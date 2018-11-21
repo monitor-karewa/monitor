@@ -1,11 +1,20 @@
-/**
- * Created by taco on 11/21/18.
- */
+const session = require("express-session");
+const mongoStore = require('connect-mongo')(session);
+
+const mongoose = require('mongoose');
 
 const nodeEnv = process.env.NODE_ENV;
 
 const config = {
     production: {
+        defaults: {
+            user: {
+                name: "Admin",
+                lastName: "Admin",
+                email: "admin@app.admin",
+                password: "admin"
+            }
+        },
         mongo: {
             url: process.env.MONGODB_URL,
             connectionOptions: {
@@ -19,9 +28,35 @@ const config = {
                 promiseLibrary: Promise, // Use native promises in the underlying MongoDB Driver
                 useNewUrlParser: true //New url parser
             }
+        },
+        session: {
+            options: {
+                secret: process.env.SESSION_SECRET,
+                resave: false,
+                saveUninitialized: false,
+                store: new mongoStore({
+                    mongooseConnection: mongoose.connection,
+                    db: process.env.MONGODB_DB,
+                    touchAfter: 24 * 3600 // time period in seconds
+                }),
+                cookie: {
+                    path: '/',
+                    httpOnly: false,
+                    secure: false,
+                    maxAge: null
+                }
+            }
         }
     },
     dev: {
+        defaults: {
+            user: {
+                name: "Admin",
+                lastName: "Admin",
+                email: "admin@app.admin",
+                password: "admin"
+            }
+        },
         mongo: {
             url: 'mongodb://127.0.0.1:27017/monitor_karewa_web_dev',
             connectionOptions: {
@@ -34,6 +69,24 @@ const config = {
                 bufferMaxEntries: 0,
                 promiseLibrary: Promise, // Use native promises in the underlying MongoDB Driver
                 useNewUrlParser: true //New url parser
+            }
+        },
+        session: {
+            options: {
+                secret: "537b8537c9292f085a233789f6411f92",
+                resave: false,
+                saveUninitialized: false,
+                store: new mongoStore({
+                    mongooseConnection: mongoose.connection,
+                    db: 'monitor_karewa_web_dev',
+                    touchAfter: 24 * 3600 // time period in seconds
+                }),
+                cookie: {
+                    path: '/',
+                    httpOnly: false,
+                    secure: false,
+                    maxAge: null
+                }
             }
         }
     }

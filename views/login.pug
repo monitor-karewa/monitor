@@ -1,0 +1,16 @@
+extends layout
+
+block append script
+    script(src='/javascripts/login.vue.js')
+
+block content
+    #vue_login
+        h1 Login
+        //form(method="POST" action="/login")
+        label Email:
+        input(type="email" v-model="email")
+        br
+        label Password:
+        input(type="password" v-model="password")
+        br
+        button(type="button" 'v-on:click'="login") Login

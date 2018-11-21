@@ -11,16 +11,33 @@ const bodyParser = require('body-parser');
 // Database
 const mongoose = require('mongoose');
 
+// Session & Login
+const passport = require('passport');
+const session = require("express-session");
+
+//Optimization & security
+const compression = require('compression');
+const helmet = require('helmet');
+
+// Flash notifications
+const flash = require('express-flash-notification');
+
 // =======
 // Local dependencies
 // =======
 // Routers
 const indexRoutes = require('./app/routes/index.routes');
-const usersRoutes = require('./app/routes/users.routes');
+const securityRoutes = require('./app/routes/security.routes');
+const adminRoutes = require('./app/routes/admin.routes');
+// const usersRoutes = require('./app/routes/users.routes');
 
-// Values
+// Controllers
+const securityController = require('./app/controllers/security.controller');
+
+// Other
 const config = require('./config/config').get();
-
+const passportManger = require('./app/components/passportManager');
+const seedsManager = require('./app/components/seedsManager');
 
 // ============
 // Database configuration
@@ -46,11 +63,17 @@ mongoose.connection.on("open", function () {
 const app = express();
 
 // =================
-// App configuration
+// App settings & configuration
 // =================
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
+
+// Initialize PassportJS
+passportManger.init();
+
+// Ensure database basic config
+seedsManager.init();
 
 // ===========
 // Middlewares
@@ -60,15 +83,37 @@ app.set('view engine', 'pug');
 app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
-app.use(cookieParser());
+app.use(cookieParser(config.session.options.secret));
 app.use(express.static(path.join(__dirname, 'public')));
 
+app.use(compression());
+app.use(helmet());
 
-// ======
-// Routes
-// ======
+// ======================
+// Routes without session
+// ======================
 app.use('/', indexRoutes);
-app.use('/users', usersRoutes);
+
+// ======================
+// Session initialization
+// ======================
+app.use(session(config.session.options));
+app.use(flash(app));
+
+app.use(passport.initialize());
+app.use(passport.session());
+
+app.use((req, res, next) => {
+    res.locals.user = req.user;
+    next();
+});
+
+// ======================
+// Routes with session
+// ======================
+// app.use('/api/users', usersRoutes);
+app.use('/security', securityRoutes);
+app.use('/admin', securityController.checkLogin, adminRoutes);
 
 
 // ==============
@@ -83,6 +128,7 @@ app.use(function (req, res, next) {
 
 // error handler
 app.use(function (err, req, res, next) {
+    console.log('err');
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = req.app.get('env') === 'development' ? err : {};
