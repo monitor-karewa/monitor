@@ -1,5 +1,12 @@
 extends layout
 
+block append script
+  script(src='/javascripts/index.vue.js')
+
 block content
-  h1= title
-  p Welcome to #{title}
+  #vue_index
+    h1= title
+    p Hello, what's your name?
+    input(v-model="name")
+    p Welcome to #{title}
+      span(v-if="name && name.length") , {{name}}!
