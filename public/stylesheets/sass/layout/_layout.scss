@@ -1,12 +1,38 @@
+/* Created on : 03/12/2018
+ * Author     : Ingrid Pinedo
+ * Version    : 1.0
+ * Content    : Layout app styles
+ */
+
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+html {
+  position: relative;
+  height: 100%;
+  box-sizing: border-box;
+  overflow: hidden;
+  overflow-y: auto;
+  height: 100%;
+}
+
+html:not(.ie9) body {
+  overflow-y: auto;
+}
+
 body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+  min-height: 100%;
+  margin:0;
+}
+
+html,
+body {
+  position: relative;
+  box-sizing: border-box;
+  background-color: #f8f9ff;
 }
 
 a {
-  color: #00B7FF;
-}
-
-.omg {
-	color: red;
+  text-decoration: none;
 }

@@ -1,54 +1,50 @@
-/* Estructura basada en la guia oficial de estilos http://sass-guidelin.es/es/ */
-
+/* Structure from official style guideline http://sass-guidelin.es/es/ */
 
 /* -----------------------------------------------------------------------------
- * Abstracts: Utilidades, archivos de ayuda, mixins, helpers, variables
+ * Abstracts: Class utilities, helpers, mixins, variables
  * ----------------------------------------------------------------------------- */
-/*@import "abstracts/class-utilities";*/
-
+@import "abstracts/class-utilities";
 
 
 /* -----------------------------------------------------------------------------
- * Base: Define estilos estandar para los elementos HTML
+ * Base: Standard styles for HTML elements
  * ----------------------------------------------------------------------------- */
-/*@import "base/alerts";*/
-/*@import "base/animations";*/
-/*@import "base/buttons";*/
-/*@import "base/breadcrumb";*/
-
+@import "base/alerts";
+@import "base/animations";
+@import "base/buttons";
+@import "base/breadcrumb";
+@import "base/fontface";
+@import "base/pagination";
+@import "base/modals";
 
 
 /* -----------------------------------------------------------------------------
- * Layout: Contiene las hojas de estilo para las partes principales del sitio (header, footer, navigation, sidebar…)
+ * Layout: Header, footer, navigation, sidebar, etc
  * ----------------------------------------------------------------------------- */
 @import "layout/layout";
 
 
-
 /* -----------------------------------------------------------------------------
- * Components: Contiene todo tipo de módulos específicos como un slider, modal, timeline, panel
+ * Components: Components like slider, modal, timeline, panel, etc
  * ----------------------------------------------------------------------------- */
 
 
 
 /* -----------------------------------------------------------------------------
- * Pages: Contiene los estilos específicos para cada página
+ * Pages: Specific styles for full pages
  * ----------------------------------------------------------------------------- */
-/*@import "pages/login-page";*/
 
 
 
 /* -----------------------------------------------------------------------------
- * Temas: Archivos que contienen los temas de la aplicacion
+ * Temas: App's themes colors
  * ----------------------------------------------------------------------------- */
-/*@import "themes/material-classes";*/
-/*@import "themes/theme-app";*/
-
+@import "themes/material-colors";
 
 
 /* -----------------------------------------------------------------------------
- * Archivos exclusivos: Estos archivos se ponen al final y en este orden para
- * que no afecte a toda la aplicacion y se aplique el responsive design
+ * Exclusive files: Placed at the end so it does not affect the entire
+ * application and the responsive design is applied
  * ----------------------------------------------------------------------------- */
-/*@import "abstracts/media-queries";*/
-/*@import "layout/shame";
+@import "abstracts/media-queries";
+@import "layout/shame";
