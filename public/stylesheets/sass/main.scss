@@ -1,0 +1,54 @@
+/* Estructura basada en la guia oficial de estilos http://sass-guidelin.es/es/ */
+
+
+/* -----------------------------------------------------------------------------
+ * Abstracts: Utilidades, archivos de ayuda, mixins, helpers, variables
+ * ----------------------------------------------------------------------------- */
+/*@import "abstracts/class-utilities";*/
+
+
+
+/* -----------------------------------------------------------------------------
+ * Base: Define estilos estandar para los elementos HTML
+ * ----------------------------------------------------------------------------- */
+/*@import "base/alerts";*/
+/*@import "base/animations";*/
+/*@import "base/buttons";*/
+/*@import "base/breadcrumb";*/
+
+
+
+/* -----------------------------------------------------------------------------
+ * Layout: Contiene las hojas de estilo para las partes principales del sitio (header, footer, navigation, sidebar…)
+ * ----------------------------------------------------------------------------- */
+@import "layout/layout";
+
+
+
+/* -----------------------------------------------------------------------------
+ * Components: Contiene todo tipo de módulos específicos como un slider, modal, timeline, panel
+ * ----------------------------------------------------------------------------- */
+
+
+
+/* -----------------------------------------------------------------------------
+ * Pages: Contiene los estilos específicos para cada página
+ * ----------------------------------------------------------------------------- */
+/*@import "pages/login-page";*/
+
+
+
+/* -----------------------------------------------------------------------------
+ * Temas: Archivos que contienen los temas de la aplicacion
+ * ----------------------------------------------------------------------------- */
+/*@import "themes/material-classes";*/
+/*@import "themes/theme-app";*/
+
+
+
+/* -----------------------------------------------------------------------------
+ * Archivos exclusivos: Estos archivos se ponen al final y en este orden para
+ * que no afecte a toda la aplicacion y se aplique el responsive design
+ * ----------------------------------------------------------------------------- */
+/*@import "abstracts/media-queries";*/
+/*@import "layout/shame";
