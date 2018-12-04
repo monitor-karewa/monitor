@@ -48,6 +48,7 @@ const cssVendors = [
 
 const jsVendors = [
     './public/javascripts/lib/jquery-3.3.1.min.js',
+    // './public/javascripts/lib/popover.js',
     './public/javascripts/lib/bootstrap.min.js',
     './public/javascripts/lib/bootstrap-select.min.js',
     './public/javascripts/main.js'
