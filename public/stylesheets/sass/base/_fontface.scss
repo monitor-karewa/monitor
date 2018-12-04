@@ -3,3 +3,80 @@
  * Version    : 1.0
  * Content    : Fontface
  */
+
+/*--------------------
+  Raleway Light
+---------------------*/
+@font-face {
+  font-family: raleway-light;
+  font-display: fallback;
+  src: url('Raleway-Light.ttf') format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+
+/*--------------------
+  Raleway Regular
+---------------------*/
+@font-face {
+  font-family: raleway-regular;
+  font-display: fallback;
+  src: url('Raleway-Regular.ttf') format('truetype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+/*--------------------
+  Raleway Medium
+---------------------*/
+@font-face {
+  font-family: raleway-medium;
+  font-display: fallback;
+  src: url('Raleway-Medium.ttf') format('truetype');
+  font-weight: 500;
+  font-style: normal;
+}
+
+/*--------------------
+  Raleway SemiBold
+---------------------*/
+@font-face {
+  font-family: raleway-semibold;
+  font-display: fallback;
+  src: url('Raleway-SemiBold.ttf') format('truetype');
+  font-weight: 600;
+  font-style: normal;
+}
+
+/*--------------------
+  Raleway Bold
+---------------------*/
+@font-face {
+  font-family: raleway-bold;
+  font-display: fallback;
+  src: url('Raleway-Bold.ttf') format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+
+/*--------------------
+  Raleway ExtraBold
+---------------------*/
+@font-face {
+  font-family: raleway-extrabold;
+  font-display: fallback;
+  src: url('Raleway-ExtraBold.ttf') format('truetype');
+  font-weight: 800;
+  font-style: normal;
+}
+
+/*--------------------
+  Raleway Black
+---------------------*/
+@font-face {
+  font-family: raleway-black;
+  font-display: fallback;
+  src: url('Raleway-Black.ttf') format('truetype');
+  font-weight: 900;
+  font-style: normal;
+}

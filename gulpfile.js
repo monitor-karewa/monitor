@@ -1,8 +1,8 @@
 "use strict";
+/*----------------------------------
+ * Plugins
+ *----------------------------------*/
 
-// -----------------------------------------------------------------------------
-// Plugins
-// -----------------------------------------------------------------------------
 //Basic
 var gulp = require('gulp');
 var concat = require('gulp-concat');
@@ -18,12 +18,8 @@ var uglify = require('gulp-uglify');
 //Browsersync
 var browserSync = require('browser-sync');
 
-//Fonts
-var consolidate = require('gulp-consolidate');
 var del = require('del');
-var iconfont = require('gulp-iconfont');
 var rename = require('gulp-rename');
-var sketch = require('gulp-sketch');
 
 var browserify = require('browserify');
 var source = require('vinyl-source-stream');
@@ -42,36 +38,34 @@ var cleanCssOptions = {
 };
 
 /*
- * Archivos de js de la aplicación.
- * 
- * En orden, son los siguientes:
- * - Archivos de funciones generales, por ejemplo para inicializar componentes de terceros
- * - Módulos de AngularJS, por ejemplo controllers relacionados al login, al home, al perfil, etc.
- * - El archivo principal de Angular, encargado de inicializar la app y cargar los módulos previamente mencionados
- * 
- * @type {[*]}
+ * Archives
  */
 const cssVendors = [
+    './stylesheets/vendors/bootstrap.css',
+    './stylesheets/vendors/bootstrap-select.min.css',
     './stylesheets/vendors/animate.css'
 ];
 
 const jsVendors = [
+    './javascripts/lib/jquery-3.3.1.min.js',
+    './javascripts/lib/bootstrap.min.js',
+    './javascripts/lib/bootstrap-select.min.js',
     './javascripts/main.js'
 ];
 
 // -----------------------------------------------------------------------------
-// Concatenar y minificar los archivos css de terceros
+// Task: Concat and minify vendors css files.
 // -----------------------------------------------------------------------------
 gulp.task('css-vendors', function() {
     return gulp.src(cssVendors) 
         .pipe(concat('vendors.min.css'))
         .pipe(cleanCss(cleanCssOptions))
         .pipe(gulp.dest('.public/stylesheets/dist'))
-        .pipe(notify({message: 'Compilacion COMPLETA de los archivos CSS de terceros.'}));
+        .pipe(notify({message: 'Vendors CSS files compilation success.'}));
 });
 
 // -----------------------------------------------------------------------------
-// Task: Concatenar y minificar todos los archivos sass .scss a .min.css
+// Task: Concat and minify sass/.scss to .min.css files.
 // -----------------------------------------------------------------------------
 gulp.task('css-sass', function () {
     return gulp.src('./public/stylesheets/sass/main.scss')
@@ -79,46 +73,41 @@ gulp.task('css-sass', function () {
         .pipe(sass())
         .pipe(cleanCss(cleanCssOptions))
         .pipe(gulp.dest('./public/stylesheets/dist'))
-        .pipe(notify({message: 'Compilacion COMPLETA de los archivos SASS.'}));
+        .pipe(notify({message: 'SASS files compilation success.'}));
 });
 
 // -----------------------------------------------------------------------------
-// Task: Concatenar y minificar los archivos .js de terceros.
+// Task: Concat and minify vendors js files.
 // -----------------------------------------------------------------------------
 gulp.task('js-vendors', function() {
     return gulp.src(jsVendors)
         .pipe(concat('vendors.min.js'))
         // .pipe(uglify())
         .pipe(gulp.dest('./public/javascripts/dist'))
-        .pipe(notify({message: 'Compilacion COMPLETA de JS de terceros.'}));
+        .pipe(notify({message: 'Vendors JS files compilation success.'}));
 });
 
 // -----------------------------------------------------------------------------
-// Task: Arrancar server y actualizar el navegador cada que se detecte cambios en los archivos
+// Task: Run server to update web page.
 // -----------------------------------------------------------------------------
 gulp.task('server', function () {
     browserSync({
-        // Por default, Play escucha en el puerto 9000
         proxy: 'localhost:3000',
-        // Vamos a establecer BrowserSync en el puerto 9001
         port: 3001,
-        // Actualizar todos los assets
-        // Importante: es necesario especificar la ruta de acceso de los archivos no la ruta de los url
         files: ['**/*.html', 'public/javascripts/*.js', 'public/stylesheets/**/*.scss', 'public/stylesheets/vendors/*.css'],
         open: false
     });
 });
 
 // -----------------------------------------------------------------------------
-// Task: Obserconst los cambios en los archivos .scss y compilar automaticamente
+// Task: Watch changes on files .scss
 // -----------------------------------------------------------------------------
 gulp.task('watch', function () {
-    // Watch archivos .scss
     gulp.watch(['./public/stylesheets/**/*.scss', './public/stylesheets/main.scss', './public/stylesheets/**/*.css'], ['css-sass']);
 });
 
 // -----------------------------------------------------------------------------
-// Task: Borrar los archivos compilados y minificados de css y js y volver a generarlos
+// Task: Delete compiled and minified files css y js and re generate them.
 // -----------------------------------------------------------------------------
 gulp.task('clean', function (bc) {
     del([
@@ -126,12 +115,11 @@ gulp.task('clean', function (bc) {
         'public/stylesheets/dist/main.min.css',
         'public/javascripts/dist/vendors.min.js'
     ], bc());
-    console.log('Se hizo un CLEANUP CORRECTO de los archivos minificados [CSS,JS]');
+    console.log('SuccessCLEANUP of files [CSS,JS]');
 });
 
 // -----------------------------------------------------------------------------
-// Task: Tarea por default en Desarrollo (minificado de archivos css y js y obserconst cambios en los archivos)
-// Primeramente corre la tarea Clean y luego cuando finaliza continua con las demas tareas
+// Task: Default Task on Dev
 // -----------------------------------------------------------------------------
 gulp.task('default', ['clean'], function () {
     gulp.start('css-vendors', 'css-sass', 'js-vendors', 'server', 'watch');
