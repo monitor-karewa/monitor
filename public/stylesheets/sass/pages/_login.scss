@@ -1,5 +1,6 @@
 .simple-login {
   height: 100vh;
+  min-height: 650px;
   .left-side, .right-side {
     float: left;
     height: 100%;
@@ -7,6 +8,15 @@
   .left-side {
     width: 60%;
     position:relative;
+    .logo {
+      position: absolute;
+      padding: 45px 70px;
+      img {
+        //filter: brightness(0) invert(1);
+        height: 70px;
+        width: auto;
+      }
+    }
     .info {
       z-index: 1;
       position: absolute;
@@ -114,8 +124,27 @@
   }
   .right-side {
     width: 40%;
-    z-index: 1;
-    background-color: white;
+    padding: 65px 50px;
+    background-color: rgba(69, 78, 123, 0.05);
+    .principal-title {
+      font-size: 24px;
+      font-weight: bold;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: 1.17;
+      letter-spacing: normal;
+      color: #19babd;
+      margin-bottom: 25px;
+    }
+    .info {
+      font-size: 14px;
+      font-weight: normal;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: 2;
+      letter-spacing: normal;
+      color: #454e7b;
+    }
   }
 
 }
