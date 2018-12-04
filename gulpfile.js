@@ -41,16 +41,16 @@ var cleanCssOptions = {
  * Archives
  */
 const cssVendors = [
-    './stylesheets/vendors/bootstrap.css',
-    './stylesheets/vendors/bootstrap-select.min.css',
-    './stylesheets/vendors/animate.css'
+    './public/stylesheets/vendors/bootstrap.css',
+    './public/stylesheets/vendors/bootstrap-select.min.css',
+    './public/stylesheets/vendors/animate.css'
 ];
 
 const jsVendors = [
-    './javascripts/lib/jquery-3.3.1.min.js',
-    './javascripts/lib/bootstrap.min.js',
-    './javascripts/lib/bootstrap-select.min.js',
-    './javascripts/main.js'
+    './public/javascripts/lib/jquery-3.3.1.min.js',
+    './public/javascripts/lib/bootstrap.min.js',
+    './public/javascripts/lib/bootstrap-select.min.js',
+    './public/javascripts/main.js'
 ];
 
 // -----------------------------------------------------------------------------
@@ -60,7 +60,7 @@ gulp.task('css-vendors', function() {
     return gulp.src(cssVendors) 
         .pipe(concat('vendors.min.css'))
         .pipe(cleanCss(cleanCssOptions))
-        .pipe(gulp.dest('.public/stylesheets/dist'))
+        .pipe(gulp.dest('./public/stylesheets/dist'))
         .pipe(notify({message: 'Vendors CSS files compilation success.'}));
 });
 
