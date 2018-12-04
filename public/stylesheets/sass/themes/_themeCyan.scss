@@ -23,3 +23,181 @@ $grey-3: #b4b8ca;
 $grey-4: #dadce5;
 $grey-5: #e9ebf7;
 $neutral: #ffffff;
+
+.theme-cyan {
+	.container-footer {
+	  	background-color: $background;
+
+	  	> div {
+	    	a,
+	    	label {
+		      	font-family: $principal-font-semibold;
+		      	color: $primary;
+	    	}
+
+		    a {
+		      &::before {
+		        background-color: $primary;
+		      }
+		    }
+	  	}
+	}
+
+
+	#hamburguer-icon {
+	  	path {
+	    	stroke: $primary;
+	  	}
+	}
+
+	.header {
+	  	background-color: $neutral;
+
+	  	.right {
+	    	.links {
+		      	> a {
+		        	color: $primary;
+		        	font-family: $principal-font-medium;
+
+		        	&::before {
+		          	background-color: $primary;
+		        	}
+		      	}
+
+		      	.topMenuDropdown {
+		        	.dropdown-toggle {
+			          	border: 1px solid transparentize($primary, 0.8);
+
+			          	> div {
+			            	label {
+			              		font-family: $principal-font-bold;
+			              		color: $primary;
+			            	}
+			            	span {
+			              		font-family: $principal-font-semibold;
+			              		color: transparentize($primary, 0.4);;
+			            	}
+			          	}
+			        }
+
+			        .dropdown-menu {
+			          	.dropdown-item {
+			            	font-family: $principal-font-bold;
+			            	color: $primary;
+
+			            	&:hover {
+			              		opacity: 1;
+			              		background-color: transparentize($primary, 0.9);
+			            	}
+
+			            	&.active {
+			              		background-color: transparentize($accent, 0.9);
+			              		color: $accent;
+			              		border-left-color: $accent;
+			            	}
+			          	}
+			        }
+
+			        &.show .dropdown-toggle {
+			          border: 1px solid transparentize($accent, 0.3);
+			        }
+		      	}
+	    	}
+
+		    .admin {
+		      	ul {
+		        	li {
+			          	a {
+			            	font-family: $principal-font-medium;
+			            	color: $grey-2;
+
+			            	&::before {
+			              	background-color: $grey-2;
+			            	}
+			          	}
+
+			          	&:first-of-type a {
+			            	color: $accent;
+
+			            	&::before {
+			              		background-color: $accent;
+			            	}
+			          	}
+		        	}
+		      	}
+
+		      	.topMenuDropdown {
+	        		.dropdown-toggle {
+			          	&:hover {
+			            	background-color: $grey-4;
+			          	}
+		        	}	
+
+		        	.dropdown-menu {
+		          		.dropdown-item {
+		            		font-family: $principal-font-bold;
+		            		color: $primary;
+
+			            	&:hover {
+			              		opacity: 1;
+			              		background-color: transparentize($primary, 0.9);
+			            	}
+
+			            	&.active {
+			              		background-color: transparentize($accent, 0.9);
+			              		color: $accent;
+			              		border-left-color: $accent;
+		            		}
+		          		}
+		        	}
+		      	}
+		    }  
+	  	}
+	}
+
+	#main #content {
+	  	background-color: $background;
+	}
+
+	.sidebar {
+	  	background-color: $neutral;
+
+	  	.main-menu {
+	    	li {
+	      		a {
+	        		font-family: $principal-font-bold;
+	        		color: $primary;
+	      		}
+
+	      		&.active {
+	        		background-color: transparentize($accent, 0.9);
+	        		&::before {
+	          			background-color: $accent;
+	        		}
+	        		a {
+	          			color: $accent;
+	        		}
+	      		}
+	    	}
+
+		    .divider {
+		      	background-color: $primary;
+		    }
+	  	}
+
+	  	.footer-sidebar {
+		    > a {
+		      	font-family: $principal-font-bold;
+		      	color: $primary;
+		      
+		      	&:focus {
+		        	color: $accent;
+		        	background-color: transparentize($accent, 0.9);
+		        	&::before {
+		          background-color: $accent;
+		        	}
+		      	}
+		    }
+  		}
+	}
+}
