@@ -82,7 +82,6 @@ gulp.task('css-sass', function () {
 gulp.task('js-vendors', function() {
     return gulp.src(jsVendors)
         .pipe(concat('vendors.min.js'))
-        // .pipe(uglify())
         .pipe(gulp.dest('./public/javascripts/dist'))
         .pipe(notify({message: 'Vendors JS files compilation success.'}));
 });
@@ -115,7 +114,7 @@ gulp.task('clean', function (bc) {
         'public/stylesheets/dist/main.min.css',
         'public/javascripts/dist/vendors.min.js'
     ], bc());
-    console.log('SuccessCLEANUP of files [CSS,JS]');
+    console.log('Success CLEANUP of files CSS, JS');
 });
 
 // -----------------------------------------------------------------------------
