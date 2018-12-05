@@ -3,3 +3,200 @@
  * Version    : 1.0
  * Content    : Buttons
  */
+
+.btn-raised {
+	width: fit-content;
+	min-height: 25px;
+	display: flex;
+	align-content: center;
+	justify-content: center;
+  	padding: 8px 20px;
+  	border-radius: 2px;
+  	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  	font-size: 12px;
+  	font-weight: 500;
+  	text-align: center;
+  	text-transform: uppercase;
+  	letter-spacing: 0.5px;
+  	text-decoration: none !important;
+  	border: 1px solid transparent;
+  	outline: none;
+  	transition: 0.5s;
+
+  	i {
+  		margin-right: 6px;
+  		font-size: 16px;
+  	}
+
+  	&:hover {
+  		opacity: 0.8;
+  	}
+
+  	&.xs {
+  		font-size: 10px;
+  		padding: 7px 13px;
+  		i {
+  			font-size: 14px;
+  		}
+  	}
+  	&.lg {
+  		font-size: 16px;
+  		padding: 10px 30px;
+  		i {
+  			font-size: 18px;
+  		}
+  	}
+}
+
+.btn-stroke {
+	width: fit-content;
+	min-height: 25px;
+	display: flex;
+	align-content: center;
+	justify-content: center;
+  	padding: 8px 20px;
+  	border-radius: 2px;
+  	box-shadow: 0 2px 5px 0 rgba(0, 0, 0, 0.16), 0 2px 10px 0 rgba(0, 0, 0, 0.12);
+  	background-color: transparent;
+  	font-size: 12px;
+  	font-weight: 500;
+  	text-align: center;
+  	text-transform: uppercase;
+  	letter-spacing: 0.5px;
+  	text-decoration: none !important;
+  	border: 1px solid;
+  	outline: none;
+  	transition: 0.5s;
+
+  	i {
+  		margin-right: 6px;
+  		font-size: 16px;
+  	}
+
+  	&:hover {
+  		opacity: 0.8;
+  	}
+
+  	&.xs {
+  		font-size: 10px;
+  		padding: 7px 13px;
+  		i {
+  			font-size: 14px;
+  		}
+  	}
+  	&.lg {
+  		font-size: 16px;
+  		padding: 10px 30px;
+  		i {
+  			font-size: 18px;
+  		}
+  	}
+}
+
+.btn-outline {
+	width: fit-content;
+	min-height: 25px;
+	display: flex;
+	align-content: center;
+	justify-content: center;
+  	padding: 8px 20px;
+  	border-radius: 2px;
+  	background-color: transparent;
+  	font-size: 13px;
+  	text-align: center;
+  	letter-spacing: 0.5px;
+  	text-decoration: none !important;
+  	border: 1px solid transparent;
+  	outline: none;
+  	transition: 0.5s;
+
+  	i {
+  		margin-right: 12px;
+  		font-size: 22px;
+  	}
+
+  	&:hover {
+  		opacity: 0.8;
+  	}
+
+  	&.xs {
+  		font-size: 10px;
+  		padding: 7px 13px;
+  		i {
+  			font-size: 16px;
+  		}
+  	}
+  	&.lg {
+  		font-size: 18px;
+  		padding: 10px 30px;
+  		i {
+  			font-size: 25px;
+  		}
+  	}
+}
+
+.btn-loading {
+	> div {
+		$offset: 200;
+
+		.spinner {
+		  animation: rotator 1.4s linear infinite;
+		}
+
+		@keyframes rotator {
+		  0% { transform: rotate(0deg); }
+		  100% { transform: rotate(270deg); }
+		}
+
+		.path {
+		  stroke-dasharray: 200;
+		  stroke-dashoffset: 200;
+		  transform-origin: center;
+		  animation:
+		    dash 1.4s ease-in-out infinite;
+		}
+
+		@keyframes dash {
+		 0% { stroke-dashoffset: $offset; }
+		 50% {
+		   stroke-dashoffset: $offset/5;
+		   transform:rotate(135deg);
+		 }
+		 100% {
+		   stroke-dashoffset: $offset;
+		   transform:rotate(450deg);
+		 }
+		}
+	}
+}
+
+.btn-circle-icon {
+	width: fit-content;
+	width: 25px;
+	height: 25px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 50%;
+	font-size: 18px;
+	text-decoration: none !important;
+	outline: none;
+	border: none;
+	margin: 0 15px;
+
+	&:hover,
+	&:focus {
+		animation: spin 0.6s ease-in-out;
+	}
+
+	&.sm {
+	    width: 35px;
+    	height: 35px;
+    	font-size: 25px;
+  	}
+  	&.lg {
+	    width: 45px;
+    	height: 45px;
+    	font-size: 30px;
+  	}
+}

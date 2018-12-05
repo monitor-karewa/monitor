@@ -1,4 +1,99 @@
 /*
+ * Palette Colors
+ */
+.bgm-accent {
+    background-color: $accent !important;
+}
+.c-accent {
+    color: $accent !important;
+}
+
+.bgm-primary {
+    background-color: $primary !important;
+}
+.c-primary {
+    color: $primary !important;
+}
+
+.bgm-background {
+    background-color: $background !important;
+}
+.c-background {
+    color: $background !important;
+}
+
+.bgm-semantic-red {
+    background-color: $semantic-red !important;
+}
+.c-semantic-red {
+    color: $semantic-red !important;
+}
+
+.bgm-semantic-yellow {
+    background-color: $semantic-yellow !important;
+}
+.c-semantic-yellow {
+    color: $semantic-yellow !important;
+}
+
+.bgm-semantic-green {
+    background-color: $semantic-green !important;
+}
+.c-semantic-green {
+    color: $semantic-green !important;
+}
+
+.bgm-semantic-blue {
+    background-color: $semantic-blue !important;
+}
+.c-semantic-blue {
+    color: $semantic-blue !important;
+}
+
+.bgm-grey-1 {
+    background-color: $grey-1 !important;
+}
+.c-grey-1 {
+    color: $grey-1 !important;
+}
+
+.bgm-grey-2 {
+    background-color: $grey-2 !important;
+}
+.c-grey-2 {
+    color: $grey-2 !important;
+}
+
+.bgm-grey-3 {
+    background-color: $grey-3 !important;
+}
+.c-grey-3 {
+    color: $grey-3 !important;
+}
+
+.bgm-grey-4 {
+    background-color: $grey-4 !important;
+}
+.c-grey-4 {
+    color: $grey-4 !important;
+}
+
+.bgm-grey-5 {
+    background-color: $grey-5 !important;
+}
+.c-grey-5 {
+    color: $grey-5 !important;
+}
+
+.bgm-neutral {
+    background-color: $neutral !important;
+}
+.c-neutral {
+    color: $neutral !important;
+}
+
+
+/*
  * Material Background Colors
  */
 .bgm-white, .b-c-w {

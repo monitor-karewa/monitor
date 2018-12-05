@@ -1,203 +1,375 @@
 /* Created on : 03/12/2018
  * Author     : Ingrid Pinedo
  * Version    : 1.0
- * Content    : Theme Cyan and variables
+ * Content    : Theme Color Palette
  */
 /*---------------------------------------------------------------------
-  COLOR PALETTE VARIABLES & THEME
+  COLOR PALETTE THEME
   To change the 'opacity' please use sass transparentize. 
   Example: ($variable-color, .8);
   Using transparentize the opacity changes: 1 means 0 and 0 means 1. 
   Example: If you want an opacity 0.2 -> it changes to 0.8.
 -----------------------------------------------------------------------*/
-
-$accent: #19babd;
-$primary: #454e7b;
-$background: #f8f9ff;
-$semantic-red: #eb6262;
-$semantic-yellow: #ffc043;
-$semantic-green: #6ec284;
-$grey-1: #6a7296;
-$grey-2: #8f95b0;
-$grey-3: #b4b8ca;
-$grey-4: #dadce5;
-$grey-5: #e9ebf7;
-$neutral: #ffffff;
-
-.theme-cyan {
-	.container-footer {
-	  	background-color: $background;
-
-	  	> div {
-	    	a,
-	    	label {
-		      	font-family: $principal-font-semibold;
-		      	color: $primary;
-	    	}
-
-		    a {
-		      &::before {
-		        background-color: $primary;
-		      }
-		    }
-	  	}
+.alert {
+	background: $neutral !important;
+	font-family: $principal-font-regular;
+	&.alert-info {
+		color: $semantic-blue;
 	}
-
-
-	#hamburguer-icon {
-	  	path {
-	    	stroke: $primary;
-	  	}
+	&.alert-danger {
+		color: $semantic-red;
 	}
-
-	.header {
-	  	background-color: $neutral;
-
-	  	.right {
-	    	.links {
-		      	> a {
-		        	color: $primary;
-		        	font-family: $principal-font-medium;
-
-		        	&::before {
-		          	background-color: $primary;
-		        	}
-		      	}
-
-		      	.topMenuDropdown {
-		        	.dropdown-toggle {
-			          	border: 1px solid transparentize($primary, 0.8);
-
-			          	> div {
-			            	label {
-			              		font-family: $principal-font-bold;
-			              		color: $primary;
-			            	}
-			            	span {
-			              		font-family: $principal-font-semibold;
-			              		color: transparentize($primary, 0.4);;
-			            	}
-			          	}
-			        }
-
-			        .dropdown-menu {
-			          	.dropdown-item {
-			            	font-family: $principal-font-bold;
-			            	color: $primary;
-
-			            	&:hover {
-			              		opacity: 1;
-			              		background-color: transparentize($primary, 0.9);
-			            	}
-
-			            	&.active {
-			              		background-color: transparentize($accent, 0.9);
-			              		color: $accent;
-			              		border-left-color: $accent;
-			            	}
-			          	}
-			        }
-
-			        &.show .dropdown-toggle {
-			          border: 1px solid transparentize($accent, 0.3);
-			        }
-		      	}
-	    	}
-
-		    .admin {
-		      	ul {
-		        	li {
-			          	a {
-			            	font-family: $principal-font-medium;
-			            	color: $grey-2;
-
-			            	&::before {
-			              	background-color: $grey-2;
-			            	}
-			          	}
-
-			          	&:first-of-type a {
-			            	color: $accent;
-
-			            	&::before {
-			              		background-color: $accent;
-			            	}
-			          	}
-		        	}
-		      	}
-
-		      	.topMenuDropdown {
-	        		.dropdown-toggle {
-			          	&:hover {
-			            	background-color: $grey-4;
-			          	}
-		        	}	
-
-		        	.dropdown-menu {
-		          		.dropdown-item {
-		            		font-family: $principal-font-bold;
-		            		color: $primary;
-
-			            	&:hover {
-			              		opacity: 1;
-			              		background-color: transparentize($primary, 0.9);
-			            	}
-
-			            	&.active {
-			              		background-color: transparentize($accent, 0.9);
-			              		color: $accent;
-			              		border-left-color: $accent;
-		            		}
-		          		}
-		        	}
-		      	}
-		    }  
-	  	}
+	&.alert-success {
+		color: $semantic-green;
 	}
-
-	#main #content {
-	  	background-color: $background;
+	&.alert-warning {
+		color: $semantic-yellow;
 	}
+}
 
-	.sidebar {
-	  	background-color: $neutral;
+.btn-raised {
+  	background-color: $accent;
+  	color: $neutral;
+  	font-family: $principal-font-medium;
 
-	  	.main-menu {
-	    	li {
-	      		a {
-	        		font-family: $principal-font-bold;
-	        		color: $primary;
-	      		}
+  	&:hover {
+  		color: $neutral;
+  	}
+}
 
-	      		&.active {
-	        		background-color: transparentize($accent, 0.9);
-	        		&::before {
-	          			background-color: $accent;
-	        		}
-	        		a {
-	          			color: $accent;
-	        		}
-	      		}
-	    	}
+.btn-stroke {
+  	color: $accent;
+  	font-family: $principal-font-medium;
+  	border-color: $accent;
 
-		    .divider {
-		      	background-color: $primary;
-		    }
-	  	}
+  	&:hover {
+  		background-color: $accent;
+  		color: $neutral;
+  	}
+}
 
-	  	.footer-sidebar {
-		    > a {
-		      	font-family: $principal-font-bold;
-		      	color: $primary;
-		      
-		      	&:focus {
-		        	color: $accent;
-		        	background-color: transparentize($accent, 0.9);
-		        	&::before {
-		          background-color: $accent;
-		        	}
-		      	}
-		    }
-  		}
+.btn-outline {
+  	color: $primary;
+  	font-family: $principal-font-medium;
+
+  	&:hover {
+  		background-color: $grey-4;
+  		color: $primary;
+  	}
+}
+
+.btn-loading {
+	> div {
+		.spinner {
+		  stroke: #0f6f70;
+		}
 	}
+}
+
+.btn-circle-icon {
+	color: $primary;
+
+	&:hover,
+	&:focus {
+		color: inherit;
+		background-color: $grey-4;
+	}
+}
+
+.btn-raised.button-accent {
+	background-color: $accent !important;
+}
+.btn-raised.button-primary {
+	background-color: $primary !important;
+}
+.btn-raised.button-grey {
+	background-color: $grey-2 !important;
+}
+.btn-raised.button-red {
+	background-color: $semantic-red !important;
+}
+.btn-raised.button-yellow {
+	background-color: $semantic-yellow !important;
+}
+.btn-raised.button-green {
+	background-color: $semantic-green !important;
+}
+.btn-raised.button-blue {
+	background-color: $semantic-blue !important;
+}
+
+.btn-stroke.button-accent {
+	color: $accent !important;
+	border-color: $accent !important;
+
+	&:hover {
+		background-color: $accent !important;
+	}
+}
+.btn-stroke.button-primary {
+	color: $primary !important;
+	border-color: $primary !important;
+
+	&:hover {
+		background-color: $primary !important;
+	}
+}
+.btn-stroke.button-grey {
+	color: $grey-2 !important;
+	border-color: $grey-2 !important;
+
+	&:hover {
+		background-color: $grey-2 !important;
+	}
+}
+.btn-stroke.button-red {
+	color: $semantic-red !important;
+	border-color: $semantic-red !important;
+
+	&:hover {
+		background-color: $semantic-red !important;
+	}
+}
+.btn-stroke.button-yellow {
+	color: $semantic-yellow !important;
+	border-color: $semantic-yellow !important;
+
+	&:hover {
+		background-color: $semantic-yellow !important;
+	}
+}
+.btn-stroke.button-green {
+	color: $semantic-green !important;
+	border-color: $semantic-green !important;
+
+	&:hover {
+		background-color: $semantic-green !important;
+	}
+}
+.btn-stroke.button-blue {
+	color: $semantic-blue !important;
+	border-color: $semantic-blue !important;
+
+	&:hover {
+		background-color: $semantic-blue !important;
+	}
+}
+
+.btn-outline.button-accent {
+	color: $accent !important;
+
+	&:hover {
+		color: $accent !important;
+	}
+}
+.btn-outline.button-primary {
+	color: $primary !important;
+
+	&:hover {
+		color: $primary !important;
+	}
+}
+.btn-outline.button-grey {
+	color: $grey-2 !important;
+
+	&:hover {
+		color: $grey-2 !important;
+	}
+}
+.btn-outline.button-red {
+	color: $semantic-red !important;
+
+	&:hover {
+		color: $semantic-red !important;
+	}
+}
+.btn-outline.button-yellow {
+	color: $semantic-yellow !important;
+
+	&:hover {
+		color: $semantic-yellow !important;
+	}
+}
+.btn-outline.button-green {
+	color: $semantic-green !important;
+
+	&:hover {
+		color: $semantic-green !important;
+	}
+}
+.btn-outline.button-blue {
+	color: $semantic-blue !important;
+
+	&:hover {
+		color: $semantic-blue !important;
+	}
+}
+
+
+
+.container-footer {
+  	background-color: $background;
+
+  	> div {
+    	a,
+    	label {
+	      	font-family: $principal-font-semibold;
+	      	color: $primary;
+    	}
+
+	    a {
+	      &::before {
+	        background-color: $primary;
+	      }
+	    }
+  	}
+}
+
+
+#hamburguer-icon {
+  	path {
+    	stroke: $primary;
+  	}
+}
+
+.header {
+  	background-color: $neutral;
+
+  	.right {
+    	.links {
+	      	.topMenuDropdown {
+	        	.dropdown-toggle {
+		          	border: 1px solid transparentize($primary, 0.8);
+
+		          	> div {
+		            	label {
+		              		font-family: $principal-font-bold;
+		              		color: $primary;
+		            	}
+		            	span {
+		              		font-family: $principal-font-semibold;
+		              		color: transparentize($primary, 0.4);;
+		            	}
+		          	}
+		        }
+
+		        .dropdown-menu {
+		          	.dropdown-item {
+		            	font-family: $principal-font-bold;
+		            	color: $primary;
+
+		            	&:hover {
+		              		opacity: 1;
+		              		background-color: transparentize($primary, 0.9);
+		            	}
+
+		            	&.active {
+		              		background-color: transparentize($accent, 0.9);
+		              		color: $accent;
+		              		border-left-color: $accent;
+		            	}
+		          	}
+		        }
+
+		        &.show .dropdown-toggle {
+		          border: 1px solid transparentize($accent, 0.3);
+		        }
+	      	}
+    	}
+
+	    .admin {
+	      	ul {
+	        	li {
+		          	a {
+		            	font-family: $principal-font-medium;
+		            	color: $grey-2;
+
+		            	&::before {
+		              	background-color: $grey-2;
+		            	}
+		          	}
+
+		          	&:first-of-type a {
+		            	color: $accent;
+
+		            	&::before {
+		              		background-color: $accent;
+		            	}
+		          	}
+	        	}
+	      	}
+
+	      	.topMenuDropdown {
+        		.dropdown-toggle {
+		          	&:hover {
+		            	background-color: $grey-4;
+		          	}
+	        	}	
+
+	        	.dropdown-menu {
+	          		.dropdown-item {
+	            		font-family: $principal-font-bold;
+	            		color: $primary;
+
+		            	&:hover {
+		              		opacity: 1;
+		              		background-color: transparentize($primary, 0.9);
+		            	}
+
+		            	&.active {
+		              		background-color: transparentize($accent, 0.9);
+		              		color: $accent;
+		              		border-left-color: $accent;
+	            		}
+	          		}
+	        	}
+	      	}
+	    }  
+  	}
+}
+
+#main #content {
+  	background-color: $background;
+}
+
+.sidebar {
+  	background-color: $neutral;
+
+  	.main-menu {
+    	li {
+      		a {
+        		font-family: $principal-font-bold;
+        		color: $primary;
+      		}
+
+      		&.active {
+        		background-color: transparentize($accent, 0.9);
+        		&::before {
+          			background-color: $accent;
+        		}
+        		a {
+          			color: $accent;
+        		}
+      		}
+    	}
+
+	    .divider {
+	      	background-color: $primary;
+	    }
+  	}
+
+  	.footer-sidebar {
+	    > a {
+	      	font-family: $principal-font-bold;
+	      	color: $primary;
+	      
+	      	&:focus {
+	        	color: $accent;
+	        	background-color: transparentize($accent, 0.9);
+	        	&::before {
+	          background-color: $accent;
+	        	}
+	      	}
+	    }
+		}
 }
