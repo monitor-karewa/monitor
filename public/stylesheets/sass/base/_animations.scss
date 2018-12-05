@@ -4,7 +4,42 @@
  * Content    : Animations
  */
 
- /* GENERAL ANIMATIONS */
+/* GENERAL ANIMATIONS */
+
+/*
+ * SPIN / ROTATE  INFINITE
+ */
+@-webkit-keyframes spin { 
+  100% { 
+    -webkit-transform: rotate(360deg); 
+    transform: rotate(360deg); 
+  } 
+}
+@-moz-keyframes spin { 
+  100% { 
+    -moz-transform: rotate(360deg);
+    transform: rotate(360deg);  
+  } 
+}
+@-ms-keyframes spin { 
+  100% { 
+    -webkit-transform: rotate(360deg); 
+    transform:rotate(360deg); 
+  } 
+}
+@-o-keyframes spin { 
+  100% { 
+    -webkit-transform: rotate(360deg); 
+    transform:rotate(360deg); 
+  } 
+}
+@keyframes spin { 
+  100% { 
+    -webkit-transform: rotate(360deg); 
+    transform:rotate(360deg); 
+  } 
+}
+
 
 /*
  * LOADING CIRCLE
@@ -130,7 +165,7 @@
   }
 
   &:focus:not(:active)::after {
-    animation: waves 1s ease-in-out;
+    animation: waves 2s ease-in-out;
   }
 }
 
