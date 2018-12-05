@@ -1,203 +1,179 @@
 /* Created on : 03/12/2018
  * Author     : Ingrid Pinedo
  * Version    : 1.0
- * Content    : Theme Cyan and variables
+ * Content    : Theme Color Palette
  */
 /*---------------------------------------------------------------------
-  COLOR PALETTE VARIABLES & THEME
+  COLOR PALETTE THEME
   To change the 'opacity' please use sass transparentize. 
   Example: ($variable-color, .8);
   Using transparentize the opacity changes: 1 means 0 and 0 means 1. 
   Example: If you want an opacity 0.2 -> it changes to 0.8.
 -----------------------------------------------------------------------*/
 
-$accent: #19babd;
-$primary: #454e7b;
-$background: #f8f9ff;
-$semantic-red: #eb6262;
-$semantic-yellow: #ffc043;
-$semantic-green: #6ec284;
-$grey-1: #6a7296;
-$grey-2: #8f95b0;
-$grey-3: #b4b8ca;
-$grey-4: #dadce5;
-$grey-5: #e9ebf7;
-$neutral: #ffffff;
+.container-footer {
+  	background-color: $background;
 
-.theme-cyan {
-	.container-footer {
-	  	background-color: $background;
+  	> div {
+    	a,
+    	label {
+	      	font-family: $principal-font-semibold;
+	      	color: $primary;
+    	}
 
-	  	> div {
-	    	a,
-	    	label {
-		      	font-family: $principal-font-semibold;
-		      	color: $primary;
-	    	}
-
-		    a {
-		      &::before {
-		        background-color: $primary;
-		      }
-		    }
-	  	}
-	}
+	    a {
+	      &::before {
+	        background-color: $primary;
+	      }
+	    }
+  	}
+}
 
 
-	#hamburguer-icon {
-	  	path {
-	    	stroke: $primary;
-	  	}
-	}
+#hamburguer-icon {
+  	path {
+    	stroke: $primary;
+  	}
+}
 
-	.header {
-	  	background-color: $neutral;
+.header {
+  	background-color: $neutral;
 
-	  	.right {
-	    	.links {
-		      	> a {
-		        	color: $primary;
-		        	font-family: $principal-font-medium;
+  	.right {
+    	.links {
+	      	.topMenuDropdown {
+	        	.dropdown-toggle {
+		          	border: 1px solid transparentize($primary, 0.8);
 
-		        	&::before {
-		          	background-color: $primary;
-		        	}
-		      	}
+		          	> div {
+		            	label {
+		              		font-family: $principal-font-bold;
+		              		color: $primary;
+		            	}
+		            	span {
+		              		font-family: $principal-font-semibold;
+		              		color: transparentize($primary, 0.4);;
+		            	}
+		          	}
+		        }
 
-		      	.topMenuDropdown {
-		        	.dropdown-toggle {
-			          	border: 1px solid transparentize($primary, 0.8);
+		        .dropdown-menu {
+		          	.dropdown-item {
+		            	font-family: $principal-font-bold;
+		            	color: $primary;
 
-			          	> div {
-			            	label {
-			              		font-family: $principal-font-bold;
-			              		color: $primary;
-			            	}
-			            	span {
-			              		font-family: $principal-font-semibold;
-			              		color: transparentize($primary, 0.4);;
-			            	}
-			          	}
-			        }
+		            	&:hover {
+		              		opacity: 1;
+		              		background-color: transparentize($primary, 0.9);
+		            	}
 
-			        .dropdown-menu {
-			          	.dropdown-item {
-			            	font-family: $principal-font-bold;
-			            	color: $primary;
+		            	&.active {
+		              		background-color: transparentize($accent, 0.9);
+		              		color: $accent;
+		              		border-left-color: $accent;
+		            	}
+		          	}
+		        }
 
-			            	&:hover {
-			              		opacity: 1;
-			              		background-color: transparentize($primary, 0.9);
-			            	}
+		        &.show .dropdown-toggle {
+		          border: 1px solid transparentize($accent, 0.3);
+		        }
+	      	}
+    	}
 
-			            	&.active {
-			              		background-color: transparentize($accent, 0.9);
-			              		color: $accent;
-			              		border-left-color: $accent;
-			            	}
-			          	}
-			        }
+	    .admin {
+	      	ul {
+	        	li {
+		          	a {
+		            	font-family: $principal-font-medium;
+		            	color: $grey-2;
 
-			        &.show .dropdown-toggle {
-			          border: 1px solid transparentize($accent, 0.3);
-			        }
-		      	}
-	    	}
+		            	&::before {
+		              	background-color: $grey-2;
+		            	}
+		          	}
 
-		    .admin {
-		      	ul {
-		        	li {
-			          	a {
-			            	font-family: $principal-font-medium;
-			            	color: $grey-2;
+		          	&:first-of-type a {
+		            	color: $accent;
 
-			            	&::before {
-			              	background-color: $grey-2;
-			            	}
-			          	}
+		            	&::before {
+		              		background-color: $accent;
+		            	}
+		          	}
+	        	}
+	      	}
 
-			          	&:first-of-type a {
-			            	color: $accent;
+	      	.topMenuDropdown {
+        		.dropdown-toggle {
+		          	&:hover {
+		            	background-color: $grey-4;
+		          	}
+	        	}	
 
-			            	&::before {
-			              		background-color: $accent;
-			            	}
-			          	}
-		        	}
-		      	}
+	        	.dropdown-menu {
+	          		.dropdown-item {
+	            		font-family: $principal-font-bold;
+	            		color: $primary;
 
-		      	.topMenuDropdown {
-	        		.dropdown-toggle {
-			          	&:hover {
-			            	background-color: $grey-4;
-			          	}
-		        	}	
+		            	&:hover {
+		              		opacity: 1;
+		              		background-color: transparentize($primary, 0.9);
+		            	}
 
-		        	.dropdown-menu {
-		          		.dropdown-item {
-		            		font-family: $principal-font-bold;
-		            		color: $primary;
+		            	&.active {
+		              		background-color: transparentize($accent, 0.9);
+		              		color: $accent;
+		              		border-left-color: $accent;
+	            		}
+	          		}
+	        	}
+	      	}
+	    }  
+  	}
+}
 
-			            	&:hover {
-			              		opacity: 1;
-			              		background-color: transparentize($primary, 0.9);
-			            	}
+#main #content {
+  	background-color: $background;
+}
 
-			            	&.active {
-			              		background-color: transparentize($accent, 0.9);
-			              		color: $accent;
-			              		border-left-color: $accent;
-		            		}
-		          		}
-		        	}
-		      	}
-		    }  
-	  	}
-	}
+.sidebar {
+  	background-color: $neutral;
 
-	#main #content {
-	  	background-color: $background;
-	}
+  	.main-menu {
+    	li {
+      		a {
+        		font-family: $principal-font-bold;
+        		color: $primary;
+      		}
 
-	.sidebar {
-	  	background-color: $neutral;
+      		&.active {
+        		background-color: transparentize($accent, 0.9);
+        		&::before {
+          			background-color: $accent;
+        		}
+        		a {
+          			color: $accent;
+        		}
+      		}
+    	}
 
-	  	.main-menu {
-	    	li {
-	      		a {
-	        		font-family: $principal-font-bold;
-	        		color: $primary;
-	      		}
+	    .divider {
+	      	background-color: $primary;
+	    }
+  	}
 
-	      		&.active {
-	        		background-color: transparentize($accent, 0.9);
-	        		&::before {
-	          			background-color: $accent;
-	        		}
-	        		a {
-	          			color: $accent;
-	        		}
-	      		}
-	    	}
-
-		    .divider {
-		      	background-color: $primary;
-		    }
-	  	}
-
-	  	.footer-sidebar {
-		    > a {
-		      	font-family: $principal-font-bold;
-		      	color: $primary;
-		      
-		      	&:focus {
-		        	color: $accent;
-		        	background-color: transparentize($accent, 0.9);
-		        	&::before {
-		          background-color: $accent;
-		        	}
-		      	}
-		    }
-  		}
-	}
+  	.footer-sidebar {
+	    > a {
+	      	font-family: $principal-font-bold;
+	      	color: $primary;
+	      
+	      	&:focus {
+	        	color: $accent;
+	        	background-color: transparentize($accent, 0.9);
+	        	&::before {
+	          background-color: $accent;
+	        	}
+	      	}
+	    }
+		}
 }
