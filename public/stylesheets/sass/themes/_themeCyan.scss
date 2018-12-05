@@ -10,6 +10,25 @@
   Using transparentize the opacity changes: 1 means 0 and 0 means 1. 
   Example: If you want an opacity 0.2 -> it changes to 0.8.
 -----------------------------------------------------------------------*/
+.badge {
+  font-family: $principal-font-medium;
+  color: $neutral;
+  background-color: $grey-2;
+
+  &.badge-green {
+    background-color: $semantic-green;
+  }
+  &.badge-red {
+    background-color: $semantic-red;
+  }
+  &.badge-yellow {
+    background-color: $semantic-yellow;
+  }
+  &.badge-blue {
+    background-color: $semantic-blue;
+  }
+}
+
 .btn-raised {
   	background-color: $accent;
   	color: $neutral;
@@ -187,8 +206,6 @@
 		color: $semantic-blue !important;
 	}
 }
-
-
 
 .container-footer {
   	background-color: $background;
