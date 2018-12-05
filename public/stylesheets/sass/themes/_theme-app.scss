@@ -10,6 +10,24 @@
   Using transparentize the opacity changes: 1 means 0 and 0 means 1. 
   Example: If you want an opacity 0.2 -> it changes to 0.8.
 -----------------------------------------------------------------------*/
+
+.alert {
+	background: $neutral !important;
+	font-family: $principal-font-regular;
+	&.alert-info {
+		color: $semantic-blue;
+	}
+	&.alert-danger {
+		color: $semantic-red;
+	}
+	&.alert-success {
+		color: $semantic-green;
+	}
+	&.alert-warning {
+		color: $semantic-yellow;
+	}
+}
+
 .badge {
   font-family: $principal-font-medium;
   color: $neutral;
