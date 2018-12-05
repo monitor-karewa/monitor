@@ -1,4 +1,15 @@
-$(document).ready(function (){});
+$(document).ready(function (){
+	/* Sidebar Menu Responsive */
+	$('#showMenu').on('click', function() { 
+		$('.sidebar').addClass('small-sidebar'); 
+		$('.backdrop').addClass('active');
+	});
+	$('#hideMenu').on('click', function() { 
+		$('.sidebar').removeClass('small-sidebar');
+		$('.backdrop').removeClass('active');
+		$('#hamburguer-icon').removeClass('active'); 
+	});
+});
 
 
 /*----------------------------------------------------------
