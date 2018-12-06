@@ -11,6 +11,8 @@
   Example: If you want an opacity 0.2 -> it changes to 0.8.
 -----------------------------------------------------------------------*/
 
+
+/* ALERTS */
 .alert {
 	background: $neutral !important;
 	font-family: $principal-font-regular;
@@ -27,6 +29,8 @@
 		color: $semantic-yellow;
 	}
 }
+/* FIN ALERTS */
+
 
 .badge {
   font-family: $principal-font-medium;
@@ -47,6 +51,8 @@
   }
 }
 
+
+/* BUTTONS */
 .btn-raised {
   	background-color: $accent;
   	color: $neutral;
@@ -224,6 +230,8 @@
 		color: $semantic-blue !important;
 	}
 }
+/* END BUTTONS */
+
 
 .container-footer {
   	background-color: $background;
@@ -243,13 +251,14 @@
   	}
 }
 
-
 #hamburguer-icon {
   	path {
     	stroke: $primary;
   	}
 }
 
+
+/* HEADER APP */
 .header {
   	background-color: $neutral;
 
@@ -345,11 +354,89 @@
 	    }  
   	}
 }
+/* END HEADER APP */
 
+
+/* MAIN CONTAINER */
 #main #content {
   	background-color: $background;
 }
+/* END MAIN CONTAINER */
 
+
+/* PANELS */
+.panel-simple {
+  background-color: transparentize($primary, 0.94);
+
+  span {
+    /*font-family: avenir-heavy;*/
+    color: $accent;
+  }
+
+  label {
+    font-family: $principal-font-regular;
+    color: $grey-1;
+  }
+}
+
+.panel-simple-color {
+  background-color: $neutral;
+
+  span {
+    /*font-family: avenir-heavy;*/
+    color: $primary;
+  }
+
+  label {
+    font-family: $principal-font-regular;
+    color: $grey-1;
+  }
+
+  &.accent {
+    border-left-color: $accent;
+  }
+  &.red {
+    border-left-color: $semantic-red;
+  }
+  &.yellow {
+    border-left-color: $semantic-yellow;
+  }
+  &.green {
+    border-left-color: $semantic-green;
+  }
+}
+
+.panel-info {
+  background-color: $neutral;
+
+  label {
+    font-family: $principal-font-semibold;
+    color: $primary;
+  }
+  span {
+    font-family: $principal-font-bold;
+    color: $primary;
+  }
+
+  i {
+    background-color: $accent;
+    color: $neutral;
+  }
+}
+
+.panel-button {
+  border-left-color: $accent;
+  background-color: transparentize($primary, 0.94);
+
+  label {
+    font-family: $principal-font-bold;
+    color: $grey-1;
+  }
+}
+/* END PANELS */
+
+
+/* SIDEBAR MENU */
 .sidebar {
   	background-color: $neutral;
 
@@ -391,3 +478,4 @@
 	    }
 		}
 }
+/* END SIDEBAR MENU */
