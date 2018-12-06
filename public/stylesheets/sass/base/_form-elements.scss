@@ -50,6 +50,30 @@ input:focus {
   transition-duration: 250ms;
 }
 
+.checkbox {
+  width: 18px;
+  height: 18px;
+  position: relative;
+  display: flex;
+  align-items: center;
+  input {
+    z-index: 1;
+    position: relative;
+  }
+  span {
+    padding-left: 30px;
+    z-index: 0;
+    position: absolute;
+    font-size: 13px;
+    font-weight: bold;
+    font-style: normal;
+    font-stretch: normal;
+    line-height: normal;
+    letter-spacing: normal;
+    color: #454e7b;
+  }
+}
+
 .checkbox,
 .radio {
   padding-top: 0 !important;
@@ -71,7 +95,7 @@ input:focus {
   }
 
   input:checked + .input-helper:before {
-    border-color: #009688;
+    border-color: #19babd;
   }
 
 }
@@ -97,12 +121,12 @@ input:focus {
 }
 
 .checkbox input {
-  width: 17px;
-  height: 17px;
+  width: 18px;
+  height: 18px;
 }
 
 .checkbox input:checked + .input-helper:before {
-  background-color: #009688;
+  background-color: #19babd;
 }
 
 .checkbox input:checked + .input-helper:after {
@@ -407,7 +431,7 @@ html:not(.ie9) .select.fg-line:before {
   .ts-helper {
     display: inline-block;
     position: relative;
-    width: 40px;
+    width: 35px;
     height: 16px;
     border-radius: 8px;
     background: rgba(0, 0, 0, 0.26);
@@ -527,4 +551,66 @@ html:not(.ie9) .select.fg-line:before {
 ------------------------------------*/
 .ie9 textarea {
   overflow: auto !important;
+}
+
+/*-----------------------------------
+    CHECKBOX
+------------------------------------*/
+
+.input-radio-check {
+  .check-container {
+    margin-bottom: 10px;
+    padding-left: 0;
+  }
+
+  input {
+    cursor: pointer;
+  }
+
+  input[type='radio'] {
+    -webkit-appearance: none;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    outline: none;
+    border: 2px solid;
+  }
+
+  input:focus {
+    outline: none !important;
+  }
+
+  input[type='radio']:before {
+    content: '';
+    display: block;
+    border-radius: 50%;
+    width: 8px;
+    height: 8px;
+    margin: 3px auto;
+  }
+
+  span {
+    position: absolute;
+    margin-left: 8px;
+    text-align: left;
+    font-size: 12px;
+    font-weight: bold;
+    color: #454e7b;
+  }
+}
+
+.input-radio-check {
+  input[type="radio"]{
+    border-color: gray;
+  }
+  input[type="radio"]:checked:before {
+    background: #19babd;
+  }
+
+  input[type="radio"]:checked {
+    border-color: #19babd;
+  }
+  span{
+    color: black;
+  }
 }
