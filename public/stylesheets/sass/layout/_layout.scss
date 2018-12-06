@@ -37,6 +37,17 @@ a {
   text-decoration: none;
 }
 
+.badge {
+  display: flex !important;
+  align-items: center;
+  border-radius: 3px !important;
+  padding: 4px 10px !important;
+  font-size: 12px !important;
+  line-height: 1.33 !important;
+  text-align: center !important;
+  font-weight: inherit !important;
+}
+
 .container-footer {
   position: fixed;
   bottom: 0;
@@ -99,7 +110,6 @@ a {
   }
 }
 
-
 #hamburguer-icon {
   path {
     -webkit-transform: translate3d(0, 0, 0);
@@ -148,6 +158,7 @@ a {
   }
 }
 
+/* HEADER APP */
 .header {
   display: flex;
   width: 100%;
@@ -386,6 +397,7 @@ a {
   }
 }
 
+/* MAIN CONTAINER */
 #main #content {
   position: fixed;
   overflow: scroll;
@@ -402,6 +414,7 @@ a {
   }
 }
 
+/* SIDEBAR MENU */
 .sidebar {
   overflow-y: scroll;
   overflow-x: hidden;
