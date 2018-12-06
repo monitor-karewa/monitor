@@ -521,6 +521,7 @@ a {
     margin-top: 8px;
     margin-bottom: 2px;
     display: block;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
@@ -529,6 +530,7 @@ a {
     font-weight: bold;
     line-height: 0.76;
     display: block;
+    white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
