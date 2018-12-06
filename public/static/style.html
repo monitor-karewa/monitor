@@ -281,21 +281,51 @@
                     <div class="row m-b-50">
                         <h1 class="f-20 m-t-0 m-b-10 col-12">Form Elements</h1>
                         <div class="col-12">
+                            <p class="">
+                                If the input has an error add this class
+                                <br>
+                                <strong class="c-semantic-red">.has-error</strong>
+                            </p>
                             <div class="form">
+
                                 <div class="form-group fg-float">
                                     <div class="fg-line">
                                         <input type="text" class="form-control fg-input">
-                                        <label class="fg-label">Nombre del Hospital <small>(Opcional)</small></label>
+                                        <label class="fg-label">Input label <small>(small text)</small></label>
                                     </div>
 
                                 </div>
-                                <div class="form-group fg-float error-field">
+
+                                <div class="form-group fg-float has-error">
                                     <div class="fg-line">
-                                        <input type="text" class="form-control fg-input" value="error ejemplo">
-                                        <label class="fg-label">Numero del Hospital</label>
+                                        <input type="text" class="form-control fg-input">
+                                        <label class="fg-label">Input label</label>
                                     </div>
-                                    <span class="error-span-show">Este error se presenta cuando el Input no está lleno y es obligatorio</span>
+                                    <span class="error-span">Error message</span>
                                 </div>
+
+                                <br>
+                                <p>
+                                    Input <strong> "basic-input". </strong>
+                                    <br>
+                                    This type of input has the "label" up permanently.
+                                </p>
+
+                                <div class="form-group fg-float">
+                                    <div class="fg-line  basic-input">
+                                        <input type="text" class="form-control fg-input" placeholder="Placeholder">
+                                        <label class="fg-label">Input label <small>(small text)</small></label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group fg-float has-error">
+                                    <div class="fg-line  basic-input">
+                                        <input type="text" class="form-control fg-input" placeholder="Placeholder">
+                                        <label class="fg-label">Input label <small>(small text)</small></label>
+                                    </div>
+                                    <span class="error-span">Error message</span>
+                                </div>
+
                             </div>
                         </div>
                     </div>
