@@ -365,6 +365,27 @@
 /* END MAIN CONTAINER */
 
 
+/* MODAL ALERT */
+.modal-alert {
+	.modal-content {
+		.modal-title {
+			font-family: $principal-font-bold;
+			color: $primary;
+		}
+
+		p.text-centered {
+			font-family: $principal-font-semibold;
+			color: $primary;
+
+			strong {
+				font-family: $principal-font-bold;
+			}
+		}
+	}
+}
+/* END MODAL ALERT */
+
+
 /* PANELS */
 .panel-simple {
   background-color: transparentize($primary, 0.94);

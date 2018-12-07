@@ -25,23 +25,19 @@
 		}
 
 		.modal-title {
-			font-family: raleway-bold;
 			font-size: 18px;
 			font-weight: bold;
 			line-height: normal;
 			text-align: center;
-			color: #454e7b;
 			display: block;
 		}
 
 		.modal-body {}
 
 		p.text-centered {
-			font-family: raleway-semibold;
 			font-size: 12px;
 			line-height: 1.67;
 			text-align: center;
-			color: #454e7b;
 			display: block;
 			margin-bottom: 0;
 		}
@@ -56,3 +52,24 @@
 	}
 }
 /* END MODAL ALERT */
+
+
+/* MODAL NORMAL */
+.modal {
+	.modal-content {
+		padding: 25px;
+
+		.modal-header, 
+		.modal-body, 
+		.modal-footer {
+			padding: 0;
+		}
+	}
+	
+	.modal-header {}
+	.modal-body {
+		max-height: 455px;
+	}
+	.modal-footer {}
+}
+/* END MODAL NORMAL */
