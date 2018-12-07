@@ -141,11 +141,12 @@
 	}
 }
 .btn-stroke.button-grey {
-	color: $grey-2 !important;
-	border-color: $grey-2 !important;
+	color: transparentize($primary, 0.5) !important;
+	border-color: transparentize($primary, 0.5) !important;
 
 	&:hover {
-		background-color: $grey-2 !important;
+		background-color: transparentize($primary, 0.5) !important;
+		color: $neutral !important;
 	}
 }
 .btn-stroke.button-red {
@@ -479,3 +480,28 @@
 		}
 }
 /* END SIDEBAR MENU */
+
+
+
+/* SWITCHER TABS */
+.switcher-tabs {
+	background-color: $neutral;
+  .tab {
+    label {
+      border-color: $accent;
+      font-family: $principal-font-bold;
+      color: transparentize($primary, 0.5);
+    }
+
+    .content {
+      background-color: $neutral;
+    }
+  }
+}
+
+.checkboxtab:checked ~ label {
+  background-color: $accent;
+  color: $neutral;
+  border-color: transparent;
+}
+/* END SWITCHER TABS */

@@ -3,3 +3,56 @@
  * Version    : 1.0
  * Content    : Modals
  */
+
+/* MODAL ALERT */
+.modal-alert {
+	.modal-content {
+		padding: 30px;
+
+		.modal-header, 
+		.modal-body, 
+		.modal-footer {
+			padding: 0;
+		}
+
+		.modal-header {
+			border-bottom: none;
+			margin-bottom: 20px;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+
+		}
+
+		.modal-title {
+			font-family: raleway-bold;
+			font-size: 18px;
+			font-weight: bold;
+			line-height: normal;
+			text-align: center;
+			color: #454e7b;
+			display: block;
+		}
+
+		.modal-body {}
+
+		p.text-centered {
+			font-family: raleway-semibold;
+			font-size: 12px;
+			line-height: 1.67;
+			text-align: center;
+			color: #454e7b;
+			display: block;
+			margin-bottom: 0;
+		}
+
+		.modal-footer {
+			border-top: none;
+			margin-top: 50px;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+}
+/* END MODAL ALERT */
