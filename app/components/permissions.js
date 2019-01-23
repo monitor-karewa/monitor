@@ -30,7 +30,7 @@ exports.getDefault = (modelName) => {
     //"Cache" to avoid unnecesary re-processing of the same modelName
     let permissionFromModelName = defaultPermissionsFromModelNameCache[modelName];
     if (!permissionFromModelName) {
-        permissionFromModelName = modelName.replaceAll(/(?<!^)[A-Z]/g, function (str) {
+        permissionFromModelName = modelName.replace(/(?<!^)[A-Z]/g, function (str) {
             return `_${str}`;
         }).toUpperCase();
         defaultPermissionsFromModelNameCache[modelName] = permissionFromModelName;

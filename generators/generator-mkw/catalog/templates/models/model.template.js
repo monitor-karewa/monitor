@@ -38,7 +38,7 @@ class <%= modelName %>Class {
 //Cargar class en Schema
 <%= modelName %>Schema.loadClass(<%= modelName %>Class);
 
-<%= modelName %>Schema.statics.permission = permissions.getDefault("<%= modelName %>")
+<%= modelName %>Schema.statics.permission = permissions.getDefault("<%= modelName %>");
 
 <%= modelName %>Schema.statics.expressValidator = function() {
     

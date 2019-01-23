@@ -26,6 +26,6 @@ router.post('/save', securityController.validatePermission(<%= modelName %>.perm
  * POST /delete
  * Borrar un registro
  */
-router.post('/delete', securityController.validatePermission(<%= modelName %>.permissions, 'delete'), <%= name %>Controller.delete);
+router.post('/delete', securityController.validatePermission(<%= modelName %>.permission, 'delete'), <%= name %>Controller.delete);
 
 module.exports = router;

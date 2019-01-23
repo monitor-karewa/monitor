@@ -5,7 +5,7 @@ module.exports = class extends Generator {
         this.answers = await this.prompt([{
             type: 'input',
             name: 'name',
-            message: 'Catalog name (CamelCase, e.g. userAccount)' 
+            message: 'Catalog name (camelCase, e.g. userAccount)' 
         }]);
     }
     

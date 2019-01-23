@@ -31,37 +31,14 @@ const _logMessage = (err, req, logFn, source, message, args) => {
     }
 };
 
-//Custom stream to allow request logging from morgan to npmlog
-/**
- * Stream personalizado para permitir logging con tipo http, conectando el middleware para logging de ExpressJS usando morgan, con el logging de la aplicación usando npmlog.
- * @constructor
- */
-function HttpLogStream () {
-    stream.Writable.call(this);
-}
-
-//Archaic way to create a new Writable
-util.inherits(HttpLogStream, stream.Writable);
-HttpLogStream.prototype._write = function (chunk, encoding, done) {
-    let chunkStr = chunk.toString();
-    if (chunkStr && chunkStr.length > 0) {
-        //Remove last char (new line)
-        log.http('', chunkStr.substring(0, chunkStr.length - 1));
-    }
-    done();
-};
-
 /**
  * Clase encargada de realizar el logging de la aplicación de manera personalizada.
  */
 class Logger {
     /**
      * Constructor de la clase.
-     *
-     * Inicializa un nuevo {@link HttpLogStream} para la instancia.
      */
     constructor () {
-        this._httpStream = new HttpLogStream();
     }
 
     /**
