@@ -30,7 +30,6 @@ const flash = require('express-flash-notification');
 const indexRoutes = require('./app/routes/index.routes');
 const securityRoutes = require('./app/routes/security.routes');
 const adminRoutes = require('./app/routes/admin.routes');
-const supplierRoutes = require('./app/routes/supplier.routes');
 // const usersRoutes = require('./app/routes/users.routes');
 
 // Controllers
