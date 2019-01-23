@@ -28,6 +28,7 @@
     "browser-sync": "^2.26.3",
     "browserify": "^16.2.3",
     "del": "^3.0.0",
+    "generator-mkw": "file:generators/generator-mkw",
     "gulp": "^3.9.1",
     "gulp-babel": "^8.0.0",
     "gulp-clean-css": "^4.0.0",

@@ -46,6 +46,9 @@ const config = {
                     maxAge: null
                 }
             }
+        },
+        behavior: {
+            logLevel: 'info'
         }
     },
     dev: {
@@ -88,6 +91,9 @@ const config = {
                     maxAge: null
                 }
             }
+        },
+        behavior: {
+            logLevel: 'info'
         }
     }
 };

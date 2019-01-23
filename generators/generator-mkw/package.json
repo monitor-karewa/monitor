@@ -1,0 +1,20 @@
+{
+  "name": "generator-mkw",
+  "version": "1.0.0",
+  "description": "Yeoman Generator for scaffolding in Monitor Karewa Web",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "yeoman-generator"
+  ],
+  "dependencies": {
+    "yeoman-generator": "^1.1.1"
+  },
+  "author": "Hiram Hernández",
+  "license": "ISC",
+  "files": [
+    "catalog"
+  ]
+}
