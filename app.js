@@ -4,9 +4,10 @@
 const express = require('express');
 const path = require('path');
 const favicon = require('serve-favicon');
-const logger = require('morgan');
+const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const i18n = require("i18n");
 
 // Database
 const mongoose = require('mongoose');
@@ -29,6 +30,7 @@ const flash = require('express-flash-notification');
 const indexRoutes = require('./app/routes/index.routes');
 const securityRoutes = require('./app/routes/security.routes');
 const adminRoutes = require('./app/routes/admin.routes');
+const supplierRoutes = require('./app/routes/supplier.routes');
 // const usersRoutes = require('./app/routes/users.routes');
 
 // Controllers
@@ -36,11 +38,12 @@ const securityController = require('./app/controllers/security.controller');
 
 // Other
 const config = require('./config/config').get();
+const logger = require('./app/components/logger').instance;
 const passportManger = require('./app/components/passportManager');
 const seedsManager = require('./app/components/seedsManager');
 
 // ============
-// Database configuration
+// Configuration
 // ============
 // Compatibility of MongoDB >=3.6 with Mongoose < v5.0.0
 mongoose.plugin(schema => {
@@ -55,6 +58,13 @@ mongoose.connect(config.mongo.url, config.mongo.connectionOptions);
 mongoose.connection.on("open", function () {
     //TODO: Use logger
     console.log("MongoDB connection opened");
+});
+
+i18n.configure({
+    locales:['es'],
+    directory: process.cwd() + '/app/locales',
+    autoReload: config.behavior.i18nAutoReload,
+    defaultLocale: 'es'
 });
 
 // =============
@@ -80,9 +90,10 @@ seedsManager.init();
 // ===========
 // uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname, 'public', 'favicon.ico')));
-app.use(logger('dev'));
+app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(i18n.init);
 app.use(cookieParser(config.session.options.secret));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -137,5 +148,7 @@ app.use(function (err, req, res, next) {
     res.status(err.status || 500);
     res.render('error');
 });
+
+logger.info(null, null, 'app', 'App started');
 
 module.exports = app;
