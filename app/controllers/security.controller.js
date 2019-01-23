@@ -1,4 +1,5 @@
 const passport = require('passport');
+const logger = require('./../components/logger').instance;
 
 /**
  * Middleware to check if user has logged in. If no session is detected, the user is redirected to '/login'.

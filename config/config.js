@@ -48,7 +48,8 @@ const config = {
             }
         },
         behavior: {
-            logLevel: 'info'
+            logLevel: 'info',
+            i18nAutoReload: false
         }
     },
     dev: {
@@ -93,7 +94,8 @@ const config = {
             }
         },
         behavior: {
-            logLevel: 'info'
+            logLevel: 'info',
+            i18nAutoReload: true
         }
     }
 };

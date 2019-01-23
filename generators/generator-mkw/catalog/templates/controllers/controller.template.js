@@ -1,4 +1,5 @@
 const pagination = require('./../components/pagination');
+const logger = require('./../components/logger').instance;
 
 const <%= modelName %> = require('./../models/<%= name %>.model').<%= modelName %>;
 const deletedSchema = require('./../models/schemas/deleted.schema');
@@ -49,10 +50,10 @@ exports.list = (req, res, next) => {
                     errors: false,
                     message: "",
                     data: {
-                        results: result.docs,
+                        docs: result.docs,
                         page: result.page,
                         pages: result.pages,
-                        records: result.total
+                        total: result.total
                     }
                 });
             }
@@ -74,7 +75,7 @@ exports.save = (req, res, next) => {
         let qById = {_id: id};
 
         <%= modelName %>
-            .find(qById)
+            .findOne(qById)
             .exec((err, <%= name %>) => {
                 if (err || !<%= name %>) {
                     logger.error(req, err, '<%= name %>.controller#save', 'Error al consultar <%= modelName %>');
@@ -83,6 +84,9 @@ exports.save = (req, res, next) => {
                         message: req.__('general.error.save')
                     });
                 }
+
+                //Update doc fields
+                <%= name %>.name = req.body.name;
                 
                 <%= name %>.save((err, saved<%= modelName %>) => {
                     if (err) {
@@ -137,7 +141,7 @@ exports.delete = (req, res, next) => {
 
     let query = {};
 
-    query["_id"] = req.body.id;
+    query["_id"] = req.body._id;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     query = {...query, ...qNotDeleted};
@@ -168,7 +172,7 @@ exports.delete = (req, res, next) => {
                 {
                     $set: {
                         deleted: {
-                            user: req.user._id,
+                            user: req.user ? req.user._id : null,
                             isDeleted: true,
                             date: new Date()
                         }

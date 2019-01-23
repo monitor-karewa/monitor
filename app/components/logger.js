@@ -114,4 +114,7 @@ class Logger {
  * Instancia de {@link Logger} para la aplicación.
  * @type {Logger}
  */
-module.exports.logger = new Logger();
+
+let loggerInstance = new Logger();
+
+module.exports.instance = loggerInstance;

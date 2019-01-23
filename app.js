@@ -7,6 +7,7 @@ const favicon = require('serve-favicon');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
+const i18n = require("i18n");
 
 // Database
 const mongoose = require('mongoose');
@@ -37,12 +38,12 @@ const securityController = require('./app/controllers/security.controller');
 
 // Other
 const config = require('./config/config').get();
-const logger = require('./app/components/logger');
+const logger = require('./app/components/logger').instance;
 const passportManger = require('./app/components/passportManager');
 const seedsManager = require('./app/components/seedsManager');
 
 // ============
-// Database configuration
+// Configuration
 // ============
 // Compatibility of MongoDB >=3.6 with Mongoose < v5.0.0
 mongoose.plugin(schema => {
@@ -57,6 +58,13 @@ mongoose.connect(config.mongo.url, config.mongo.connectionOptions);
 mongoose.connection.on("open", function () {
     //TODO: Use logger
     console.log("MongoDB connection opened");
+});
+
+i18n.configure({
+    locales:['es'],
+    directory: process.cwd() + '/app/locales',
+    autoReload: config.behavior.i18nAutoReload,
+    defaultLocale: 'es'
 });
 
 // =============
@@ -85,6 +93,7 @@ seedsManager.init();
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
+app.use(i18n.init);
 app.use(cookieParser(config.session.options.secret));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -116,6 +125,7 @@ app.use((req, res, next) => {
 // app.use('/api/users', usersRoutes);
 app.use('/security', securityRoutes);
 app.use('/admin', securityController.checkLogin, adminRoutes);
+app.use('/supplier'/*, securityController.checkLogin*/, supplierRoutes);
 
 
 // ==============
