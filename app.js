@@ -125,7 +125,6 @@ app.use((req, res, next) => {
 // app.use('/api/users', usersRoutes);
 app.use('/security', securityRoutes);
 app.use('/admin', securityController.checkLogin, adminRoutes);
-app.use('/supplier'/*, securityController.checkLogin*/, supplierRoutes);
 
 
 // ==============
