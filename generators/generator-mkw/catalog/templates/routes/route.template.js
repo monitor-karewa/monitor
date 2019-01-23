@@ -8,18 +8,24 @@ var securityController = require('./../controllers/security.controller');
  * GET /
  * Renderizar vista principal
  */
-router.get('/', <%= name %>Controller.index);
+router.get('/', securityController.validatePermission(<%= modelName %>.permission, 'read'), <%= name %>Controller.index);
 
 /**
  * GET /list
  * Consulta de registros
  */
-router.get('/list', <%= name %>Controller.list);
+router.get('/list', securityController.validatePermission(<%= modelName %>.permission, 'read'), <%= name %>Controller.list);
 
 /**
- * GET /list
- * Consulta de registros
+ * POST /save
+ * Guardar un registro
  */
-router.get('/save', <%= modelName %>.validateRequestFields(), <%= name %>Controller.list);
+router.post('/save', securityController.validatePermission(<%= modelName %>.permission, 'edit'), <%= modelName %>.expressValidator(), <%= name %>Controller.save);
+
+/**
+ * POST /delete
+ * Borrar un registro
+ */
+router.post('/delete', securityController.validatePermission(<%= modelName %>.permissions, 'delete'), <%= name %>Controller.delete);
 
 module.exports = router;

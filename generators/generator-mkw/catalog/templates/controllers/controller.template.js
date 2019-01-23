@@ -1,5 +1,6 @@
 const pagination = require('./../components/pagination');
 
+const <%= modelName %> = require('./../models/<%= name %>.model').<%= modelName %>;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 /**
@@ -10,6 +11,8 @@ const deletedSchema = require('./../models/schemas/deleted.schema');
  */
 exports.index = (req, res, next) => {
     let renderParams = {};
+    renderParams.model = <%= modelName %>;
+    renderParams.permission = <%= modelName %>.permission;
     res.render('<%= name %>', renderParams);
 };
 
@@ -37,13 +40,13 @@ exports.list = (req, res, next) => {
                 if (err) {
                     logger.error(err, req, '<%= name %>.controller#list', 'Error al consultar lista de <%= modelName %>');
                     return res.json({
-                        error: true,
-                        message: res.__('general.errors.unexpected-error')
+                        errors: true,
+                        message: res.__('general.error.unexpected-error')
                     });
                 }
 
                 return res.json({
-                    error: false,
+                    errors: false,
                     message: "",
                     data: {
                         results: result.docs,
@@ -76,8 +79,8 @@ exports.save = (req, res, next) => {
                 if (err || !<%= name %>) {
                     logger.error(req, err, '<%= name %>.controller#save', 'Error al consultar <%= modelName %>');
                     return res.json({
-                        "error": true,
-                        "message": req.__('general.errors.save')
+                        errors: true,
+                        message: req.__('general.error.save')
                     });
                 }
                 
@@ -85,15 +88,15 @@ exports.save = (req, res, next) => {
                     if (err) {
                         logger.error(req, err, '<%= name %>.controller#save', 'Error al guardar <%= modelName %>');
                         return res.json({
-                            "error": true,
-                            "message": req.__('general.errors.save')
+                            errors: true,
+                            message: req.__('general.error.save')
                         });
                     }
         
                     return res.json({
-                        "error": false,
-                        "message": req.__('general.success.updated'),
-                        "data": saved<%= modelName %>
+                        errors: false,
+                        message: req.__('general.success.updated'),
+                        data: saved<%= modelName %>
                     });
                 });
             });
@@ -110,7 +113,7 @@ exports.save = (req, res, next) => {
                 logger.error(req, err, '<%= name %>.controller#save', 'Error al guardar <%= modelName %>');
                 return res.json({
                     "error": true,
-                    "message": req.__('general.errors.save')
+                    "message": req.__('general.error.save')
                 });
             }
 
@@ -123,7 +126,69 @@ exports.save = (req, res, next) => {
     }
 };
 
-
+/**
+ * Borra un <%= modelName %>.
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.delete = (req, res, next) => {
     //TODO: Implementation
+
+    let query = {};
+
+    query["_id"] = req.body.id;
+
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    query = {...query, ...qNotDeleted};
+    
+    <%= modelName %>
+        .find(query)
+        .count()
+        .exec((err, count) => {
+            if (err) {
+                logger.error(req, err, '<%= name %>.controller#delete', 'Error al realizar count de <%= modelName %>');
+                return res.json({
+                    errors: true,
+                    message: req.__('general.error.delete')
+                });
+            }
+            
+            if (count === 0) {
+                logger.error(req, err, '<%= name %>.controller#delete', 'Error al intentar borrar <%= modelName %>; el registro no existe o ya fue borrado anteriormente');
+                return res.json({
+                    errors: true,
+                    message: req.__('general.error.not-exists-or-already-deleted')
+                });
+            }
+
+
+            <%= modelName %>.update(
+                query,
+                {
+                    $set: {
+                        deleted: {
+                            user: req.user._id,
+                            isDeleted: true,
+                            date: new Date()
+                        }
+                    }
+                },
+                {multi: false}
+            ).exec((err) => {
+                if (err) {
+                    logger.error(req, err, '<%= name %>.controller#delete', 'Error al borrar <%= modelName %>.');
+                    return res.json({
+                        errors: true,
+                        message: req.__('general.error.delete')
+                    });
+                }
+                return res.json({
+                    error: false,
+                    message: req.__('general.success.deleted')
+                });
+            });
+            
+            
+        });
 };
