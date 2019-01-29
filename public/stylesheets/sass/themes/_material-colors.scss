@@ -2,10 +2,10 @@
  * Palette Colors
  */
 .bgm-accent {
-    background-color: $accent !important;
+    background-color: $accent_1 !important;
 }
 .c-accent {
-    color: $accent !important;
+    color: $accent_1 !important;
 }
 
 .bgm-primary {
@@ -22,74 +22,60 @@
     color: $background !important;
 }
 
-.bgm-semantic-red {
-    background-color: $semantic-red !important;
+.bgm-error {
+    background-color: $error !important;
 }
-.c-semantic-red {
-    color: $semantic-red !important;
-}
-
-.bgm-semantic-yellow {
-    background-color: $semantic-yellow !important;
-}
-.c-semantic-yellow {
-    color: $semantic-yellow !important;
+.c-error {
+    color: $error !important;
 }
 
-.bgm-semantic-green {
-    background-color: $semantic-green !important;
+.bgm-e {
+    background-color: $warning !important;
 }
-.c-semantic-green {
-    color: $semantic-green !important;
+.c-warning {
+    color: $warning !important;
 }
 
-.bgm-semantic-blue {
-    background-color: $semantic-blue !important;
+.bgm-success {
+    background-color: $success !important;
 }
-.c-semantic-blue {
-    color: $semantic-blue !important;
+.c-success {
+    color: $success !important;
+}
+
+.bgm-info {
+    background-color: $info !important;
+}
+.c-info {
+    color: $info !important;
 }
 
 .bgm-grey-1 {
-    background-color: $grey-1 !important;
+    background-color: $grey_1 !important;
 }
 .c-grey-1 {
-    color: $grey-1 !important;
+    color: $grey_1 !important;
 }
 
 .bgm-grey-2 {
-    background-color: $grey-2 !important;
+    background-color: $grey_2 !important;
 }
 .c-grey-2 {
     color: $grey-2 !important;
 }
 
 .bgm-grey-3 {
-    background-color: $grey-3 !important;
+    background-color: $grey_3 !important;
 }
 .c-grey-3 {
-    color: $grey-3 !important;
-}
-
-.bgm-grey-4 {
-    background-color: $grey-4 !important;
-}
-.c-grey-4 {
-    color: $grey-4 !important;
-}
-
-.bgm-grey-5 {
-    background-color: $grey-5 !important;
-}
-.c-grey-5 {
-    color: $grey-5 !important;
+    color: $grey_3 !important;
 }
 
 .bgm-neutral {
-    background-color: $neutral !important;
+    background-color: $white!important;
 }
 .c-neutral {
-    color: $neutral !important;
+    color: $white !important;
 }
 
 

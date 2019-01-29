@@ -3,17 +3,22 @@
  * Version    : 1.0
  * Content    : Palette Colors variable
  */
-
-$accent: #19babd;
 $primary: #454e7b;
+$accent_1: #19babd;
+
+$success: #6ec284;
+$error: #eb6262;
+$warning: #ffc043;
+$info: #587fe3;
+
+$title: #454e7b;
+$plain_text: #6a7296;
+$info_text: #8f95b0;
+$grey_1: #b4b8ca;
+$grey_2: #dadce5;
+$grey_3: #e9ebf7;
+
 $background: #f8f9ff;
-$semantic-red: #eb6262;
-$semantic-yellow: #ffc043;
-$semantic-green: #6ec284;
-$semantic-blue: #2077dc;
-$grey-1: #6a7296;
-$grey-2: #8f95b0;
-$grey-3: #b4b8ca;
-$grey-4: #dadce5;
-$grey-5: #e9ebf7;
-$neutral: #ffffff;
+$black: #242424;
+$white: #ffffff;
+$cards: #f7f8f9;

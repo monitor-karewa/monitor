@@ -14,19 +14,19 @@
 
 /* ALERTS */
 .alert {
-	background: $neutral !important;
+	background: $white !important;
 	font-family: $principal-font-regular;
 	&.alert-info {
-		color: $semantic-blue;
+		color: $info;
 	}
 	&.alert-danger {
-		color: $semantic-red;
+		color: $error;
 	}
 	&.alert-success {
-		color: $semantic-green;
+		color: $success;
 	}
 	&.alert-warning {
-		color: $semantic-yellow;
+		color: $warning;
 	}
 }
 /* FIN ALERTS */
@@ -34,43 +34,43 @@
 
 .badge {
   font-family: $principal-font-medium;
-  color: $neutral;
-  background-color: $grey-2;
+  color: $white;
+  background-color: $grey_2;
 
   &.badge-green {
-    background-color: $semantic-green;
+    background-color: $success;
   }
   &.badge-red {
-    background-color: $semantic-red;
+    background-color: $error;
   }
   &.badge-yellow {
-    background-color: $semantic-yellow;
+    background-color: $warning;
   }
   &.badge-blue {
-    background-color: $semantic-blue;
+    background-color: $info;
   }
 }
 
 
 /* BUTTONS */
 .btn-raised {
-  	background-color: $accent;
-  	color: $neutral;
+  	background-color: $accent_1;
+  	color: $white;
   	font-family: $principal-font-medium;
 
   	&:hover {
-  		color: $neutral;
+  		color: $white;
   	}
 }
 
 .btn-stroke {
-  	color: $accent;
+  	color: $accent_1;
   	font-family: $principal-font-medium;
-  	border-color: $accent;
+  	border-color: $accent_1;
 
   	&:hover {
-  		background-color: $accent;
-  		color: $neutral;
+  		background-color: $accent_1;
+  		color: $white;
   	}
 }
 
@@ -79,7 +79,7 @@
   	font-family: $principal-font-medium;
 
   	&:hover {
-  		background-color: $grey-4;
+  		background-color: $grey_3;
   		color: $primary;
   	}
 }
@@ -98,38 +98,38 @@
 	&:hover,
 	&:focus {
 		color: inherit;
-		background-color: $grey-4;
+		background-color: $grey_3;
 	}
 }
 
 .btn-raised.button-accent {
-	background-color: $accent !important;
+	background-color: $accent_1 !important;
 }
 .btn-raised.button-primary {
 	background-color: $primary !important;
 }
 .btn-raised.button-grey {
-	background-color: $grey-2 !important;
+	background-color: $grey_2 !important;
 }
 .btn-raised.button-red {
-	background-color: $semantic-red !important;
+	background-color: $error !important;
 }
 .btn-raised.button-yellow {
-	background-color: $semantic-yellow !important;
+	background-color: $warning !important;
 }
 .btn-raised.button-green {
-	background-color: $semantic-green !important;
+	background-color: $success !important;
 }
 .btn-raised.button-blue {
-	background-color: $semantic-blue !important;
+	background-color: $info !important;
 }
 
 .btn-stroke.button-accent {
-	color: $accent !important;
-	border-color: $accent !important;
+	color: $accent_1 !important;
+	border-color: $accent_1 !important;
 
 	&:hover {
-		background-color: $accent !important;
+		background-color: $accent_1 !important;
 	}
 }
 .btn-stroke.button-primary {
@@ -146,47 +146,47 @@
 
 	&:hover {
 		background-color: transparentize($primary, 0.5) !important;
-		color: $neutral !important;
+		color: $white !important;
 	}
 }
 .btn-stroke.button-red {
-	color: $semantic-red !important;
-	border-color: $semantic-red !important;
+	color: $error !important;
+	border-color: $error !important;
 
 	&:hover {
-		background-color: $semantic-red !important;
+		background-color: $error !important;
 	}
 }
 .btn-stroke.button-yellow {
-	color: $semantic-yellow !important;
-	border-color: $semantic-yellow !important;
+	color: $warning !important;
+	border-color: $warning !important;
 
 	&:hover {
-		background-color: $semantic-yellow !important;
+		background-color: $warning !important;
 	}
 }
 .btn-stroke.button-green {
-	color: $semantic-green !important;
-	border-color: $semantic-green !important;
+	color: $success !important;
+	border-color: $success !important;
 
 	&:hover {
-		background-color: $semantic-green !important;
+		background-color: $success !important;
 	}
 }
 .btn-stroke.button-blue {
-	color: $semantic-blue !important;
-	border-color: $semantic-blue !important;
+	color: $info !important;
+	border-color: $info !important;
 
 	&:hover {
-		background-color: $semantic-blue !important;
+		background-color: $info !important;
 	}
 }
 
 .btn-outline.button-accent {
-	color: $accent !important;
+	color: $accent_1 !important;
 
 	&:hover {
-		color: $accent !important;
+		color: $accent_1 !important;
 	}
 }
 .btn-outline.button-primary {
@@ -197,38 +197,38 @@
 	}
 }
 .btn-outline.button-grey {
-	color: $grey-2 !important;
+	color: $grey_2 !important;
 
 	&:hover {
-		color: $grey-2 !important;
+		color: $grey_2 !important;
 	}
 }
 .btn-outline.button-red {
-	color: $semantic-red !important;
+	color: $error !important;
 
 	&:hover {
-		color: $semantic-red !important;
+		color: $error !important;
 	}
 }
 .btn-outline.button-yellow {
-	color: $semantic-yellow !important;
+	color: $warning !important;
 
 	&:hover {
-		color: $semantic-yellow !important;
+		color: $warning !important;
 	}
 }
 .btn-outline.button-green {
-	color: $semantic-green !important;
+	color: $success !important;
 
 	&:hover {
-		color: $semantic-green !important;
+		color: $success !important;
 	}
 }
 .btn-outline.button-blue {
-	color: $semantic-blue !important;
+	color: $info !important;
 
 	&:hover {
-		color: $semantic-blue !important;
+		color: $info !important;
 	}
 }
 /* END BUTTONS */
@@ -261,7 +261,7 @@
 
 /* HEADER APP */
 .header {
-  	background-color: $neutral;
+  	background-color: $white;
 
   	.right {
     	.links {
@@ -292,15 +292,15 @@
 		            	}
 
 		            	&.active {
-		              		background-color: transparentize($accent, 0.9);
-		              		color: $accent;
-		              		border-left-color: $accent;
+		              		background-color: transparentize($accent_1, 0.9);
+		              		color: $accent_1;
+		              		border-left-color: $accent_1;
 		            	}
 		          	}
 		        }
 
 		        &.show .dropdown-toggle {
-		          border: 1px solid transparentize($accent, 0.3);
+		          border: 1px solid transparentize($accent_1, 0.3);
 		        }
 	      	}
     	}
@@ -310,18 +310,18 @@
 	        	li {
 		          	a {
 		            	font-family: $principal-font-medium;
-		            	color: $grey-2;
+		            	color: $grey_2;
 
 		            	&::before {
-		              	background-color: $grey-2;
+		              	background-color: $grey_2;
 		            	}
 		          	}
 
 		          	&:first-of-type a {
-		            	color: $accent;
+		            	color: $accent_1;
 
 		            	&::before {
-		              		background-color: $accent;
+		              		background-color: $accent_1;
 		            	}
 		          	}
 	        	}
@@ -330,7 +330,7 @@
 	      	.topMenuDropdown {
         		.dropdown-toggle {
 		          	&:hover {
-		            	background-color: $grey-4;
+		            	background-color: $grey_3;
 		          	}
 	        	}	
 
@@ -345,9 +345,9 @@
 		            	}
 
 		            	&.active {
-		              		background-color: transparentize($accent, 0.9);
-		              		color: $accent;
-		              		border-left-color: $accent;
+		              		background-color: transparentize($accent_1, 0.9);
+		              		color: $accent_1;
+		              		border-left-color: $accent_1;
 	            		}
 	          		}
 	        	}
@@ -392,17 +392,17 @@
 
   span {
     /*font-family: avenir-heavy;*/
-    color: $accent;
+    color: $accent_1;
   }
 
   label {
     font-family: $principal-font-regular;
-    color: $grey-1;
+    color: $grey_1;
   }
 }
 
 .panel-simple-color {
-  background-color: $neutral;
+  background-color: $white;
 
   span {
     /*font-family: avenir-heavy;*/
@@ -411,25 +411,25 @@
 
   label {
     font-family: $principal-font-regular;
-    color: $grey-1;
+    color: $grey_1;
   }
 
   &.accent {
-    border-left-color: $accent;
+    border-left-color: $accent_1;
   }
   &.red {
-    border-left-color: $semantic-red;
+    border-left-color: $error;
   }
   &.yellow {
-    border-left-color: $semantic-yellow;
+    border-left-color: $warning;
   }
   &.green {
-    border-left-color: $semantic-green;
+    border-left-color: $success;
   }
 }
 
 .panel-info {
-  background-color: $neutral;
+  background-color: $white;
 
   label {
     font-family: $principal-font-semibold;
@@ -441,18 +441,18 @@
   }
 
   i {
-    background-color: $accent;
-    color: $neutral;
+    background-color: $accent_1;
+    color: $white;
   }
 }
 
 .panel-button {
-  border-left-color: $accent;
+  border-left-color: $accent_1;
   background-color: transparentize($primary, 0.94);
 
   label {
     font-family: $principal-font-bold;
-    color: $grey-1;
+    color: $grey_1;
   }
 }
 /* END PANELS */
@@ -460,7 +460,7 @@
 
 /* SIDEBAR MENU */
 .sidebar {
-  	background-color: $neutral;
+  	background-color: $white;
 
   	.main-menu {
     	li {
@@ -470,12 +470,12 @@
       		}
 
       		&.active {
-        		background-color: transparentize($accent, 0.9);
+        		background-color: transparentize($accent_1, 0.9);
         		&::before {
-          			background-color: $accent;
+          			background-color: $accent_1;
         		}
         		a {
-          			color: $accent;
+          			color: $accent_1;
         		}
       		}
     	}
@@ -491,10 +491,10 @@
 	      	color: $primary;
 	      
 	      	&:focus {
-	        	color: $accent;
-	        	background-color: transparentize($accent, 0.9);
+	        	color: $accent_1;
+	        	background-color: transparentize($accent_1, 0.9);
 	        	&::before {
-	          background-color: $accent;
+	          background-color: $accent_1;
 	        	}
 	      	}
 	    }
@@ -506,23 +506,23 @@
 
 /* SWITCHER TABS */
 .switcher-tabs {
-	background-color: $neutral;
+	background-color: $white;
   .tab {
     label {
-      border-color: $accent;
+      border-color: $accent_1;
       font-family: $principal-font-bold;
       color: transparentize($primary, 0.5);
     }
 
     .content {
-      background-color: $neutral;
+      background-color: $white;
     }
   }
 }
 
 .checkboxtab:checked ~ label {
-  background-color: $accent;
-  color: $neutral;
+  background-color: $accent_1;
+  color: $white;
   border-color: transparent;
 }
 /* END SWITCHER TABS */
