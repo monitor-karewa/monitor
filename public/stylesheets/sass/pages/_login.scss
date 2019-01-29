@@ -1,0 +1,176 @@
+.simple-login {
+  height: 100vh;
+  min-height: 650px;
+  .left-side, .right-side {
+    float: left;
+    height: 100%;
+  }
+  .left-side {
+    width: 60%;
+    position:relative;
+    .logo {
+      position: absolute;
+      padding: 45px 70px;
+      img {
+        //filter: brightness(0) invert(1);
+        height: 70px;
+        width: auto;
+      }
+    }
+    .info {
+      z-index: 1;
+      position: absolute;
+      bottom: 0;
+      padding: 0px 70px;
+      padding-bottom: 100px;
+      .title {
+        margin-bottom: 25px;
+        position: relative;
+        h1 {
+          padding-left: 25px;
+          font-size: 40px;
+          font-weight: 500;
+          font-style: normal;
+          font-stretch: normal;
+          line-height: 1.15;
+          letter-spacing: normal;
+          color: white;
+          margin: 0;
+        }
+        &::before {
+          content: "";
+          display: block;
+          height: 100%;
+          background-color: rgb(25, 186, 189);
+          width: 5px;
+          border-radius: 2px;
+          top: 0;
+          position: absolute;
+        }
+      }
+      p {
+        font-size: 16px;
+        font-weight: normal;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.88;
+        letter-spacing: normal;
+        color: rgb(255, 255, 255);
+      }
+      .link {
+        margin-top: 20px;
+        a {
+          color:rgb(25, 186, 189);
+          font-size: 14px;
+          font-weight: bold;
+          font-style: normal;
+          font-stretch: normal;
+          line-height: 1.43;
+          letter-spacing: normal;
+          text-decoration: none;
+          transition: .5s;
+          &:hover {
+            color: rgb(255, 255, 255);
+          }
+        }
+
+      }
+    }
+    .img-background {
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      position:absolute;
+      img {
+        display: block;
+        width: 100vw;
+        height: 100%;
+        object-fit: cover;
+        transition: 1s;
+        transform: translateX(-5%) scale(1.1);
+        will-change: transform;
+        animation-duration: 7s;
+        // animation-name: background-image-animation;
+        animation-iteration-count: infinite;
+        animation-direction: alternate;
+        animation-timing-function: linear;
+        background-size: cover;
+        -webkit-filter: grayscale(100%);
+        filter: grayscale(100%)
+      }
+    }
+    .overlay-login {
+      background-image: linear-gradient(to bottom, rgba(69, 78, 123, 0.7), rgb(40, 46, 71));
+      position: absolute;
+      height: 100%;
+      width: 100%;
+    }
+
+    .login-footer {
+      z-index: 1;
+      position: absolute;
+      bottom: 30px;
+      padding: 0px 70px;
+      opacity: 0.5;
+      font-size: 12px;
+      font-weight: 600;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: 1.67;
+      letter-spacing: normal;
+      color: rgb(255, 255, 255);
+    }
+  }
+  .right-side {
+    width: 40%;
+    padding: 65px 50px;
+    background-color: rgba(69, 78, 123, 0.05);
+    .principal-title {
+      font-size: 24px;
+      font-weight: bold;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: 1.17;
+      letter-spacing: normal;
+      color: #19babd;
+      margin-bottom: 25px;
+    }
+    .info {
+      font-size: 14px;
+      font-weight: normal;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: 2;
+      letter-spacing: normal;
+      color: #454e7b;
+    }
+  }
+
+}
+
+/* Animación del background */
+@keyframes background-image-animation {
+  0% {
+    transform: translateX(-5%) scale(1.1);
+  }
+  100% {
+    transform: translateX(5%) scale(1.1);
+  }
+}
+@-webkit-keyframes background-image-animation {
+  0% {
+    transform: translateX(-5%) scale(1.1);
+  }
+  100% {
+    transform: translateX(5%) scale(1.1);
+  }
+}
+@-moz-keyframes background-image-animation {
+  0% {
+    transform: translateX(-5%) scale(1.1);
+  }
+  100% {
+    transform: translateX(5%) scale(1.1);
+  }
+}
