@@ -46,6 +46,10 @@ const config = {
                     maxAge: null
                 }
             }
+        },
+        behavior: {
+            logLevel: 'info',
+            i18nAutoReload: false
         }
     },
     dev: {
@@ -88,6 +92,10 @@ const config = {
                     maxAge: null
                 }
             }
+        },
+        behavior: {
+            logLevel: 'info',
+            i18nAutoReload: true
         }
     }
 };

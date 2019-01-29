@@ -1,4 +1,5 @@
 const passport = require('passport');
+const logger = require('./../components/logger').instance;
 
 /**
  * Middleware to check if user has logged in. If no session is detected, the user is redirected to '/login'.
@@ -69,4 +70,36 @@ exports.doLogin = (req, res, next) => {
             });
         }
     })(req, res, next);
+};
+
+/**
+ * Valida si un usuario cuenta con el permiso indicado
+ * @param user {User} usuario a validar
+ * @param permission {string} clave del permiso
+ * @param kind {string} tipo del permiso
+ */
+const hasPermission = (user, permission, kind) => {
+    logger.warn(null, null, 'security.controller#hasPermission', 'All permissions are currently allowed.');
+    return true;
+};
+
+exports.hasPermission = hasPermission;
+
+/**
+ * Devuelve un middleware para validar que el usuario actual cuenta con el permiso indicado.
+ * @param permission {string} clave del permiso
+ * @param kind {string} tipo del permiso
+ * @returns {function(*, *, *)} middleware para validar el permiso
+ */
+exports.validatePermission = (permission, kind) => {
+    //permission: 
+    return (req, res, next) => {
+        if (hasPermission(req.user, permission, kind)) {
+            return next();
+        } else {
+            let error = new Error(res.__('access.error.denied'));
+            error.status = 403;
+            return next(error);
+        }
+    }
 };

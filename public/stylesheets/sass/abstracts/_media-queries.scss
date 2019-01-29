@@ -36,9 +36,14 @@
 		}
 	}
 }
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 767px) {
 	.container-footer {
 		
+	}
+	.container-panel-info {
+		> div {
+			max-width: 100% !important;
+		}
 	}
 
 	.header {
@@ -68,12 +73,32 @@
 		padding-right: 15px !important;
 
 		.container-footer {
-			padding-left: 15px !important;
-			padding-right: 15px !important;
+			padding: 5px 15px 10px !important;
+			display: block;
+			grid-template-columns: inherit;
+			text-align: center;
+
+			> div {
+				display: block;
+				&:nth-child(2) {
+					margin-bottom: 5px;
+				}
+				&:nth-child(3) {
+					text-align: center;
+				}
+			}
 		}
 	}
 }
 @media screen and (max-width: 991px) {
+	.container-panel-info {
+		display: flex;
+		flex-wrap: wrap;
+
+		> div {
+			max-width: 25%;
+		}
+	}
 	.simple-login {
 		.left-side {
 			width: 100%;
@@ -127,12 +152,12 @@
 	}
 
 	#main #content {
-		padding-left: 30px !important;
-		padding-right: 30px !important;
+		padding-left: 30px;
+		padding-right: 30px;
 
 		.container-footer {
-			padding-left: 30px !important;
-			padding-right: 30px !important;
+			padding-left: 30px;
+			padding-right: 30px;
 		}
 	}
 
