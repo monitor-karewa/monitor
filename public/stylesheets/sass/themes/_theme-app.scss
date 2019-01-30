@@ -392,6 +392,48 @@
 /* END MODAL ALERT */
 
 
+/* MODAL NORMAL */
+.modal {
+  .modal-header {
+    .close-modal {
+      color: $info_text;
+    }
+
+    .modal-title {
+      font-family: $principal-font-semibold;
+        color: $primary;
+
+        strong {
+          font-family: $principal-font-bold;
+        }
+    }
+
+    .modal-subtitle {
+      font-family: $principal-font-semibold;
+      color: $plain_text;
+    }
+  }
+
+  .modal-body {
+    .content-img {
+      label {
+        font-family: $principal-font-bold;
+        color: $primary;
+      }
+      p {
+        font-family: $principal-font-regular;
+        color: $plain_text;
+
+        strong {
+          font-family: $principal-font-bold;
+        }
+      }
+    }
+  }
+}
+/* END MODAL NORMAL */
+
+
 /* PANELS */
 .panel-simple {
   background-color: transparentize($primary, 0.94);

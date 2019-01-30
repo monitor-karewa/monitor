@@ -710,6 +710,21 @@
                     <div class="row m-b-50">
                         <h1 class="f-20 m-t-0 m-b-10 col-12">Modal Simple</h1>
                         <div class="col-12"></div>
+                        <div class="col-6 col-md-3">
+                            <button type="button" class="btn-raised button-accent" data-toggle="modal" data-target="#modalSimple">
+                              Modal Simple
+                            </button>
+                        </div>  
+                        <div class="col-6 col-md-3">
+                            <button type="button" class="btn-raised button-accent" data-toggle="modal" data-target="#modalImage">
+                              Modal w/imagen 
+                            </button>
+                        </div> 
+                        <div class="col-6 col-md-3">
+                            <button type="button" class="btn-raised button-accent" data-toggle="modal" data-target="#modalAutoDismiss">
+                              Modal auto dismiss
+                            </button>
+                        </div>  
                     </div>
                     <!-- END MODAL SIMPLE -->
 
@@ -1025,6 +1040,61 @@
                         <div class="modal-footer">
                             <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar</button>
                             <button type="button" class="btn-raised button-error m-l-15">Eliminar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL SIMPLE NO CONTENT -->
+            <div class="modal fade" id="modalSimple" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <a class="close-modal" data-dismiss="modal"><i class="zmdi zmdi-close"></i></a>
+                            <h1 class="modal-title">Parece ser que ocurrió <strong>algo inesperado</strong></h1>
+                            <label class="modal-subtitle">No te preocupes, nuestro equipo sera notificado. Solo ayudanos diciendo que fue lo que ocurrió.</label>
+                        </div>
+                        <div class="modal-body">
+                            INSERTAR COMPONENTES AQUÍ
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn-raised button-accent m-l-15">Continuar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL SIMPLE NO CONTENT -->
+            <div class="modal fade" id="modalImage" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <a class="close-modal" data-dismiss="modal"><i class="zmdi zmdi-close"></i></a>
+                        </div>
+                        <div class="modal-body">
+                            <div class="content-img">
+                                <img class="img-fluid" src="../images/Illustrations/send-message.svg" alt="" />
+                                <label>¡Tu mensaje ha sido enviado!</label>
+                                <p>¡Gracias! por ayudarnos a reportar los problemas ocurridos en la plataforma y asi poder ofrecerte un servicio de calidad. En breve responderemos tu mensaje.</p>
+                            </div>
+                        </div>
+                        <div class="modal-footer justify-content-center">
+                            <button type="button" class="btn-raised button-accent" data-dismiss="modal">Cancelar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODAL AUTO DISMISS-->
+            <div class="modal fade" id="modalAutoDismiss" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-body">
+                            <div class="content-img">
+                                <img class="img-fluid" src="../images/Illustrations/files-download.svg" alt="" />
+                                <p>Tu documento se descargará en un momento...</p>
+                            </div>
                         </div>
                     </div>
                 </div>
