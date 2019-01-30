@@ -293,7 +293,7 @@
                             <div class="card-img-corner">
                                 <h1>Configuración</h1>
                                 <p>Aquí puedes configurar tu logo, colores, descripción de tu organización…</p>
-                                <a href="#" class="link-to" tabindex="">Configurar aquí</a> 
+                                <a href="#" class="link-to" tabindex="">Configurar aquí</a>
                                 <img class="img-fluid" src="../images/Cards/corner-setting.svg" alt="" />
                             </div>
                         </div>
@@ -301,7 +301,7 @@
                             <div class="card-img-corner">
                                 <h1>Contratos</h1>
                                 <p>Aquí puedes crear nuevos contratos o editarlos …</p>
-                                <a href="#" class="link-to" tabindex="">Configurar aquí</a> 
+                                <a href="#" class="link-to" tabindex="">Configurar aquí</a>
                                 <img class="img-fluid" src="../images/Cards/corner-document.svg" alt="" />
                             </div>
                         </div>
@@ -309,7 +309,7 @@
                             <div class="card-img-corner">
                                 <h1>Registra tus proveedores</h1>
                                 <p>Aquí puedes registrar tus nuevos  proveedores o editarlos…</p>
-                                <a href="#" class="link-to" tabindex="">Configurar aquí</a> 
+                                <a href="#" class="link-to" tabindex="">Configurar aquí</a>
                                 <img class="img-fluid" src="../images/Cards/corner-account.svg" alt="" />
                             </div>
                         </div>
@@ -612,7 +612,68 @@
                                     <span class="error-span">Error message</span>
                                 </div>
 
+                                <br>
+                                <p>
+                                  <strong>Selects</strong>
+                                  <br>
+                                    Select <strong> ".basic-select". </strong>
+                                    <br>
+                                    If the input has an error add this class:
+                                    <br>
+                                    <strong class="c-semantic-red">.has-error</strong>
+                                    <br>
+                                    This is a basic select with <span class="c-accent">data-live-search="true"</span>, change the value to false if you don't want the search field. <br>
+                                    If you don't want a placeholder remove the <span class="c-accent">title attribute</span> of the select. <br>
+                                    For a subtitle inside the select add the <span class="c-accent">optgroup</span> tag and add the text to the <span class="c-accent">label attribute</span>. <br>
+                                    Remove the <span class="c-accent">label tag</span> if you don't want a title for the select. <br>
+                                    You can add the <span class="c-accent">disabled attribute</span> to an option tag or to an optgroup tag. <br>
+                                    Add an option tag with <span class="c-accent">data-divider="true"</span> for a divider between two options.
+                                </p>
+
+                                <div class="form-group fg-float basic-select">
+                                  <div class="fg-line">
+                                    <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Search placeholder" title="Select placeholder">
+                                      <optgroup label="Subtitle">
+                                        <option disabled>Text 1 (disabled option)</option>
+                                        <option>Text 2</option>
+                                        <option>Text 3</option>
+                                      </optgroup>
+                                      <optgroup label="Subtitle 2 (group disabled)" disabled>
+                                        <option>Text 1.1</option>
+                                        <option>Text 2.1</option>
+                                        <option data-divider="true"></option>
+                                        <option>Text 3.1</option>
+                                      </optgroup>
+                                    </select>
+                                    <label class="fg-label">Select label</label>
+                                  </div>
+                                </div>
+
+
+                                <div class="form-group fg-float basic-select has-error">
+                                  <div class="fg-line">
+                                    <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Search placeholder" title="Select placeholder">
+                                      <optgroup label="Subtitle">
+                                        <option disabled>Text 1 (disabled option)</option>
+                                        <option>Text 2</option>
+                                        <option>Text 3</option>
+                                      </optgroup>
+                                      <optgroup label="Subtitle 2 (group disabled)" disabled>
+                                        <option>Text 1.1</option>
+                                        <option>Text 2.1</option>
+                                        <option data-divider="true"></option>
+                                        <option>Text 3.1</option>
+                                      </optgroup>
+                                    </select>
+                                    <label class="fg-label">Select label</label>
+                                  </div>
+                                  <span class="error-span">Error message</span>
+                                </div>
+
+
+
                             </div>
+
 
                             <p class="">
                                 <strong>Switches/Checkbox/Radio</strong>
@@ -682,12 +743,12 @@
                             <button type="button" class="btn-raised button-accent" data-toggle="modal" data-target="#modalAlertDefault">
                               Modal Alert Default
                             </button>
-                        </div>  
+                        </div>
                         <div class="col-6 col-md-3">
                             <button type="button" class="btn-raised button-info" data-toggle="modal" data-target="#modalAlertInfo">
                               Modal Alert Info
                             </button>
-                        </div>      
+                        </div>
                         <div class="col-6 col-md-3">
                             <button type="button" class="btn-raised button-success" data-toggle="modal" data-target="#modalAlertSuccess">
                               Modal Alert Success
@@ -702,7 +763,7 @@
                              <button type="button" class="btn-raised button-error" data-toggle="modal" data-target="#modalAlertDanger">
                               Modal Alert Danger
                             </button>
-                        </div>  
+                        </div>
                     </div>
                     <!-- END MODAL ALERTS -->
 
@@ -820,8 +881,8 @@
                             </div>
                         </div>
 
-                        <div class="container-panel-info m-b-30">   
-                            <div> 
+                        <div class="container-panel-info m-b-30">
+                            <div>
                                 <div class="panel-info">
                                     <div class="w-70">
                                         <label>Proveedores</label>
@@ -831,39 +892,6 @@
                                         <i class="zmdi zmdi-eye"></i>
                                     </div>
                                 </div>
-                            </div> 
-                            <div>   
-                                <div class="panel-info">
-                                    <div class="w-70">
-                                        <label>Proveedores</label>
-                                        <span>20,876</span>
-                                    </div>
-                                    <div class="w-30">
-                                        <i class="zmdi zmdi-eye"></i>
-                                    </div>
-                                </div>  
-                            </div> 
-                            <div>
-                                <div class="panel-info">
-                                    <div class="w-70">
-                                        <label>Proveedores</label>
-                                        <span>20,876</span>
-                                    </div>
-                                    <div class="w-30">
-                                        <i class="zmdi zmdi-eye"></i>
-                                    </div>
-                                </div>   
-                            </div> 
-                            <div>
-                                <div class="panel-info">
-                                    <div class="w-70">
-                                        <label>Proveedores</label>
-                                        <span>20,876</span>
-                                    </div>
-                                    <div class="w-30">
-                                        <i class="zmdi zmdi-eye"></i>
-                                    </div>
-                                </div>  
                             </div>
                             <div>
                                 <div class="panel-info">
@@ -874,9 +902,42 @@
                                     <div class="w-30">
                                         <i class="zmdi zmdi-eye"></i>
                                     </div>
-                                </div> 
+                                </div>
                             </div>
-                        </div>    
+                            <div>
+                                <div class="panel-info">
+                                    <div class="w-70">
+                                        <label>Proveedores</label>
+                                        <span>20,876</span>
+                                    </div>
+                                    <div class="w-30">
+                                        <i class="zmdi zmdi-eye"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="panel-info">
+                                    <div class="w-70">
+                                        <label>Proveedores</label>
+                                        <span>20,876</span>
+                                    </div>
+                                    <div class="w-30">
+                                        <i class="zmdi zmdi-eye"></i>
+                                    </div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="panel-info">
+                                    <div class="w-70">
+                                        <label>Proveedores</label>
+                                        <span>20,876</span>
+                                    </div>
+                                    <div class="w-30">
+                                        <i class="zmdi zmdi-eye"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                     <!-- END PANELS -->
 
