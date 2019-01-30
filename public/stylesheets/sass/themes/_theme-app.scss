@@ -91,6 +91,141 @@
 /* END BUTTONS */
 
 
+/* CARDS */
+.card {
+  background-color: $white;
+}
+
+.card-img-corner {
+  background-color: $white;
+
+  h1 {
+    font-family: $principal-font-bold;
+    color: $primary;
+  }
+
+  p {
+    font-family: $principal-font-semibold;
+    color: $plain_text;
+  }
+
+  .link-to {
+    font-family: $principal-font-bold;
+    color: $accent;
+  }
+}
+
+.card-info {
+  background-color: $white;
+
+  p {
+    font-family: $principal-font-medium;
+    color: $primary;
+  }
+
+  .link-to {
+    font-family: $principal-font-medium;
+    color: $accent; 
+  }
+}
+
+.card-background {
+  background-color: $cards;
+
+  p {
+    font-family: $principal-font-semibold;
+    color: $primary;
+  }
+  > div {
+    span {
+      label {
+        /*font-family: Avenir-heavy;*/
+        color: $accent;
+      }
+      small {
+        font-family: $principal-font-medium;
+        color: $plain_text;
+      }
+    }
+
+    .btn-stroke {
+      border-color: $grey_2;
+    }
+  }
+}
+
+.card-compare {
+  background-color: $cards;
+  > small {
+    font-family: $principal-font-regular;
+    color: $plain_text;
+  }
+  .btn-stroke {
+    border-color: $grey_2;
+  }
+}
+
+.card-image-large {
+  background-color: $cards;
+  > div {
+    p {
+      font-family: $principal-font-semibold;
+      color: $plain_text;
+    }
+    span {
+      small {
+        font-family: $principal-font-medium;
+        color: $grey_1;
+      }
+      .btn-stroke {
+        border-color: $grey_2;
+      }
+    }
+  }
+}
+
+.card-only-text {
+  background-color: transparentize($cards, 0.2);
+
+  h1 {
+    font-family: $principal-font-semibold;
+    color: $plain_text;
+  }
+  span {
+    small {
+      font-family: $principal-font-medium;
+      color: $grey_1;
+    }
+
+    .btn-stroke {
+      border-color: $grey_2;
+    }
+  }
+}
+
+.card-map-info {
+  background-color: $cards;
+
+  .info {
+    h1 {
+      font-family: $principal-font-semibold;
+      color: $plain_text;
+    }
+    ul {
+      li {
+        font-family: $principal-font-regular;
+        color: $plain_text;
+
+        i {
+          color: $info;
+        }
+      }
+    }
+  }
+}
+/* END CARDS */
+
+
 .container-footer {
   	background-color: $background;
 
