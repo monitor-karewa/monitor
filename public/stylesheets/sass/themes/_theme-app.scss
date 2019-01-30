@@ -32,6 +32,7 @@
 /* FIN ALERTS */
 
 
+/* BADGE */
 .badge {
   font-family: $principal-font-medium;
   color: $white;
@@ -50,6 +51,7 @@
     background-color: $info;
   }
 }
+/*END BADGE*/
 
 
 /* BUTTONS */
@@ -211,6 +213,20 @@
   	}
 }
 /* END HEADER APP */
+
+
+.logo-full {
+  > div {
+    small {
+      font-family: $principal-font-medium;
+      color: $primary;
+    }
+    label {
+      font-family: $principal-font-semibold;
+      color: $accent;
+    }
+  }
+}
 
 
 /* MAIN CONTAINER */

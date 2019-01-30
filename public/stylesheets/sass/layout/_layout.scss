@@ -664,6 +664,31 @@ a {
 /* END HEADER APP */
 
 
+.logo-full {
+  display: flex;
+  align-items: center;
+  > img {
+    max-height: 50px;
+    margin-right: 16px;
+  }
+  > div {
+    small {
+      font-size: 12px;
+      font-weight: 500;
+      line-height: 1.5;
+      display: block;
+    }
+    label {
+      font-size: 20px;
+      font-weight: 700;
+      line-height: 1;
+      display: block;
+      margin-bottom: 0;
+      text-transform: uppercase;
+    }
+  }
+}
+
 /* MAIN CONTAINER */
 #main #content {
   position: fixed;
@@ -846,8 +871,8 @@ a {
       align-items: center;
       justify-content: center;
       position: absolute;
-      background-color: #19babd;
-      color: #fff;
+      background-color: transparent;
+      color: #19babd;
       font-size: 20px;
       top: 0;
       right: 0;
@@ -856,7 +881,7 @@ a {
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      box-shadow: 2px 0 10px 0 rgba(56,73,99,.2);
+      /*box-shadow: 2px 0 10px 0 rgba(56,73,99,.2);*/
 
       &:hover {
         animation: jello 1s ease-in-out;
