@@ -20,8 +20,6 @@
         <div class="d-none">
             <div class="simple-login">
                 <div class="left-side">
-
-
                     <div class="img-background">
                         <img class="" src="https://images.unsplash.com/photo-1529044463920-a6a976199645?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2191&q=80" alt="">
                     </div>
@@ -120,6 +118,7 @@
 
             </div>
         </div>
+
         <header id="header" class="header clearfix">
             <div class="left col-md-3 col-4">
                 <!-- When admin == true, SHOW this -->
@@ -137,7 +136,7 @@
             <div class="right col-md-9 col-8">
                 <!-- When admin == true, SHOW this -->
                 <div class="links">
-                    <a href="" class="btn-raised xs waves-effect hideresp"><i class="zmdi zmdi-plus"></i> Cargar datos</a>
+                    <a href="" class="btn-raised xs button-accent hideresp"><i class="zmdi zmdi-plus"></i> Cargar datos</a>
                     <a href="" class="btn-circle-icon hideresp m-l-30"><i class="zmdi zmdi-notifications-none"></i></a>
                     <a href="" class="btn-circle-icon hideresp m-r-30"><i class="zmdi zmdi-settings"></i></a>
                     <div class="topMenuDropdown dropdown">
@@ -238,13 +237,13 @@
                         <p class="col-12">
                             To change the type of an alert add the next classes:
                             <br>
-                            <strong>.alert-info</strong>
+                            <strong class="c-info">.alert-info</strong>
                             <br>
-                            <strong>.alert-danger</strong>
+                            <strong class="c-error">.alert-danger</strong>
                             <br>
-                            <strong>.alert-success</strong>
+                            <strong class="c-success">.alert-success</strong>
                             <br>
-                            <strong>.alert-warning</strong>
+                            <strong class="c-warning">.alert-warning</strong>
                         </p>
 
                         <div class="col-12">
@@ -283,13 +282,13 @@
                         <p class="col-12">
                             To change badge's color add one of the next classes:
                             <br>
-                            <strong class="c-semantic-green">.badge-green</strong>
+                            <strong class="c-success">.badge-green</strong>
                             <br>
-                            <strong class="c-semantic-red">.badge-red</strong>
+                            <strong class="c-error">.badge-red</strong>
                             <br>
-                            <strong class="c-semantic-yellow">.badge-yellow</strong>
+                            <strong class="c-warning">.badge-yellow</strong>
                             <br>
-                            <strong class="c-semantic-blue">.badge-blue</strong>
+                            <strong class="c-info">.badge-blue</strong>
                         </p>
                         <div class="col-12 d-flex">
                             <div class="badge badge-green">Lorem Ipsum</div>
@@ -307,15 +306,13 @@
                             <br>
                             <strong class="c-primary">.button-primary</strong>
                             <br>
-                            <strong class="c-grey-4">.button-grey</strong>
+                            <strong class="c-error">.button-error</strong>
                             <br>
-                            <strong class="c-semantic-red">.button-red</strong>
+                            <strong class="c-warning">.button-warning</strong>
                             <br>
-                            <strong class="c-semantic-yellow">.button-yellow</strong>
+                            <strong class="c-success">.button-success</strong>
                             <br>
-                            <strong class="c-semantic-green">.button-green</strong>
-                            <br>
-                            <strong class="c-semantic-blue">.button-blue</strong>
+                            <strong class="c-info">.button-info</strong>
                         </p>
                         <div class="col-12 col-md-6 m-b-30">
                             <p>
@@ -323,7 +320,7 @@
                                 <br>
                                 Sizes: class:"xs", no class: normal, class:"lg". Remove icon if no need.
                             </p>
-                            <a href="" class="btn-raised"><i class="zmdi zmdi-plus"></i> Lorem Ipsum</a>
+                            <a href="" class="btn-raised button-accent"><i class="zmdi zmdi-plus"></i> Lorem Ipsum</a>
                         </div>
                         <div class="col-12 col-md-6 m-b-30">
                             <p>
@@ -331,7 +328,7 @@
                                 <br>
                                 Sizes: class:"xs", no class: normal, class:"lg". Remove icon if no need.
                             </p>
-                            <a href="" class="btn-stroke"><i class="zmdi zmdi-plus"></i> Lorem Ipsum</a>
+                            <a href="" class="btn-stroke button-accent"><i class="zmdi zmdi-plus"></i> Lorem Ipsum</a>
                         </div>
                         <div class="col-12 col-md-6 m-b-30">
                             <p>
@@ -347,7 +344,7 @@
                                 <br>
                                 Sizes: class:"xs", no class: normal, class:"lg". Remove icon if no need.
                             </p>
-                            <a href="" class="btn-raised btn-loading">
+                            <a href="" class="btn-raised button-accent btn-loading">
                                 <div class="m-r-10">
                                     <svg class="spinner" width="17px" height="17px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
                                        <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
@@ -366,13 +363,180 @@
                         </div>
                     </div>
                     <div class="row m-b-50">
-                        <h1 class="f-20 m-t-0 m-b-10 col-12">Cards</h1>
-                        <div class="col-12">
-                            <p class="">Empty Card</p>
-                            <div class="card">
-                                
+                        <h1 class="col-12 f-20 m-t-0 m-b-10 col-12">Cards</h1>
+                        <div class="col-12 m-b-30">
+                            <p class="">Default Card</p>
+                            <div class="card">Insertar cosas aquí</div>
+                        </div>
+
+                        <p class="col-12">Card image on corner</p>
+                        <div class="col-12 col-md-4">
+                            <div class="card-img-corner">
+                                <h1>Configuración</h1>
+                                <p>Aquí puedes configurar tu logo, colores, descripción de tu organización…</p>
+                                <a href="#" class="link-to" tabindex="">Configurar aquí</a> 
+                                <img class="img-fluid" src="../images/Cards/corner-setting.svg" alt="" />
                             </div>
                         </div>
+                        <div class="col-12 col-md-4">
+                            <div class="card-img-corner">
+                                <h1>Contratos</h1>
+                                <p>Aquí puedes crear nuevos contratos o editarlos …</p>
+                                <a href="#" class="link-to" tabindex="">Configurar aquí</a> 
+                                <img class="img-fluid" src="../images/Cards/corner-document.svg" alt="" />
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="card-img-corner">
+                                <h1>Registra tus proveedores</h1>
+                                <p>Aquí puedes registrar tus nuevos  proveedores o editarlos…</p>
+                                <a href="#" class="link-to" tabindex="">Configurar aquí</a> 
+                                <img class="img-fluid" src="../images/Cards/corner-account.svg" alt="" />
+                            </div>
+                        </div>
+
+                        <p class="col-12">Card w/image on side</p>
+                        <div class="col-12 col-md-6">
+                            <div class="card-info">
+                                <img class="img-fluid" src="../images/Cards/home-vector.svg" alt="" />
+                                <div>
+                                    <p>Consulta la lista de todos los proveedores.</p>
+                                    <a href="" class="link-to" tabindex="">Ver Proveedores <i class="zmdi zmdi-chevron-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="card-info">
+                                <img class="img-fluid" src="../images/Cards/contracts-vector.svg" alt="" />
+                                <div>
+                                    <p>Consulta la lista de todos los contratos.</p>
+                                    <a href="" class="link-to" tabindex="">Ver Contratos <i class="zmdi zmdi-chevron-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="card-info">
+                                <img class="img-fluid" src="../images/Cards/providers-vector.svg" alt="" />
+                                <div>
+                                    <p>Conoce el índice de corrupción del monitor.</p>
+                                    <a href="" class="link-to" tabindex="">Ver Índice <i class="zmdi zmdi-chevron-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6">
+                            <div class="card-info">
+                                <img class="img-fluid" src="../images/Cards/compare-vector.svg" alt="" />
+                                <div>
+                                    <p>Compara los datos escenciales con otro monitor.</p>
+                                    <a href="" class="link-to" tabindex="">Comparar <i class="zmdi zmdi-chevron-right"></i></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="col-12">Card w/background</p>
+                        <div class="col-12 col-md-4">
+                            <div class="card-background">
+                                <p>OBRA CIVIL PARA LA IMPLEMENTACIÓN DE LA PLATAFORMA ESCUDO CHIHUAHUA EN LA CIUDAD DE…</p>
+                                <div>
+                                    <span>
+                                        <label>$26,327,329.17</label>
+                                        <small>20 de octubre de 2017</small>
+                                    </span>
+                                    <a href="" class="btn-stroke xs button-primary" tabindex="">Ver más</a>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="card-background">
+                                <p>CANALIZACIÓN DE ARROYO MAGALLANES,  DE C. CARMEN SERDAN A C. CAMILO TORRES DE LA COL…</p>
+                                <div>
+                                    <span>
+                                        <label>$1,180,547.00</label>
+                                        <small>20 de octubre de 2017</small>
+                                    </span>
+                                    <a href="" class="btn-stroke xs button-primary" tabindex="">Ver más</a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="col-12">Card Compare</p>
+                        <div class="col-12 col-md-3"></div>
+
+                        <p class="col-12">Card Image on Top</p>
+                        <div class="col-12 col-md-4">
+                            <div class="card-image-large">
+                                <img class="img-fluid" src="../images/Demo/image-default-full.svg" alt="Default" />
+                                <div>
+                                    <p>Generan controlaría social gracias al Monitor Karewa</p>
+                                    <span>
+                                        <small>29 de noviembre de 2017</small>
+                                        <a href="" class="btn-stroke xs button-primary" tabindex="">Ver más</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="card-image-large">
+                                <img class="img-fluid" src="../images/Demo/image-default-full.svg" alt="Default" />
+                                <div>
+                                    <p>Generan controlaría social gracias al Monitor Karewa</p>
+                                    <span>
+                                        <small>29 de noviembre de 2017</small>
+                                        <a href="" class="btn-stroke xs button-primary" tabindex="">Ver más</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-4">
+                            <div class="card-image-large">
+                                <img class="img-fluid" src="../images/Demo/image-default-full.svg" alt="Default" />
+                                <div>
+                                    <p>Generan controlaría social gracias al Monitor Karewa</p>
+                                    <span>
+                                        <small>29 de noviembre de 2017</small>
+                                        <a href="" class="btn-stroke xs button-primary" tabindex="">Ver más</a>
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="col-12">Card Only Text</p>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="card-only-text">
+                                <h1>Excepciones a la Licitación pública de Adquisiciones</h1>
+                                <span>
+                                    <small>29 de noviembre de 2017</small>
+                                    <a href="" class="btn-stroke xs button-primary" tabindex="">Ver más</a>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="card-only-text">
+                                <h1>Excepciones a la Licitación pública de Adquisiciones</h1>
+                                <span>
+                                    <small>29 de noviembre de 2017</small>
+                                    <a href="" class="btn-stroke xs button-primary" tabindex="">Ver más</a>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="card-only-text text-centering">
+                                <h1>Sitio oficial de Karewa</h1>
+                                <span>
+                                    <a href="" class="btn-stroke xs button-primary" tabindex="">Ir al sitio</a>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-6 col-lg-4">
+                            <div class="card-only-text text-centering">
+                                <h1>Gobierno Municipal de Chihuahua</h1>
+                                <span>
+                                    <a href="" class="btn-stroke xs button-primary" tabindex="">Ir al sitio</a>
+                                </span>
+                            </div>
+                        </div>
+
+                        <p class="col-12">Card Map Info</p>
                     </div>
                     <div class="row m-b-50">
                         <h1 class="f-20 m-t-0 m-b-10 col-12">Dropdown</h1>
@@ -484,22 +648,22 @@
                     <div class="row m-b-50">
                         <h1 class="f-20 m-t-0 m-b-10 col-12">Modal Alert</h1>
                         <div class="col-6 col-md-3">
-                            <button type="button" class="btn-raised button-blue" data-toggle="modal" data-target="#modalAlertInfo">
+                            <button type="button" class="btn-raised button-info" data-toggle="modal" data-target="#modalAlertInfo">
                               Modal Alert Info
                             </button>
                         </div>      
                         <div class="col-6 col-md-3">
-                            <button type="button" class="btn-raised button-green" data-toggle="modal" data-target="#modalAlertSuccess">
+                            <button type="button" class="btn-raised button-success" data-toggle="modal" data-target="#modalAlertSuccess">
                               Modal Alert Success
                             </button>
                         </div>
                         <div class="col-6 col-md-3">    
-                             <button type="button" class="btn-raised button-yellow" data-toggle="modal" data-target="#modalAlertWarning">
+                             <button type="button" class="btn-raised button-warning" data-toggle="modal" data-target="#modalAlertWarning">
                               Modal Alert Warning
                             </button>
                         </div>
                         <div class="col-6 col-md-3">    
-                             <button type="button" class="btn-raised button-red" data-toggle="modal" data-target="#modalAlertDanger">
+                             <button type="button" class="btn-raised button-error" data-toggle="modal" data-target="#modalAlertDanger">
                               Modal Alert Danger
                             </button>
                         </div>  
@@ -571,80 +735,80 @@
                         <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                             <div class="panel-button">
                                 <label>Contrato</label>
-                                <button class="btn-raised xs"><i class="zmdi zmdi-download"></i>Descargar documento</button>
+                                <button class="btn-raised xs button-accent"><i class="zmdi zmdi-download"></i>Descargar documento</button>
                             </div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                             <div class="panel-button">
                                 <label>Convocatoria / Invitación</label>
-                                <button class="btn-raised xs"><i class="zmdi zmdi-download"></i>Descargar documento</button>
+                                <small>Documento no disponible</small>
                             </div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                             <div class="panel-button">
                                 <label>Fallo de Junta de Aclaraciones</label>
-                                <button class="btn-raised xs"><i class="zmdi zmdi-download"></i>Descargar documento</button>
+                                <button class="btn-raised xs button-accent"><i class="zmdi zmdi-download"></i>Descargar documento</button>
                             </div>
                         </div>
                         <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                             <div class="panel-button">
                                 <label>Presentación de Propuesta</label>
-                                <button class="btn-raised xs"><i class="zmdi zmdi-download"></i>Descargar documento</button>
+                                <button class="btn-raised xs button-accent"><i class="zmdi zmdi-download"></i>Descargar documento</button>
                             </div>
                         </div>
 
                         <div class="container-panel-info m-b-30">   
                             <div> 
                                 <div class="panel-info">
-                                    <div class="w-80">
+                                    <div class="w-70">
                                         <label>Proveedores</label>
                                         <span>20,876</span>
                                     </div>
-                                    <div class="w-20">
+                                    <div class="w-30">
                                         <i class="zmdi zmdi-eye"></i>
                                     </div>
                                 </div>
                             </div> 
                             <div>   
                                 <div class="panel-info">
-                                    <div class="w-80">
+                                    <div class="w-70">
                                         <label>Proveedores</label>
                                         <span>20,876</span>
                                     </div>
-                                    <div class="w-20">
+                                    <div class="w-30">
                                         <i class="zmdi zmdi-eye"></i>
                                     </div>
                                 </div>  
                             </div> 
                             <div>
                                 <div class="panel-info">
-                                    <div class="w-80">
+                                    <div class="w-70">
                                         <label>Proveedores</label>
                                         <span>20,876</span>
                                     </div>
-                                    <div class="w-20">
+                                    <div class="w-30">
                                         <i class="zmdi zmdi-eye"></i>
                                     </div>
                                 </div>   
                             </div> 
                             <div>
                                 <div class="panel-info">
-                                    <div class="w-80">
+                                    <div class="w-70">
                                         <label>Proveedores</label>
                                         <span>20,876</span>
                                     </div>
-                                    <div class="w-20">
+                                    <div class="w-30">
                                         <i class="zmdi zmdi-eye"></i>
                                     </div>
                                 </div>  
                             </div>
                             <div>
                                 <div class="panel-info">
-                                    <div class="w-80">
+                                    <div class="w-70">
                                         <label>Proveedores</label>
                                         <span>20,876</span>
                                     </div>
-                                    <div class="w-20">
+                                    <div class="w-30">
                                         <i class="zmdi zmdi-eye"></i>
                                     </div>
                                 </div> 
@@ -712,8 +876,8 @@
                             </p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn-stroke button-grey" data-dismiss="modal">Cancelar</button>
-                            <button type="button" class="btn-raised button-blue m-l-15">Continuar</button>
+                            <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn-raised button-info m-l-15">Continuar</button>
                         </div>
                     </div>
                 </div>
@@ -732,8 +896,8 @@
                             </p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn-stroke button-grey" data-dismiss="modal">Cancelar</button>
-                            <button type="button" class="btn-raised button-green m-l-15">Aceptar</button>
+                            <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn-raised button-success m-l-15">Aceptar</button>
                         </div>
                     </div>
                 </div>
@@ -752,8 +916,8 @@
                             </p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn-stroke button-grey" data-dismiss="modal">Cancelar</button>
-                            <button type="button" class="btn-raised button-yellow m-l-15">Continuar</button>
+                            <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn-raised button-warning m-l-15">Continuar</button>
                         </div>
                     </div>
                 </div>
@@ -772,13 +936,12 @@
                             </p>
                         </div>
                         <div class="modal-footer">
-                            <button type="button" class="btn-stroke button-grey" data-dismiss="modal">Cancelar</button>
-                            <button type="button" class="btn-raised button-red m-l-15">Eliminar</button>
+                            <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn-raised button-error m-l-15">Eliminar</button>
                         </div>
                     </div>
                 </div>
             </div>
-
         </section>
 
         <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>

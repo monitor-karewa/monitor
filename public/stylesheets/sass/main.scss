@@ -1,4 +1,12 @@
 /* Structure from official style guideline http://sass-guidelin.es/es/ */
+/* -----------------------------------------------------------------------------
+ * Temas: App's themes colors
+ * ----------------------------------------------------------------------------- */
+@import "themes/varFonts";
+@import "themes/varColors";
+@import "themes/theme-app";
+@import "themes/material-colors";
+
 
 /* -----------------------------------------------------------------------------
  * Abstracts: Class utilities, helpers, mixins, variables
@@ -35,15 +43,6 @@
  * Pages: Specific styles for full pages
  * ----------------------------------------------------------------------------- */
 @import "pages/login";
-
-
-/* -----------------------------------------------------------------------------
- * Temas: App's themes colors
- * ----------------------------------------------------------------------------- */
-@import "themes/varFonts";
-@import "themes/varColors";
-@import "themes/theme-app";
-@import "themes/material-colors";
 
 
 /* -----------------------------------------------------------------------------
