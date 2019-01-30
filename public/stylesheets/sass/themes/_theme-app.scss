@@ -32,6 +32,7 @@
 /* FIN ALERTS */
 
 
+/* BADGE */
 .badge {
   font-family: $principal-font-medium;
   color: $white;
@@ -50,28 +51,14 @@
     background-color: $info;
   }
 }
+/*END BADGE*/
 
 
 /* BUTTONS */
-.btn-raised {
-  	background-color: $accent_1;
-  	color: $white;
+.btn-raised,
+.btn-stroke,
+.btn-outline {
   	font-family: $principal-font-medium;
-
-  	&:hover {
-  		color: $white;
-  	}
-}
-
-.btn-stroke {
-  	color: $accent_1;
-  	font-family: $principal-font-medium;
-  	border-color: $accent_1;
-
-  	&:hover {
-  		background-color: $accent_1;
-  		color: $white;
-  	}
 }
 
 .btn-outline {
@@ -101,137 +88,142 @@
 		background-color: $grey_3;
 	}
 }
-
-.btn-raised.button-accent {
-	background-color: $accent_1 !important;
-}
-.btn-raised.button-primary {
-	background-color: $primary !important;
-}
-.btn-raised.button-grey {
-	background-color: $grey_2 !important;
-}
-.btn-raised.button-red {
-	background-color: $error !important;
-}
-.btn-raised.button-yellow {
-	background-color: $warning !important;
-}
-.btn-raised.button-green {
-	background-color: $success !important;
-}
-.btn-raised.button-blue {
-	background-color: $info !important;
-}
-
-.btn-stroke.button-accent {
-	color: $accent_1 !important;
-	border-color: $accent_1 !important;
-
-	&:hover {
-		background-color: $accent_1 !important;
-	}
-}
-.btn-stroke.button-primary {
-	color: $primary !important;
-	border-color: $primary !important;
-
-	&:hover {
-		background-color: $primary !important;
-	}
-}
-.btn-stroke.button-grey {
-	color: transparentize($primary, 0.5) !important;
-	border-color: transparentize($primary, 0.5) !important;
-
-	&:hover {
-		background-color: transparentize($primary, 0.5) !important;
-		color: $white !important;
-	}
-}
-.btn-stroke.button-red {
-	color: $error !important;
-	border-color: $error !important;
-
-	&:hover {
-		background-color: $error !important;
-	}
-}
-.btn-stroke.button-yellow {
-	color: $warning !important;
-	border-color: $warning !important;
-
-	&:hover {
-		background-color: $warning !important;
-	}
-}
-.btn-stroke.button-green {
-	color: $success !important;
-	border-color: $success !important;
-
-	&:hover {
-		background-color: $success !important;
-	}
-}
-.btn-stroke.button-blue {
-	color: $info !important;
-	border-color: $info !important;
-
-	&:hover {
-		background-color: $info !important;
-	}
-}
-
-.btn-outline.button-accent {
-	color: $accent_1 !important;
-
-	&:hover {
-		color: $accent_1 !important;
-	}
-}
-.btn-outline.button-primary {
-	color: $primary !important;
-
-	&:hover {
-		color: $primary !important;
-	}
-}
-.btn-outline.button-grey {
-	color: $grey_2 !important;
-
-	&:hover {
-		color: $grey_2 !important;
-	}
-}
-.btn-outline.button-red {
-	color: $error !important;
-
-	&:hover {
-		color: $error !important;
-	}
-}
-.btn-outline.button-yellow {
-	color: $warning !important;
-
-	&:hover {
-		color: $warning !important;
-	}
-}
-.btn-outline.button-green {
-	color: $success !important;
-
-	&:hover {
-		color: $success !important;
-	}
-}
-.btn-outline.button-blue {
-	color: $info !important;
-
-	&:hover {
-		color: $info !important;
-	}
-}
 /* END BUTTONS */
+
+
+/* CARDS */
+.card {
+  background-color: $white;
+}
+
+.card-img-corner {
+  background-color: $white;
+
+  h1 {
+    font-family: $principal-font-bold;
+    color: $primary;
+  }
+
+  p {
+    font-family: $principal-font-semibold;
+    color: $plain_text;
+  }
+
+  .link-to {
+    font-family: $principal-font-bold;
+    color: $accent;
+  }
+}
+
+.card-info {
+  background-color: $white;
+
+  p {
+    font-family: $principal-font-medium;
+    color: $primary;
+  }
+
+  .link-to {
+    font-family: $principal-font-medium;
+    color: $accent; 
+  }
+}
+
+.card-background {
+  background-color: $cards;
+
+  p {
+    font-family: $principal-font-semibold;
+    color: $primary;
+  }
+  > div {
+    span {
+      label {
+        /*font-family: Avenir-heavy;*/
+        color: $accent;
+      }
+      small {
+        font-family: $principal-font-medium;
+        color: $plain_text;
+      }
+    }
+
+    .btn-stroke {
+      border-color: $grey_2;
+    }
+  }
+}
+
+.card-compare {
+  background-color: $cards;
+  > small {
+    font-family: $principal-font-regular;
+    color: $plain_text;
+  }
+  .btn-stroke {
+    border-color: $grey_2;
+  }
+}
+
+.card-image-large {
+  background-color: $cards;
+  > div {
+    p {
+      font-family: $principal-font-semibold;
+      color: $plain_text;
+    }
+    span {
+      small {
+        font-family: $principal-font-medium;
+        color: $grey_1;
+      }
+      .btn-stroke {
+        border-color: $grey_2;
+      }
+    }
+  }
+}
+
+.card-only-text {
+  background-color: transparentize($cards, 0.2);
+
+  h1 {
+    font-family: $principal-font-semibold;
+    color: $plain_text;
+  }
+  span {
+    small {
+      font-family: $principal-font-medium;
+      color: $grey_1;
+    }
+
+    .btn-stroke {
+      border-color: $grey_2;
+    }
+  }
+}
+
+.card-map-info {
+  background-color: $cards;
+
+  .info {
+    h1 {
+      font-family: $principal-font-semibold;
+      color: $plain_text;
+    }
+    ul {
+      li {
+        font-family: $principal-font-regular;
+        color: $plain_text;
+
+        i {
+          color: $info;
+        }
+      }
+    }
+  }
+}
+/* END CARDS */
 
 
 .container-footer {
@@ -292,15 +284,15 @@
 		            	}
 
 		            	&.active {
-		              		background-color: transparentize($accent_1, 0.9);
-		              		color: $accent_1;
-		              		border-left-color: $accent_1;
+		              		background-color: transparentize($accent, 0.9);
+		              		color: $accent;
+		              		border-left-color: $accent;
 		            	}
 		          	}
 		        }
 
 		        &.show .dropdown-toggle {
-		          border: 1px solid transparentize($accent_1, 0.3);
+		          border: 1px solid transparentize($accent, 0.3);
 		        }
 	      	}
     	}
@@ -318,10 +310,10 @@
 		          	}
 
 		          	&:first-of-type a {
-		            	color: $accent_1;
+		            	color: $accent;
 
 		            	&::before {
-		              		background-color: $accent_1;
+		              		background-color: $accent;
 		            	}
 		          	}
 	        	}
@@ -345,9 +337,9 @@
 		            	}
 
 		            	&.active {
-		              		background-color: transparentize($accent_1, 0.9);
-		              		color: $accent_1;
-		              		border-left-color: $accent_1;
+		              		background-color: transparentize($accent, 0.9);
+		              		color: $accent;
+		              		border-left-color: $accent;
 	            		}
 	          		}
 	        	}
@@ -356,6 +348,20 @@
   	}
 }
 /* END HEADER APP */
+
+
+.logo-full {
+  > div {
+    small {
+      font-family: $principal-font-medium;
+      color: $primary;
+    }
+    label {
+      font-family: $principal-font-semibold;
+      color: $accent;
+    }
+  }
+}
 
 
 /* MAIN CONTAINER */
@@ -392,7 +398,7 @@
 
   span {
     /*font-family: avenir-heavy;*/
-    color: $accent_1;
+    color: $accent;
   }
 
   label {
@@ -415,7 +421,7 @@
   }
 
   &.accent {
-    border-left-color: $accent_1;
+    border-left-color: $accent;
   }
   &.red {
     border-left-color: $error;
@@ -441,18 +447,23 @@
   }
 
   i {
-    background-color: $accent_1;
+    background-color: $accent;
     color: $white;
   }
 }
 
 .panel-button {
-  border-left-color: $accent_1;
+  border-left-color: $accent !important;
   background-color: transparentize($primary, 0.94);
 
   label {
     font-family: $principal-font-bold;
-    color: $grey_1;
+    color: $plain_text;
+  }
+
+  small {
+  	font-family: $principal-font-medium;
+  	color: $info_text;
   }
 }
 /* END PANELS */
@@ -470,12 +481,12 @@
       		}
 
       		&.active {
-        		background-color: transparentize($accent_1, 0.9);
+        		background-color: transparentize($accent, 0.9);
         		&::before {
-          			background-color: $accent_1;
+          			background-color: $accent;
         		}
         		a {
-          			color: $accent_1;
+          			color: $accent;
         		}
       		}
     	}
@@ -491,10 +502,10 @@
 	      	color: $primary;
 	      
 	      	&:focus {
-	        	color: $accent_1;
-	        	background-color: transparentize($accent_1, 0.9);
+	        	color: $accent;
+	        	background-color: transparentize($accent, 0.9);
 	        	&::before {
-	          background-color: $accent_1;
+	          background-color: $accent;
 	        	}
 	      	}
 	    }
@@ -509,7 +520,7 @@
 	background-color: $white;
   .tab {
     label {
-      border-color: $accent_1;
+      border-color: $accent;
       font-family: $principal-font-bold;
       color: transparentize($primary, 0.5);
     }
@@ -521,7 +532,7 @@
 }
 
 .checkboxtab:checked ~ label {
-  background-color: $accent_1;
+  background-color: $accent;
   color: $white;
   border-color: transparent;
 }
