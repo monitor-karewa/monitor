@@ -1,5 +1,4 @@
 $(document).ready(function (){
-
     /* Text Field*/
     if($('.fg-line')[0]) {
         $('body').on('focus', '.fg-line .form-control', function(){
@@ -55,18 +54,4 @@ $(document).ready(function (){
  -----------------------------------------------------------*/
 $('#hamburguer-icon').on('click', function() {
     this.classList.toggle('active');
-<<<<<<< HEAD
 });
-=======
-});
-
-
-/*----------------------------------------------------------
- Do not close dropdown Menu
- -----------------------------------------------------------*/
-// $('.dropdown.keep-open').on({
-//     "shown.bs.dropdown": function() { this.closable = false; },
-//     "click":             function() { this.closable = true; },
-//     "hide.bs.dropdown":  function() { return this.closable; }
-// });
->>>>>>> 66c03e0d7257db1c052acf8e3979eb4693967acd
