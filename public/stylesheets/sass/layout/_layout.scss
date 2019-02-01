@@ -41,6 +41,7 @@ a {
 .badge {
   display: flex !important;
   align-items: center;
+  justify-content: center;
   border-radius: 3px !important;
   padding: 4px 10px !important;
   font-size: 12px !important;
@@ -1299,7 +1300,6 @@ a {
 
 /* TABLES */
 .table.form-table {
-  overflow: hidden;
   position: relative;
 
   thead th {
@@ -1315,7 +1315,7 @@ a {
   }
 
   tbody td {
-    padding: 14px 10px;
+    vertical-align: middle;
     border-top: 2px solid #f8f9ff;//$background;
     font-family: Raleway-medium;
     font-size: 12px;
@@ -1325,10 +1325,10 @@ a {
 
     &.row-buttons-hover {
       padding: 0;
-      position: absolute;
-      right: 0;
+      position: relative;
+      /*display: none;*/
       opacity: 0;
-      display: none;
+      transition: 0.5s;
     }
   }
 
@@ -1337,20 +1337,22 @@ a {
 
     > td.row-buttons-hover {
       opacity: 1;
-      display: block;
-      animation: slideInRight 0.5s linear;
+      /*display: table-cell;*/
     }
   }
 }
 
 .table-buttons-hover {
+  position: absolute;
   display: flex;
   align-items: center;
-  background-color: #b4b8ca;//$grey_1;
-  padding: 14px 10px;
+  background-color: #b4b8ca;
   justify-content: center;
-  max-width: 170px;
   margin: 0 0 0 auto;
+  width: 170px;
+  height: 100%;
+  top: 0;
+  right: 0;
 
   button {
     width: 30px;
@@ -1363,7 +1365,7 @@ a {
     color: #6a7296;//$plain_text;
     font-size: 18px;
     border: none;
-    margin: 0 5px;
+    margin: auto 5px;
     transition: 0.5s;
 
     &:hover {

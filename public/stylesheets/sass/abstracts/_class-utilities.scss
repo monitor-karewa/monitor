@@ -423,6 +423,10 @@
     margin: 0 auto !important;
 }
 
+.m-auto {
+    margin: auto !important;
+}
+
 .m-0, 
 .m-none {
     margin: 0px !important;
@@ -1076,6 +1080,10 @@
 /*
  * Width (min and max)
  */
+.max-w-250px {
+    max-width: 250px !important;
+}
+
 
 
 /*
@@ -1167,6 +1175,3 @@
 /* -------------------
  * CLASES ESPECIALES
 ---------------------- */
-.m-auto {
-    margin: auto !important;
-}
