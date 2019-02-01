@@ -112,6 +112,17 @@
 			}
 		}
 	}
+
+	.table.form-table {
+		.row-buttons-hover {
+			opacity: 1;
+			background-color: transparent;
+			.table-buttons-hover {
+				position: relative;
+				background-color: transparent;
+			}
+		}
+	}
 }
 
 @media screen and (max-width: 991px) {

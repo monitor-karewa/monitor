@@ -36,6 +36,14 @@ body {
 
 a {
   text-decoration: none;
+  outline: none;
+}
+
+button {
+  outline: none !important;
+  &:focus {
+    outline: none !important;
+  }
 }
 
 .badge {
@@ -1306,39 +1314,32 @@ a {
     padding: 7px 10px;
     border-bottom: none;
     border-top: none;
-    font-family: Raleway-bold;
     text-transform: uppercase;
     font-size: 12px;
     font-weight: bold;
     line-height: 1.5;
-    color: #454e7b;//$primary;
+    white-space: nowrap;
   }
 
   tbody td {
     vertical-align: middle;
-    border-top: 2px solid #f8f9ff;//$background;
-    font-family: Raleway-medium;
+    border-top: 2px solid;
     font-size: 12px;
     font-weight: 600;
     line-height: 1.33;
-    color: #8f95b0;//info_text;
-
-    &.row-buttons-hover {
-      padding: 0;
-      position: relative;
-      /*display: none;*/
-      opacity: 0;
-      transition: 0.5s;
-    }
   }
 
   tbody tr:hover {
-    background-color: #e9ebf7;//$grey-3;
-
     > td.row-buttons-hover {
       opacity: 1;
-      /*display: table-cell;*/
     }
+  }
+
+  .row-buttons-hover {
+    padding: 0;
+    position: relative;
+    opacity: 0;
+    transition: 0.5s;
   }
 }
 
@@ -1346,7 +1347,6 @@ a {
   position: absolute;
   display: flex;
   align-items: center;
-  background-color: #b4b8ca;
   justify-content: center;
   margin: 0 0 0 auto;
   width: 170px;
@@ -1362,16 +1362,10 @@ a {
     display: flex;
     align-items: center;
     justify-content: center;
-    color: #6a7296;//$plain_text;
     font-size: 18px;
     border: none;
     margin: auto 5px;
     transition: 0.5s;
-
-    &:hover {
-      background-color: #6a7296;//$plain_text;
-      color: #fff;//$white;
-    }
   }
 }
 /* END TABLES */

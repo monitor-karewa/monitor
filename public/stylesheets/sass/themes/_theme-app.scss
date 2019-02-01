@@ -685,3 +685,40 @@ strong {
   border-color: transparent;
 }
 /* END SWITCHER TABS */
+
+
+/* TABLES */
+.table.form-table {
+  thead th {
+    font-family: $principal-font-bold;
+    color: $primary;
+  }
+
+  tbody td {
+    border-top-color: $background !important;
+    font-family: $principal-font-medium;
+    color: $info_text;
+  }
+
+  tbody tr:hover {
+    background-color: $grey-3;
+  }
+
+  .row-buttons-hover {
+    background-color: $grey_1;
+  }
+}
+
+.table-buttons-hover {
+  background-color: $grey_1;
+
+  button {
+    color: $plain_text;
+
+    &:hover {
+      background-color: $plain_text;
+      color: $white;
+    }
+  }
+}
+/* END TABLES */
