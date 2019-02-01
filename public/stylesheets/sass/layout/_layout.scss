@@ -1,4 +1,5 @@
-/* Created on : 03/12/2018
+/* 
+ Created on : 03/12/2018
  * Author     : Ingrid Pinedo
  * Version    : 1.0
  * Content    : Layout app styles
@@ -55,6 +56,13 @@ a {
   padding: 20px;
   border-radius: 5px;
   box-shadow: 2px 0 10px 0 rgba(56, 73, 99, 0.2);
+
+  .card-header {
+    background-color: transparent;
+    border-bottom: 2px solid #f8f9ff;//$background;
+    padding: 26px 40px;
+    margin: -20px -20px 0;
+  }
 }
 
 .card-img-corner {
@@ -438,6 +446,219 @@ a {
     &:nth-child(3) {
       grid-column-start: 5;
       text-align: right;
+    }
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 30px;
+  img {
+    max-height: 170px;
+    margin: 0 auto 20px;
+  }
+  p {
+    font-size: 14px;
+    text-align: center;
+    font-weight: 500;
+    line-height: 1.71;
+    letter-spacing: normal;
+    display: block;
+    max-width: 400px;
+    margin: 0 auto 20px;
+  }
+  a {
+    margin: 0 auto;
+  }
+}
+
+.floating-title-dash {
+  display: flex;
+  align-items: center;
+  margin-bottom: 48px;
+  .side-left {
+    h1 {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: normal;
+      display: block;
+      margin-top: 0;
+      margin-bottom: 4px;
+    }
+    label {
+      font-size: 12px;
+      font-weight: bold;
+      line-height: normal;
+      display: block;
+      margin-bottom: 0;
+    }
+  }
+  .side-right {
+    margin: 0 0 0 auto;
+    p {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: normal;
+      text-align: right;
+      display: block;
+      margin-bottom: 2px;
+    }
+    small {
+      font-size: 12px;
+      font-weight: 600;
+      line-height: normal;
+      text-align: right;
+      display: block;
+    }
+  }
+
+  .btn-raised {
+    margin-left: 14px;
+  }
+}
+
+.floating-title-form {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  .side-left {
+    h1 {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: normal;
+      display: block;
+      margin-top: 0;
+      margin-bottom: 4px;
+    }
+    label {
+      font-size: 12px;
+      font-weight: bold;
+      line-height: normal;
+      display: block;
+      margin-bottom: 0;
+    }
+  }
+  .side-right {
+    margin: 0 0 0 auto;
+  }
+}
+
+.floating-title-table {
+  h2 {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.14;
+    display: block;
+    margin-top: 0;
+    margin-bottom: 12px;
+  }
+}
+
+.floating-title-panel {
+  h1 {
+    position: relative;
+    display: block;
+    margin-bottom: 48px;
+    font-size: 34px;
+    font-weight: bold;
+    line-height: normal;
+    text-transform: uppercase;
+
+    &::after {
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      content: " ";
+      width: 35px;
+      height: 2px;
+    }
+  }
+
+  &.small h1 {
+    font-size: 18px;
+    margin-bottom: 38px;
+  }
+
+  &.long-text h1 {
+    font-size: 24px;
+    margin-bottom: 28px;
+
+    small {
+      position: relative;
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: normal;
+      text-transform: uppercase;
+      margin-bottom: 23px;
+    }
+  }
+}
+
+.form-btn-top {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 50%;
+  float: left;
+  a, button {
+    text-transform: capitalize;
+  }
+}
+
+.search-container {
+  width: 50%;
+  float: left;
+  .form-search {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    padding: 0 0 0 14px;
+    .input-search {
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+      line-height: 1;
+      border: none;
+
+      &::-webkit-input-placeholder {
+        font-size: 14px;
+      }
+
+      &:-ms-input-placeholder { 
+        font-size: 14px;
+      }
+
+      &::placeholder {
+        font-size: 14px;
+      }
+    }
+
+    .icon {
+      position: absolute;
+      left: 0;
+      font-size: 20px;
+      color: #b4b8ca;
+      transition: 0.5s;
+
+      &.zmdi-search {
+        opacity: 1;
+      }
+
+      &.zmdi-close {
+        opacity: 0;
+        font-size: 25px;
+      }
+    } 
+
+    .input-search:focus ~ .icon {
+      &.zmdi-search {
+        opacity: 0;
+      }
+      &.zmdi-close {
+        opacity: 1;
+      }
     }
   }
 }
@@ -1075,3 +1296,80 @@ a {
   }
 }
 /* END SIDEBAR MENU */
+
+/* TABLES */
+.table.form-table {
+  overflow: hidden;
+  position: relative;
+
+  thead th {
+    padding: 7px 10px;
+    border-bottom: none;
+    border-top: none;
+    font-family: Raleway-bold;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1.5;
+    color: #454e7b;//$primary;
+  }
+
+  tbody td {
+    padding: 14px 10px;
+    border-top: 2px solid #f8f9ff;//$background;
+    font-family: Raleway-medium;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.33;
+    color: #8f95b0;//info_text;
+
+    &.row-buttons-hover {
+      padding: 0;
+      position: absolute;
+      right: 0;
+      opacity: 0;
+      display: none;
+    }
+  }
+
+  tbody tr:hover {
+    background-color: #e9ebf7;//$grey-3;
+
+    > td.row-buttons-hover {
+      opacity: 1;
+      display: block;
+      animation: slideInRight 0.5s linear;
+    }
+  }
+}
+
+.table-buttons-hover {
+  display: flex;
+  align-items: center;
+  background-color: #b4b8ca;//$grey_1;
+  padding: 14px 10px;
+  justify-content: center;
+  max-width: 170px;
+  margin: 0 0 0 auto;
+
+  button {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #6a7296;//$plain_text;
+    font-size: 18px;
+    border: none;
+    margin: 0 5px;
+    transition: 0.5s;
+
+    &:hover {
+      background-color: #6a7296;//$plain_text;
+      color: #fff;//$white;
+    }
+  }
+}
+/* END TABLES */
