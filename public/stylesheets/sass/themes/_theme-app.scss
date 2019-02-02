@@ -14,6 +14,12 @@ strong {
   font-family: Raleway-bold;
 }
 
+.button-upload {
+  background-color: $background;
+  border-color: $grey_1;
+}
+
+
 /* ALERTS */
 .alert {
 	background: $white !important;
@@ -245,6 +251,44 @@ strong {
 	    }
   	}
 }
+
+
+/* DROPDOWNS */
+.dropdown {
+  .dropdown-menu {
+    background-color: $white;
+  }
+}
+
+.dropdown.menu-filters {
+  .dropdown-menu {    
+    small {
+      font-family: $principal-font-bold;
+      color: $primary;
+    }
+
+    .divider {
+      background-color: $grey_3;
+    }
+
+    .checkbox {
+      span {
+        font-family: $principal-font-semibold;
+        color: $plain_text;
+      }
+    }
+
+    ul {
+      li {
+        &:hover {
+          background-color:  $grey_2;
+        }
+      }
+    }
+  }
+}
+/* END DROPDOWNS */
+
 
 .empty-state {
   p {

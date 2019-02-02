@@ -4,6 +4,13 @@
  * Content    : Buttons
  */
 
+
+a > input[type="file"],
+button > input[type="file"] {
+    opacity: 0;
+    position: absolute;
+}
+
 .btn-raised {
 	width: fit-content;
 	min-height: 25px;
