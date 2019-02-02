@@ -28,6 +28,7 @@ button > input[type="file"] {
 	text-decoration: none !important;
 	border: 1px solid transparent;
 	outline: none;
+	cursor: pointer;
 	transition: 0.5s;
 
 	i {
@@ -101,6 +102,7 @@ button > input[type="file"] {
 	text-decoration: none !important;
 	border: 1px solid;
 	outline: none;
+	cursor: pointer;
 	transition: 0.5s;
 
 	i {
@@ -181,6 +183,7 @@ button > input[type="file"] {
 	text-decoration: none !important;
 	border: 1px solid transparent;
 	outline: none;
+	cursor: pointer;
     text-transform: uppercase;
 	transition: 0.5s;
 
@@ -255,6 +258,7 @@ button > input[type="file"] {
 	text-decoration: none !important;
 	outline: none;
 	border: none;
+	cursor: pointer;
 	margin: 0 15px;
 
 	&:hover,

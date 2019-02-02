@@ -394,6 +394,17 @@ strong {
   }
 }
 
+.floating-text {
+  h1 {
+    font-family: $principal-font-bold;
+    color: $primary;
+  }
+  p {
+    font-family: $principal-font-semibold;
+    color: $plain_text;
+  }
+}
+
 #hamburguer-icon {
   	path {
     	stroke: $primary;
@@ -766,3 +777,11 @@ strong {
   }
 }
 /* END TABLES */
+
+
+.upload-section {
+  label {
+    font-family: $principal-font-bold;
+    color: $primary;
+  }
+}

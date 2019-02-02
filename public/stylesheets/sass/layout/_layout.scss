@@ -682,23 +682,17 @@ button {
 
 .floating-text {
   h1 {
-    font-family: Raleway-bold;
     font-size: 14px;
     font-weight: bold;
     line-height: 1.14;
-    color: #454e7b;//$primary;
     margin: 0 0 4px;
     display: block;
   }
   p {
-    font-family: Raleway-semibold;
     font-size: 12px;
     font-weight: 600;
-    font-style: normal;
-    font-stretch: normal;
     line-height: 1.33;
     letter-spacing: normal;
-    color: #6a7296;//$plain_text;
     display: block;
     margin-bottom: 18px;
   }
@@ -1472,3 +1466,34 @@ button {
   }
 }
 /* END TABLES */
+
+
+.upload-section {
+  text-align: center;
+  img {
+    margin: 0 auto 25px;
+  }
+
+  label {
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1.33;
+    text-align: center;
+    display: block;
+    margin-bottom: 20px;
+
+    strong {
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      display: block;
+    }
+  }
+
+  .btn-outline {
+    margin: 0 auto;
+  }
+
+  &.loading img {
+    animation: spin 2s infinite;
+  }
+}
