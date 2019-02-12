@@ -239,7 +239,7 @@ html:not(.ie9) .select:before {
   width: 30px;
   background-position: right calc(100% - 7px);
   background-repeat: no-repeat;
-  background-image: url("../../../img/select.png");
+  background-image: url("./../../images/Illustrations/select-arrow.png");
   pointer-events: none;
   z-index: 5;
 }
@@ -253,7 +253,8 @@ html:not(.ie9) .select.fg-line:before {
   right: 10px;
 }
 
-.basic-select {
+.basic-select, .border-select {
+
   .fg-line {
     border-bottom: 1px solid rgb(180, 184, 202);
 
@@ -271,13 +272,16 @@ html:not(.ie9) .select.fg-line:before {
       .dropdown-toggle {
         background-color: rgba(0, 0, 0, 0) !important;
         border-color: rgba(0, 0, 0, 0) !important;
-
+        &::after {
+          opacity: 0;
+        }
         &:focus {
           outline: none !important;
+          box-shadow: none !important;
         }
 
         .filter-option {
-          padding: 0 !important;
+          padding: 0;
 
           .filter-option-inner {
             .filter-option-inner-inner {
@@ -374,6 +378,35 @@ html:not(.ie9) .select.fg-line:before {
     }
   }
 }
+
+.border-select {
+  .fg-line {
+    border: 1px solid rgb(180, 184, 202);
+    &:not([class*=has-]):after {
+      display: none !important;
+    }
+    .bootstrap-select {
+      padding: 8px 0px 8px 0px!important;
+
+    }
+    .dropdown-toggle {
+
+    padding-right: 15px !important;
+    .filter-option {
+      padding-left: 15px !important;
+
+    }
+      &::after {
+        opacity: 1 !important;
+      }
+    }
+    .select:before {
+      display: none;
+    }
+  }
+}
+
+
 /*-------------------------
     Input Group Addon
 --------------------------*/
@@ -393,7 +426,7 @@ html:not(.ie9) .select.fg-line:before {
 /*-------------------------
     Input Feilds
 --------------------------*/
-.fg-input {
+.fg-input, .fg-textarea {
   font-size: 14px !important;
   font-stretch: normal;
   line-height: normal;
@@ -454,9 +487,29 @@ html:not(.ie9) .select.fg-line:before {
 }
 
 .fg-float {
-  margin-top: 30px;
+  padding-top: 20px;
   margin-bottom: 30px;
   position: relative;
+
+  &.subtitle {
+    padding-top: 40px;
+    .fg-label {
+      top: -40px !important;
+    }
+
+    .fg-label {
+      strong {
+        font-size: 12px;
+        font-weight: 600;
+        font-style: normal;
+        font-stretch: normal;
+        line-height: 1.4;
+        letter-spacing: normal;
+        top: 5px;
+        position: relative;
+      }
+    }
+  }
 
   .form-control {
     position: relative;
@@ -489,7 +542,6 @@ html:not(.ie9) .select.fg-line:before {
     position: absolute;
     top: 5px;
     color: #454e7b;
-    /*#959595;*/
     pointer-events: none;
     z-index: 0;
     left: 0;
@@ -517,6 +569,21 @@ html:not(.ie9) .select.fg-line:before {
       font-weight: bold;
       top: -20px;
       font-size: 16px;
+    }
+  }
+
+  &.basic-select {
+    .fg-label {
+      color: #454e7b;
+    }
+
+    .fg-line {
+      &::after {
+        -webkit-transform: scale(0);
+        -ms-transform: scale(0);
+        -o-transform: scale(0);
+        transform: scale(0);
+      }
     }
   }
 }
@@ -576,7 +643,7 @@ html:not(.ie9) .select.fg-line:before {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28), 0 0 0 20px rgba(128, 128, 128, 0.1);
   }
 
-  input {
+  input, textarea {
     position: absolute;
     z-index: 1;
     width: 46px;
@@ -627,32 +694,48 @@ html:not(.ie9) .select.fg-line:before {
     &::after {
       transition: 0s;
       background: #eb6262;
-      -webkit-transform: scale(1);
-      -ms-transform: scale(1);
-      -o-transform: scale(1);
-      transform: scale(1);
+      -webkit-transform: scale(1)!important;
+      -ms-transform: scale(1)!important;
+      -o-transform: scale(1)!important;
+      transform: scale(1)!important;
     }
   }
 
-  .fg-input {
+  .fg-input, .fg-textarea {
     border-bottom: solid 2px #eb6262;
   }
-  //.checkbox {
-  //  .input-helper {
-  //    &::after {
-  //      border-bottom-color: #f77066;
-  //      border-left-color: #f77066;
-  //    }
-  //    &::before {
-  //      border-color: #f99d97;
-  //    }
-  //  }
-  //}
+
   .basic-input,
   .fg-line,
   .fg-toggled {
     .fg-label {
       color: #eb6262;
+    }
+  }
+}
+.select-validated {
+  .error-span {
+    color: #19babd !important;
+  }
+
+  .fg-line {
+    &::after {
+      background: #19babd !important;
+      -webkit-transform: scale(1)!important;
+      -ms-transform: scale(1)!important;
+      -o-transform: scale(1)!important;
+      transform: scale(1)!important;
+    }
+  }
+
+  .fg-input, .fg-textarea {
+    border-bottom-color:  #19babd !important;
+  }
+  .basic-input,
+  .fg-line,
+  .fg-toggled {
+    .fg-label {
+      color: #19babd !important;
     }
   }
 }
@@ -678,7 +761,7 @@ html:not(.ie9) .select.fg-line:before {
     padding-left: 0;
   }
 
-  input {
+  input,textarea {
     cursor: pointer;
 
     &:focus {

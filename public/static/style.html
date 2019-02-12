@@ -308,7 +308,7 @@
                         <div class="col-12 col-md-4">
                             <div class="card-img-corner">
                                 <h1>Registra tus proveedores</h1>
-                                <p>Aquí puedes registrar tus nuevos  proveedores o editarlos…</p>
+                                <p>Aquí puedes registrar tus nuevos proveedores o editarlos…</p>
                                 <a href="#" class="link-to" tabindex="">Configurar aquí</a>
                                 <img class="img-fluid" src="../images/Cards/corner-account.svg" alt="" />
                             </div>
@@ -598,14 +598,14 @@
                                 </p>
 
                                 <div class="form-group fg-float">
-                                    <div class="fg-line  basic-input">
+                                    <div class="fg-line basic-input">
                                         <input type="text" class="form-control fg-input" placeholder="Placeholder">
                                         <label class="fg-label">Input label <small>(small text)</small></label>
                                     </div>
                                 </div>
 
                                 <div class="form-group fg-float has-error">
-                                    <div class="fg-line  basic-input">
+                                    <div class="fg-line basic-input">
                                         <input type="text" class="form-control fg-input" placeholder="Placeholder">
                                         <label class="fg-label">Input label <small>(small text)</small></label>
                                     </div>
@@ -614,9 +614,65 @@
 
                                 <br>
                                 <p>
+                                    Input <strong> "subtitle". </strong>
+                                    <br>
+                                    This type of input has a subtitle.
+                                </p>
+
+                                <div class="form-group fg-float subtitle">
+                                    <div class="fg-line basic-input">
+                                        <input type="text" class="form-control fg-input" placeholder="Placeholder">
+                                        <label class="fg-label">
+                                          Input label <small>(small text)</small>
+                                          <br>
+                                          <strong>subtitle</strong>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group fg-float subtitle has-error">
+                                    <div class="fg-line basic-input">
+                                        <input type="text" class="form-control fg-input" placeholder="Placeholder">
+                                        <label class="fg-label">
+                                          Input label <small>(small text)</small>
+                                          <br>
+                                          <strong>subtitle</strong>
+                                        </label>
+                                    </div>
+                                    <span class="error-span">Error message</span>
+                                </div>
+
+                                <div class="form-group fg-float">
+                                    <div class="fg-line basic-input">
+                                        <textarea class="form-control fg-textarea" placeholder="Placeholder"></textarea>
+                                        <label class="fg-label active">Textarea</label>
+                                    </div>
+                                </div>
+
+                                <div class="form-group fg-float has-error">
+                                    <div class="fg-line basic-input">
+                                        <textarea class="form-control fg-textarea" placeholder="Placeholder"></textarea>
+                                        <label class="fg-label active">Textarea</label>
+                                    </div>
+                                    <span class="error-span">Error message</span>
+                                </div>
+
+                                <div class="form-group fg-float subtitle">
+                                    <div class="fg-line basic-input">
+                                        <textarea class="form-control fg-textarea" placeholder="Placeholder"></textarea>
+                                        <label class="fg-label active">
+                                          Textarea<br>
+                                          <strong>subtitle</strong>
+                                        </label>
+                                    </div>
+                                    <span class="error-span">Error message</span>
+                                </div>
+
+                                <br>
+                                <p>
                                   <strong>Selects</strong>
                                   <br>
-                                    Select <strong> ".basic-select". </strong>
+                                    Select <strong> "basic-select". </strong>
                                     <br>
                                     If the input has an error add this class:
                                     <br>
@@ -627,7 +683,8 @@
                                     For a subtitle inside the select add the <span class="c-accent">optgroup</span> tag and add the text to the <span class="c-accent">label attribute</span>. <br>
                                     Remove the <span class="c-accent">label tag</span> if you don't want a title for the select. <br>
                                     You can add the <span class="c-accent">disabled attribute</span> to an option tag or to an optgroup tag. <br>
-                                    Add an option tag with <span class="c-accent">data-divider="true"</span> for a divider between two options.
+                                    Add an option tag with <span class="c-accent">data-divider="true"</span> for a divider between two options. <br>
+                                    If the select has a correct option add class <span class="c-accent">select-validated</span>
                                 </p>
 
                                 <div class="form-group fg-float basic-select">
@@ -636,6 +693,25 @@
                                       <optgroup label="Subtitle">
                                         <option disabled>Text 1 (disabled option)</option>
                                         <option>Text 2</option>
+                                        <option>Text 3</option>
+                                      </optgroup>
+                                      <optgroup label="Subtitle 2 (group disabled)" disabled>
+                                        <option>Text 1.1</option>
+                                        <option>Text 2.1</option>
+                                        <option data-divider="true"></option>
+                                        <option>Text 3.1</option>
+                                      </optgroup>
+                                    </select>
+                                    <label class="fg-label">Select label</label>
+                                  </div>
+                                </div>
+
+                                <div class="form-group fg-float basic-select select-validated">
+                                  <div class="fg-line">
+                                    <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Search placeholder" title="Select placeholder">
+                                      <optgroup label="Subtitle">
+                                        <option disabled>Text 1 (disabled option)</option>
+                                        <option selected>Right option</option>
                                         <option>Text 3</option>
                                       </optgroup>
                                       <optgroup label="Subtitle 2 (group disabled)" disabled>
@@ -670,7 +746,24 @@
                                   <span class="error-span">Error message</span>
                                 </div>
 
+                                <br>
+                                  Select <strong> "border-select". </strong>
+                                  <br>
+                                  If the input has an error add this class:
+                                  <br>
+                              </p>
 
+                              <div class="form-group fg-float border-select">
+                                <div class="fg-line">
+                                  <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Search placeholder" title="Select placeholder">
+                                    <optgroup label="Subtitle">
+                                      <option >Text 1 (disabled option)</option>
+                                      <option>Text 2</option>
+                                      <option>Text 3</option>
+                                    </optgroup>
+                                  </select>
+                                </div>
+                              </div>
 
                             </div>
 
@@ -754,12 +847,12 @@
                               Modal Alert Success
                             </button>
                         </div>
-                        <div class="col-6 col-md-3">    
+                        <div class="col-6 col-md-3">
                              <button type="button" class="btn-raised button-warning" data-toggle="modal" data-target="#modalAlertWarning">
                               Modal Alert Warning
                             </button>
                         </div>
-                        <div class="col-6 col-md-3">    
+                        <div class="col-6 col-md-3">
                              <button type="button" class="btn-raised button-error" data-toggle="modal" data-target="#modalAlertDanger">
                               Modal Alert Danger
                             </button>
