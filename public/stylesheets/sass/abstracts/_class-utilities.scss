@@ -92,7 +92,6 @@
     -webkit-line-clamp: 1;
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .cut-2-line {
@@ -101,7 +100,6 @@
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .cut-3-line {
@@ -110,7 +108,6 @@
     -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
     text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 
@@ -427,7 +424,7 @@
     margin: auto !important;
 }
 
-.m-0, 
+.m-0,
 .m-none {
     margin: 0px !important;
 }
