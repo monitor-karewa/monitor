@@ -15,7 +15,17 @@
 }
 
 /* WIDTH */
-@media screen and (max-width: 576px) {
+@media screen and (max-width: 600px) {
+	.card-header {
+		padding: 20px !important;
+	}
+	.form-btn-top {
+    	width: 100%;
+	}
+	.search-container {
+		width: 100%;
+		margin-bottom: 5px;
+	}
 	.simple-login {
 		.right-side {
 			padding: 40px 25px;
@@ -36,6 +46,7 @@
 		}
 	}
 }
+
 @media screen and (max-width: 767px) {
 	.container-footer {
 		
@@ -44,6 +55,18 @@
 		> div {
 			max-width: 100% !important;
 		}
+	}
+
+	.floating-title-dash,
+	.floating-title-form {
+	    display: block;
+	    .side-left,
+	    .side-right {
+	    	margin-bottom: 10px;
+	    }
+	    .btn-raised {
+    	    margin: 0 0 0 auto;
+	    }
 	}
 
 	.header {
@@ -89,7 +112,19 @@
 			}
 		}
 	}
+
+	.table.form-table {
+		.row-buttons-hover {
+			opacity: 1;
+			background-color: transparent;
+			.table-buttons-hover {
+				position: relative;
+				background-color: transparent;
+			}
+		}
+	}
 }
+
 @media screen and (max-width: 991px) {
 	.container-panel-info {
 		display: flex;
@@ -132,6 +167,7 @@
 		}
 	}
 }
+
 @media screen and (max-width: 1024px) {
 	.header {
 		.left {

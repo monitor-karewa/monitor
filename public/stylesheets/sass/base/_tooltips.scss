@@ -1,0 +1,16 @@
+.tippy-popper {
+	.tippy-tooltip {
+		padding: 6px 10px;
+		background-color: #454e7b !important;//$primary;
+
+		.tippy-arrow {
+			border-bottom-color: #454e7b !important;//$primary;
+		}
+
+		.tippy-content {
+			color: #fff;
+			font-size: 10px;
+			font-family: Raleway-medium;
+		}
+	}
+}

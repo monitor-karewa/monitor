@@ -65,11 +65,67 @@
 			padding: 0;
 		}
 	}
-	
-	.modal-header {}
-	.modal-body {
-		max-height: 455px;
+
+	.modal-header {
+		display: block;
+		margin-bottom: 60px;
+		border-bottom: none;
+
+		.close-modal {
+			position: absolute;
+			top: 22px;
+			right: 25px;
+			font-size: 25px;
+			transition: 0.5s;
+		}
+
+		.modal-title {
+		  	font-size: 18px;
+		  	font-weight: 600;
+		  	line-height: normal;
+		  	display: block;
+		  	margin-bottom: 3px;
+		}
+
+		.modal-subtitle {
+			font-size: 12px;
+			font-weight: 600;
+			line-height: 1.33;
+			display: block;
+			margin-bottom: 0;
+		}
 	}
-	.modal-footer {}
+
+	.modal-body {
+		.content-img {
+			text-align: center;
+			img {
+				margin: 0 auto;
+				max-height: 225px;
+				margin-bottom: 30px;
+			}
+			label {
+				font-size: 18px;
+				font-weight: bold;
+				line-height: normal;
+				text-align: center;
+				display: block;
+				margin-bottom: 8px;
+			}
+			p {
+				font-size: 14px;
+				font-weight: normal;
+				line-height: 1.71;
+				text-align: center;
+				display: block;
+				margin-bottom: 0;
+			}
+		}
+	}
+
+	.modal-footer {
+		border-top: none;
+		margin-top: 50px;
+	}
 }
 /* END MODAL NORMAL */

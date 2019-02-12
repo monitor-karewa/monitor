@@ -10,6 +10,14 @@
   Using transparentize the opacity changes: 1 means 0 and 0 means 1. 
   Example: If you want an opacity 0.2 -> it changes to 0.8.
 -----------------------------------------------------------------------*/
+strong {
+  font-family: Raleway-bold;
+}
+
+.button-upload {
+  background-color: $background;
+  border-color: $grey_1;
+}
 
 
 /* ALERTS */
@@ -244,6 +252,159 @@
   	}
 }
 
+
+/* DROPDOWNS */
+.dropdown {
+  .dropdown-menu {
+    background-color: $white;
+  }
+}
+
+.dropdown.menu-filters {
+  .dropdown-menu {    
+    small {
+      font-family: $principal-font-bold;
+      color: $primary;
+    }
+
+    .divider {
+      background-color: $grey_3;
+    }
+
+    .checkbox {
+      span {
+        font-family: $principal-font-semibold;
+        color: $plain_text;
+      }
+    }
+
+    ul {
+      li {
+        &:hover {
+          background-color:  $grey_2;
+        }
+      }
+    }
+  }
+}
+/* END DROPDOWNS */
+
+
+.empty-state {
+  p {
+    font-family: $principal-font-medium;
+    color: $plain_text;
+  }
+}
+
+.floating-title-dash {
+  .side-left {
+    h1 {
+      font-family: $principal-font-semibold;
+      color: $primary;
+    }
+    label {
+      font-family: $principal-font-bold;
+      color: $info-text;
+    }
+  }
+  .side-right {
+    p {
+      font-family: $principal-font-semibold;
+      color: $primary;
+    }
+    small {
+      font-family: $principal-font-semibold;
+      color: $info_text;
+
+      strong {
+        color: $primary;
+      }
+    }
+  }
+}
+
+.floating-title-form {
+  .side-left {
+    h1 {
+      font-family: $principal-font-semibold;
+      color: $primary;
+    }
+    label {
+      font-family: $principal-font-semibold;
+      color: $info-text;
+    }
+  }
+}
+
+.floating-title-table {
+  h2 {
+    font-family: $principal-font-bold;
+    color: $primary;
+  }
+}
+
+.floating-title-panel {
+  h1 {
+    font-family: $principal-font-bold;
+    color: $primary;
+
+    &::after {
+      background-color: $accent;
+    }
+  }
+
+  &.long-text h1 {
+    small {
+      font-family: $principal-font-bold;
+      color: $grey_1;
+    }
+  }
+}
+
+.search-container {
+  .form-search {
+    .input-search {
+      font-family: $principal-font-bold;
+      color: $accent;
+
+      &::-webkit-input-placeholder {
+        font-family: $principal-font-medium;
+        color: $grey_1;
+      }
+
+      &:-ms-input-placeholder { 
+        font-family: $principal-font-medium;
+        color: $grey_1;
+      }
+
+      &::placeholder {
+        font-family: $principal-font-medium;
+        color: $grey_1;
+      }
+    }
+
+    .icon {
+      color: $grey_1;
+
+      &.zmdi-close {
+        color: $primary;
+      }
+    }
+  }
+}
+
+.floating-text {
+  h1 {
+    font-family: $principal-font-bold;
+    color: $primary;
+  }
+  p {
+    font-family: $principal-font-semibold;
+    color: $plain_text;
+  }
+}
+
 #hamburguer-icon {
   	path {
     	stroke: $primary;
@@ -392,6 +553,48 @@
 /* END MODAL ALERT */
 
 
+/* MODAL NORMAL */
+.modal {
+  .modal-header {
+    .close-modal {
+      color: $info_text;
+    }
+
+    .modal-title {
+      font-family: $principal-font-semibold;
+        color: $primary;
+
+        strong {
+          font-family: $principal-font-bold;
+        }
+    }
+
+    .modal-subtitle {
+      font-family: $principal-font-semibold;
+      color: $plain_text;
+    }
+  }
+
+  .modal-body {
+    .content-img {
+      label {
+        font-family: $principal-font-bold;
+        color: $primary;
+      }
+      p {
+        font-family: $principal-font-regular;
+        color: $plain_text;
+
+        strong {
+          font-family: $principal-font-bold;
+        }
+      }
+    }
+  }
+}
+/* END MODAL NORMAL */
+
+
 /* PANELS */
 .panel-simple {
   background-color: transparentize($primary, 0.94);
@@ -537,3 +740,48 @@
   border-color: transparent;
 }
 /* END SWITCHER TABS */
+
+
+/* TABLES */
+.table.form-table {
+  thead th {
+    font-family: $principal-font-bold;
+    color: $primary;
+  }
+
+  tbody td {
+    border-top-color: $background !important;
+    font-family: $principal-font-medium;
+    color: $info_text;
+  }
+
+  tbody tr:hover {
+    background-color: $grey-3;
+  }
+
+  .row-buttons-hover {
+    background-color: $grey_1;
+  }
+}
+
+.table-buttons-hover {
+  background-color: $grey_1;
+
+  button {
+    color: $plain_text;
+
+    &:hover {
+      background-color: $plain_text;
+      color: $white;
+    }
+  }
+}
+/* END TABLES */
+
+
+.upload-section {
+  label {
+    font-family: $principal-font-bold;
+    color: $primary;
+  }
+}

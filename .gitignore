@@ -34,7 +34,7 @@ config/env/local-*.js
 modules/*/client/scss/*.css
 modules/*/client/less/*.css
 
-# Ignoring MEAN.JS's gh-pages branch for documenation
+# Ignoring MEAN.JS's gh-pages branch for documentation
 _site/
 
 # General
@@ -71,5 +71,5 @@ mongod
 # Files from style template
 # ============================
 public/stylesheets/css/
-public/fonts/
+#public/fonts/
 public/img/

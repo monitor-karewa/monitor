@@ -1,4 +1,5 @@
-/* Created on : 03/12/2018
+/* 
+ Created on : 03/12/2018
  * Author     : Ingrid Pinedo
  * Version    : 1.0
  * Content    : Layout app styles
@@ -35,11 +36,29 @@ body {
 
 a {
   text-decoration: none;
+  outline: none;
+}
+
+button {
+  outline: none !important;
+  &:focus {
+    outline: none !important;
+  }
+}
+
+.button-upload {
+  border: 1px dashed;
+  height: 134px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .badge {
   display: flex !important;
   align-items: center;
+  justify-content: center;
   border-radius: 3px !important;
   padding: 4px 10px !important;
   font-size: 12px !important;
@@ -52,9 +71,17 @@ a {
 /* CARDS */
 .card {
   position: relative;
-  padding: 20px;
+  padding: 22px 24px;
+  margin-bottom: 30px;
   border-radius: 5px;
   box-shadow: 2px 0 10px 0 rgba(56, 73, 99, 0.2);
+
+  .card-header {
+    background-color: transparent;
+    border-bottom: 2px solid #f8f9ff;//$background;
+    padding: 26px 40px;
+    margin: -20px -20px 0;
+  }
 }
 
 .card-img-corner {
@@ -369,7 +396,7 @@ a {
         i {
           font-size: 30px;
           margin-right: 10px; 
-          width: 40px;
+          width: 24px;
           display: flex;
           align-items: center;
           justify-content: center;
@@ -389,7 +416,7 @@ a {
   left: 0;
   display: inline-grid;
   grid-template-columns: repeat(3,1fr 0);
-  z-index: 1;
+  z-index: 5;
 
   > div {
     display: inline-block;
@@ -439,6 +466,239 @@ a {
       grid-column-start: 5;
       text-align: right;
     }
+  }
+}
+
+
+/* DROPDOWNS */
+.dropdown {
+  .dropdown-menu {
+    border-radius: 2px;
+    box-shadow: 2px 0 10px 0 rgba(56, 73, 99, 0.4);
+    padding: 12px 0;
+    width: 220px;
+    border: none;
+  }
+}
+
+.dropdown.menu-filters {
+  .dropdown-menu {    
+    small {
+      font-size: 10px;
+      font-weight: bold;
+      line-height: 1.4;
+      display: block;
+      margin-bottom: 22px;
+      padding: 0 12px;
+    }
+
+    .divider {
+      height: 1px;
+      width: 100%;
+      margin: 20px 0;
+    }
+
+    .checkbox {
+      white-space: pre;
+      margin: 0 12px;
+      span {
+        font-size: 12px;
+        font-weight: 600;
+        line-height: normal;
+        width: 100%;
+      }
+    }
+
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li {
+        padding: 8px 0;
+        transition: 0.5s;
+      }
+    }
+  }
+}
+/* END DROPDOWNS */
+
+
+.empty-state {
+  text-align: center;
+  padding: 30px;
+  img {
+    max-height: 170px;
+    margin: 0 auto 20px;
+  }
+  p {
+    font-size: 14px;
+    text-align: center;
+    font-weight: 500;
+    line-height: 1.71;
+    letter-spacing: normal;
+    display: block;
+    max-width: 400px;
+    margin: 0 auto 20px;
+  }
+  a {
+    margin: 0 auto;
+  }
+}
+
+.floating-title-dash {
+  display: flex;
+  align-items: center;
+  margin-bottom: 48px;
+  .side-left {
+    h1 {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: normal;
+      display: block;
+      margin-top: 0;
+      margin-bottom: 4px;
+    }
+    label {
+      font-size: 12px;
+      font-weight: bold;
+      line-height: normal;
+      display: block;
+      margin-bottom: 0;
+    }
+  }
+  .side-right {
+    margin: 0 0 0 auto;
+    p {
+      font-size: 16px;
+      font-weight: 600;
+      line-height: normal;
+      text-align: right;
+      display: block;
+      margin-bottom: 2px;
+    }
+    small {
+      font-size: 12px;
+      font-weight: 600;
+      line-height: normal;
+      text-align: right;
+      display: block;
+    }
+  }
+
+  .btn-raised {
+    margin-left: 14px;
+  }
+}
+
+.floating-title-form {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+  .side-left {
+    h1 {
+      font-size: 18px;
+      font-weight: 600;
+      line-height: normal;
+      display: block;
+      margin-top: 0;
+      margin-bottom: 4px;
+    }
+    label {
+      font-size: 12px;
+      font-weight: bold;
+      line-height: normal;
+      display: block;
+      margin-bottom: 0;
+    }
+  }
+  .side-right {
+    margin: 0 0 0 auto;
+  }
+}
+
+.floating-title-table {
+  h2 {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.14;
+    display: block;
+    margin-top: 0;
+    margin-bottom: 12px;
+  }
+}
+
+.floating-title-panel {
+  h1 {
+    position: relative;
+    display: block;
+    margin-bottom: 48px;
+    font-size: 34px;
+    font-weight: bold;
+    line-height: normal;
+    text-transform: uppercase;
+
+    &::after {
+      position: absolute;
+      bottom: -8px;
+      left: 0;
+      content: " ";
+      width: 35px;
+      height: 2px;
+    }
+  }
+
+  &.small h1 {
+    font-size: 18px;
+    margin-bottom: 38px;
+  }
+
+  &.long-text h1 {
+    font-size: 24px;
+    margin-bottom: 28px;
+
+    small {
+      position: relative;
+      display: block;
+      font-size: 14px;
+      font-weight: bold;
+      line-height: normal;
+      text-transform: uppercase;
+      margin-bottom: 23px;
+    }
+  }
+}
+
+.form-btn-top {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 50%;
+  float: left;
+  a, button {
+    text-transform: capitalize;
+  }
+}
+
+.floating-text {
+  h1 {
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 1.14;
+    margin: 0 0 4px;
+    display: block;
+  }
+  p {
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.33;
+    letter-spacing: normal;
+    display: block;
+    margin-bottom: 18px;
+  }
+
+  button {
+    text-transform: capitalize;
   }
 }
 
@@ -499,7 +759,7 @@ a {
   top: 0;
   height: 60px;
   box-shadow: 0 2px 10px 0 rgba(56, 73, 99, 0.15);
-  z-index: 2;
+  z-index: 5;
 
   .left {
     float: left;
@@ -731,6 +991,12 @@ a {
 }
 /* END HEADER APP */
 
+
+.img-card-corner {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+}
 
 .logo-full {
   display: flex;
@@ -1075,3 +1341,159 @@ a {
   }
 }
 /* END SIDEBAR MENU */
+
+
+/* SEARCH */
+.search-container {
+  width: 50%;
+  float: left;
+  .form-search {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    position: relative;
+    padding: 0 0 0 14px;
+    .input-search {
+      width: 100%;
+      padding: 8px;
+      font-size: 16px;
+      line-height: 1;
+      border: none;
+
+      &::-webkit-input-placeholder {
+        font-size: 14px;
+      }
+
+      &:-ms-input-placeholder { 
+        font-size: 14px;
+      }
+
+      &::placeholder {
+        font-size: 14px;
+      }
+    }
+
+    .icon {
+      position: absolute;
+      left: 0;
+      font-size: 20px;
+      color: #b4b8ca;
+      transition: 0.5s;
+
+      &.zmdi-search {
+        opacity: 1;
+      }
+
+      &.zmdi-close {
+        opacity: 0;
+        font-size: 25px;
+      }
+    } 
+
+    .input-search:focus ~ .icon {
+      &.zmdi-search {
+        opacity: 0;
+      }
+      &.zmdi-close {
+        opacity: 1;
+      }
+    }
+  }
+}
+/* END SEARCH */
+
+
+/* TABLES */
+.table.form-table {
+  position: relative;
+
+  thead th {
+    padding: 7px 10px;
+    border-bottom: none;
+    border-top: none;
+    text-transform: uppercase;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1.5;
+    white-space: nowrap;
+  }
+
+  tbody td {
+    vertical-align: middle;
+    border-top: 2px solid;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1.33;
+  }
+
+  tbody tr:hover {
+    > td.row-buttons-hover {
+      opacity: 1;
+    }
+  }
+
+  .row-buttons-hover {
+    padding: 0;
+    position: relative;
+    opacity: 0;
+    transition: 0.5s;
+  }
+}
+
+.table-buttons-hover {
+  position: absolute;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 0 auto;
+  width: 170px;
+  height: 100%;
+  top: 0;
+  right: 0;
+
+  button {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: transparent;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    border: none;
+    margin: auto 5px;
+    transition: 0.5s;
+  }
+}
+/* END TABLES */
+
+
+.upload-section {
+  text-align: center;
+  img {
+    margin: 0 auto 25px;
+  }
+
+  label {
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1.33;
+    text-align: center;
+    display: block;
+    margin-bottom: 20px;
+
+    strong {
+      text-transform: uppercase;
+      margin-bottom: 4px;
+      display: block;
+    }
+  }
+
+  .btn-outline {
+    margin: 0 auto;
+  }
+
+  &.loading img {
+    animation: spin 2s infinite;
+  }
+}

@@ -1,8 +1,5 @@
 $(document).ready(function (){
-
-    /*----------------------------------------------------------
-     Text Field
-     -----------------------------------------------------------*/
+    /* Text Field*/
     if($('.fg-line')[0]) {
         $('body').on('focus', '.fg-line .form-control', function(){
             $(this).closest('.fg-line').addClass('fg-toggled');
@@ -23,7 +20,7 @@ $(document).ready(function (){
         });
     }
 
-    //Add blue border for pre-valued fg-flot text feilds
+    /* Add blue border for pre-valued fg-flot text feilds */
     if($('.fg-float')[0]) {
         $('.fg-float .form-control').each(function(){
             var i = $(this).val();
@@ -44,6 +41,11 @@ $(document).ready(function (){
 		$('.backdrop').removeClass('active');
 		$('#hamburguer-icon').removeClass('active');
 	});
+
+    /* Modal auto close */
+    setTimeout(function() {
+        $('#modalAutoDismiss').modal('hide');
+    }, 5000);
 });
 
 
@@ -53,13 +55,3 @@ $(document).ready(function (){
 $('#hamburguer-icon').on('click', function() {
     this.classList.toggle('active');
 });
-
-
-/*----------------------------------------------------------
- Do not close dropdown Menu
- -----------------------------------------------------------*/
-// $('.dropdown.keep-open').on({
-//     "shown.bs.dropdown": function() { this.closable = false; },
-//     "click":             function() { this.closable = true; },
-//     "hide.bs.dropdown":  function() { return this.closable; }
-// });

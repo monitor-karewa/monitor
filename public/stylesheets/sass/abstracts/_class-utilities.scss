@@ -400,6 +400,14 @@
 
 
 /*
+ * Justify Content
+ */
+.justify-content-center {
+    justify-content: center !important;
+}
+
+
+/*
  * Left
  */
 .left-0 {
@@ -413,6 +421,10 @@
  */
 .m-0-auto {
     margin: 0 auto !important;
+}
+
+.m-auto {
+    margin: auto !important;
 }
 
 .m-0, 
@@ -1068,6 +1080,10 @@
 /*
  * Width (min and max)
  */
+.max-w-250px {
+    max-width: 250px !important;
+}
+
 
 
 /*
@@ -1159,6 +1175,10 @@
 /* -------------------
  * CLASES ESPECIALES
 ---------------------- */
-.m-auto {
-    margin: auto !important;
+.f-style-italic {
+    font-style: italic !important;
+}
+
+.f-style-normal {
+    font-style: normal !important;
 }

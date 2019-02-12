@@ -43,7 +43,8 @@ var cleanCssOptions = {
 const cssVendors = [
     './public/stylesheets/vendors/bootstrap.css',
     './public/stylesheets/vendors/bootstrap-select.min.css',
-    './public/stylesheets/vendors/animate.css'
+    './public/stylesheets/vendors/animate.css',
+    './node_modules/tippy.js/dist/tippy.css'
 ];
 
 const jsVendors = [
@@ -51,6 +52,7 @@ const jsVendors = [
     // './public/javascripts/lib/popover.js',
     './public/javascripts/lib/bootstrap.min.js',
     './public/javascripts/lib/bootstrap-select.min.js',
+    './node_modules/tippy.js/dist/tippy.min.js',
     './public/javascripts/main.js'
 ];
 
