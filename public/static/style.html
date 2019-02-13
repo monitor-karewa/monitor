@@ -757,6 +757,15 @@
                                 <p>Texto</p>
                             </div>
                         </div>
+                        <div class="col-12">
+                            <p>
+                                Floating title for Form.
+                            </p>
+                            <div class="floating-text-form">
+                                <h1>Texto</h1>
+                                <p>Texto</p>
+                            </div>
+                        </div>
                     </div>
                     <!-- END FLOATING TEXT -->
 
@@ -1075,6 +1084,11 @@
                         <div class="col-6 col-md-3">
                             <button type="button" class="btn-raised button-accent" data-toggle="modal" data-target="#modalAutoDismiss">
                               Modal auto dismiss
+                            </button>
+                        </div>
+                        <div class="col-6 col-md-3">
+                            <button type="button" class="btn-raised button-accent" data-toggle="modal" data-target="#modalCalculo">
+                              Modal Nuevo Cálculo
                             </button>
                         </div>
                     </div>
@@ -1611,7 +1625,7 @@
                 </div>
             </div>
 
-            <!-- MODAL SIMPLE NO CONTENT -->
+            <!-- MODAL SIMPLE W/IMAGE -->
             <div class="modal fade" id="modalImage" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                 <div class="modal-dialog modal-dialog-centered" role="document">
                     <div class="modal-content">
@@ -1645,6 +1659,163 @@
                     </div>
                 </div>
             </div>
+
+            <!-- MODAL NUEVO CALCULO -->
+            <div class="modal fade" id="modalCalculo" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <a class="close-modal" data-dismiss="modal"><i class="zmdi zmdi-close"></i></a>
+                            <h1 class="modal-title">Nuevo <strong>Cálculo</strong></h1>
+                            <label class="modal-subtitle">A continuación puedes agregar un nuevo Cálculo</label>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group fg-float subtitle">
+                                <div class="fg-line basic-input">
+                                    <input type="text" class="form-control fg-input" placeholder="Introduce el nombre">
+                                    <label class="fg-label">Nombre del Cálculo <small></small>
+                                      <br>
+                                      <strong>Nombre del cálculo que será mostrado a los usuarios</strong>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="form-group fg-float subtitle">
+                                <div class="fg-line basic-input">
+                                    <input type="text" class="form-control fg-input" placeholder="Introduce una descripción">
+                                    <label class="fg-label">Descripción <small></small>
+                                      <br>
+                                      <strong>A continuación puedes agregar una descripción</strong>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="floating-text-form">
+                                <h1>Tipo de Cálculo</h1>
+                                <p>El tipo de cálculo indica en dónde se mostrará</p>
+                            </div>
+
+                            <div class="d-flex m-b-40">
+                                <div class="input-radio-check w-50">
+                                    <div class="check-container">
+                                        <input type="radio" name="role" id="one">
+                                        <span class="role" for="one">General</span>
+                                    </div>
+                                </div>    
+                                <div class="input-radio-check w-50">    
+                                    <div class="check-container">
+                                        <input type="radio" name="role" id="two">
+                                        <span class="role" for="two">Contrato</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="floating-text-form">
+                                <h1>Habilitado</h1>
+                                <p>Solo se mostrará al usuario los cálculos habilitados</p>
+                            </div>
+
+                            <div class="d-flex m-b-40">
+                                <div class="checkbox">
+                                    <input type="checkbox" value="">
+                                    <i class="input-helper"></i>
+                                    <span>Habilitar cálculo</span>
+                                </div>
+                            </div>
+
+                            <div class="form-group fg-float subtitle">
+                                <div class="fg-line basic-input">
+                                    <input type="text" class="form-control fg-input" placeholder="Introduce la fórmula">
+                                    <label class="fg-label">Fórmula <small></small>
+                                      <br>
+                                      <strong>Formula para obtener el resultado del cálculo</strong>
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="floating-text-form">
+                                <h1>Fórmula</h1>
+                                <p>Formula para obtener el resultado del cálculo</p>
+                            </div>
+
+                            <div class="form-group fg-float dropdown-inside p-t-0">
+                                <div class="fg-line basic-input">
+                                    <input type="text" class="form-control fg-input" placeholder="Introduce la fórmula">
+                                    <div class="dropdown">
+                                        <button class="btn-stroke xs button-accent" type="button" id="dropdownInput" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Porcentaje <i class="zmdi zmdi-caret-down m-r-0 m-l-5 f-18"></i></button>
+                                        <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownInput" x-placement="bottom-end">
+                                            <ul>
+                                                <li>Porcentaje</li>
+                                                <li>Porcentaje</li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="vertical-center">
+                                <div class="form-group fg-float basic-select w-70 m-r-30 p-t-0 m-b-0">
+                                    <div class="fg-line">
+                                        <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Search placeholder" title="Agregar variable">
+                                          <optgroup label="Subtitle">
+                                            <option>Variable 1</option>
+                                            <option>Variable 2</option>
+                                            <option>Variable 3</option>
+                                          </optgroup>
+                                        </select>
+                                    </div>
+                                </div> 
+                                <div class="mini-buttons">
+                                    <button class="mini-btn m-l-0">+</button>
+                                    <button class="mini-btn">-</button>
+                                    <button class="mini-btn">*</button>
+                                    <button class="mini-btn m-r-0">/</button>
+                                </div>
+                            </div>
+
+                            <div class="m-t-40 m-b-50">
+                                <div class="floating-text-form">
+                                    <h1>Variables usadas</h1>
+                                    <p>Cálculo para mostrar el indice de perdidas al año</p>
+                                </div>
+                                <div class="vertical-center m-b-20">
+                                    <span class="w-15 m-r-10"><strong class="c-accent f-12">$NP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</strong></span>
+                                    <div class="floating-text-form">
+                                        <h1>Número de proveedores</h1>
+                                        <p class="m-b-0">Número total de proveedores disponibles en el catálogo de proveedores</p>
+                                    </div>
+                                </div>
+                                <div class="vertical-center">
+                                    <span class="w-15 m-r-10"><strong class="c-accent f-12">$IRC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</strong></span>
+                                    <div class="floating-text-form">
+                                        <h1>Índice de riesgo de corrupción</h1>
+                                        <p class="m-b-0">Índice de riesgo de que la organización presente casos de corrupción</p>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group fg-float subtitle">
+                                <div class="fg-line basic-input">
+                                    <textarea class="form-control fg-textarea" placeholder="Introduce notas adicionales"></textarea>
+                                    <label class="fg-label active">Notas<br>
+                                      <strong>A continuación puedes agregar notas al cálculo</strong>
+                                    </label>
+                                </div>
+                                <span class="error-span">Error</span>
+                            </div>
+                        </div>
+                        <div class="modal-footer aditional-text">
+                            <div class="total-footer">
+                                <span>RESULTADO: <strong>55%</strong></span>
+                                <p>La vista previa del resultado del cálculo solo está disponible en cálculos generales</p>
+                            </div>
+                            <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar</button>
+                            <button type="button" class="btn-raised button-accent m-l-15">Agregar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
         </section>
         <!-- END MAIN ADMIN SECTION -->
 

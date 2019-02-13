@@ -702,6 +702,24 @@ button {
   }
 }
 
+.floating-text-form {
+  h1 {
+    font-size: 13px;
+    font-weight: bold;
+    line-height: normal;
+    display: block;
+    margin-bottom: 2px;
+    margin-top: 0;
+  }
+  p {
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.33;
+    display: block;
+    margin-bottom: 10px;
+  }
+}
+
 #hamburguer-icon {
   path {
     -webkit-transform: translate3d(0, 0, 0);
@@ -1467,6 +1485,36 @@ button {
 }
 /* END TABLES */
 
+
+.total-footer {
+  margin-top: -10px;
+  margin-right: 20px;
+
+  span {
+    font-family: Raleway-bold;
+    font-size: 13px;
+    font-weight: bold;
+    line-height: normal;
+    color: #454e7b;//$primary;
+    display: block;
+    text-transform: uppercase;
+    strong {
+      font-size: 18px;
+      color: #19babd;//$accent_1;
+    }
+  }
+  p {
+    font-family: Raleway-semibold;
+    font-size: 10px;
+    font-weight: 600;
+    line-height: 1.4;
+    color: #8f95b0;//$info_text;
+    display: block;
+    margin-bottom: 0;
+    margin-top: 2px;
+    word-wrap: break-word;
+  }
+}
 
 .upload-section {
   text-align: center;
