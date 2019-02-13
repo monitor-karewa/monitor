@@ -155,6 +155,11 @@
 			max-width: 25%;
 		}
 	}
+	.modal-content {
+		&.min-w-600px {
+			min-width: inherit !important;
+		}
+	}
 	.simple-login {
 		.left-side {
 			width: 100%;
