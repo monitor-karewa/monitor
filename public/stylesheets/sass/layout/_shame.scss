@@ -49,3 +49,30 @@
 		}
 	}
 }
+
+.dropdown.bootstrap-select {
+	.dropdown-menu.show {
+		.inner.show {
+			.dropdown-menu.inner.show {
+				box-shadow: none;
+				width: 100;
+				position: relative;
+				overflow: hidden;
+				overflow-x: auto;
+
+				li {
+					width: 100%;
+					overflow: hidden;
+					text-overflow: ellipsis;
+					white-space: nowrap;
+
+					a {
+						text-overflow: ellipsis;
+						white-space: nowrap;
+						overflow: hidden;
+					}
+				}
+			}
+		}
+	}
+}
