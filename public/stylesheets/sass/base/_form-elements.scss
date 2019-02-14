@@ -381,28 +381,35 @@ html:not(.ie9) .select.fg-line:before {
 
 .border-select {
   .fg-line {
-    border: 1px solid rgb(180, 184, 202);
+    height: 30px;
+    border: 1px solid #dadce5;
     &:not([class*=has-]):after {
       display: none !important;
     }
     .bootstrap-select {
-      padding: 8px 0px 8px 0px!important;
+      height: 30px;
 
+      padding: 4px 0px 4px 0px!important;
+      &:before {
+        display: none;
+      }
     }
     .dropdown-toggle {
+      padding-right: 15px !important;
+      .filter-option {
+        padding-left: 15px !important;
 
-    padding-right: 15px !important;
-    .filter-option {
-      padding-left: 15px !important;
-
-    }
+      }
       &::after {
         opacity: 1 !important;
       }
     }
-    .select:before {
-      display: none;
+    .filter-option-inner{
+      padding-right: 30px !important;
     }
+     .filter-option-inner-inner {
+       font-size: 13px !important;
+     }
   }
 }
 
