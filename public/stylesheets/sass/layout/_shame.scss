@@ -76,3 +76,40 @@
 		}
 	}
 }
+
+.floating-label-table {
+	padding-left: 26px;
+	font-family: Raleway-semibold;
+  	font-size: 12px;
+  	font-weight: 600;
+  	line-height: 1.33;
+  	color: $plain_text;
+  	position: relative;
+  	display: block;
+
+	&::before {
+		content: " ";
+		width: 14px;
+	  	height: 14px;
+	  	position: absolute;
+	  	left: 0;
+	  	top: 0;
+	}
+	&.info::before {
+		background-color: $info;
+	}
+	&.error::before {
+		background-color: $error;
+	}
+}
+
+.table {
+	.height-60 {
+		td.c-error {
+			background-color: transparentize($error, 0.82);
+		}
+		td.c-info {
+			background-color: transparentize($info, 0.82);
+		}
+	}
+}
