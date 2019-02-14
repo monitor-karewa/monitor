@@ -94,8 +94,8 @@ input:focus {
 }
 
 .checkbox {
-  width: 18px;
-  height: 18px;
+  width: 100%;
+  /*height: 18px;*/
   position: relative;
   display: flex;
   align-items: center;
@@ -152,7 +152,7 @@ input:focus {
       font-family: 'Material-Design-Iconic-Font';
       position: absolute;
       font-size: 12px;
-      left: 2px;
+      left: 3px;
       top: 0;
       color: #fff;
       font-weight: bold;
@@ -506,7 +506,7 @@ html:not(.ie9) .select.fg-line:before {
 
     .fg-label {
       strong {
-        font-size: 12px;
+        font-size: 10px;
         font-weight: 600;
         font-style: normal;
         font-stretch: normal;
@@ -514,6 +514,8 @@ html:not(.ie9) .select.fg-line:before {
         letter-spacing: normal;
         top: 5px;
         position: relative;
+        font-family: Raleway-semibold;
+        color: #8f95b0;//$plain_text;
       }
     }
   }

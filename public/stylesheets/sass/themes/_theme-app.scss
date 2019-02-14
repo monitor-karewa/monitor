@@ -96,6 +96,19 @@ strong {
 		background-color: $grey_3;
 	}
 }
+
+.mini-buttons {
+  .mini-btn {
+    border-color: $accent;
+    font-family: $principal-font-bold;
+    color: $accent;
+
+    &:hover {
+      background-color: $accent;
+      color: $white;
+    }
+  }
+}
 /* END BUTTONS */
 
 
@@ -402,6 +415,17 @@ strong {
   p {
     font-family: $principal-font-semibold;
     color: $plain_text;
+  }
+}
+
+.floating-text-form {
+  h1 {
+    font-family: Raleway-bold;
+    color: #454e7b;//$primary;
+  }
+  p {
+    font-family: Raleway-semibold;
+    color: #8f95b0;//$info_text;
   }
 }
 

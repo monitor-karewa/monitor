@@ -34,6 +34,23 @@
 	.form-btn-top {
     	width: 100%;
 	}
+	.modal-content {
+		padding-right: 15px !important;
+	}
+	.modal-footer.aditional-text {
+		display: block;
+		.total-footer {
+			margin-top: 0;
+			margin-bottom: 20px;
+			display: block;
+		}
+		.button-info_text {
+			float: left;
+		}
+		.button-accent {
+			float: right;
+		}
+	}
 	.search-container {
 		width: 100%;
 		margin-bottom: 5px;
@@ -191,6 +208,11 @@
 	  }
 	}
 
+	.modal-content {
+		&.min-w-600px {
+			min-width: inherit !important;
+		}
+	}
 	.simple-login {
 		.left-side {
 			width: 100%;
