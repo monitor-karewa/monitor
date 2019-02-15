@@ -1,0 +1,112 @@
+.client-cover {
+  height: 480px;
+  margin-bottom: 60px;
+
+  .cover-container {
+    height: 420px;
+    top: 60px;
+    position: relative;
+
+    .img-container {
+      height: 100%;
+      width: 100%;
+
+      img {
+        height: 100%;
+        object-fit: cover;
+        width: 100%;
+      }
+    }
+
+    .info {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%,-50%);
+      min-width: 100%;
+      padding: 0 30px;
+
+      p {
+        font-size: 16px;
+        font-weight: 500;
+        line-height: 1.88;
+        text-align: center;
+        max-width: 780px;
+        margin: auto;
+        overflow: hidden;
+        display: -webkit-box !important;
+        -webkit-line-clamp: 4;
+        -webkit-box-orient: vertical;
+        text-overflow: ellipsis;
+        height: 114px;
+        overflow: hidden;
+      }
+
+      h3 {
+        font-size: 20px;
+        font-weight: bold;
+        line-height: normal;
+        text-align: center;
+        margin-bottom: 0;
+      }
+
+      h1 {
+        font-size: 60px;
+        font-weight: normal;
+        line-height: normal;
+        text-align: center;
+      }
+
+      .divider {
+        width: 65px;
+        height: 3px;
+        margin: 15px auto 25px;
+      }
+    }
+
+    .filter-box {
+      z-index: 4;
+      max-width: 1440px;
+      width: calc(100% - 170px);
+      bottom: -35px;
+      border-radius: 5px;
+      box-shadow: 2px 0 10px 0 rgba(56, 73, 99, 0.2);
+      padding: 20px 30px;
+      margin: auto;
+      position: absolute;
+      left: 50%;
+      transform: translate(-50%,0%);
+    }
+  }
+}
+
+.filter {
+  display: flex;
+
+  .filter-container {
+    width: calc(100% - 70px);
+    display: flex;
+
+    .fg-line {
+      border-right: none;
+    }
+  }
+
+  .filter-btn {
+    width: 70px;
+    min-height: 30px;
+    border-radius: 0 2px 2px 0;
+    font-size: 12px;
+    border: none;
+    cursor: pointer;
+    transition: 0.5s;
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+
+.client-content {
+  padding: 0 85px;
+}

@@ -1,4 +1,4 @@
-/* 
+/*
  Created on : 03/12/2018
  * Author     : Ingrid Pinedo
  * Version    : 1.0
@@ -395,7 +395,7 @@ button {
 
         i {
           font-size: 30px;
-          margin-right: 10px; 
+          margin-right: 10px;
           width: 24px;
           display: flex;
           align-items: center;
@@ -406,7 +406,6 @@ button {
   }
 }
 /* END CARDS */
-
 
 .container-footer {
   position: fixed;
@@ -469,6 +468,107 @@ button {
   }
 }
 
+.footer-client {
+  padding: 30px 85px;
+  width: 100%;
+
+  .develop-by {
+    .divider {
+      width: 40px;
+      height: 1px;
+      margin: auto;
+      margin-bottom: 20px;
+    }
+    p {
+      margin-bottom: 0;
+      font-size: 12px;
+      font-weight: 500;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      text-align: center;
+      img {
+        width: 95px;
+        height: 22px;
+      }
+
+    }
+  }
+
+  .row{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+
+    h1 {
+      text-transform: capitalize;
+    }
+
+    .img-responsive {
+      max-width: 200px;
+      float: right;
+    }
+
+    span {
+      &:nth-child(1) {
+        img {
+          margin-bottom: 30px;
+        }
+      }
+
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        label {
+          font-size: 16px;
+          font-weight: bold;
+          line-height: normal;
+          margin-bottom: 30px;
+          text-transform: uppercase;
+        }
+
+        li {
+          padding-right: 15px;
+          a {
+            position: relative;
+            width: fit-content;
+            opacity: 0.7;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.57;
+            display: block;
+            margin-bottom: 22px;
+            text-decoration: none;
+
+            &:before {
+              content: "";
+              position: absolute;
+              width: 100%;
+              height: 2px;
+              bottom: -4px;
+              left: 0;
+              visibility: hidden;
+              -webkit-transform: scaleX(0);
+              transform: scaleX(0);
+              -webkit-transition: all 0.3s ease-in-out 0s;
+              transition: all 0.3s ease-in-out 0s;
+            }
+
+            &:hover:before {
+              visibility: visible;
+              -webkit-transform: scaleX(1);
+              transform: scaleX(1);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 
 /* DROPDOWNS */
 .dropdown {
@@ -482,7 +582,7 @@ button {
 }
 
 .dropdown.menu-filters {
-  .dropdown-menu {    
+  .dropdown-menu {
     small {
       font-size: 10px;
       font-weight: bold;
@@ -1004,7 +1104,7 @@ button {
           }
         }
       }
-    }  
+    }
   }
 }
 /* END HEADER APP */
@@ -1060,6 +1160,16 @@ button {
 }
 /* END MAIN CONTAINER */
 
+.neutral-width {
+  width: 100%;
+  max-width: 1440px;
+  margin: auto;
+
+  &.topbar {
+    padding: 0 85px;
+    max-width: 1610px;
+  }
+}
 
 /* PANELS */
 .panel-simple {
@@ -1346,11 +1456,11 @@ button {
   }
 }
 .backdrop {
-  position: fixed; 
-  width: 100%; 
-  height: 100%; 
-  z-index: 4; 
-  background-color: #454e7b; 
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  background-color: #454e7b;
   opacity: 0.7;
   display: none;
 
@@ -1382,7 +1492,7 @@ button {
         font-size: 14px;
       }
 
-      &:-ms-input-placeholder { 
+      &:-ms-input-placeholder {
         font-size: 14px;
       }
 
@@ -1406,7 +1516,7 @@ button {
         opacity: 0;
         font-size: 25px;
       }
-    } 
+    }
 
     .input-search:focus ~ .icon {
       &.zmdi-search {
