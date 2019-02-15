@@ -18,9 +18,8 @@
   }
   button, a{
     padding-left: 8px;
-    background: rgba(0, 0, 0, 0);
+    background: transparent;
     border: none;
-    color: rgb(255, 255, 255);
     font-size: 14px;
     vertical-align: middle;
     padding-right: 0;
@@ -31,32 +30,12 @@
 }
 
 .tag-title{
+  padding-top: 3px;
+  font-size: 12px;
+  font-weight: bold;
   line-height: 1.5;
   text-align: left;
   font-size: 12px;
   float: left;
   margin-right: 10px;
-}
-
-.tag{
-  font-family: $principal-font-regular;
-  background-color: $accent;
-  color: $white;
-  a{
-    color: $white;
-  }
-  &:hover{
-    background-color: $primary;
-    color: $white;
-    a{
-      color: $white;
-    }
-  }
-  &.active{
-    background-color: $primary;
-  }
-}
-.tag-title{
-  font-family: $principal-font-regular;
-  color: $title;
 }

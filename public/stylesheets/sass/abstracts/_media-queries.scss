@@ -173,7 +173,6 @@
 	}
 
 	.client-cover {
-		margin-bottom: 80px !important;
 		.cover-container {
 		  .info {
 		    p {
@@ -193,7 +192,7 @@
 
 		  .filter-box {
 				width: calc(100% - 60px) !important;
-				bottom: -50px !important;
+				// bottom: -50px !important;
 		  }
 		}
 	}

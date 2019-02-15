@@ -910,6 +910,25 @@ strong {
 }
 /* END TABLES */
 
+.tag{
+  font-family: $principal-font-regular;
+  background-color: $accent;
+  color: $white;
+  a, button{
+    color: $white;
+  }
+  &:hover{
+    background-color: $primary;
+    color: $white;
+    a{
+      color: $white;
+    }
+  }
+}
+.tag-title{
+  font-family: $principal-font-regular;
+  color: $title;
+}
 
 .upload-section {
   label {
