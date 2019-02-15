@@ -500,6 +500,10 @@ button {
           margin-right: 12px;
         }
       }
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
     }
   }
 }
