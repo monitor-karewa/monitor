@@ -82,6 +82,11 @@ button {
     padding: 26px 40px;
     margin: -20px -20px 0;
   }
+
+  .card-body {
+    padding: 0;
+    z-index: 1;
+  }
 }
 
 .card-img-corner {
@@ -728,6 +733,7 @@ button {
 }
 
 .floating-text {
+  position: relative;
   h1 {
     font-size: 14px;
     font-weight: bold;
@@ -1063,6 +1069,7 @@ button {
   position: absolute;
   bottom: 0px;
   right: 0px;
+  z-index: 0;
 }
 
 .logo-full {

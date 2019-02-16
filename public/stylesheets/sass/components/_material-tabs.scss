@@ -1,0 +1,28 @@
+.material-tabs {
+	.nav {
+		margin-bottom: 20px !important;
+	}
+    
+	.nav-link {
+		font-size: 14px;
+		font-weight: bold;
+		line-height: 1.14;
+		margin-bottom: 8px;
+	    position: relative;
+
+		&::after {
+		 	content: " ";
+		 	width: 100px;
+		 	height: 2px;
+		 	background-color: transparent;
+		 	position: absolute;
+		 	display: block;
+		 	bottom: -8px;
+		 	margin: 0 auto;
+		 	left: 0;
+		 	right: 0;
+		 	transition: background 0.5s;
+	 	  	transition-timing-function: cubic-bezier(.2, 0, 0, 1);
+		}
+	}
+}

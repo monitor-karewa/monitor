@@ -65,6 +65,19 @@
 }
 
 @media screen and (max-width: 767px) {
+	.buttons-right.w-50,
+	.floating-text.w-50 {
+		width: 100% !important;
+	}
+
+	.buttons-right.w-50 {
+		margin-top: 20px;
+	}
+
+	.p-relative.d-flex.vertical-center.m-b-20 {
+		display: block !important;
+	}
+
 	.container-footer {
 
 	}

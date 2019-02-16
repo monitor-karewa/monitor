@@ -3,6 +3,22 @@
  * Version    : 1.0
  * Content    : Palette Colors variable
  */
+$default: #19babd; 
+$dark: #2e3854;
+$purple: #981beb;
+$orange: #ff691e;
+$yellow: #fab81e;
+$green-blue: #80dbb6;
+$green: #17cf86;
+$sky: #91d2fa;
+$blue: #1b95e0;
+$red: #e71c4f;
+$pink: #f58ea8;
+$gray: #abb8c2;
+$lilac: #9f97e4;
+$blue-dark: #4468c4;
+
+
 $primary: #454e7b;
 $accent: #19babd;
 
@@ -22,3 +38,18 @@ $background: #f8f9ff;
 $black: #242424;
 $white: #ffffff;
 $cards: #f7f8f9;
+
+/*.default-color { $accent: $default; }
+.dark-color { $accent: $dark; }
+.purple-color { $accent: $purple; }
+.orange-color { $accent: $orange; }
+.yellow-color { $accent: $yellow; }
+.green-blue-color { $accent: $green-blue; }
+.green-color { $accent: $green; }
+.sky-color { $accent: $sky; }
+.blue-color { $accent: $blue; }
+.red-color { $accent: $red; }
+.pink-color { $accent: $pink; }
+.gray-color { $accent: $gray; }
+.lilac-color { $accent: $lilac; }
+.blue-dark-color { $accent: $blue-dark; }*/
