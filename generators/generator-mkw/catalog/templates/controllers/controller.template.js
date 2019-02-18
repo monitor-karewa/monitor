@@ -4,6 +4,8 @@ const logger = require('./../components/logger').instance;
 const <%= modelName %> = require('./../models/<%= name %>.model').<%= modelName %>;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
+const { validationResult } = require('express-validator/check');
+
 /**
  * Renderiza la vista principal de consulta de <%= modelName %>.
  * @param req
@@ -67,6 +69,11 @@ exports.list = (req, res, next) => {
  * @param next
  */
 exports.save = (req, res, next) => {
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
     
     let id = req.body._id;
     
