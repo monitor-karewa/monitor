@@ -782,18 +782,18 @@
                                                 <div class="floating-text w-50">
                                                     <h1>Imagen de portada </h1>
                                                     <p class="m-b-0">Puedes cambiar la imagen principal de la página del monitor</p>
-                                                </div>      
+                                                </div>
                                                 <div class="buttons-right w-50">
                                                     <a href="" class="btn-stroke button-accent b-shadow-none p-t-5 p-b-5"><i class="zmdi zmdi-plus"></i>
                                                         Cambiar Imagen
-                                                        <input type="file" /> 
+                                                        <input type="file" />
                                                     </a>
-                                                    <a href="" class="btn-raised button-accent b-shadow-none p-t-5 p-b-5 m-l-15"><i class="zmdi zmdi-plus"></i> 
+                                                    <a href="" class="btn-raised button-accent b-shadow-none p-t-5 p-b-5 m-l-15"><i class="zmdi zmdi-plus"></i>
                                                         Guardar
                                                     </a>
-                                                </div>  
+                                                </div>
                                             </div>
-                                            
+
                                             <div class="cover-test m-b-30">
                                                 <label>Tamaño de imagen recomendado: <strong class="primary">1280 x 500</strong> </label>
                                                 <div class="container-cover">
@@ -855,10 +855,10 @@
                                                   <div class="floating-text w-50">
                                                       <h1>Personalización de plataforma </h1>
                                                       <p class="m-b-0">Elige el tema para personalizar la plataforma.</p>
-                                                  </div>      
+                                                  </div>
                                                   <div class="buttons-right w-50">
                                                       <a href="" class="btn-raised button-accent b-shadow-none p-t-5 p-b-5"> Editar/Guardar </a>
-                                                  </div>  
+                                                  </div>
                                               </div>
                                               <!-- AL DAR CLICK EN EDITAR, SE DEBE ELIMINAR LA CLASE "disabled".
                                               CUANDO SE DE GUARDAR, SE AGREGA LA CLASE "disabled". -->
@@ -1195,7 +1195,21 @@
 
                                 <br>
                                 <p>
-                                    Textarea
+                                    Input <strong> "input-border". </strong>
+                                    <br>
+                                    This type of input has a subtitle.
+                                </p>
+                                <div class="form-group fg-float input-border p-0">
+                                    <div class="fg-line">
+                                        <input type="text" class="form-control fg-input" placeholder="Placeholder">
+                                    </div>
+                                </div>
+
+                                </div>
+
+                                <br>
+                                <p>
+                                  <strong>Textarea</strong>
                                     <br>
                                     Differents types od textarea.
                                 </p>
@@ -1307,8 +1321,6 @@
                                 <br>
                                 <p>  Select <strong> "border-select". </strong>
                                   <br>
-                                  If the input has an error add this class:
-                                  <br>
                                 </p>
 
                               <div class="form-group fg-float border-select">
@@ -1322,56 +1334,6 @@
                                 </div>
                               </div>
 
-                              <br>
-                              <p>  Select <strong> "filter". </strong>
-                              </p>
-                              <div class="filter">
-                                <div class="filter-container row m-0">
-                                  <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
-                                    <div class="fg-line m-0">
-                                      <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Placeholder" title="Select placeholder">
-                                        <option>Text 2</option>
-                                        <option>Text 3</option>
-                                        </optgroup>
-                                      </select>
-                                    </div>
-                                  </div>
-                                  <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
-                                    <div class="fg-line m-0">
-                                      <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Placeholder" title="Select placeholder">
-                                        <optgroup label="2018">
-                                          <option>3º 2018</option>
-                                          <option>2º 2018</option>
-                                          <option>1º 2018</option>
-                                        </optgroup>
-                                        <optgroup label="2017">
-                                          <option>3º 2017</option>
-                                          <option>2º 2017</option>
-                                          <option>1º 2017</option>
-                                        </optgroup>
-                                      </select>
-
-                                    </div>
-                                  </div>
-                                  <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
-                                    <div class="fg-line m-0">
-                                      <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Placeholder" title="Select placeholder">
-                                        <option>Text 2</option>
-                                        <option>Text 3</option>
-                                      </select>
-                                    </div>
-                                  </div>
-                                  <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
-                                    <div class="fg-line m-0">
-                                      <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Placeholder" title="Select placeholder">
-                                        <option>Text 2</option>
-                                        <option>Text 3</option>
-                                      </select>
-                                    </div>
-                                  </div>
-                                </div>
-                                <button class="filter-btn" type="button" name="button">Filter</button>
-                              </div>
 
                             </div>
 
@@ -1381,7 +1343,7 @@
                                 <br>
                             </p>
 
-                            <div class="toggle-switch">
+                            <div class="toggle-switch col-12">
                                 <div class="switch-border"></div>
                                 <input id="ts1" type="checkbox" hidden="hidden">
                                 <label for="ts1" class="ts-helper"></label>
@@ -1389,7 +1351,7 @@
 
                             <br><br>
 
-                            <div class="toggle-switch">
+                            <div class="toggle-switch col-12">
                                 <div class="switch-border"></div>
                                 <input id="ts2" type="checkbox" hidden="hidden">
                                 <label for="ts2" class="ts-helper"></label>
@@ -1397,7 +1359,7 @@
 
                             <br><br>
 
-                            <div class="input-radio-check">
+                            <div class="input-radio-check col-12">
                                 <div class=" check-container">
                                     <input type="radio" name="role" id="one">
                                     <span class="role" for="one">Option 1</span>
@@ -1735,6 +1697,74 @@
                                 </div>
                             </div>
                         </div>
+
+                        <br>
+                        <p>  Filter</strong>
+                        </p>
+                        <div class="col-12">
+                          <div class="filter">
+                            <div class="filter-container row m-0">
+                              <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
+                                <div class="fg-line m-0">
+                                  <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Placeholder" title="Select placeholder">
+                                    <option>Text 2</option>
+                                    <option>Text 3</option>
+                                    </optgroup>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
+                                <div class="fg-line m-0">
+                                  <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Placeholder" title="Select placeholder">
+                                    <optgroup label="2018">
+                                      <option>3º 2018</option>
+                                      <option>2º 2018</option>
+                                      <option>1º 2018</option>
+                                    </optgroup>
+                                    <optgroup label="2017">
+                                      <option>3º 2017</option>
+                                      <option>2º 2017</option>
+                                      <option>1º 2017</option>
+                                    </optgroup>
+                                  </select>
+
+                                </div>
+                              </div>
+                              <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
+                                <div class="fg-line m-0">
+                                  <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Placeholder" title="Select placeholder">
+                                    <option>Text 2</option>
+                                    <option>Text 3</option>
+                                  </select>
+                                </div>
+                              </div>
+                              <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
+                                <div class="fg-line m-0">
+                                  <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Placeholder" title="Select placeholder">
+                                    <option>Text 2</option>
+                                    <option>Text 3</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            <button class="filter-btn" type="button" name="button">Filter</button>
+                          </div>
+                        </div>
+                        <div class="col-12">
+                          <div class="form m-t-20">
+                            <div class="filter">
+                              <div class="form-group fg-float input-border">
+                                  <div class="fg-line">
+                                      <input type="text" class="form-control fg-input" placeholder="Placeholder">
+                                  </div>
+                              </div>
+                              <button class="filter-btn" type="button" name="button">Filter</button>
+                            </div>
+
+                          </div>
+
+                        </div>
+
                     </div>
                     <!-- END SEARCH -->
 

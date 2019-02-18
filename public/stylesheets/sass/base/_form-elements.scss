@@ -381,7 +381,24 @@ html:not(.ie9) .select.fg-line:before {
   }
 }
 
-.border-select {
+ .input-border {
+   width: 100%;
+   margin: 0px !important;
+   padding: 0px !important;
+   .fg-line {
+     margin: 0px;
+   }
+   input {
+     border-bottom: 0;
+     font-size: 13px !important;
+     padding: 5px 15px 4px 15px !important;
+     &:focus {
+       border-bottom: none !important;
+     }
+   }
+ }
+
+.border-select, .input-border {
   .fg-line {
     height: 30px;
     border: 1px solid;
