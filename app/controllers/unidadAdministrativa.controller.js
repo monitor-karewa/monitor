@@ -1,26 +1,26 @@
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 
-const Proveedor = require('./../models/proveedor.model').Proveedor;
+const UnidadAdministrativa = require('./../models/unidadAdministrativa.model').UnidadAdministrativa;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const { validationResult } = require('express-validator/check');
 
 /**
- * Renderiza la vista principal de consulta de Proveedor.
+ * Renderiza la vista principal de consulta de UnidadAdministrativa.
  * @param req
  * @param res
  * @param next
  */
 exports.index = (req, res, next) => {
     let renderParams = {};
-    renderParams.model = Proveedor;
-    renderParams.permission = Proveedor.permission;
-    res.render('proveedor', renderParams);
+    renderParams.model = UnidadAdministrativa;
+    renderParams.permission = UnidadAdministrativa.permission;
+    res.render('unidadAdministrativa', renderParams);
 };
 
 /**
- * Consulta los registros de Proveedor disponibles.
+ * Consulta los registros de UnidadAdministrativa disponibles.
  * @param req
  * @param res
  * @param next
@@ -35,13 +35,13 @@ exports.list = (req, res, next) => {
     //let qNotDeleted = deletedSchema.qNotDeleted();
     //query = {...query, ...qNotDeleted};
 
-    Proveedor
+    UnidadAdministrativa
         .paginate(
             query,
             paginationOptions,
             (err, result) => {
                 if (err) {
-                    logger.error(err, req, 'proveedor.controller#list', 'Error al consultar lista de Proveedor');
+                    logger.error(err, req, 'unidadAdministrativa.controller#list', 'Error al consultar lista de UnidadAdministrativa');
                     return res.json({
                         errors: true,
                         message: res.__('general.error.unexpected-error')
@@ -63,13 +63,13 @@ exports.list = (req, res, next) => {
 };
 
 /**
- * Guarda un Proveedor. 
+ * Guarda un UnidadAdministrativa. 
  * @param req
  * @param res
  * @param next
  */
 exports.save = (req, res, next) => {
-
+    
     let id = req.body._id;
 
     const errors = validationResult(req);
@@ -81,11 +81,11 @@ exports.save = (req, res, next) => {
         //Update
         let qById = {_id: id};
 
-        Proveedor
+        UnidadAdministrativa
             .findOne(qById)
-            .exec((err, proveedor) => {
-                if (err || !proveedor) {
-                    logger.error(req, err, 'proveedor.controller#save', 'Error al consultar Proveedor');
+            .exec((err, unidadAdministrativa) => {
+                if (err || !unidadAdministrativa) {
+                    logger.error(req, err, 'unidadAdministrativa.controller#save', 'Error al consultar UnidadAdministrativa');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.save')
@@ -93,13 +93,12 @@ exports.save = (req, res, next) => {
                 }
 
                 //Update doc fields
-                proveedor.nombre = req.body.nombre;
-                proveedor.rfc = req.body.rfc;
-                proveedor.notas =  req.body.notas;
-                
-                proveedor.save((err, savedProveedor) => {
+                unidadAdministrativa.nombre = req.body.nombre;
+                unidadAdministrativa.notas = req.body.notas;
+
+                unidadAdministrativa.save((err, savedUnidadAdministrativa) => {
                     if (err) {
-                        logger.error(req, err, 'proveedor.controller#save', 'Error al guardar Proveedor');
+                        logger.error(req, err, 'unidadAdministrativa.controller#save', 'Error al guardar UnidadAdministrativa');
                         return res.json({
                             errors: true,
                             message: req.__('general.error.save')
@@ -109,7 +108,7 @@ exports.save = (req, res, next) => {
                     return res.json({
                         errors: false,
                         message: req.__('general.success.updated'),
-                        data: savedProveedor
+                        data: savedUnidadAdministrativa
                     });
                 });
             });
@@ -117,16 +116,14 @@ exports.save = (req, res, next) => {
     } else {
         //Create
 
-        let proveedor = new Proveedor({
+        let unidadAdministrativa = new UnidadAdministrativa({
             nombre: req.body.nombre,
-            rfc: req.body.rfc,
             notas: req.body.notas
         });
 
-        proveedor.save((err, savedProveedor) => {
-
+        unidadAdministrativa.save((err, savedUnidadAdministrativa) => {
             if (err) {
-                logger.error(req, err, 'proveedor.controller#save', 'Error al guardar Proveedor');
+                logger.error(req, err, 'unidadAdministrativa.controller#save', 'Error al guardar UnidadAdministrativa');
                 return res.json({
                     "error": true,
                     "message": req.__('general.error.save')
@@ -136,14 +133,14 @@ exports.save = (req, res, next) => {
             return res.json({
                 "error": false,
                 "message": req.__('general.success.created'),
-                "data": savedProveedor
+                "data": savedUnidadAdministrativa
             });
         });
     }
 };
 
 /**
- * Borra un Proveedor.
+ * Borra un UnidadAdministrativa.
  * @param req
  * @param res
  * @param next
@@ -158,12 +155,12 @@ exports.delete = (req, res, next) => {
     let qNotDeleted = deletedSchema.qNotDeleted();
     query = {...query, ...qNotDeleted};
     
-    Proveedor
+    UnidadAdministrativa
         .find(query)
         .count()
         .exec((err, count) => {
             if (err) {
-                logger.error(req, err, 'proveedor.controller#delete', 'Error al realizar count de Proveedor');
+                logger.error(req, err, 'unidadAdministrativa.controller#delete', 'Error al realizar count de UnidadAdministrativa');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.delete')
@@ -171,7 +168,7 @@ exports.delete = (req, res, next) => {
             }
             
             if (count === 0) {
-                logger.error(req, err, 'proveedor.controller#delete', 'Error al intentar borrar Proveedor; el registro no existe o ya fue borrado anteriormente');
+                logger.error(req, err, 'unidadAdministrativa.controller#delete', 'Error al intentar borrar UnidadAdministrativa; el registro no existe o ya fue borrado anteriormente');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.not-exists-or-already-deleted')
@@ -179,7 +176,7 @@ exports.delete = (req, res, next) => {
             }
 
 
-            Proveedor.update(
+            UnidadAdministrativa.update(
                 query,
                 {
                     $set: {
@@ -193,7 +190,7 @@ exports.delete = (req, res, next) => {
                 {multi: false}
             ).exec((err) => {
                 if (err) {
-                    logger.error(req, err, 'proveedor.controller#delete', 'Error al borrar Proveedor.');
+                    logger.error(req, err, 'unidadAdministrativa.controller#delete', 'Error al borrar UnidadAdministrativa.');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.delete')

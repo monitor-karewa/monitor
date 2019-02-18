@@ -1,10 +1,11 @@
-const { check, validationResult } = require('express-validator/check');
 
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 
 const Recurso = require('./../models/recurso.model').Recurso;
 const deletedSchema = require('./../models/schemas/deleted.schema');
+
+const { validationResult } = require('express-validator/check');
 
 /**
  * Renderiza la vista principal de consulta de Recurso.
@@ -71,6 +72,11 @@ exports.list = (req, res, next) => {
 exports.save = (req, res, next) => {
 
     let id = req.body._id;
+
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+        return res.status(422).json({ errors: errors.array() });
+    }
     
     if (id) {
         //Update
@@ -90,8 +96,10 @@ exports.save = (req, res, next) => {
                 }
 
                 //Update doc fields
-                recurso.name = req.body.name;
-                
+                recurso.titulo = req.body.titulo;
+                recurso.clasificacion = req.body.clasificacion;
+                recurso.enlace = req.body.enlace;
+
                 recurso.save((err, savedRecurso) => {
                     if (err) {
                         logger.error(req, err, 'recurso.controller#save', 'Error al guardar Recurso');
@@ -110,12 +118,6 @@ exports.save = (req, res, next) => {
             });
         
     } else {
-
-        //Validaciones del modelo
-        const errors = validationResult(req);
-        if (!errors.isEmpty()) {
-            return res.status(422).json({ errors: errors.array() });
-        }
 
         //Create
         let recurso = new Recurso({
@@ -204,7 +206,5 @@ exports.delete = (req, res, next) => {
                     message: req.__('general.success.deleted')
                 });
             });
-            
-            
         });
 };

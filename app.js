@@ -32,6 +32,7 @@ const securityRoutes = require('./app/routes/security.routes');
 const adminRoutes = require('./app/routes/admin.routes');
 const proveedorRoutes = require('./app/routes/proveedor.routes');
 const recursoRoutes = require('./app/routes/recurso.routes');
+const unidadesRoutes = require('./app/routes/unidadAdministrativa.routes');
 // const usersRoutes = require('./app/routes/users.routes');
 
 // Controllers
@@ -126,8 +127,9 @@ app.use((req, res, next) => {
 // app.use('/api/users', usersRoutes);
 app.use('/security', securityRoutes);
 app.use('/admin', securityController.checkLogin, adminRoutes);
-app.use('/proveedores', proveedorRoutes);
-app.use('/recursos', recursoRoutes);
+app.use('/api/proveedores', proveedorRoutes);
+app.use('/api/recursos', recursoRoutes);
+app.use('/api/unidades', unidadesRoutes);
 
 
 // ==============
