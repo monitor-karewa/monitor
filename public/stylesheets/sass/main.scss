@@ -37,7 +37,7 @@
 /* -----------------------------------------------------------------------------
  * Components: Components like slider, modal, timeline, panel, etc
  * ----------------------------------------------------------------------------- */
-@import "components/cover-page";
+ @import "components/dropdowns";
 @import "components/switcher-tabs";
 @import "components/tags";
 
@@ -45,6 +45,7 @@
 /* -----------------------------------------------------------------------------
  * Pages: Specific styles for full pages
  * ----------------------------------------------------------------------------- */
+ @import "pages/cover-page";
 @import "pages/login";
 @import "pages/page-error";
 
