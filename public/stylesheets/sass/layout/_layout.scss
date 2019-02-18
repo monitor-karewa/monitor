@@ -70,6 +70,7 @@ button {
 
 /* CARDS */
 .card {
+  overflow: hidden;
   position: relative;
   padding: 22px 24px;
   margin-bottom: 30px;
@@ -78,7 +79,7 @@ button {
 
   .card-header {
     background-color: transparent;
-    border-bottom: 2px solid #f8f9ff;//$background;
+    border-bottom: 2px solid $background;
     padding: 26px 40px;
     margin: -20px -20px 0;
   }
@@ -474,7 +475,6 @@ button {
   }
 }
 
-
 .details-list {
   ul {
     list-style: none;
@@ -508,6 +508,47 @@ button {
 
       &:last-of-type {
         margin-bottom: 0;
+      }
+    }
+  }
+}
+
+.dropdown-inside {
+  .fg-line {
+    position: relative;
+  }
+
+  .fg-input {
+      padding-right: 110px;
+  }
+
+  .dropdown {
+    position: absolute;
+    right: 0;
+    top: 0;
+
+    .btn-stroke {
+      padding: 0 10px !important;
+      text-transform: capitalize !important;
+      font-size: 12px !important;
+      height: 20px !important;
+      min-height: 0px !important;
+    }
+
+    .dropdown-menu {
+      padding: 0;
+        width: 100px;
+        transform: translate3d(-60px, 20px, 0px);
+        
+      ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+
+        li {
+          font-size: 14px;
+          padding: 8px 20px;
+        }
       }
     }
   }
@@ -875,7 +916,7 @@ button {
 
       .topMenuDropdown {
         .dropdown-toggle {
-          background-color: #fff;
+          background-color: $white;
           outline: none;
           height: 46px;
           padding: 6px 12px;
@@ -1105,7 +1146,6 @@ button {
   height: 100%;
   width: 100%;
   padding: 85px 60px 75px 300px;
-  background-color: #f8f9ff;
 
   .container {
     padding: 0;
@@ -1125,7 +1165,6 @@ button {
     font-size: 30px;
   }
   p {
-    font-family: Raleway-medium;
     font-size: 12px;
     font-weight: 500;
     font-style: italic;
@@ -1134,34 +1173,6 @@ button {
     display: block;
     margin: 0 auto 35px;
     max-width: 220px;
-  }
-
-  &.error {
-    i,
-    p {
-      color: $error;
-    }
-  }
-
-  &.info {
-    i,
-    p {
-      color: $info;
-    }
-  }
-
-  &.success {
-    i,
-    p {
-      color: $success;
-    }
-  }
-
-  &.warning {
-    i,
-    p {
-      color: $warning;
-    }
   }
 }
 
@@ -1285,7 +1296,6 @@ button {
   padding: 14px;
   border-left: 3px solid;
   box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.12);
-  background-color: #f7f8f9;//$cards
 
   label {
     font-size: 12px;
@@ -1339,7 +1349,6 @@ button {
       width: 30px;
       height: 30px;
       border-radius: 50%;
-      /*box-shadow: 2px 0 10px 0 rgba(56,73,99,.2);*/
 
       &:hover {
         animation: jello 1s ease-in-out;
@@ -1454,8 +1463,7 @@ button {
   position: fixed; 
   width: 100%; 
   height: 100%; 
-  z-index: 4; 
-  background-color: #454e7b; 
+  z-index: 4;  
   opacity: 0.7;
   display: none;
 
@@ -1500,7 +1508,7 @@ button {
       position: absolute;
       left: 0;
       font-size: 20px;
-      color: #b4b8ca;
+      color: $grey_1;
       transition: 0.5s;
 
       &.zmdi-search {
@@ -1572,12 +1580,10 @@ button {
   }
 
   &::-webkit-scrollbar-track {
-    background-color: #dadce5;//$grey_2;
     border-radius: 30px;
   }
 
   &::-webkit-scrollbar-thumb {
-    background-color: #b4b8ca;//$grey_1;
     border-radius: 30px;
   }
 }
@@ -1615,24 +1621,19 @@ button {
   margin-right: 20px !important;
 
   span {
-    font-family: Raleway-bold;
     font-size: 13px;
     font-weight: bold;
     line-height: normal;
-    color: #454e7b;//$primary;
     display: block;
     text-transform: uppercase;
     strong {
       font-size: 18px;
-      color: #19babd;//$accent_1;
     }
   }
   p {
-    font-family: Raleway-semibold;
     font-size: 10px;
     font-weight: 600;
     line-height: 1.4;
-    color: #8f95b0;//$info_text;
     display: block;
     margin-bottom: 0;
     margin-top: 2px;

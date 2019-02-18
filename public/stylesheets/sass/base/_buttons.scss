@@ -3,15 +3,8 @@
  * Version    : 1.0
  * Content    : Buttons
  */
-
-
-a > input[type="file"],
-button > input[type="file"] {
-    opacity: 0;
-    position: absolute;
-}
-
 .btn-raised {
+	position: relative;
 	width: fit-content;
 	min-height: 25px;
 	display: flex;
@@ -54,37 +47,33 @@ button > input[type="file"] {
 		}
 	}
 
-  @mixin filled-color($bgm, $text){
-    background-color: $bgm;
-    color: $text;
-    &:hover {
-      color: $text;
-    }
-  }
+	@mixin filled-color($bgm, $text){
+	  background-color: $bgm;
+	  color: $text;
+	  &:hover {
+	    color: $text;
+	  }
+	}
 
-  // Button Colors
-  &.button-accent {
-    @include filled-color($accent, $white);
-  }
+	&.button-error {
+	  @include filled-color($error, $white);
+	}
 
-  &.button-error {
-    @include filled-color($error, $white);
-  }
+	&.button-success {
+	  @include filled-color($success, $white);
+	}
 
-  &.button-success {
-    @include filled-color($success, $white);
-  }
+	&.button-warning {
+	  @include filled-color($warning, $white);
+	}
 
-  &.button-warning {
-    @include filled-color($warning, $white);
-  }
-
-  &.button-info {
-    @include filled-color($info, $white);
-  }
+	&.button-info {
+	  @include filled-color($info, $white);
+	}
 }
 
 .btn-stroke {
+	position: relative;
 	width: fit-content;
 	min-height: 25px;
 	display: flex;
@@ -128,47 +117,43 @@ button > input[type="file"] {
 		}
 	}
 
-  @mixin filled-color($bgm, $text){
-    color: $text;
-    border-color: $bgm;
+	@mixin filled-color($bgm, $text){
+	  color: $text;
+	  border-color: $bgm;
 
-    &:hover {
-      background-color: $bgm;
-      color: $white !important;
-    }
-  }
+	  &:hover {
+	    background-color: $bgm;
+	    color: $white !important;
+	  }
+	}
 
-  // Button Colors
-  &.button-accent {
-    @include filled-color($accent, $accent);
-  }
+	&.button-primary {
+	  @include filled-color($primary, $primary);
+	}
 
-  &.button-primary {
-    @include filled-color($primary, $primary);
-  }
+	&.button-info_text {
+	  @include filled-color($info_text, $info_text);
+	}
 
-  &.button-info_text {
-    @include filled-color($info_text, $info_text);
-  }
+	&.button-error {
+	  @include filled-color($error, $error);
+	}
 
-  &.button-error {
-    @include filled-color($error, $error);
-  }
+	&.button-success {
+	  @include filled-color($success, $success);
+	}
 
-  &.button-success {
-    @include filled-color($success, $success);
-  }
+	&.button-warning {
+	  @include filled-color($warning, $warning);
+	}
 
-  &.button-warning {
-    @include filled-color($warning, $warning);
-  }
-
-  &.button-info {
-    @include filled-color($info, $info);
-  }
+	&.button-info {
+	  @include filled-color($info, $info);
+	}
 }
 
 .btn-outline {
+	position: relative;
 	width: fit-content;
 	min-height: 25px;
 	display: flex;
@@ -247,6 +232,7 @@ button > input[type="file"] {
 }
 
 .btn-circle-icon {
+	position: relative;
 	width: fit-content;
 	width: 25px;
 	height: 25px;
@@ -298,4 +284,10 @@ button > input[type="file"] {
 		margin: 0 6px;
 		transition: 0.5s;
 	}
+}
+
+a > input[type="file"],
+button > input[type="file"] {
+    opacity: 0;
+    position: absolute;
 }

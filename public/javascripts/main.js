@@ -57,23 +57,27 @@ $('#hamburguer-icon').on('click', function() {
 });
 
 
-// $('#grayButton').click(switchGray);
-// $('#whiteButton').click(switchWhite);
-// $('#blueButton').click(switchBlue);
-// $('#yellowButton').click(switchYellow);
-
-// function switchGray() {
-//   $('body').attr('class', 'gray');
-// }
-
-// function switchWhite() {
-//   $('body').attr('class', 'white');
-// }
-
-// function switchBlue() {
-//   $('body').attr('class', 'blue');
-// }
-
-// function switchYellow() {
-//   $('body').attr('class', 'yellow');
-// }
+/*----------------------------------------------------------
+ Change Theme Colors
+ -----------------------------------------------------------*/
+(function(exports) {
+  var themeChanger = {
+    settings: {
+      wrapper: $('.theme-body'),
+      buttons: $('.controls button')
+    },
+    
+    init: function () {
+      var _self = this;
+      this.settings.buttons.on('click', function () {
+        var $node = $(this),
+            theme = $node.data('theme');
+        _self.settings.wrapper.removeClass().addClass('.theme-body ' + theme);
+        _self.settings.buttons.removeAttr('disabled');
+        $node.attr('disabled', true);
+      });
+    }
+  };
+  
+  themeChanger.init();
+}(window));

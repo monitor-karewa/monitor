@@ -6,7 +6,7 @@
 
 /* DEFAULT COLORS */
 $primary: #454e7b;
-$accent: burlywood;
+$accent: transparent;
 
 $success: #6ec284;
 $error: #eb6262;
@@ -41,6 +41,3 @@ $pink: #f58ea8;
 $gray: #abb8c2;
 $lilac: #9f97e4;
 $blue-dark: #4468c4;
-
-.default-theme { $accent: $default !important; }
-.dark-theme { $accent: $dark !important; }
