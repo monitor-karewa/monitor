@@ -664,6 +664,21 @@ strong {
 /* END MAIN CONTAINER */
 
 
+.material-tabs {    
+  .nav-link {
+    font-family: $principal-font-bold;
+    color: $info_text;
+    
+    &.active { 
+      color: $accent; 
+      &::after {
+        background-color: $accent;
+      }
+    }
+  }
+}
+
+
 /* MODAL ALERT */
 .modal-alert {
 	.modal-content {

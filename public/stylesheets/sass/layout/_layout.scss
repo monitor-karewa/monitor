@@ -82,6 +82,11 @@ button {
     padding: 26px 40px;
     margin: -20px -20px 0;
   }
+
+  .card-body {
+    padding: 0;
+    z-index: 1;
+  }
 }
 
 .card-img-corner {
@@ -570,6 +575,45 @@ button {
 }
 
 
+.details-list {
+  ul {
+    list-style: none;
+    margin: 0 0 62px;
+    padding: 0;
+
+    li {
+      display: flex;
+      align-items: center;
+      font-family: $principal-font-semibold;
+      font-size: 12px;
+      font-weight: 600;
+      line-height: 1.33;
+      color: $plain_text;
+      margin-bottom: 12px;
+
+      span {
+        min-width: 50px;
+        font-family: $principal-font-bold;
+        font-size: 14px;
+        font-weight: bold;
+        line-height: 1.14;
+        margin-right: 25px;
+        display: flex;
+        align-items: center;
+        i {
+          font-size: 16px;
+          margin-right: 12px;
+        }
+      }
+
+      &:last-of-type {
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+
 /* DROPDOWNS */
 .dropdown {
   .dropdown-menu {
@@ -582,6 +626,11 @@ button {
 }
 
 .dropdown.menu-filters {
+  .btn-stroke {
+    padding-top: 5px;
+    padding-bottom: 5px;
+    box-shadow: none;
+  }
   .dropdown-menu {
     small {
       font-size: 10px;
@@ -777,16 +826,22 @@ button {
   float: left;
   a, button {
     text-transform: capitalize;
+    padding-top: 5px;
+    padding-bottom: 5px;
+    box-shadow: none;
   }
 }
 
 .floating-text {
+  position: relative;
   h1 {
     font-size: 14px;
     font-weight: bold;
-    line-height: 1.14;
+    line-height: 1.4;
     margin: 0 0 4px;
     display: block;
+
+    strong {}
   }
   p {
     font-size: 12px;
@@ -1114,6 +1169,7 @@ button {
   position: absolute;
   bottom: 0px;
   right: 0px;
+  z-index: 0;
 }
 
 .logo-full {
@@ -1170,6 +1226,55 @@ button {
     max-width: 1610px;
   }
 }
+
+.note-transparent {
+  i {
+    display: block;
+    margin: 0 auto 20px;
+    text-align: center;
+    font-size: 30px;
+  }
+  p {
+    font-family: Raleway-medium;
+    font-size: 12px;
+    font-weight: 500;
+    font-style: italic;
+    line-height: 1.5;
+    text-align: center;
+    display: block;
+    margin: 0 auto 35px;
+    max-width: 220px;
+  }
+
+  &.error {
+    i,
+    p {
+      color: $error;
+    }
+  }
+
+  &.info {
+    i,
+    p {
+      color: $info;
+    }
+  }
+
+  &.success {
+    i,
+    p {
+      color: $success;
+    }
+  }
+
+  &.warning {
+    i,
+    p {
+      color: $warning;
+    }
+  }
+}
+
 
 /* PANELS */
 .panel-simple {
@@ -1534,9 +1639,10 @@ button {
 /* TABLES */
 .table.form-table {
   position: relative;
+  margin-bottom: 40px;
 
   thead th {
-    padding: 7px 10px;
+    padding: 7px 26px;
     border-bottom: none;
     border-top: none;
     text-transform: uppercase;
@@ -1552,6 +1658,7 @@ button {
     font-size: 12px;
     font-weight: 600;
     line-height: 1.33;
+    padding: 10px 26px;
   }
 
   tbody tr:hover {
@@ -1565,6 +1672,23 @@ button {
     position: relative;
     opacity: 0;
     transition: 0.5s;
+  }
+}
+
+.table-responsive {
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 4px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background-color: #dadce5;//$grey_2;
+    border-radius: 30px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: #b4b8ca;//$grey_1;
+    border-radius: 30px;
   }
 }
 

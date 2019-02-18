@@ -325,6 +325,10 @@
     height: 50px !important;
 }
 
+.height-60 {
+    height: 60px !important;
+} 
+
 .height-70 {
     height: 70px !important;
 }
@@ -401,6 +405,9 @@
  */
 .justify-content-center {
     justify-content: center !important;
+}
+.justify-content-end {
+    justify-content: flex-end !important;
 }
 
 
@@ -1182,4 +1189,26 @@
 
 .f-style-normal {
     font-style: normal !important;
+}
+
+/*
+ * FONT FAMILY
+ */
+.principal-font-light {
+    font-family: $principal-font-light !important;
+}
+.principal-font-regular {
+    font-family: $principal-font-regular !important;
+}
+.principal-font-medium {
+    font-family: $principal-font-medium !important;
+}
+.principal-font-semibold {
+    font-family: $principal-font-semibold !important;
+}
+.principal-font-bold {
+    font-family: $principal-font-bold !important;
+}
+.principal-font-black {
+    font-family: $principal-font-black !important;
 }

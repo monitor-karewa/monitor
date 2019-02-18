@@ -16,7 +16,7 @@
         <!-- <link rel="icon" type="image/png" sizes="96x96" href="img/favicons/eupho-favicon-96x96.png"> -->
         <!-- <link rel="icon" type="image/png" sizes="16x16" href="img/favicons/eupho-favicon-16x16.png"> -->
     </head>
-    <body>
+    <body class="default-color">
         <!-- HEADER SECTION -->
         <header id="header" class="header clearfix">
             <div class="left col-md-3 col-4">
@@ -595,6 +595,324 @@
                                     <button tupe="" class="btn-outline c-error">Cancelar procesamiento</button>
                                 </div>
                                 <img class="img-fluid img-card-corner" src="../images/Cards/corner-file-table.svg" alt="" />
+                            </div>
+                        </div>
+
+                        <p class="col-12">Card 'Carga de Datos'</p>
+                        <div class="row m-0 w-100">
+                            <div class="col-12 col-md-8 di-flex">
+                                <div class="card w-100">
+                                    <div class="floating-text m-b-30">
+                                        <h1>Resultados de la validación <strong class="m-l-10 f-12 c-accent">(datos2018.xls)</strong></h1>
+                                        <p class="m-b-30">Para corregir los registros encontrados con errores, descarga el archivo generado, realiza las correcciones necesarias y súbelo nuevamente.</p>
+                                        <button class="btn-stroke button-accent b-shadow-none">
+                                            Mostrar detalles
+                                        </button>
+                                    </div>
+
+                                    <div class="details-list">
+                                        <ul>
+                                            <li>
+                                                <span class="c-success"><i class="zmdi zmdi-check-circle"></i> 173</span> Nuevos Contratos
+                                            </li>
+                                            <li>
+                                                <span class="c-success"><i class="zmdi zmdi-check-circle"></i> 5</span> Nuevos Proveedores
+                                            </li>
+                                            <li>
+                                                <span class="c-success"><i class="zmdi zmdi-check-circle"></i> 173</span> Nuevas Unidades Administrativas
+                                            </li>
+                                        </ul>
+                                        <ul>
+                                            <li>
+                                                <span class="c-info"><i class="zmdi zmdi-info-outline"></i> 17</span> Contratos omitidos (duplicados)
+                                            </li>
+                                            <li>
+                                                <span class="c-info"><i class="zmdi zmdi-info-outline"></i> 17</span> Proveedores omitidos (duplicados)
+                                            </li>
+                                            <li>
+                                                <span class="c-info"><i class="zmdi zmdi-info-outline"></i> 17</span> Unidades Administrativas omitidas (duplicados)
+                                            </li>
+                                        </ul>
+                                        <ul>
+                                            <li>
+                                                <span class="c-error"><i class="zmdi zmdi-alert-triangle"></i> 13</span> Registros con errores
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-md-4">
+                                <div class="card">
+                                    <div class="note-transparent error">
+                                        <i class="zmdi zmdi-alert-triangle"></i>
+                                        <p>Hay errores en uno o más registros. Por favor, <strong>descarga el archivo</strong> con validaciones y realiza las correcciones necesarias.</p>
+                                    </div>
+                                    <p class="f-12 c-plain_text principal-font-semibold text-align-c d-block m-b-15">Descargar archivo con validaciones</p>
+                                    <button class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR VALIDACIONES</button>
+                                </div>
+                                <div class="card">
+                                    <p class="f-12 c-plain_text principal-font-semibold text-align-c d-block m-b-15">Cargar archivo con  correcciones</p>
+                                    <button class="btn-stroke button-accent m-0-auto b-shadow-none">CARGAR CORRECCIONES</button>
+                                </div>
+                                <div class="card">
+                                    <button class="btn-outline c-warning m-0-auto">IGNORAR ERRORES Y CONTINUAR</button>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row m-0 w-100">
+                            <div class="col-12 col-md-8">
+                                <div class="card w-100">
+                                    <div class="card-header">
+                                        <div class="search-container">
+                                            <div class="form-search">
+                                                <input class="input-search" type="text" name="" value="" placeholder="Buscar Contratos" />
+                                                <i class="icon zmdi zmdi-search"></i>
+                                                <i class="icon zmdi zmdi-close"></i>
+                                            </div>
+                                        </div>
+                                        <div class="form-btn-top">
+                                            <div class="dropdown menu-filters">
+                                                <button class="btn-stroke button-accent m-l-15" type="button" id="dropdownFilters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filtrar <i class="zmdi zmdi-caret-down m-r-0 m-l-5 f-18"></i></button>
+                                                <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownFilters">
+                                                    <ul>
+                                                        <li>
+                                                            <div class="checkbox">
+                                                                <input type="checkbox" value="">
+                                                                <i class="input-helper"></i>
+                                                                <span>Omitidos</span>
+                                                            </div>
+                                                        </li>
+                                                        <li>
+                                                            <div class="checkbox">
+                                                                <input type="checkbox" value="">
+                                                                <i class="input-helper"></i>
+                                                                <span>Errores</span>
+                                                            </div>
+                                                        </li>
+                                                    </ul>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover form-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Proveedor<i class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>
+                                                        <th>Unidad Administrativa Solicitante<i class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>
+                                                        <th class="text-align-r">Monto Total<i class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>
+                                                        <th>Title Header<i class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>
+                                                        <th>Title Header<i class="zmdi zmdi-caret-down m-l-5 f-16"></i><i></i></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr class="height-60">
+                                                        <td class="text-upper c-error">FUTUFARMA SA DE CV</td>
+                                                        <td class="text-upper c-info">INSTITUTO MUNICIPAL DE PENSIONES</td>
+                                                        <td class="c-error text-align-r"><strong class="f-14">$81,400,000</strong></td>
+                                                        <td class="text-upper c-info">Body text</td>
+                                                        <td class="text-upper c-info">Body text</td>
+                                                        <td class="row-buttons-hover">
+                                                            <div class="table-buttons-hover">
+                                                                <button data-tippy="Ver" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-eye"></i></button>
+                                                                <button data-tippy="Editar" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-edit"></i></button>
+                                                                <button data-tippy="Eliminar" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-delete"></i></button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="height-60">
+                                                        <td class="text-upper">FUTUFARMA SA DE CV</td>
+                                                        <td class="text-upper">INSTITUTO MUNICIPAL DE PENSIONES</td>
+                                                        <td class="c-accent text-align-r"><strong class="f-14">$81,400,000</strong></td>
+                                                        <td class="text-upper">Body text</td>
+                                                        <td class="text-upper">Body text</td>
+                                                        <td class="row-buttons-hover">
+                                                            <div class="table-buttons-hover">
+                                                                <button data-tippy="Ver" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-eye"></i></button>
+                                                                <button data-tippy="Editar" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-edit"></i></button>
+                                                                <button data-tippy="Eliminar" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-delete"></i></button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                    <tr class="height-60">
+                                                        <td class="text-upper c-error">FUTUFARMA SA DE CV</td>
+                                                        <td class="text-upper c-error">INSTITUTO MUNICIPAL DE PENSIONES</td>
+                                                        <td class="c-error text-align-r"><strong class="f-14">$81,400,000</strong></td>
+                                                        <td class="text-upper c-error">Body text</td>
+                                                        <td class="text-upper c-error">Body text</td>
+                                                        <td class="row-buttons-hover">
+                                                            <div class="table-buttons-hover">
+                                                                <button data-tippy="Ver" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-eye"></i></button>
+                                                                <button data-tippy="Editar" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-edit"></i></button>
+                                                                <button data-tippy="Eliminar" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-delete"></i></button>
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="vertical-center">
+                                    <div class="floating-label-table info m-r-40">Omitidos (duplicados)</div>
+                                    <div class="floating-label-table error">Registros con errores</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <p class="col-12 m-t-30">Card CONFIGURACIÓN</p>
+                        <div class="col-12">
+                            <div class="material-tabs">
+                                <div class="nav" id="material-tabs" role="tablist" aria-orientation="vertical">
+                                    <a class="nav-link active" id="material-tab" data-toggle="pill" href="#info-content" role="tab" aria-controls="info-content" aria-selected="true">
+                                        Información general
+                                    </a>
+
+                                    <a class="nav-link" id="material-tab" data-toggle="pill" href="#plat-content" role="tab" aria-controls="plat-content" aria-selected="false">
+                                        Personalización de la plataforma
+                                    </a>
+                                </div>
+
+                                <div class="tab-content" id="material-tabsContent">
+                                  <div class="tab-pane fade show active" id="info-content" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            <div class="p-relative d-flex vertical-center m-t-20 m-b-20">
+                                                <div class="floating-text w-50">
+                                                    <h1>Imagen de portada </h1>
+                                                    <p class="m-b-0">Puedes cambiar la imagen principal de la página del monitor</p>
+                                                </div>      
+                                                <div class="buttons-right w-50">
+                                                    <a href="" class="btn-stroke button-accent b-shadow-none p-t-5 p-b-5"><i class="zmdi zmdi-plus"></i>
+                                                        Cambiar Imagen
+                                                        <input type="file" /> 
+                                                    </a>
+                                                    <a href="" class="btn-raised button-accent b-shadow-none p-t-5 p-b-5 m-l-15"><i class="zmdi zmdi-plus"></i> 
+                                                        Guardar
+                                                    </a>
+                                                </div>  
+                                            </div>
+                                            
+                                            <div class="cover-test m-b-30">
+                                                <label>Tamaño de imagen recomendado: <strong class="primary">1280 x 500</strong> </label>
+                                                <div class="container-cover">
+                                                    <img class="img-fluid" src="https://hpmedia.bloomsbury.com/rep/g/page-background-shell%20-%202.png" alt="Cover" />
+                                                    <div class="info">
+                                                        <small>Bienvenido a</small>
+                                                        <label>Monitor <strong>Karewa</strong></label>
+                                                        <p>
+                                                            Aquí podrás obtener información sobre los procedimientos de licitaciones para comparar la compra, renta y contratación de serviciosque se realizan en el Monitor Karewa.
+                                                        </p>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group fg-float">
+                                                        <div class="fg-line basic-input">
+                                                            <input type="text" class="form-control fg-input" placeholder="Titulo">
+                                                            <label class="fg-label">Titulo</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group fg-float">
+                                                        <div class="fg-line basic-input">
+                                                            <textarea type="text" class="form-control fg-input" placeholder="Aquí podrás obtener información sobre los procedimientos de licitaciones para comparar la compra, renta y contratación de serviciosque se realizan en el Monitor Karewa."></textarea>
+                                                            <label class="fg-label">Descripción</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group fg-float">
+                                                        <div class="fg-line basic-input">
+                                                            <textarea type="text" class="form-control fg-input" placeholder="Edita la dirección de correo de donde recibirás la información  de la gente que te contacte."></textarea>
+                                                            <label class="fg-label">Formulario de contacto</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12 col-md-6">
+                                                    <div class="form-group fg-float">
+                                                        <div class="fg-line basic-input">
+                                                            <input type="text" class="form-control fg-input" placeholder="Ingresa el correo de contacto">
+                                                            <label class="fg-label">Ingresa el correo de contacto</label>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <img class="img-fluid img-card-corner" src="../images/Cards/corner-settings-lg.svg" alt="">
+                                    </div>
+                                  </div>
+
+                                  <div class="tab-pane fade" id="plat-content" role="tabpanel" aria-labelledby="plat-content">
+                                      <div class="card">
+                                          <div class="card-body">
+                                              <div class="p-relative d-flex vertical-center m-t-20 m-b-20">
+                                                  <div class="floating-text w-50">
+                                                      <h1>Personalización de plataforma </h1>
+                                                      <p class="m-b-0">Elige el tema para personalizar la plataforma.</p>
+                                                  </div>      
+                                                  <div class="buttons-right w-50">
+                                                      <a href="" class="btn-raised button-accent b-shadow-none p-t-5 p-b-5"> Editar/Guardar </a>
+                                                  </div>  
+                                              </div>
+                                              <!-- AL DAR CLICK EN EDITAR, SE DEBE ELIMINAR LA CLASE "disabled".
+                                              CUANDO SE DE GUARDAR, SE AGREGA LA CLASE "disabled". -->
+                                              <ul class="colors-list disabled">
+                                                <li>
+                                                    <!-- SE AGREGA LA CLASE "active" CUANDO SE DA CLICK EN RECUADRO -->
+                                                   <span class="active"></span> Default
+                                                </li>
+                                                <li>
+                                                   <span></span> Oscuro
+                                                </li>
+                                                <li>
+                                                   <span></span> Morado
+                                                </li>
+                                                <li>
+                                                   <span></span> Naranja
+                                                </li>
+                                                <li>
+                                                   <span></span> Amarillo
+                                                </li>
+                                                <li>
+                                                   <span></span> Azul Verde
+                                                </li>
+                                                <li>
+                                                   <span></span> Verde
+                                                </li>
+                                                <li>
+                                                   <span></span> Cielo
+                                                </li>
+                                                <li>
+                                                   <span></span> Azul
+                                                </li>
+                                                <li>
+                                                   <span></span> Rojo
+                                                </li>
+                                                <li>
+                                                   <span></span> Rosa
+                                                </li>
+                                                <li>
+                                                   <span></span> Gris
+                                                </li>
+                                                <li>
+                                                   <span></span> Lila
+                                                </li>
+                                                <li>
+                                                   <span></span> Azul Oscuro
+                                                </li>
+                                              </ul>
+                                          </div>
+
+                                          <img class="img-fluid img-card-corner" src="../images/Cards/corner-settings-lg.svg" alt="">
+                                      </div>
+                                  </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -1587,6 +1905,36 @@
                     </div>
                     <!-- END TAGS -->
 
+                    <!-- TABS -->
+                    <div class="row m-b-50">
+                        <h1 class="f-20 m-t-0 m-b-10 col-12">Tabs</h1>
+                        <div class="col-12">
+                            <h1 class="f-20 m-t-0 m-b-10 col-12">Material TABS</h1>
+                            <div class="material-tabs">
+                                <div class="nav" id="material-tabs" role="tablist" aria-orientation="vertical">
+                                  <a class="nav-link active" id="material-tab" data-toggle="pill" href="#info-content" role="tab" aria-controls="info-content" aria-selected="true">
+                                      Información general
+                                  </a>
+
+                                  <a class="nav-link" id="material-tab" data-toggle="pill" href="#plat-content" role="tab" aria-controls="plat-content" aria-selected="false">
+                                      Personalización de la plataforma
+                                  </a>
+                                </div>
+
+                                <div class="tab-content" id="material-tabsContent">
+                                  <div class="tab-pane fade show active" id="info-content" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                                      Contenido 1
+                                  </div>
+
+                                  <div class="tab-pane fade" id="plat-content" role="tabpanel" aria-labelledby="plat-content">
+                                      Contenido 2
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- END TABS -->
+
                     <!-- TOAST -->
                     <div class="row m-b-50">
                         <h1 class="f-20 m-t-0 m-b-10 col-12">Toast</h1>
@@ -1936,7 +2284,6 @@
                     </div>
                 </div>
             </div>
-
         </section>
         <!-- END MAIN ADMIN SECTION -->
 

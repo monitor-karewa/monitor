@@ -1,0 +1,102 @@
+.colors-list {
+	list-style: none;
+	margin: 50px auto 20px;
+	padding: 0;
+	text-align: left;
+
+	&.disabled {
+		opacity: 0.5;
+		cursor: not-allowed;
+		li {
+			cursor: not-allowed;
+		}
+	}
+
+	li {
+		display: inline-block;
+		margin: 0 25px 60px;
+		font-family: Raleway-bold;
+		font-size: 13px;
+		font-weight: bold;
+		line-height: normal;
+		text-align: center;
+		color: $primary;
+		cursor: pointer;
+
+		span {
+			position: relative;
+		    display: flex;
+		    align-items: center;
+		    justify-content: center;
+			width: 76px;
+		  	height: 78px;
+		  	border-radius: 2px;
+		  	border: 2px solid #fff;
+		  	margin-bottom: 10px;
+
+		  	&.active::after {
+	  			content: '\f269';
+	  			font-family: Material-Design-Iconic-Font;
+	  			color: #fff;
+	  			font-size: 30px;
+		  	}
+		}
+
+		&:nth-child(1) span {
+	  		background-color: $default;
+	  		box-shadow: 0 0 0 2px $default;
+	  	}
+		&:nth-child(2) span {
+	  		background-color: $dark;
+	  		box-shadow: 0 0 0 2px $dark;
+	  	}
+	  	&:nth-child(3) span {
+	  		background-color: $purple;
+	  		box-shadow: 0 0 0 2px $purple;
+	  	}
+	  	&:nth-child(4) span {
+	  		background-color: $orange;
+	  		box-shadow: 0 0 0 2px $orange;
+	  	}
+	  	&:nth-child(5) span {
+	  		background-color: $yellow;
+	  		box-shadow: 0 0 0 2px $yellow;
+	  	}
+	  	&:nth-child(6) span {
+	  		background-color: $green-blue;
+	  		box-shadow: 0 0 0 2px $green-blue;
+	  	}
+	  	&:nth-child(7) span {
+	  		background-color: $green;
+	  		box-shadow: 0 0 0 2px $green;
+	  	}
+	  	&:nth-child(8) span {
+	  		background-color: $sky;
+	  		box-shadow: 0 0 0 2px $sky;
+	  	}
+	  	&:nth-child(9) span {
+	  		background-color: $blue;
+	  		box-shadow: 0 0 0 2px $blue;
+	  	}
+	  	&:nth-child(10) span {
+	  		background-color: $red;
+	  		box-shadow: 0 0 0 2px $red;
+	  	}
+	  	&:nth-child(11) span {
+	  		background-color: $pink;
+	  		box-shadow: 0 0 0 2px $pink;
+	  	}
+	  	&:nth-child(12) span {
+	  		background-color: $gray;
+	  		box-shadow: 0 0 0 2px $gray;
+	  	}
+	  	&:nth-child(13) span {
+	  		background-color: $lilac;
+	  		box-shadow: 0 0 0 2px $lilac;
+	  	}
+	  	&:nth-child(14) span {
+	  		background-color: $blue-dark;
+	  		box-shadow: 0 0 0 2px $blue-dark;
+	  	}
+	}
+}
