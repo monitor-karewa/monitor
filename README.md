@@ -21,3 +21,14 @@ The application uses the following underlying technologies:
 - **Request handling**: ExpressJS
 - **Database**: MongoDB
 - **ODM**: Mongoose
+
+To install the custom yoeman generator for catalogs run 
+
+    npm link ./generators/generator-mkw
+    
+To create a catalog run the command
+
+    yo generator-mkw:catalog
+    
+Then input the name of the catalog and the generator will create the models, controllers and routes for the catalog
+    

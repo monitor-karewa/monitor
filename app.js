@@ -30,6 +30,7 @@ const flash = require('express-flash-notification');
 const indexRoutes = require('./app/routes/index.routes');
 const securityRoutes = require('./app/routes/security.routes');
 const adminRoutes = require('./app/routes/admin.routes');
+const proveedorRoutes = require('./app/routes/proveedor.routes');
 // const usersRoutes = require('./app/routes/users.routes');
 
 // Controllers
@@ -124,6 +125,7 @@ app.use((req, res, next) => {
 // app.use('/api/users', usersRoutes);
 app.use('/security', securityRoutes);
 app.use('/admin', securityController.checkLogin, adminRoutes);
+app.use('/proveedores', proveedorRoutes);
 
 
 // ==============
