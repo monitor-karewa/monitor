@@ -6,9 +6,9 @@
 
 /*---------------------------------------------------------------------
   COLOR PALETTE THEME
-  To change the 'opacity' please use sass transparentize. 
+  To change the 'opacity' please use sass transparentize.
   Example: ($variable-color, .8);
-  Using transparentize the opacity changes: 1 means 0 and 0 means 1. 
+  Using transparentize the opacity changes: 1 means 0 and 0 means 1.
   Example: If you want an opacity 0.2 -> it changes to 0.8.
 -----------------------------------------------------------------------*/ 
 /* THEME COLORS LIST */
@@ -169,6 +169,11 @@ $themes: (
       h1 {
         font-family: $principal-font-bold;
         color: $primary;
+      }
+
+      .link-to {
+        font-family: $principal-font-medium;
+        color: $accent;
       }
 
       p {
@@ -341,6 +346,34 @@ $themes: (
       }
     }
 
+    .client-cover {
+      .cover-container {
+        .info {
+          p {
+            font-family: $principal-font-regular;
+            color: $grey_1;
+          }
+
+          h3 {
+            font-family: $principal-font-regular;
+            color: $info_text;
+          }
+
+          h1 {
+            color: $white;
+            font-family: $principal-font-regular;
+          }
+
+          .divider {
+            background-color: $accent;
+          }
+        }
+      }
+      .filter-box {
+        background: $white;
+      }
+    }
+
 
     /* DROPDOWNS */
     .dropdown {
@@ -433,6 +466,13 @@ $themes: (
       }
     }
 
+    .filter {
+      .filter-btn {
+        background: $plain_text;
+        color: $white;
+      }
+    }
+
     .floating-title-panel {
       h1 {
         font-family: $principal-font-bold;
@@ -504,6 +544,77 @@ $themes: (
         color: #8f95b0;//$info_text;
       }
     }
+
+    /* FOOTER CLIENT */
+    .footer-client {
+      background-color: $grey_3;
+
+      .develop-by {
+        .divider {
+          background-color: $grey_1;
+        }
+        p {
+            font-family: $principal-font-regular;
+            color: $plain_text;
+        }
+      }
+
+      .row {
+        span {
+          ul {
+            label {
+              font-family: $principal-font-regular;
+              color: $plain_text;
+            }
+
+            li a {
+              font-family: $principal-font-regular;
+              color: $plain_text;
+
+              &:hover:before {
+                background-color: $plain_text;
+              }
+            }
+          }
+
+          h1 {
+            font-family: $principal-font-regular;
+            color: $plain_text;
+
+            strong {
+              font-family: $principal-font-regular;
+            }
+
+            ul {
+              label {
+                font-family: $principal-font-regular;
+                color: $plain_text;
+              }
+
+              li a {
+                font-family: $principal-font-regular;
+                color: $plain_text;
+
+                &:hover:before {
+                  background-color: $plain_text;
+                }
+              }
+            }
+          }
+
+          p {
+            font-family: $principal-font-regular;
+            color: $plain_text;
+
+            strong {
+              font-family: $principal-font-regular;
+            }
+          }
+        }
+      }
+    }
+    /* END FOOTER CLIENT */
+
 
     #hamburguer-icon {
       	path {
@@ -665,7 +776,6 @@ $themes: (
         }
       }
     }
-
 
     .material-tabs {    
       .nav-link {
@@ -973,6 +1083,10 @@ $themes: (
     	    }
       	}
 
+        .divider {
+            background-color: $primary;
+        }
+
       	.footer-sidebar {
     	    > a {
     	      	font-family: $principal-font-bold;
@@ -1078,6 +1192,30 @@ $themes: (
         color: $info_text;
       }
     }
+
+
+    /* TAG */
+    .tag{
+      font-family: $principal-font-regular;
+      background-color: $accent;
+      color: $white;
+      a, button{
+        color: $white;
+      }
+      &:hover{
+        background-color: $primary;
+        color: $white;
+        a{
+          color: $white;
+        }
+      }
+    }
+    .tag-title{
+      font-family: $principal-font-regular;
+      color: $title;
+    }
+    /* END TAG */
+
 
     .upload-section {
       label {

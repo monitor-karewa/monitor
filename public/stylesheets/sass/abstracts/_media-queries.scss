@@ -19,6 +19,18 @@
 	.card-header {
 		padding: 20px !important;
 	}
+	.cover-container .info {
+		top: 40% !important;
+	}
+	.footer-client {
+		.img-logo {
+			margin-top: 30px;
+			text-align: center;
+			img {
+				float: initial !important;
+			}
+		}
+	}
 	.form-btn-top {
     	width: 100%;
 	}
@@ -168,6 +180,46 @@
 			max-width: 25%;
 		}
 	}
+
+	.client-content {
+		padding: 0 30px !important;
+	}
+
+	.client-cover {
+		.cover-container {
+		  .info {
+		    p {
+					font-size: 14px !important;
+					-webkit-line-clamp: 5 !important;
+			    height: 125px !important;
+		    }
+
+		    h3 {
+			    font-size: 15px !important;
+		    }
+
+		    h1 {
+					font-size: 40px !important;
+		    }
+		  }
+
+		  .filter-box {
+				width: calc(100% - 60px) !important;
+				// bottom: -50px !important;
+		  }
+		}
+	}
+
+	.footer-client {
+		padding: 30px 30px !important;
+	}
+
+	.neutral-width {
+	  &.topbar {
+	    padding: 0 30px !important;
+	  }
+	}
+
 	.modal-content {
 		&.min-w-600px {
 			min-width: inherit !important;

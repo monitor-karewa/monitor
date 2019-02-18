@@ -1,4 +1,4 @@
-/* 
+/*
  Created on : 03/12/2018
  * Author     : Ingrid Pinedo
  * Version    : 1.0
@@ -401,7 +401,7 @@ button {
 
         i {
           font-size: 30px;
-          margin-right: 10px; 
+          margin-right: 10px;
           width: 24px;
           display: flex;
           align-items: center;
@@ -412,7 +412,6 @@ button {
   }
 }
 /* END CARDS */
-
 
 .container-footer {
   position: fixed;
@@ -475,6 +474,107 @@ button {
   }
 }
 
+.footer-client {
+  padding: 30px 85px;
+  width: 100%;
+
+  .develop-by {
+    .divider {
+      width: 40px;
+      height: 1px;
+      margin: auto;
+      margin-bottom: 20px;
+    }
+    p {
+      margin-bottom: 0;
+      font-size: 12px;
+      font-weight: 500;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      text-align: center;
+      img {
+        width: 95px;
+        height: 22px;
+      }
+
+    }
+  }
+
+  .row{
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+
+    h1 {
+      text-transform: capitalize;
+    }
+
+    .img-responsive {
+      max-width: 200px;
+      float: right;
+    }
+
+    span {
+      &:nth-child(1) {
+        img {
+          margin-bottom: 30px;
+        }
+      }
+
+      ul {
+        margin: 0;
+        padding: 0;
+        list-style: none;
+
+        label {
+          font-size: 16px;
+          font-weight: bold;
+          line-height: normal;
+          margin-bottom: 30px;
+          text-transform: uppercase;
+        }
+
+        li {
+          padding-right: 15px;
+          a {
+            position: relative;
+            width: fit-content;
+            opacity: 0.7;
+            font-size: 14px;
+            font-weight: 500;
+            line-height: 1.57;
+            display: block;
+            margin-bottom: 22px;
+            text-decoration: none;
+
+            &:before {
+              content: "";
+              position: absolute;
+              width: 100%;
+              height: 2px;
+              bottom: -4px;
+              left: 0;
+              visibility: hidden;
+              -webkit-transform: scaleX(0);
+              transform: scaleX(0);
+              -webkit-transition: all 0.3s ease-in-out 0s;
+              transition: all 0.3s ease-in-out 0s;
+            }
+
+            &:hover:before {
+              visibility: visible;
+              -webkit-transform: scaleX(1);
+              transform: scaleX(1);
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
 .details-list {
   ul {
     list-style: none;
@@ -484,16 +584,13 @@ button {
     li {
       display: flex;
       align-items: center;
-      font-family: $principal-font-semibold;
       font-size: 12px;
       font-weight: 600;
       line-height: 1.33;
-      color: $plain_text;
       margin-bottom: 12px;
 
       span {
         min-width: 50px;
-        font-family: $principal-font-bold;
         font-size: 14px;
         font-weight: bold;
         line-height: 1.14;
@@ -572,7 +669,7 @@ button {
     padding-bottom: 5px;
     box-shadow: none;
   }
-  .dropdown-menu {    
+  .dropdown-menu {
     small {
       font-size: 10px;
       font-weight: bold;
@@ -782,7 +879,7 @@ button {
     margin: 0 0 4px;
     display: block;
 
-    strong {} 
+    strong {}
   }
   p {
     font-size: 12px;
@@ -897,7 +994,7 @@ button {
       background-color: transparent;
       font-size: 30px;
       &:hover {
-        background-color: #dadce5;
+        background-color: $grey_2;
       }
     }
   }
@@ -1100,7 +1197,7 @@ button {
           }
         }
       }
-    }  
+    }
   }
 }
 /* END HEADER APP */
@@ -1138,6 +1235,7 @@ button {
   }
 }
 
+
 /* MAIN CONTAINER */
 #main #content {
   position: fixed;
@@ -1157,10 +1255,22 @@ button {
 /* END MAIN CONTAINER */
 
 
+.neutral-width {
+  width: 100%;
+  max-width: 1440px;
+  margin: auto;
+
+  &.topbar {
+    padding: 0 85px;
+    max-width: 1610px;
+  }
+}
+
+
 .note-transparent {
   i {
     display: block;
-    margin: 0 auto 20px; 
+    margin: 0 auto 20px;
     text-align: center;
     font-size: 30px;
   }
@@ -1460,10 +1570,10 @@ button {
   }
 }
 .backdrop {
-  position: fixed; 
-  width: 100%; 
-  height: 100%; 
-  z-index: 4;  
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
   opacity: 0.7;
   display: none;
 
@@ -1495,7 +1605,7 @@ button {
         font-size: 14px;
       }
 
-      &:-ms-input-placeholder { 
+      &:-ms-input-placeholder {
         font-size: 14px;
       }
 
@@ -1519,7 +1629,7 @@ button {
         opacity: 0;
         font-size: 25px;
       }
-    } 
+    }
 
     .input-search:focus ~ .icon {
       &.zmdi-search {

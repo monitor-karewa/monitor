@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="29" height="35" viewBox="0 0 29 35">
+    <g fill="none" fill-rule="evenodd">
+        <g stroke="#B5C7D1" stroke-width="1.796">
+            <path fill="#FFF" d="M4.41 1h13.478l10.15 9.884v19.768c0 .876-.331 1.635-.992 2.278-.66.644-1.44.966-2.339.966H4.33c-.899 0-1.678-.322-2.339-.966-.66-.643-.991-1.402-.991-2.278V4.243c0-.875.33-1.634.991-2.278C2.651 1.322 3.458 1 4.41 1z"/>
+            <path d="M17.937 1.1v9.517h9.974"/>
+        </g>
+        <text fill="#97C3A7" font-family="arial" font-size="8.979" font-weight="bold" transform="translate(1 1)">
+            <tspan x="5.53" y="21.469">XLS</tspan>
+        </text>
+    </g>
+</svg>

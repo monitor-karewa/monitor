@@ -949,6 +949,31 @@
                     </div>
                     <!-- END CLIENT SECTION -->
 
+                    <!-- DROPDOWN -->
+                    <div class="row m-b-50">
+                        <h1 class="f-20 m-t-0 m-b-10 col-12">Dropdown</h1>
+                        <div class="dropdown col-12">
+                          <button class="btn-raised button-accent" type="button" id="dropdownOptions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Dropdown button
+                          </button>
+                          <div class="dropdown-menu dropdown-options" aria-labelledby="dropdownOptions">
+                            <span>Title</span>
+                            <div class="container-dropdown">
+                              <a class="dropdown-item" href="#">
+                                <img class="img-fluid" src="../images/Illustrations/icon-file-pdf.svg" alt="Empty" />
+                              </a>
+                              <a class="dropdown-item" href="#">
+                                <img class="img-fluid" src="../images/Illustrations/icon-file-xls.svg" alt="Empty" />
+                              </a>
+                              <a class="dropdown-item" href="#">
+                                <img class="img-fluid" src="../images/Illustrations/icon-file-json.svg" alt="Empty" />
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                    </div>
+                    <!-- END DROPDOWN -->
+
                     <!-- DROPLET -->
                     <div class="row m-b-50">
                         <h1 class="f-20 m-t-0 m-b-10 col-12">Droplet</h1>
@@ -1183,6 +1208,13 @@
                                     <span class="error-span">Error message</span>
                                 </div>
 
+                                <br>
+                                <p>
+                                    Textarea
+                                    <br>
+                                    Differents types od textarea.
+                                </p>
+
                                 <div class="form-group fg-float">
                                     <div class="fg-line basic-input">
                                         <textarea class="form-control fg-textarea" placeholder="Placeholder"></textarea>
@@ -1288,11 +1320,11 @@
                                 </div>
 
                                 <br>
-                                  Select <strong> "border-select". </strong>
+                                <p>  Select <strong> "border-select". </strong>
                                   <br>
                                   If the input has an error add this class:
                                   <br>
-                              </p>
+                                </p>
 
                               <div class="form-group fg-float border-select">
                                 <div class="fg-line">
@@ -1305,10 +1337,61 @@
                                 </div>
                               </div>
 
+                              <br>
+                              <p>  Select <strong> "filter". </strong>
+                              </p>
+                              <div class="filter">
+                                <div class="filter-container row m-0">
+                                  <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
+                                    <div class="fg-line m-0">
+                                      <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Placeholder" title="Select placeholder">
+                                        <option>Text 2</option>
+                                        <option>Text 3</option>
+                                        </optgroup>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
+                                    <div class="fg-line m-0">
+                                      <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Placeholder" title="Select placeholder">
+                                        <optgroup label="2018">
+                                          <option>3º 2018</option>
+                                          <option>2º 2018</option>
+                                          <option>1º 2018</option>
+                                        </optgroup>
+                                        <optgroup label="2017">
+                                          <option>3º 2017</option>
+                                          <option>2º 2017</option>
+                                          <option>1º 2017</option>
+                                        </optgroup>
+                                      </select>
+
+                                    </div>
+                                  </div>
+                                  <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
+                                    <div class="fg-line m-0">
+                                      <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Placeholder" title="Select placeholder">
+                                        <option>Text 2</option>
+                                        <option>Text 3</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                  <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
+                                    <div class="fg-line m-0">
+                                      <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Placeholder" title="Select placeholder">
+                                        <option>Text 2</option>
+                                        <option>Text 3</option>
+                                      </select>
+                                    </div>
+                                  </div>
+                                </div>
+                                <button class="filter-btn" type="button" name="button">Filter</button>
+                              </div>
+
                             </div>
 
 
-                            <p class="">
+                            <p class=" m-t-30">
                                 <strong>Switches/Checkbox/Radio</strong>
                                 <br>
                             </p>
@@ -1352,6 +1435,40 @@
                         </div>
                     </div>
                     <!-- END FORM ELEMENTS -->
+
+                    <!-- TAGS -->
+                    <div class="row m-b-50">
+                        <h1 class="f-20 m-t-0 m-b-10 col-12">Tags</h1>
+                        <div class="col-12">
+                          <div class="m-t-20">
+                              <span class="tag-title">Title:</span>
+                              <div class="tag">
+                                <span class="">
+                                  Tag 1
+                                </span>
+                                <button>
+                                  <i class="zmdi zmdi-close"></i>
+                                </button>
+                              </div>
+                              <div class="tag">
+                                <span class="">
+                                  Tag 2
+                                </span>
+                                <button>
+                                  <i class="zmdi zmdi-close"></i>
+                                </button>
+                              </div>
+                              <div class="tag">
+                                <span class="">
+                                  Tag 3
+                                </span>
+                                <button>
+                                  <i class="zmdi zmdi-close"></i>
+                                </button>
+                              </div>
+                          </div>
+                        </div>
+                    </div>
 
                     <!-- GRAPHS -->
                     <div class="row m-b-50">
@@ -2064,8 +2181,8 @@
                                         <input type="radio" name="role" id="one">
                                         <span class="role" for="one">General</span>
                                     </div>
-                                </div>    
-                                <div class="input-radio-check w-50">    
+                                </div>
+                                <div class="input-radio-check w-50">
                                     <div class="check-container">
                                         <input type="radio" name="role" id="two">
                                         <span class="role" for="two">Contrato</span>
@@ -2131,7 +2248,7 @@
                                           </optgroup>
                                         </select>
                                     </div>
-                                </div> 
+                                </div>
                                 <div class="mini-buttons">
                                     <button class="mini-btn m-l-0">+</button>
                                     <button class="mini-btn">-</button>
