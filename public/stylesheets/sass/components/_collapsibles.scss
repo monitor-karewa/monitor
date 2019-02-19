@@ -1,0 +1,146 @@
+.collapsible-status {
+  .collapsible-content {
+    margin-bottom: 20px;
+  }
+
+  .info-container {
+    width: 100%;
+    padding-right: 20px;
+  }
+
+  .collapsible-body {
+    padding: 20px 0;
+  }
+
+  .collapsible-header {
+    padding: 6px 20px;
+    display: flex;
+    align-items: center;
+    padding: 6px 20px;
+
+    h1 {
+      font-size: 20px;
+      font-weight: 900;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      font-family: $principal-font-regular;
+      color: $primary;
+    }
+
+    h2 {
+      font-size: 12px;
+      font-weight: 500;
+      font-style: normal;
+      font-stretch: normal;
+      line-height: normal;
+      letter-spacing: normal;
+      text-transform: uppercase;
+      font-family: $principal-font-regular;
+      color: $info_text;
+    }
+
+    .btn-accordion {
+      border: 1px solid;
+      border-radius: 2px;
+      font-size: 12px;
+      font-style: normal;
+      cursor: pointer;
+      font-stretch: normal;
+      line-height: normal;
+      float: right;
+      letter-spacing: normal;
+      text-align: center;
+      transition: 0.3s;
+      padding: 0;
+      background-color: transparent;
+      font-family: $principal-font-regular;
+
+      i {
+        font-size: 22px;
+        margin-right: 8px;
+        font-weight: bold;
+        height: 0;
+        margin-top: -3px;
+      }
+
+      .collapse,
+      .expand {
+        padding: 8px 20px;
+        display: flex;
+      }
+
+      .expand {
+        opacity: 0;
+        position: absolute;
+      }
+
+      &.collapsed {
+        color: $plain_text !important;
+        border-color: $plain_text !important;
+
+        .expand {
+          opacity: 1!important;
+          position: initial;
+        }
+
+        .collapse {
+          opacity: 0 !important;
+          position: absolute;
+        }
+      }
+    }
+
+    &.success {
+      border-left: 3px solid;
+      border-left-color: $success;
+      background-color: transparentize($success, 0.9);
+
+      .btn-accordion {
+        color: $success;
+        border-color: transparentize($success, 0.5);
+
+        &:hover {
+          background-color: transparentize($success, 0.5);
+          border-color: transparentize($success, 0.5) !important;
+          color: $white !important;
+        }
+      }
+    }
+
+    &.warning {
+      border-left: 3px solid;
+      border-left-color: $warning;
+      background-color: transparentize($warning, 0.9);
+
+      .btn-accordion {
+        color: $warning;
+        border-color: transparentize($warning, 0.5);
+
+        &:hover {
+          background-color: transparentize($warning, 0.5);
+          border-color: transparentize($warning, 0.5) !important;
+          color: $white !important;
+        }
+      }
+    }
+
+    &.error {
+      border-left: 3px solid;
+      border-left-color: $error;
+      background-color: transparentize($error, 0.9);
+
+      .btn-accordion {
+        color: $error;
+        border-color: transparentize($error, 0.5);
+
+        &:hover {
+          background-color: transparentize($error, 0.5);
+          border-color: transparentize($error, 0.5) !important;
+          color: $white !important;
+        }
+      }
+    }
+  }
+}
