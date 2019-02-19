@@ -292,6 +292,83 @@ strong {
   	}
 }
 
+// COLLAPSIBLES
+.collapsible-status {
+
+  .collapsible-header {
+
+    h1 {
+      font-family: $principal-font-regular;
+      color: $primary;
+    }
+
+    h2 {
+      font-family: $principal-font-regular;
+      color: $info_text;
+    }
+
+    .btn-accordion {
+      font-family: $principal-font-regular;
+
+      &.collapsed {
+        color: $plain_text !important;
+        border-color: $plain_text !important;
+
+      }
+    }
+
+    &.success {
+      border-left-color: $success !important;
+      background-color: transparentize($success, 0.9);
+
+      .btn-accordion {
+        color: $success;
+        border-color: transparentize($success, 0.5);
+
+        &:hover {
+          background-color: transparentize($success, 0.5);
+          border-color: transparentize($success, 0.5) !important;
+          color: $white !important;
+        }
+      }
+    }
+
+    &.warning {
+      border-left-color: $warning !important;
+      background-color: transparentize($warning, 0.9);
+
+      .btn-accordion {
+        color: $warning;
+        border-color: transparentize($warning, 0.5);
+
+        &:hover {
+          background-color: transparentize($warning, 0.5);
+          border-color: transparentize($warning, 0.5) !important;
+          color: $white !important;
+        }
+      }
+    }
+
+    &.error {
+      border-left-color: $error !important;
+      background-color: transparentize($error, 0.9);
+
+      .btn-accordion {
+        color: $error;
+        border-color: transparentize($error, 0.5);
+
+        &:hover {
+          background-color: transparentize($error, 0.5);
+          border-color: transparentize($error, 0.5) !important;
+          color: $white !important;
+        }
+      }
+    }
+  }
+}
+
+// END COLLAPSIBLES
+
 
 /* DROPDOWNS */
 .dropdown {
@@ -664,13 +741,13 @@ strong {
 /* END MAIN CONTAINER */
 
 
-.material-tabs {    
+.material-tabs {
   .nav-link {
     font-family: $principal-font-bold;
     color: $info_text;
-    
-    &.active { 
-      color: $accent; 
+
+    &.active {
+      color: $accent;
       &::after {
         background-color: $accent;
       }

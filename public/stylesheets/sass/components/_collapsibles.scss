@@ -25,8 +25,6 @@
       font-stretch: normal;
       line-height: normal;
       letter-spacing: normal;
-      font-family: $principal-font-regular;
-      color: $primary;
     }
 
     h2 {
@@ -37,8 +35,6 @@
       line-height: normal;
       letter-spacing: normal;
       text-transform: uppercase;
-      font-family: $principal-font-regular;
-      color: $info_text;
     }
 
     .btn-accordion {
@@ -55,7 +51,6 @@
       transition: 0.3s;
       padding: 0;
       background-color: transparent;
-      font-family: $principal-font-regular;
 
       i {
         font-size: 22px;
@@ -77,8 +72,6 @@
       }
 
       &.collapsed {
-        color: $plain_text !important;
-        border-color: $plain_text !important;
 
         .expand {
           opacity: 1!important;
@@ -92,55 +85,8 @@
       }
     }
 
-    &.success {
+    &.success, &.warning, &.error {
       border-left: 3px solid;
-      border-left-color: $success;
-      background-color: transparentize($success, 0.9);
-
-      .btn-accordion {
-        color: $success;
-        border-color: transparentize($success, 0.5);
-
-        &:hover {
-          background-color: transparentize($success, 0.5);
-          border-color: transparentize($success, 0.5) !important;
-          color: $white !important;
-        }
-      }
-    }
-
-    &.warning {
-      border-left: 3px solid;
-      border-left-color: $warning;
-      background-color: transparentize($warning, 0.9);
-
-      .btn-accordion {
-        color: $warning;
-        border-color: transparentize($warning, 0.5);
-
-        &:hover {
-          background-color: transparentize($warning, 0.5);
-          border-color: transparentize($warning, 0.5) !important;
-          color: $white !important;
-        }
-      }
-    }
-
-    &.error {
-      border-left: 3px solid;
-      border-left-color: $error;
-      background-color: transparentize($error, 0.9);
-
-      .btn-accordion {
-        color: $error;
-        border-color: transparentize($error, 0.5);
-
-        &:hover {
-          background-color: transparentize($error, 0.5);
-          border-color: transparentize($error, 0.5) !important;
-          color: $white !important;
-        }
-      }
     }
   }
 }
