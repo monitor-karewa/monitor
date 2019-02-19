@@ -22,6 +22,18 @@
 	.card-header {
 		padding: 20px !important;
 	}
+	.collapsible-status .collapsible-header {
+		display: block;
+		.info-container {
+			padding-right: 0;
+		}
+		.btn-accordion {
+			float: initial;
+			position: initial;
+			margin-top: 20px;
+			margin-bottom: 20px;
+		}
+	}
 	.cover-container .info {
 		top: 40% !important;
 	}

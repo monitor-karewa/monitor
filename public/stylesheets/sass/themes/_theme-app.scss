@@ -10,7 +10,7 @@
   Example: ($variable-color, .8);
   Using transparentize the opacity changes: 1 means 0 and 0 means 1.
   Example: If you want an opacity 0.2 -> it changes to 0.8.
------------------------------------------------------------------------*/ 
+-----------------------------------------------------------------------*/
 /* THEME COLORS LIST */
 $themes: (
   default: #19babd,
@@ -171,7 +171,7 @@ $themes: (
           label {
             font-family: $principal-font-light;
             color: $white;
-            
+
             &::after {
               background-color: $accent;
             }
@@ -228,7 +228,7 @@ $themes: (
 
       .link-to {
         font-family: $principal-font-medium;
-        color: $accent; 
+        color: $accent;
       }
     }
 
@@ -362,7 +362,7 @@ $themes: (
 
     .dropdown-inside {
       .dropdown {
-        .dropdown-menu {            
+        .dropdown-menu {
           ul {
             li {
               color: $accent;
@@ -405,6 +405,101 @@ $themes: (
       }
     }
 
+.container-footer {
+  	background-color: $background;
+
+  	> div {
+    	a,
+    	label {
+	      	font-family: $principal-font-semibold;
+	      	color: $primary;
+    	}
+
+	    a {
+	      &::before {
+	        background-color: $primary;
+	      }
+	    }
+  	}
+}
+
+// COLLAPSIBLES
+.collapsible-status {
+
+  .collapsible-header {
+
+    h1 {
+      font-family: $principal-font-regular;
+      color: $primary;
+    }
+
+    h2 {
+      font-family: $principal-font-regular;
+      color: $info_text;
+    }
+
+    .btn-accordion {
+      font-family: $principal-font-regular;
+
+      &.collapsed {
+        color: $plain_text !important;
+        border-color: $plain_text !important;
+
+      }
+    }
+
+    &.success {
+      border-left-color: $success !important;
+      background-color: transparentize($success, 0.9);
+
+      .btn-accordion {
+        color: $success;
+        border-color: transparentize($success, 0.5);
+
+        &:hover {
+          background-color: transparentize($success, 0.5);
+          border-color: transparentize($success, 0.5) !important;
+          color: $white !important;
+        }
+      }
+    }
+
+    &.warning {
+      border-left-color: $warning !important;
+      background-color: transparentize($warning, 0.9);
+
+      .btn-accordion {
+        color: $warning;
+        border-color: transparentize($warning, 0.5);
+
+        &:hover {
+          background-color: transparentize($warning, 0.5);
+          border-color: transparentize($warning, 0.5) !important;
+          color: $white !important;
+        }
+      }
+    }
+
+    &.error {
+      border-left-color: $error !important;
+      background-color: transparentize($error, 0.9);
+
+      .btn-accordion {
+        color: $error;
+        border-color: transparentize($error, 0.5);
+
+        &:hover {
+          background-color: transparentize($error, 0.5);
+          border-color: transparentize($error, 0.5) !important;
+          color: $white !important;
+        }
+      }
+    }
+  }
+}
+
+// END COLLAPSIBLES
+
 
     /* DROPDOWNS */
     .dropdown {
@@ -414,7 +509,7 @@ $themes: (
     }
 
     .dropdown.menu-filters {
-      .dropdown-menu {    
+      .dropdown-menu {
         small {
           font-family: $principal-font-bold;
           color: $primary;
@@ -534,7 +629,7 @@ $themes: (
             color: $grey_1;
           }
 
-          &:-ms-input-placeholder { 
+          &:-ms-input-placeholder {
             font-family: $principal-font-medium;
             color: $grey_1;
           }
@@ -647,6 +742,313 @@ $themes: (
     }
     /* END FOOTER CLIENT */
 
+    /* FORM ELEMENTS */
+
+    .form-control {
+      font-family: $principal-font-regular;
+    }
+
+
+    .checkbox,
+    .radio {
+
+      input {
+
+        &:checked + .input-helper:before {
+          border-color: $accent;
+        }
+      }
+
+      .input-helper {
+        &:before {
+          border-color: transparentize($black, .65);
+        }
+      }
+    }
+
+    .checkbox {
+
+      span {
+        color: $primary;
+      }
+
+      input {
+
+        &:checked + .input-helper:before {
+          background-color: $accent;
+        }
+      }
+
+      .input-helper {
+
+        &:after {
+          color: $white;
+        }
+      }
+    }
+
+    .radio {
+
+      .input-helper {
+        &:after {
+          background: $accent;
+        }
+      }
+    }
+
+
+    .checkbox-light {
+      .input-helper:before {
+        border-color: $white;
+      }
+
+      input:checked + .input-helper:before {
+        border-color: $white;
+        background-color: $white;
+      }
+
+      input:checked + .input-helper:after {
+        color: $black;
+      }
+    }
+
+    .radio-light {
+      .input-helper:before {
+        border-color: $white;
+      }
+    }
+
+
+    .basic-select, .border-select {
+
+      .fg-line {
+        border-bottom-color: $grey_1;
+
+        .bootstrap-select {
+
+          .dropdown-menu {
+            box-shadow: transparentize($title, .6) 2px 6px 20px 0;
+
+            .dropdown-header {
+              .text {
+                color: $grey_1;
+              }
+            }
+
+            .dropdown-item {
+
+              .text {
+                color: $plain_text;
+              }
+
+              &.active {
+                background-color: $grey_2;
+              }
+
+              &:active {
+                background-color: $white;
+              }
+            }
+
+            .bs-searchbox {
+              background-color: transparentize($primary, .9);
+
+              &:before {
+                color: $grey_1;
+              }
+
+              .form-control {
+                &::-moz-placeholder {
+                  color: $title;
+                }
+
+                &:-ms-input-placeholder {
+                  color: $title;
+                }
+
+                &::-webkit-input-placeholder {
+                  color: $title;
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .border-select, .input-border {
+      .fg-line {
+        border-color: $grey_2;
+      }
+    }
+
+    .fg-line {
+
+      .form-control:disabled {
+        color: $grey_1;
+      }
+
+      &:not([class*=has-]):after {
+        background: $accent;
+      }
+
+      &.readonly .form-control {
+        color: $info_text;
+      }
+
+    }
+
+    .fg-float {
+
+      &.subtitle {
+
+        .fg-label {
+          strong {
+            font-family: $principal-font-semibold;
+            color: $info_text;
+          }
+        }
+      }
+
+      .form-control {
+        color: $black;
+
+        &::-moz-placeholder {
+          color: $primary;
+        }
+
+        &:-ms-input-placeholder {
+          color: $primary;
+        }
+
+        &::-webkit-input-placeholder {
+          color: $primary;
+        }
+      }
+
+      .fg-label {
+        font-family: $principal-font-bold;
+        color: $title;
+      }
+
+      .basic-input {
+        .fg-label {
+          color: $title;
+        }
+      }
+
+      .fg-toggled {
+        .fg-label {
+          color: $accent;
+        }
+      }
+
+      &.basic-select {
+        .fg-label {
+          color: $title;
+        }
+      }
+    }
+
+    .toggle-switch {
+
+      .ts-helper {
+        background: transparentize($black, .7);
+
+        &::before {
+          background: $background;
+          box-shadow: 0 2px 8px transparentize($black, .7);
+        }
+      }
+
+      &:not(.disabled) .ts-helper:active:before {
+        box-shadow: 0 2px 8px transparentize($black, .72), 0 0 0 20px transparentize($info_text, .72);
+      }
+    }
+
+    .toggle-switch:not([data-ts-color]) input:not(:disabled):checked + .ts-helper {
+      background: transparentize($accent, .5);
+    }
+
+    .toggle-switch:not([data-ts-color]) input:not(:disabled):checked + .ts-helper:before {
+      background: $accent;
+    }
+
+    .toggle-switch:not([data-ts-color]) input:not(:disabled):checked + .ts-helper:active:before {
+      box-shadow: 0 2px 8px transparentize($black, .7), 0 0 0 20px  transparentize($accent, .8);
+    }
+
+    .has-error {
+      .error-span {
+        font-family: $principal-font-medium;
+        color: $error;
+      }
+
+      .fg-line {
+        &::after {
+          background: $error;
+        }
+      }
+
+      .fg-input, .fg-textarea {
+        border-bottom-color: $error;
+      }
+
+      .basic-input,
+      .fg-line,
+      .fg-toggled {
+        .fg-label {
+          color: $error;
+        }
+      }
+    }
+    .select-validated {
+      .error-span {
+        color: $accent !important;
+      }
+
+      .fg-line {
+        &::after {
+          background: $accent !important;
+        }
+      }
+
+      .fg-input, .fg-textarea {
+        border-bottom-color:  $accent !important;
+      }
+      .basic-input,
+      .fg-line,
+      .fg-toggled {
+        .fg-label {
+          color: $accent !important;
+        }
+      }
+    }
+
+    .ie9-placeholder {
+      color: $info_text !important;
+    }
+
+    .input-radio-check {
+
+      input[type='radio'] {
+        border-color: $info_text;
+
+        &:checked:before {
+          background: $accent;
+        }
+
+        &:checked {
+          border-color: $accent;
+        }
+      }
+
+      span {
+        color: $title;
+      }
+    }
+    /* END FORM ELEMENTS */
+
 
     #hamburguer-icon {
       	path {
@@ -728,7 +1130,7 @@ $themes: (
     		          	&:hover {
     		            	background-color: $grey_3;
     		          	}
-    	        	}	
+    	        	}
 
     	        	.dropdown-menu {
     	          		.dropdown-item {
@@ -748,10 +1150,66 @@ $themes: (
     	          		}
     	        	}
     	      	}
-    	    }  
+    	    }
       	}
     }
     /* END HEADER APP */
+
+    /* LOGIN */
+
+    .simple-login {
+      .left-side {
+        .info {
+          .title {
+            font-family: $principal-font-regular;
+
+            h1 {
+              color: $white;
+            }
+            &::before {
+              background-color: $accent;
+            }
+          }
+          p {
+            color: $white;
+            font-family: $principal-font-regular;
+          }
+          .link {
+            font-family: $principal-font-regular;
+            a {
+              color:$accent;
+              &:hover {
+                color: $white;
+              }
+            }
+
+          }
+        }
+        .overlay-login {
+          background-image: linear-gradient(to bottom, transparentize($primary, .3), darken($primary, 12%));
+        }
+
+        .login-footer {
+          font-family: $principal-font-regular;
+          color: $white;
+        }
+      }
+      .right-side {
+        background-color: transparentize($primary, 0.95);
+        .principal-title {
+          color: $accent;
+          font-family: $principal-font-bold;
+
+        }
+        .info {
+          font-family: $principal-font-regular;
+          color: $primary;
+        }
+      }
+
+    }
+
+    /* END LOGIN */
 
 
     .logo-full {
@@ -809,13 +1267,13 @@ $themes: (
       }
     }
 
-    .material-tabs {    
+    .material-tabs {
       .nav-link {
         font-family: $principal-font-bold;
         color: $info_text;
-        
-        &.active { 
-          color: $accent; 
+
+        &.active {
+          color: $accent;
           &::after {
             background-color: $accent;
           }
@@ -1123,7 +1581,7 @@ $themes: (
     	    > a {
     	      	font-family: $principal-font-bold;
     	      	color: $primary;
-    	      
+
     	      	&:focus {
     	        	color: $accent;
     	        	background-color: transparentize($accent, 0.9);
@@ -1135,7 +1593,7 @@ $themes: (
     		}
     }
     .backdrop {
-      background-color: $primary; 
+      background-color: $primary;
     }
     /* END SIDEBAR MENU */
 

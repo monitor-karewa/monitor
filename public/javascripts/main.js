@@ -66,7 +66,7 @@ $('#hamburguer-icon').on('click', function() {
       wrapper: $('.theme-body'),
       buttons: $('.controls button')
     },
-    
+
     init: function () {
       var _self = this;
       this.settings.buttons.on('click', function () {
@@ -78,6 +78,6 @@ $('#hamburguer-icon').on('click', function() {
       });
     }
   };
-  
+
   themeChanger.init();
 }(window));

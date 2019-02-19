@@ -11,7 +11,6 @@ input:focus {
   box-shadow: none !important;
   resize: none;
   border-radius: 0;
-  font-family: $principal-font-regular;
 
   &:active,
   &:focus {
@@ -68,9 +67,7 @@ input:focus {
     filter: alpha(opacity=0);
     margin-top: 0;
 
-    &:checked + .input-helper:before {
-      border-color: #19babd;
-    }
+
   }
 
   &.disabled {
@@ -82,7 +79,6 @@ input:focus {
     &:before {
       left: 0;
       border: 1px solid;
-      border-color: rgba(0, 0, 0, 0.35);
       position: absolute;
       content: "";
     }
@@ -111,7 +107,6 @@ input:focus {
     font-stretch: normal;
     line-height: normal;
     letter-spacing: normal;
-    color: #454e7b;
   }
 
   input {
@@ -120,9 +115,6 @@ input:focus {
     width: 18px;
     height: 18px;
 
-    &:checked + .input-helper:before {
-      background-color: #19babd;
-    }
 
     &:checked + .input-helper:after {
       opacity: 1;
@@ -155,7 +147,6 @@ input:focus {
       font-size: 12px;
       left: 3px;
       top: 0;
-      color: #fff;
       font-weight: bold;
     }
   }
@@ -185,7 +176,6 @@ input:focus {
     &:after {
       width: 9px;
       height: 9px;
-      background: #009688;
       border-radius: 50%;
       top: 4px;
       left: 5px;
@@ -204,26 +194,8 @@ input:focus {
   padding-left: 25px;
 }
 
-.checkbox-light {
-  .input-helper:before {
-    border-color: #fff;
-  }
 
-  input:checked + .input-helper:before {
-    border-color: #fff;
-    background-color: #fff;
-  }
 
-  input:checked + .input-helper:after {
-    color: #333;
-  }
-}
-
-.radio-light {
-  .input-helper:before {
-    border-color: #fff;
-  }
-}
 /*-------------------------
     Select
 --------------------------*/
@@ -258,7 +230,6 @@ html:not(.ie9) .select.fg-line:before {
 
   .fg-line {
     border-bottom: 1px solid;
-    border-bottom-color: $grey_1;
 
     &:not([class*=has-]):after {
       bottom: -1px;
@@ -296,7 +267,6 @@ html:not(.ie9) .select.fg-line:before {
       .dropdown-menu {
         padding-top: 0;
         border: none;
-        box-shadow: rgba(56, 73, 99, 0.4) 2px 6px 20px 0;
 
         .disabled {
           opacity: 0.6;
@@ -310,7 +280,6 @@ html:not(.ie9) .select.fg-line:before {
           .text {
             font-size: 12px;
             font-weight: 600;
-            color: $grey_1;
             text-transform: uppercase;
           }
         }
@@ -320,25 +289,21 @@ html:not(.ie9) .select.fg-line:before {
           padding-bottom: 10px;
 
           .text {
-            color: $plain_text;
             text-transform: none;
             font-size: 14px;
             font-weight: 600;
           }
 
           &.active {
-            background-color: $grey_2;
             outline: none;
           }
 
           &:active {
-            background-color: $white;
             outline: none;
           }
         }
 
         .bs-searchbox {
-          background-color: rgba(69, 78, 123, 0.1);
           padding-top: 10px;
           padding-left: 40px;
           padding-bottom: 10px;
@@ -350,7 +315,6 @@ html:not(.ie9) .select.fg-line:before {
             font-size: 22px;
             left: 15px;
             top: 7px;
-            color: $grey_1;
             font-weight: 700;
           }
 
@@ -358,19 +322,16 @@ html:not(.ie9) .select.fg-line:before {
             border-bottom: none;
 
             &::-moz-placeholder {
-              color: $title;
               opacity: 0.4;
               font-size: 14px;
             }
 
             &:-ms-input-placeholder {
-              color: $title;
               opacity: 0.4;
               font-size: 14px;
             }
 
             &::-webkit-input-placeholder {
-              color: $title;
               opacity: 0.4;
               font-size: 14px;
             }
@@ -381,11 +342,27 @@ html:not(.ie9) .select.fg-line:before {
   }
 }
 
-.border-select {
+ .input-border {
+   width: 100%;
+   margin: 0px !important;
+   padding: 0px !important;
+   .fg-line {
+     margin: 0px;
+   }
+   input {
+     border-bottom: 0;
+     font-size: 13px !important;
+     padding: 5px 15px 4px 15px !important;
+     &:focus {
+       border-bottom: none !important;
+     }
+   }
+ }
+
+.border-select, .input-border {
   .fg-line {
     height: 30px;
     border: 1px solid;
-    border-color: $grey_2;
     &:not([class*=has-]):after {
       display: none !important;
     }
@@ -455,7 +432,6 @@ html:not(.ie9) .select.fg-line:before {
   }
 
   .form-control:disabled {
-    color: $grey_1;
     background: transparent;
   }
 
@@ -479,12 +455,8 @@ html:not(.ie9) .select.fg-line:before {
     transition-duration: 300ms;
   }
 
-  &:not([class*=has-]):after {
-    background: $accent;
-  }
 
   &.readonly .form-control {
-    color: $info_text;
     background: transparent;
   }
 
@@ -517,8 +489,6 @@ html:not(.ie9) .select.fg-line:before {
         letter-spacing: normal;
         top: 5px;
         position: relative;
-        font-family: Raleway-semibold;
-        color: $info_text;
       }
     }
   }
@@ -527,26 +497,21 @@ html:not(.ie9) .select.fg-line:before {
     position: relative;
     background: transparent;
     border-radius: 0;
-    color: $black;
 
     &::-moz-placeholder {
-      color: $primary;
       opacity: 0.25;
     }
 
     &:-ms-input-placeholder {
-      color: $primary;
       opacity: 0.4;
     }
 
     &::-webkit-input-placeholder {
-      color: $primary;
       opacity: 0.4;
     }
   }
 
   .fg-label {
-    font-family: $principal-font-bold;
     -webkit-transition: all;
     -o-transition: all;
     transition: all;
@@ -554,7 +519,6 @@ html:not(.ie9) .select.fg-line:before {
     transition-duration: 200ms;
     position: absolute;
     top: 5px;
-    color: $title;
     pointer-events: none;
     z-index: 0;
     left: 0;
@@ -569,7 +533,6 @@ html:not(.ie9) .select.fg-line:before {
 
   .basic-input {
     .fg-label {
-      color: $title;
       font-weight: bold;
       top: -20px;
       font-size: 16px;
@@ -578,7 +541,6 @@ html:not(.ie9) .select.fg-line:before {
 
   .fg-toggled {
     .fg-label {
-      color: $accent;
       font-weight: bold;
       top: -20px;
       font-size: 16px;
@@ -586,9 +548,6 @@ html:not(.ie9) .select.fg-line:before {
   }
 
   &.basic-select {
-    .fg-label {
-      color: $title;
-    }
 
     .fg-line {
       &::after {
@@ -631,7 +590,6 @@ html:not(.ie9) .select.fg-line:before {
     width: 35px;
     height: 16px;
     border-radius: 8px;
-    background: transparentize($black, .7);
     -webkit-transition: background 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     transition: background 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     vertical-align: middle;
@@ -644,16 +602,10 @@ html:not(.ie9) .select.fg-line:before {
       left: -4px;
       width: 24px;
       height: 24px;
-      background: $background;
-      box-shadow: 0 2px 8px transparentize($black, .7);
       border-radius: 50%;
       webkit-transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
       transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1), background 0.28s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.28s cubic-bezier(0.4, 0, 0.2, 1);
     }
-  }
-
-  &:not(.disabled) .ts-helper:active:before {
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.28), 0 0 0 20px rgba(128, 128, 128, 0.1);
   }
 
   input, textarea {
@@ -672,17 +624,6 @@ html:not(.ie9) .select.fg-line:before {
   }
 }
 
-.toggle-switch:not([data-ts-color]) input:not(:disabled):checked + .ts-helper {
-  background: transparentize($accent, .5);
-}
-
-.toggle-switch:not([data-ts-color]) input:not(:disabled):checked + .ts-helper:before {
-  background: $accent;
-}
-
-.toggle-switch:not([data-ts-color]) input:not(:disabled):checked + .ts-helper:active:before {
-  box-shadow: 0 2px 8px transparentize($black, .7), 0 0 0 20px  transparentize($accent, .8);
-}
 /*-------------------------
     Validation
 --------------------------*/
@@ -691,7 +632,6 @@ html:not(.ie9) .select.fg-line:before {
 }
 .has-error {
   .error-span {
-    font-family: $principal-font-medium;
     display: initial !important;
     font-size: 10px;
     font-weight: 500;
@@ -699,7 +639,6 @@ html:not(.ie9) .select.fg-line:before {
     font-stretch: normal;
     line-height: normal;
     letter-spacing: normal;
-    color: $error;
   }
 
   .fg-line {
@@ -707,7 +646,6 @@ html:not(.ie9) .select.fg-line:before {
 
     &::after {
       transition: 0s;
-      background: $error;
       -webkit-transform: scale(1)!important;
       -ms-transform: scale(1)!important;
       -o-transform: scale(1)!important;
@@ -717,40 +655,16 @@ html:not(.ie9) .select.fg-line:before {
 
   .fg-input, .fg-textarea {
     border-bottom: solid 2px;
-    border-bottom-color: $error;
-  }
-
-  .basic-input,
-  .fg-line,
-  .fg-toggled {
-    .fg-label {
-      color: $error;
-    }
   }
 }
 .select-validated {
-  .error-span {
-    color: $accent !important;
-  }
 
   .fg-line {
     &::after {
-      background: $accent !important;
       -webkit-transform: scale(1)!important;
       -ms-transform: scale(1)!important;
       -o-transform: scale(1)!important;
       transform: scale(1)!important;
-    }
-  }
-
-  .fg-input, .fg-textarea {
-    border-bottom-color:  $accent !important;
-  }
-  .basic-input,
-  .fg-line,
-  .fg-toggled {
-    .fg-label {
-      color: $accent !important;
     }
   }
 }
@@ -758,7 +672,6 @@ html:not(.ie9) .select.fg-line:before {
     IE 9 Placeholder
 --------------------------*/
 .ie9-placeholder {
-  color: $info_text !important;
   font-weight: normal;
 }
 /*-----------------------------------
@@ -791,7 +704,6 @@ html:not(.ie9) .select.fg-line:before {
     border-radius: 50%;
     outline: none;
     border: 2px solid;
-    border-color: $info_text;
 
     &:before {
       content: '';
@@ -802,13 +714,7 @@ html:not(.ie9) .select.fg-line:before {
       margin: 3px auto;
     }
 
-    &:checked:before {
-      background: $accent;
-    }
 
-    &:checked {
-      border-color: $accent;
-    }
   }
 
   span {
@@ -817,6 +723,5 @@ html:not(.ie9) .select.fg-line:before {
     text-align: left;
     font-size: 12px;
     font-weight: bold;
-    color: $title;
   }
 }
