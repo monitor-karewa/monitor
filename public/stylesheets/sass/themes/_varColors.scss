@@ -4,9 +4,26 @@
  * Content    : Palette Colors variable
  */
 
+/* THEME COLORS */
+$default: #19babd; 
+$dark: #2e3854;
+$purple: #981beb;
+$orange: #ff691e;
+$yellow: #fab81e;
+$green-blue: #80dbb6;
+$green: #17cf86;
+$sky: #91d2fa;
+$blue: #1b95e0;
+$red: #e71c4f;
+$pink: #f58ea8;
+$gray: #abb8c2;
+$lilac: #9f97e4;
+$blue-dark: #4468c4;
+  
+
 /* DEFAULT COLORS */
 $primary: #454e7b;
-$accent: transparent;
+$accent: $default;
 
 $success: #6ec284;
 $error: #eb6262;
@@ -24,20 +41,3 @@ $background: #f8f9ff;
 $black: #242424;
 $white: #ffffff;
 $cards: #f7f8f9;
-
-
-/* THEME COLORS */
-$default: #19babd; 
-$dark: #2e3854;
-$purple: #981beb;
-$orange: #ff691e;
-$yellow: #fab81e;
-$green-blue: #80dbb6;
-$green: #17cf86;
-$sky: #91d2fa;
-$blue: #1b95e0;
-$red: #e71c4f;
-$pink: #f58ea8;
-$gray: #abb8c2;
-$lilac: #9f97e4;
-$blue-dark: #4468c4;

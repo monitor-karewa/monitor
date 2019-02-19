@@ -26,3 +26,34 @@
 		}
 	}
 }
+
+
+.box-tabs {
+	.nav {}
+	
+	.nav-link {
+		font-family: $principal-font-regular;
+		font-size: 12px;
+		font-weight: 600;
+		line-height: normal;
+		color: $plain_text;
+		padding: 8px 20px;
+		display: inline-block;
+	    width: 150px;
+	    text-align: center;
+		border: 1px solid $plain_text;
+		display: inline-block;
+
+		&.active {
+			color: $accent;
+			border-color: $accent;
+			border-left: 1px solid $accent;
+			background-color: transparentize($accent, 0.93);
+		}
+	}
+
+	.tab-pane {
+		padding-top: 40px;
+		padding-bottom: 20px;
+	}
+}

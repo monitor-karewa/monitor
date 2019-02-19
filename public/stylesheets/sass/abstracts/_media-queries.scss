@@ -16,6 +16,9 @@
 
 /* WIDTH */
 @media screen and (max-width: 600px) {
+	.box-tabs .nav {
+		justify-content: center;
+	}
 	.card-header {
 		padding: 20px !important;
 	}
@@ -33,6 +36,11 @@
 	}
 	.form-btn-top {
     	width: 100%;
+	}
+	.material-tabs {
+		.nav {
+			justify-content: center;
+		}
 	}
 	.modal-content {
 		padding-right: 15px !important;
@@ -84,6 +92,7 @@
 
 	.buttons-right.w-50 {
 		margin-top: 20px;
+		margin-bottom: 20px;
 	}
 
 	.p-relative.d-flex.vertical-center.m-b-20 {
@@ -162,7 +171,7 @@
 	.table.form-table {
 		.row-buttons-hover {
 			opacity: 1;
-			background-color: transparent;
+			background-color: transparent !important;
 			.table-buttons-hover {
 				position: relative;
 				background-color: transparent;

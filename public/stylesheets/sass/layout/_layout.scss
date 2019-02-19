@@ -68,6 +68,76 @@ button {
 }
 
 
+.cover-test {
+  label {
+    font-size: 12px;
+    font-weight: 600;
+    font-style: italic;
+    line-height: 1.33;
+    display: block;
+    margin-bottom: 8px;
+  }
+
+  .container-cover {
+    height: 250px;
+    width: 100%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    img {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      object-fit: cover;
+    }
+
+    .info {
+      text-align: center;
+      max-width: 500px;
+      position: absolute;
+
+      small {
+         font-size: 13px;
+         font-weight: bold;
+         line-height: normal;
+         text-align: center;
+      }
+      label {
+        position: relative;
+        font-size: 40.3px;
+        font-weight: normal;
+        line-height: normal;
+        text-align: center;
+        font-style: normal;
+        margin-bottom: 28px;
+        display: block;
+
+        &::after {
+          content: " ";
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          right: 0;
+          margin: 0 auto;
+          width: 42px;
+          height: 2px;
+        }
+      }
+      p {
+        font-size: 11px;
+        font-weight: 500;
+        line-height: 1.88;
+        text-align: center;
+      }
+    }
+  }
+}
+
+
 /* CARDS */
 .card {
   overflow: hidden;
@@ -1748,6 +1818,29 @@ button {
     margin-bottom: 0;
     margin-top: 2px;
     word-wrap: break-word;
+  }
+}
+
+.title-dot {
+  padding-left: 14px;
+  margin-bottom: 20px;
+  display: block;
+  position: relative;
+  font-size: 16px;
+  font-weight: 600;
+  line-height: normal;
+
+  &:before {
+    position: absolute;
+    display: block;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    margin: auto;
+    border-radius: 2px;
+    content: " ";
+    width: 6px;
+    height: 6px;
   }
 }
 

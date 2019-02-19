@@ -99,6 +99,32 @@
     .fg-line {
       border-right: none;
     }
+
+    .input-search {
+      border: 1px solid $grey_2;
+      width: 100%;
+      padding: 8px 15px;
+      font-family: $principal-font-regular;
+      font-size: 12px;
+      font-weight: normal;
+      line-height: normal;
+      color: $plain_text;
+      background-color: transparent;
+      width: 100%;
+
+      &::placeholder { 
+        color: $grey_1;
+        opacity: 1; 
+      }
+
+      &:-ms-input-placeholder {
+        color: $grey_1;
+      }
+
+      &::-ms-input-placeholder {
+        color: $grey_1;
+      }
+    }
   }
 
   .filter-btn {

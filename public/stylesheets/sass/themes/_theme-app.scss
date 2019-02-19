@@ -36,11 +36,6 @@ $themes: (
       font-family: $principal-font-bold;
     }
 
-    .button-upload {
-      background-color: $background;
-      border-color: $grey_1;
-    }
-
 
     /* ALERTS */
     .alert {
@@ -143,6 +138,11 @@ $themes: (
     	}
     }
 
+    .button-upload {
+      background-color: $background;
+      border-color: $grey_1;
+    }
+
     .mini-buttons {
       .mini-btn {
         border-color: $accent;
@@ -156,6 +156,37 @@ $themes: (
       }
     }
     /* END BUTTONS */
+
+    .cover-test {
+      label {
+        font-family: $principal-font-semibold;
+        color: $plain_text;
+      }
+      .container-cover {
+        .info {
+          small {
+            font-family: $principal-font-medium;
+             color: $info_text;
+          }
+          label {
+            font-family: $principal-font-light;
+            color: $white;
+            
+            &::after {
+              background-color: $accent;
+            }
+          }
+          p {
+            font-family: $principal-font-regular;
+            color: $grey_1;
+
+            strong {
+              color: $accent;
+            }
+          }
+        }
+      }
+    }
 
 
     /* CARDS */
@@ -470,6 +501,7 @@ $themes: (
       .filter-btn {
         background: $plain_text;
         color: $white;
+        font-family: $principal-font-regular;
       }
     }
 
@@ -1216,6 +1248,15 @@ $themes: (
     }
     /* END TAG */
 
+
+    .title-dot {
+      font-family: $principal-font-semibold;
+      color: $plain_text;
+
+      &:before {
+        background-color: $accent;
+      }
+    }
 
     .upload-section {
       label {
