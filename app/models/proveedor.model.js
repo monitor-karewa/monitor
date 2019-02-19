@@ -59,10 +59,7 @@ ProveedorSchema.statics.expressValidator = function () {
     //https://express-validator.github.io/docs/
 
     return [
-        check('nombre').isLength({
-            min: 2,
-            max: 100
-        })
+        check('rfc').matches(/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/).withMessage('Verifica que el RFC es válido')
         //Some examples:
         // check('email').isEmail(),
         // check('type').isIn(allowedTypes),

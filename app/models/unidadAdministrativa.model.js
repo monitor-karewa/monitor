@@ -9,45 +9,40 @@ const mongoosePagination = require('mongoose-paginate');
 const permissions = require('./../components/permissions');
 
 /**
- * Schema de Mongoose para el modelo Recurso.
+ * Schema de Mongoose para el modelo UnidadAdministrativa.
  * @type {mongoose.Schema}
  */
-let RecursoSchema = new Schema({
-    titulo: {
+let UnidadAdministrativaSchema = new Schema({
+    nombre: {
         type: String,
         required: true
     },
-    clasificacion: {
+    notas: {
         type: String,
-        enum: ['MARCO LEGAL', 'ARTICULO', 'NOTAS'],
-        required: true
-    },
-    enlace: {
-        type:String,
         required: true
     },
     deleted: require("./schemas/deleted.schema").Deleted
 });
 
 //Agregar createdAt, modifiedAt automáticamente
-RecursoSchema.plugin(pluginCreatedUpdated);
+UnidadAdministrativaSchema.plugin(pluginCreatedUpdated);
 
 //Paginación
-RecursoSchema.plugin(mongoosePagination);
+UnidadAdministrativaSchema.plugin(mongoosePagination);
 
-//Clase del modelo Recurso.
-class RecursoClass {
+//Clase del modelo UnidadAdministrativa.
+class UnidadAdministrativaClass {
     constructor() {
 
     }
 }
 
 //Cargar class en Schema
-RecursoSchema.loadClass(RecursoClass);
+UnidadAdministrativaSchema.loadClass(UnidadAdministrativaClass);
 
-RecursoSchema.statics.permission = permissions.getDefault("Recurso");
+UnidadAdministrativaSchema.statics.permission = permissions.getDefault("UnidadAdministrativa");
 
-RecursoSchema.statics.expressValidator = function() {
+UnidadAdministrativaSchema.statics.expressValidator = function() {
     
     //For a list of available validators, check:
     //https://github.com/chriso/validator.js#validators
@@ -56,19 +51,15 @@ RecursoSchema.statics.expressValidator = function() {
     //https://express-validator.github.io/docs/
     
     return [
-        // check('titulo').isLength({
-        //     min: 2,
-        //     max: 100
-        // })
         //Some examples:
         // check('email').isEmail(),
         // check('type').isIn(allowedTypes),
-        check('enlace').isURL().withMessage('Verifica que la URL del enlace es válido')
+        // check('url').isUrl()
     ]
 };
 
-const Recurso = mongoose.model('Recurso', RecursoSchema);
+const UnidadAdministrativa = mongoose.model('UnidadAdministrativa', UnidadAdministrativaSchema);
 
 module.exports = {
-    Recurso
+    UnidadAdministrativa
 };
