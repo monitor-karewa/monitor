@@ -3,6 +3,7 @@
  * Version    : 1.0
  * Content    : Theme Color Palette
  */
+
 /*---------------------------------------------------------------------
   COLOR PALETTE THEME
   To change the 'opacity' please use sass transparentize.
@@ -10,269 +11,399 @@
   Using transparentize the opacity changes: 1 means 0 and 0 means 1.
   Example: If you want an opacity 0.2 -> it changes to 0.8.
 -----------------------------------------------------------------------*/
-strong {
-  font-family: Raleway-bold;
-}
+/* THEME COLORS LIST */
+$themes: (
+  default: #19babd,
+  dark: #2e3854,
+  purple: #981beb,
+  orange: #ff691e,
+  yellow: #fab81e,
+  greenBlue: #80dbb6,
+  green: #17cf86,
+  sky: #91d2fa,
+  blue: #1b95e0,
+  red: #e71c4f,
+  pink: #f58ea8,
+  gray: #abb8c2,
+  lilac: #9f97e4,
+  blueDark: #4468c4
+);
 
-.button-upload {
-  background-color: $background;
-  border-color: $grey_1;
-}
-
-
-/* ALERTS */
-.alert {
-	background: $white !important;
-	font-family: $principal-font-regular;
-	&.alert-info {
-		color: $info;
-	}
-	&.alert-danger {
-		color: $error;
-	}
-	&.alert-success {
-		color: $success;
-	}
-	&.alert-warning {
-		color: $warning;
-	}
-}
-/* FIN ALERTS */
-
-
-/* BADGE */
-.badge {
-  font-family: $principal-font-medium;
-  color: $white;
-  background-color: $grey_2;
-
-  &.badge-green {
-    background-color: $success;
-  }
-  &.badge-red {
-    background-color: $error;
-  }
-  &.badge-yellow {
-    background-color: $warning;
-  }
-  &.badge-blue {
-    background-color: $info;
-  }
-}
-/*END BADGE*/
-
-
-/* BUTTONS */
-.btn-raised,
-.btn-stroke,
-.btn-outline {
-  	font-family: $principal-font-medium;
-}
-
-.btn-outline {
-  	color: $primary;
-  	font-family: $principal-font-medium;
-
-  	&:hover {
-  		background-color: $grey_3;
-  		color: $primary;
-  	}
-}
-
-.btn-loading {
-	> div {
-		.spinner {
-		  stroke: #0f6f70;
-		}
-	}
-}
-
-.btn-circle-icon {
-	color: $primary;
-
-	&:hover,
-	&:focus {
-		color: inherit;
-		background-color: $grey_3;
-	}
-}
-
-.mini-buttons {
-  .mini-btn {
-    border-color: $accent;
-    font-family: $principal-font-bold;
-    color: $accent;
-
-    &:hover {
-      background-color: $accent;
-      color: $white;
+/* THEME COLORS MIXIN */
+@mixin theme($name, $accent) {
+  .#{$name} {
+    strong {
+      font-family: $principal-font-bold;
     }
-  }
-}
-/* END BUTTONS */
 
 
-/* CARDS */
-.card {
-  background-color: $white;
-}
+    /* ALERTS */
+    .alert {
+    	background: $white !important;
+    	font-family: $principal-font-regular;
+    	&.alert-info {
+    		color: $info;
+    	}
+    	&.alert-danger {
+    		color: $error;
+    	}
+    	&.alert-success {
+    		color: $success;
+    	}
+    	&.alert-warning {
+    		color: $warning;
+    	}
+    }
+    /* FIN ALERTS */
 
-.card-img-corner {
-  background-color: $white;
 
-  h1 {
-    font-family: $principal-font-bold;
-    color: $primary;
-  }
+    /* BADGE */
+    .badge {
+      font-family: $principal-font-medium;
+      color: $white;
+      background-color: $grey_2;
 
-  p {
-    font-family: $principal-font-semibold;
-    color: $plain_text;
-  }
-
-  .link-to {
-    font-family: $principal-font-bold;
-    color: $accent;
-  }
-}
-
-.card-info {
-  background-color: $white;
-
-  p {
-    font-family: $principal-font-medium;
-    color: $primary;
-  }
-
-  .link-to {
-    font-family: $principal-font-medium;
-    color: $accent;
-  }
-}
-
-.card-background {
-  background-color: $cards;
-
-  p {
-    font-family: $principal-font-semibold;
-    color: $primary;
-  }
-  > div {
-    span {
-      label {
-        /*font-family: Avenir-heavy;*/
-        color: $accent;
+      &.badge-green {
+        background-color: $success;
       }
-      small {
-        font-family: $principal-font-medium;
-        color: $plain_text;
+      &.badge-red {
+        background-color: $error;
+      }
+      &.badge-yellow {
+        background-color: $warning;
+      }
+      &.badge-blue {
+        background-color: $info;
+      }
+    }
+    /*END BADGE*/
+
+
+    /* BUTTONS */
+    .btn-raised,
+    .btn-stroke,
+    .btn-outline {
+      	font-family: $principal-font-medium;
+    }
+
+    .btn-raised {
+      /* SPECIAL CASE */
+      &.button-accent {
+        background-color: $accent;
+        color: $white;
+        &:hover {
+          color: $white;
+        }
       }
     }
 
     .btn-stroke {
-      border-color: $grey_2;
-    }
-  }
-}
+      /* SPECIAL CASE */
+      &.button-accent {
+        color: $accent;
+        border-color: $accent;
 
-.card-compare {
-  background-color: $cards;
-  > small {
-    font-family: $principal-font-regular;
-    color: $plain_text;
-  }
-  .btn-stroke {
-    border-color: $grey_2;
-  }
-}
-
-.card-image-large {
-  background-color: $cards;
-  > div {
-    p {
-      font-family: $principal-font-semibold;
-      color: $plain_text;
+        &:hover {
+          background-color: $accent;
+          color: $white !important;
+        }
+      }
     }
-    span {
-      small {
+
+    .btn-outline {
+      	color: $primary;
+      	font-family: $principal-font-medium;
+
+      	&:hover {
+      		background-color: $grey_3;
+      		color: $primary;
+      	}
+    }
+
+    .btn-loading {
+    	> div {
+    		.spinner {
+    		  stroke: #0f6f70;
+    		}
+    	}
+    }
+
+    .btn-circle-icon {
+    	color: $primary;
+
+    	&:hover,
+    	&:focus {
+    		color: inherit;
+    		background-color: $grey_3;
+    	}
+    }
+
+    .button-upload {
+      background-color: $background;
+      border-color: $grey_1;
+    }
+
+    .mini-buttons {
+      .mini-btn {
+        border-color: $accent;
+        font-family: $principal-font-bold;
+        color: $accent;
+
+        &:hover {
+          background-color: $accent;
+          color: $white;
+        }
+      }
+    }
+    /* END BUTTONS */
+
+    .cover-test {
+      label {
+        font-family: $principal-font-semibold;
+        color: $plain_text;
+      }
+      .container-cover {
+        .info {
+          small {
+            font-family: $principal-font-medium;
+             color: $info_text;
+          }
+          label {
+            font-family: $principal-font-light;
+            color: $white;
+
+            &::after {
+              background-color: $accent;
+            }
+          }
+          p {
+            font-family: $principal-font-regular;
+            color: $grey_1;
+
+            strong {
+              color: $accent;
+            }
+          }
+        }
+      }
+    }
+
+
+    /* CARDS */
+    .card {
+      background-color: $white;
+    }
+
+    .card-img-corner {
+      background-color: $white;
+
+      h1 {
+        font-family: $principal-font-bold;
+        color: $primary;
+      }
+
+      .link-to {
         font-family: $principal-font-medium;
-        color: $grey_1;
+        color: $accent;
+      }
+
+      p {
+        font-family: $principal-font-semibold;
+        color: $plain_text;
+      }
+
+      .link-to {
+        font-family: $principal-font-bold;
+        color: $accent;
+      }
+    }
+
+    .card-info {
+      background-color: $white;
+
+      p {
+        font-family: $principal-font-medium;
+        color: $primary;
+      }
+
+      .link-to {
+        font-family: $principal-font-medium;
+        color: $accent;
+      }
+    }
+
+    .card-background {
+      background-color: $cards;
+
+      p {
+        font-family: $principal-font-semibold;
+        color: $primary;
+      }
+      > div {
+        span {
+          label {
+            /*font-family: Avenir-heavy;*/
+            color: $accent;
+          }
+          small {
+            font-family: $principal-font-medium;
+            color: $plain_text;
+          }
+        }
+
+        .btn-stroke {
+          border-color: $grey_2;
+        }
+      }
+    }
+
+    .card-compare {
+      background-color: $cards;
+      > small {
+        font-family: $principal-font-regular;
+        color: $plain_text;
       }
       .btn-stroke {
         border-color: $grey_2;
       }
     }
-  }
-}
 
-.card-only-text {
-  background-color: transparentize($cards, 0.2);
-
-  h1 {
-    font-family: $principal-font-semibold;
-    color: $plain_text;
-  }
-  span {
-    small {
-      font-family: $principal-font-medium;
-      color: $grey_1;
-    }
-
-    .btn-stroke {
-      border-color: $grey_2;
-    }
-  }
-}
-
-.card-map-info {
-  background-color: $cards;
-
-  .info {
-    h1 {
-      font-family: $principal-font-semibold;
-      color: $plain_text;
-    }
-    ul {
-      li {
-        font-family: $principal-font-regular;
-        color: $plain_text;
-
-        i {
-          color: $info;
+    .card-image-large {
+      background-color: $cards;
+      > div {
+        p {
+          font-family: $principal-font-semibold;
+          color: $plain_text;
+        }
+        span {
+          small {
+            font-family: $principal-font-medium;
+            color: $grey_1;
+          }
+          .btn-stroke {
+            border-color: $grey_2;
+          }
         }
       }
     }
-  }
-}
-/* END CARDS */
 
-.client-cover {
-  .cover-container {
-    .info {
-      p {
-        font-family: $principal-font-regular;
-        color: $grey_1;
-      }
-
-      h3 {
-        font-family: $principal-font-regular;
-        color: $info_text;
-      }
+    .card-only-text {
+      background-color: transparentize($cards, 0.2);
 
       h1 {
-        color: $white;
-        font-family: $principal-font-regular;
+        font-family: $principal-font-semibold;
+        color: $plain_text;
       }
+      span {
+        small {
+          font-family: $principal-font-medium;
+          color: $grey_1;
+        }
 
-      .divider {
-        background-color: $accent;
+        .btn-stroke {
+          border-color: $grey_2;
+        }
       }
     }
-  }
-  .filter-box {
-    background: $white;
-  }
-}
+
+    .card-map-info {
+      background-color: $cards;
+
+      .info {
+        h1 {
+          font-family: $principal-font-semibold;
+          color: $plain_text;
+        }
+        ul {
+          li {
+            font-family: $principal-font-regular;
+            color: $plain_text;
+
+            i {
+              color: $info;
+            }
+          }
+        }
+      }
+    }
+    /* END CARDS */
+
+
+    .container-footer {
+      	background-color: $background;
+
+      	> div {
+        	a,
+        	label {
+    	      	font-family: $principal-font-semibold;
+    	      	color: $primary;
+        	}
+
+    	    a {
+    	      &::before {
+    	        background-color: $primary;
+    	      }
+    	    }
+      	}
+    }
+
+    .details-list {
+      ul {
+        li {
+          font-family: $principal-font-semibold;
+          color: $plain_text;
+
+          span {
+            font-family: $principal-font-bold;
+          }
+        }
+      }
+    }
+
+    .dropdown-inside {
+      .dropdown {
+        .dropdown-menu {
+          ul {
+            li {
+              color: $accent;
+              font-family: $principal-font-semibold;
+
+              &:hover {
+                background-color: transparentize($accent, 0.8);
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .client-cover {
+      .cover-container {
+        .info {
+          p {
+            font-family: $principal-font-regular;
+            color: $grey_1;
+          }
+
+          h3 {
+            font-family: $principal-font-regular;
+            color: $info_text;
+          }
+
+          h1 {
+            color: $white;
+            font-family: $principal-font-regular;
+          }
+
+          .divider {
+            background-color: $accent;
+          }
+        }
+      }
+      .filter-box {
+        background: $white;
+      }
+    }
 
 .container-footer {
   	background-color: $background;
@@ -370,661 +501,869 @@ strong {
 // END COLLAPSIBLES
 
 
-/* DROPDOWNS */
-.dropdown {
-  .dropdown-menu {
-    background-color: $white;
-  }
-}
-
-.dropdown.menu-filters {
-  .dropdown-menu {
-    small {
-      font-family: $principal-font-bold;
-      color: $primary;
+    /* DROPDOWNS */
+    .dropdown {
+      .dropdown-menu {
+        background-color: $white;
+      }
     }
 
-    .divider {
-      background-color: $grey_3;
+    .dropdown.menu-filters {
+      .dropdown-menu {
+        small {
+          font-family: $principal-font-bold;
+          color: $primary;
+        }
+
+        .divider {
+          background-color: $grey_3;
+        }
+
+        .checkbox {
+          span {
+            font-family: $principal-font-semibold;
+            color: $plain_text;
+          }
+        }
+
+        ul {
+          li {
+            &:hover {
+              background-color:  $grey_2;
+            }
+          }
+        }
+      }
+    }
+    /* END DROPDOWNS */
+
+
+    .empty-state {
+      p {
+        font-family: $principal-font-medium;
+        color: $plain_text;
+      }
     }
 
-    .checkbox {
-      span {
+    .floating-title-dash {
+      .side-left {
+        h1 {
+          font-family: $principal-font-semibold;
+          color: $primary;
+        }
+        label {
+          font-family: $principal-font-bold;
+          color: $info-text;
+        }
+      }
+      .side-right {
+        p {
+          font-family: $principal-font-semibold;
+          color: $primary;
+        }
+        small {
+          font-family: $principal-font-semibold;
+          color: $info_text;
+
+          strong {
+            color: $primary;
+          }
+        }
+      }
+    }
+
+    .floating-title-form {
+      .side-left {
+        h1 {
+          font-family: $principal-font-semibold;
+          color: $primary;
+        }
+        label {
+          font-family: $principal-font-semibold;
+          color: $info-text;
+        }
+      }
+    }
+
+    .floating-title-table {
+      h2 {
+        font-family: $principal-font-bold;
+        color: $primary;
+      }
+    }
+
+    .filter {
+      .filter-btn {
+        background: $plain_text;
+        color: $white;
+        font-family: $principal-font-regular;
+      }
+    }
+
+    .floating-title-panel {
+      h1 {
+        font-family: $principal-font-bold;
+        color: $primary;
+
+        &::after {
+          background-color: $accent;
+        }
+      }
+
+      &.long-text h1 {
+        small {
+          font-family: $principal-font-bold;
+          color: $grey_1;
+        }
+      }
+    }
+
+    .search-container {
+      .form-search {
+        .input-search {
+          font-family: $principal-font-bold;
+          color: $accent;
+
+          &::-webkit-input-placeholder {
+            font-family: $principal-font-medium;
+            color: $grey_1;
+          }
+
+          &:-ms-input-placeholder {
+            font-family: $principal-font-medium;
+            color: $grey_1;
+          }
+
+          &::placeholder {
+            font-family: $principal-font-medium;
+            color: $grey_1;
+          }
+        }
+
+        .icon {
+          color: $grey_1;
+
+          &.zmdi-close {
+            color: $primary;
+          }
+        }
+      }
+    }
+
+    .floating-text {
+      h1 {
+        font-family: $principal-font-bold;
+        color: $primary;
+      }
+      p {
         font-family: $principal-font-semibold;
         color: $plain_text;
       }
     }
 
-    ul {
-      li {
-        &:hover {
-          background-color:  $grey_2;
-        }
-      }
-    }
-  }
-}
-/* END DROPDOWNS */
-
-
-.empty-state {
-  p {
-    font-family: $principal-font-medium;
-    color: $plain_text;
-  }
-}
-
-.filter {
-  // background: $white;
-
-  .filter-btn {
-    background: $plain_text;
-    color: $white;
-  }
-}
-
-/* FOOTER CLIENT */
-
-.footer-client {
-  background-color: $grey_3;
-
-  .develop-by {
-    .divider {
-      background-color: $grey_1;
-    }
-    p {
-        font-family: $principal-font-regular;
-        color: $plain_text;
-    }
-  }
-
-  .row {
-    span {
-      ul {
-        label {
-          font-family: $principal-font-regular;
-          color: $plain_text;
-        }
-
-        li a {
-          font-family: $principal-font-regular;
-          color: $plain_text;
-
-          &:hover:before {
-            background-color: $plain_text;
-          }
-        }
-      }
-
+    .floating-text-form {
       h1 {
-        font-family: $principal-font-regular;
-        color: $plain_text;
+        font-family: Raleway-bold;
+        color: #454e7b;//$primary;
+      }
+      p {
+        font-family: Raleway-semibold;
+        color: #8f95b0;//$info_text;
+      }
+    }
 
-        strong {
-          font-family: $principal-font-regular;
+    /* FOOTER CLIENT */
+    .footer-client {
+      background-color: $grey_3;
+
+      .develop-by {
+        .divider {
+          background-color: $grey_1;
         }
-
-        ul {
-          label {
+        p {
             font-family: $principal-font-regular;
             color: $plain_text;
+        }
+      }
+
+      .row {
+        span {
+          ul {
+            label {
+              font-family: $principal-font-regular;
+              color: $plain_text;
+            }
+
+            li a {
+              font-family: $principal-font-regular;
+              color: $plain_text;
+
+              &:hover:before {
+                background-color: $plain_text;
+              }
+            }
           }
 
-          li a {
+          h1 {
             font-family: $principal-font-regular;
             color: $plain_text;
 
-            &:hover:before {
-              background-color: $plain_text;
+            strong {
+              font-family: $principal-font-regular;
+            }
+
+            ul {
+              label {
+                font-family: $principal-font-regular;
+                color: $plain_text;
+              }
+
+              li a {
+                font-family: $principal-font-regular;
+                color: $plain_text;
+
+                &:hover:before {
+                  background-color: $plain_text;
+                }
+              }
+            }
+          }
+
+          p {
+            font-family: $principal-font-regular;
+            color: $plain_text;
+
+            strong {
+              font-family: $principal-font-regular;
             }
           }
         }
       }
+    }
+    /* END FOOTER CLIENT */
 
-      p {
-        font-family: $principal-font-regular;
-        color: $plain_text;
 
-        strong {
-          font-family: $principal-font-regular;
+    #hamburguer-icon {
+      	path {
+        	stroke: $primary;
+      	}
+    }
+
+
+    /* HEADER APP */
+    .header {
+      	background-color: $white;
+
+      	.right {
+        	.links {
+    	      	.topMenuDropdown {
+    	        	.dropdown-toggle {
+    		          	border: 1px solid transparentize($primary, 0.8);
+
+    		          	> div {
+    		            	label {
+    		              		font-family: $principal-font-bold;
+    		              		color: $primary;
+    		            	}
+    		            	span {
+    		              		font-family: $principal-font-semibold;
+    		              		color: transparentize($primary, 0.4);;
+    		            	}
+    		          	}
+    		        }
+
+    		        .dropdown-menu {
+    		          	.dropdown-item {
+    		            	font-family: $principal-font-bold;
+    		            	color: $primary;
+
+    		            	&:hover {
+    		              		opacity: 1;
+    		              		background-color: transparentize($primary, 0.9);
+    		            	}
+
+    		            	&.active {
+    		              		background-color: transparentize($accent, 0.9);
+    		              		color: $accent;
+    		              		border-left-color: $accent;
+    		            	}
+    		          	}
+    		        }
+
+    		        &.show .dropdown-toggle {
+    		          border: 1px solid transparentize($accent, 0.3);
+    		        }
+    	      	}
+        	}
+
+    	    .admin {
+    	      	ul {
+    	        	li {
+    		          	a {
+    		            	font-family: $principal-font-medium;
+    		            	color: $grey_2;
+
+    		            	&::before {
+    		              	background-color: $grey_2;
+    		            	}
+    		          	}
+
+    		          	&:first-of-type a {
+    		            	color: $accent;
+
+    		            	&::before {
+    		              		background-color: $accent;
+    		            	}
+    		          	}
+    	        	}
+    	      	}
+
+    	      	.topMenuDropdown {
+            		.dropdown-toggle {
+    		          	&:hover {
+    		            	background-color: $grey_3;
+    		          	}
+    	        	}
+
+    	        	.dropdown-menu {
+    	          		.dropdown-item {
+    	            		font-family: $principal-font-bold;
+    	            		color: $primary;
+
+    		            	&:hover {
+    		              		opacity: 1;
+    		              		background-color: transparentize($primary, 0.9);
+    		            	}
+
+    		            	&.active {
+    		              		background-color: transparentize($accent, 0.9);
+    		              		color: $accent;
+    		              		border-left-color: $accent;
+    	            		}
+    	          		}
+    	        	}
+    	      	}
+    	    }
+      	}
+    }
+    /* END HEADER APP */
+
+
+    .logo-full {
+      > div {
+        small {
+          font-family: $principal-font-medium;
+          color: $primary;
+        }
+        label {
+          font-family: $principal-font-semibold;
+          color: $accent;
         }
       }
     }
-  }
-}
 
-/* END FOOTER CLIENT */
 
-.floating-title-dash {
-  .side-left {
-    h1 {
-      font-family: $principal-font-semibold;
-      color: $primary;
+    /* MAIN CONTAINER */
+    #main #content {
+      	background-color: $background;
     }
-    label {
-      font-family: $principal-font-bold;
-      color: $info-text;
-    }
-  }
-  .side-right {
-    p {
-      font-family: $principal-font-semibold;
-      color: $primary;
-    }
-    small {
-      font-family: $principal-font-semibold;
-      color: $info_text;
+    /* END MAIN CONTAINER */
 
-      strong {
-        color: $primary;
-      }
-    }
-  }
-}
 
-.floating-title-form {
-  .side-left {
-    h1 {
-      font-family: $principal-font-semibold;
-      color: $primary;
-    }
-    label {
-      font-family: $principal-font-semibold;
-      color: $info-text;
-    }
-  }
-}
-
-.floating-title-table {
-  h2 {
-    font-family: $principal-font-bold;
-    color: $primary;
-  }
-}
-
-.floating-title-panel {
-  h1 {
-    font-family: $principal-font-bold;
-    color: $primary;
-
-    &::after {
-      background-color: $accent;
-    }
-  }
-
-  &.long-text h1 {
-    small {
-      font-family: $principal-font-bold;
-      color: $grey_1;
-    }
-  }
-}
-
-.search-container {
-  .form-search {
-    .input-search {
-      font-family: $principal-font-bold;
-      color: $accent;
-
-      &::-webkit-input-placeholder {
+    .note-transparent {
+      p {
         font-family: $principal-font-medium;
-        color: $grey_1;
       }
 
-      &:-ms-input-placeholder {
-        font-family: $principal-font-medium;
-        color: $grey_1;
+      &.error {
+        i,
+        p {
+          color: $error;
+        }
       }
 
-      &::placeholder {
-        font-family: $principal-font-medium;
-        color: $grey_1;
+      &.info {
+        i,
+        p {
+          color: $info;
+        }
+      }
+
+      &.success {
+        i,
+        p {
+          color: $success;
+        }
+      }
+
+      &.warning {
+        i,
+        p {
+          color: $warning;
+        }
       }
     }
 
-    .icon {
-      color: $grey_1;
+    .material-tabs {
+      .nav-link {
+        font-family: $principal-font-bold;
+        color: $info_text;
 
-      &.zmdi-close {
-        color: $primary;
+        &.active {
+          color: $accent;
+          &::after {
+            background-color: $accent;
+          }
+        }
       }
     }
-  }
-}
-
-.floating-text {
-  h1 {
-    font-family: $principal-font-bold;
-    color: $primary;
-  }
-  p {
-    font-family: $principal-font-semibold;
-    color: $plain_text;
-  }
-}
-
-.floating-text-form {
-  h1 {
-    font-family: Raleway-bold;
-    color: #454e7b;//$primary;
-  }
-  p {
-    font-family: Raleway-semibold;
-    color: #8f95b0;//$info_text;
-  }
-}
-
-#hamburguer-icon {
-  	path {
-    	stroke: $primary;
-  	}
-}
 
 
-/* HEADER APP */
-.header {
-  	background-color: $white;
+    /* MODAL ALERT */
+    .modal-alert {
+    	.modal-content {
+    		.modal-title {
+    			font-family: $principal-font-bold;
+    			color: $primary;
+    		}
 
-  	.right {
-    	.links {
-	      	.topMenuDropdown {
-	        	.dropdown-toggle {
-		          	border: 1px solid transparentize($primary, 0.8);
+    		p.text-centered {
+    			font-family: $principal-font-semibold;
+    			color: $primary;
 
-		          	> div {
-		            	label {
-		              		font-family: $principal-font-bold;
-		              		color: $primary;
-		            	}
-		            	span {
-		              		font-family: $principal-font-semibold;
-		              		color: transparentize($primary, 0.4);;
-		            	}
-		          	}
-		        }
-
-		        .dropdown-menu {
-		          	.dropdown-item {
-		            	font-family: $principal-font-bold;
-		            	color: $primary;
-
-		            	&:hover {
-		              		opacity: 1;
-		              		background-color: transparentize($primary, 0.9);
-		            	}
-
-		            	&.active {
-		              		background-color: transparentize($accent, 0.9);
-		              		color: $accent;
-		              		border-left-color: $accent;
-		            	}
-		          	}
-		        }
-
-		        &.show .dropdown-toggle {
-		          border: 1px solid transparentize($accent, 0.3);
-		        }
-	      	}
+    			strong {
+    				font-family: $principal-font-bold;
+    			}
+    		}
     	}
-
-	    .admin {
-	      	ul {
-	        	li {
-		          	a {
-		            	font-family: $principal-font-medium;
-		            	color: $grey_2;
-
-		            	&::before {
-		              	background-color: $grey_2;
-		            	}
-		          	}
-
-		          	&:first-of-type a {
-		            	color: $accent;
-
-		            	&::before {
-		              		background-color: $accent;
-		            	}
-		          	}
-	        	}
-	      	}
-
-	      	.topMenuDropdown {
-        		.dropdown-toggle {
-		          	&:hover {
-		            	background-color: $grey_3;
-		          	}
-	        	}
-
-	        	.dropdown-menu {
-	          		.dropdown-item {
-	            		font-family: $principal-font-bold;
-	            		color: $primary;
-
-		            	&:hover {
-		              		opacity: 1;
-		              		background-color: transparentize($primary, 0.9);
-		            	}
-
-		            	&.active {
-		              		background-color: transparentize($accent, 0.9);
-		              		color: $accent;
-		              		border-left-color: $accent;
-	            		}
-	          		}
-	        	}
-	      	}
-	    }
-  	}
-}
-/* END HEADER APP */
-
-
-.logo-full {
-  > div {
-    small {
-      font-family: $principal-font-medium;
-      color: $primary;
     }
-    label {
+    /* END MODAL ALERT */
+
+
+    /* MODAL NORMAL */
+    .modal {
+      .modal-header {
+        .close-modal {
+          color: $info_text;
+        }
+
+        .modal-title {
+          font-family: $principal-font-semibold;
+            color: $primary;
+
+            strong {
+              font-family: $principal-font-bold;
+            }
+        }
+
+        .modal-subtitle {
+          font-family: $principal-font-semibold;
+          color: $plain_text;
+        }
+      }
+
+      .modal-body {
+        .content-img {
+          label {
+            font-family: $principal-font-bold;
+            color: $primary;
+          }
+          p {
+            font-family: $principal-font-regular;
+            color: $plain_text;
+
+            strong {
+              font-family: $principal-font-bold;
+            }
+          }
+        }
+      }
+    }
+    /* END MODAL NORMAL */
+
+
+    /* PANELS */
+    .panel-simple {
+      background-color: transparentize($primary, 0.94);
+
+      span {
+        /*font-family: avenir-heavy;*/
+        color: $accent;
+      }
+
+      label {
+        font-family: $principal-font-regular;
+        color: $grey_1;
+      }
+    }
+
+    .panel-simple-color {
+      background-color: $white;
+
+      span {
+        /*font-family: avenir-heavy;*/
+        color: $primary;
+      }
+
+      label {
+        font-family: $principal-font-regular;
+        color: $grey_1;
+      }
+
+      &.accent {
+        border-left-color: $accent;
+      }
+      &.red {
+        border-left-color: $error;
+      }
+      &.yellow {
+        border-left-color: $warning;
+      }
+      &.green {
+        border-left-color: $success;
+      }
+    }
+
+    .panel-info {
+      background-color: $white;
+
+      label {
+        font-family: $principal-font-semibold;
+        color: $primary;
+      }
+      span {
+        font-family: $principal-font-bold;
+        color: $primary;
+      }
+
+      i {
+        background-color: $accent;
+        color: $white;
+      }
+    }
+
+    .panel-button {
+      /*background-color: $cards;*/
+      border-left-color: $accent !important;
+      background-color: transparentize($primary, 0.94);
+
+      label {
+        font-family: $principal-font-bold;
+        color: $plain_text;
+      }
+
+      small {
+      	font-family: $principal-font-medium;
+      	color: $info_text;
+      }
+    }
+    /* END PANELS */
+
+
+    /* PALETTE COLORS */
+    .bgm-accent {
+        background-color: $accent !important;
+    }
+    .c-accent {
+        color: $accent !important;
+    }
+
+    .bgm-primary {
+        background-color: $primary !important;
+    }
+    .c-primary {
+        color: $primary !important;
+    }
+
+    .bgm-background {
+        background-color: $background !important;
+    }
+    .c-background {
+        color: $background !important;
+    }
+
+    .bgm-error {
+        background-color: $error !important;
+    }
+    .c-error {
+        color: $error !important;
+    }
+
+    .bgm-e {
+        background-color: $warning !important;
+    }
+    .c-warning {
+        color: $warning !important;
+    }
+
+    .bgm-success {
+        background-color: $success !important;
+    }
+    .c-success {
+        color: $success !important;
+    }
+
+    .bgm-info {
+        background-color: $info !important;
+    }
+    .c-info {
+        color: $info !important;
+    }
+
+    .bgm-grey-1 {
+        background-color: $grey_1 !important;
+    }
+    .c-grey-1 {
+        color: $grey_1 !important;
+    }
+
+    .bgm-grey-2 {
+        background-color: $grey_2 !important;
+    }
+    .c-grey-2 {
+        color: $grey-2 !important;
+    }
+
+    .bgm-grey-3 {
+        background-color: $grey_3 !important;
+    }
+    .c-grey-3 {
+        color: $grey_3 !important;
+    }
+
+    .bgm-neutral {
+        background-color: $white!important;
+    }
+    .c-neutral {
+        color: $white !important;
+    }
+
+    .bgm-title {
+        background-color: $title !important;
+    }
+    .c-title {
+        color: $title !important;
+    }
+
+    .bgm-plain_text {
+        background-color: $plain_text !important;
+    }
+    .c-plain_text {
+        color: $plain_text !important;
+    }
+
+    .bgm-info_text {
+        background-color: $info_text !important;
+    }
+    .c-info_text {
+        color: $info_text !important;
+    }
+
+    .bgm-black-var {
+        background-color: $black !important;
+    }
+    .c-black-var {
+        color: $black !important;
+    }
+
+    .bgm-cards {
+        background-color: $cards !important;
+    }
+    .c-cards {
+        color: $cards !important;
+    }
+
+    .bgm-white {
+        background-color: $white !important;
+    }
+
+    .c-white {
+        color: $white !important;
+    }
+    /* END PALETTE COLORS */
+
+
+    /* SIDEBAR MENU */
+    .sidebar {
+      	background-color: $white;
+
+      	.main-menu {
+        	li {
+          		a {
+            		font-family: $principal-font-bold;
+            		color: $primary;
+          		}
+
+          		&.active {
+            		background-color: transparentize($accent, 0.9);
+            		&::before {
+              			background-color: $accent;
+            		}
+            		a {
+              			color: $accent;
+            		}
+          		}
+        	}
+
+    	    .divider {
+    	      	background-color: $primary;
+    	    }
+      	}
+
+        .divider {
+            background-color: $primary;
+        }
+
+      	.footer-sidebar {
+    	    > a {
+    	      	font-family: $principal-font-bold;
+    	      	color: $primary;
+
+    	      	&:focus {
+    	        	color: $accent;
+    	        	background-color: transparentize($accent, 0.9);
+    	        	&::before {
+    	          background-color: $accent;
+    	        	}
+    	      	}
+    	    }
+    		}
+    }
+    .backdrop {
+      background-color: $primary;
+    }
+    /* END SIDEBAR MENU */
+
+
+    /* SWITCHER TABS */
+    .switcher-tabs {
+    	background-color: $white;
+      .tab {
+        label {
+          border-color: $accent;
+          font-family: $principal-font-bold;
+          color: transparentize($primary, 0.5);
+        }
+
+        .content {
+          background-color: $white;
+        }
+      }
+    }
+
+    .checkboxtab:checked ~ label {
+      background-color: $accent;
+      color: $white;
+      border-color: transparent;
+    }
+    /* END SWITCHER TABS */
+
+
+    /* TABLES */
+    .table.form-table {
+      thead th {
+        font-family: $principal-font-bold;
+        color: $primary;
+      }
+
+      tbody td {
+        border-top-color: $background !important;
+        font-family: $principal-font-medium;
+        color: $info_text;
+      }
+
+      tbody tr:hover {
+        background-color: $grey-3;
+      }
+
+      .row-buttons-hover {
+        background-color: $grey_1;
+      }
+    }
+
+    .table-responsive {
+      &::-webkit-scrollbar-track {
+        background-color: $grey_2;
+      }
+
+      &::-webkit-scrollbar-thumb {
+        background-color: $grey_1;
+      }
+    }
+
+    .table-buttons-hover {
+      background-color: $grey_1;
+
+      button {
+        color: $plain_text;
+
+        &:hover {
+          background-color: $plain_text;
+          color: $white;
+        }
+      }
+    }
+    /* END TABLES */
+
+
+    .total-footer {
+      span {
+        font-family: $principal-font-bold;
+        color: $primary;
+        strong {
+          color: $accent;
+        }
+      }
+      p {
+        font-family: $principal-font-semibold;
+        color: $info_text;
+      }
+    }
+
+
+    /* TAG */
+    .tag{
+      font-family: $principal-font-regular;
+      background-color: $accent;
+      color: $white;
+      a, button{
+        color: $white;
+      }
+      &:hover{
+        background-color: $primary;
+        color: $white;
+        a{
+          color: $white;
+        }
+      }
+    }
+    .tag-title{
+      font-family: $principal-font-regular;
+      color: $title;
+    }
+    /* END TAG */
+
+
+    .title-dot {
       font-family: $principal-font-semibold;
-      color: $accent;
-    }
-  }
-}
+      color: $plain_text;
 
-
-/* MAIN CONTAINER */
-#main #content {
-  	background-color: $background;
-}
-/* END MAIN CONTAINER */
-
-
-.material-tabs {
-  .nav-link {
-    font-family: $principal-font-bold;
-    color: $info_text;
-
-    &.active {
-      color: $accent;
-      &::after {
+      &:before {
         background-color: $accent;
       }
     }
-  }
-}
 
-
-/* MODAL ALERT */
-.modal-alert {
-	.modal-content {
-		.modal-title {
-			font-family: $principal-font-bold;
-			color: $primary;
-		}
-
-		p.text-centered {
-			font-family: $principal-font-semibold;
-			color: $primary;
-
-			strong {
-				font-family: $principal-font-bold;
-			}
-		}
-	}
-}
-/* END MODAL ALERT */
-
-
-/* MODAL NORMAL */
-.modal {
-  .modal-header {
-    .close-modal {
-      color: $info_text;
-    }
-
-    .modal-title {
-      font-family: $principal-font-semibold;
-        color: $primary;
-
-        strong {
-          font-family: $principal-font-bold;
-        }
-    }
-
-    .modal-subtitle {
-      font-family: $principal-font-semibold;
-      color: $plain_text;
-    }
-  }
-
-  .modal-body {
-    .content-img {
+    .upload-section {
       label {
         font-family: $principal-font-bold;
         color: $primary;
       }
-      p {
-        font-family: $principal-font-regular;
-        color: $plain_text;
-
-        strong {
-          font-family: $principal-font-bold;
-        }
-      }
-    }
-  }
-}
-/* END MODAL NORMAL */
-
-
-/* PANELS */
-.panel-simple {
-  background-color: transparentize($primary, 0.94);
-
-  span {
-    /*font-family: avenir-heavy;*/
-    color: $accent;
-  }
-
-  label {
-    font-family: $principal-font-regular;
-    color: $grey_1;
-  }
-}
-
-.panel-simple-color {
-  background-color: $white;
-
-  span {
-    /*font-family: avenir-heavy;*/
-    color: $primary;
-  }
-
-  label {
-    font-family: $principal-font-regular;
-    color: $grey_1;
-  }
-
-  &.accent {
-    border-left-color: $accent;
-  }
-  &.red {
-    border-left-color: $error;
-  }
-  &.yellow {
-    border-left-color: $warning;
-  }
-  &.green {
-    border-left-color: $success;
-  }
-}
-
-.panel-info {
-  background-color: $white;
-
-  label {
-    font-family: $principal-font-semibold;
-    color: $primary;
-  }
-  span {
-    font-family: $principal-font-bold;
-    color: $primary;
-  }
-
-  i {
-    background-color: $accent;
-    color: $white;
-  }
-}
-
-.panel-button {
-  border-left-color: $accent !important;
-  background-color: transparentize($primary, 0.94);
-
-  label {
-    font-family: $principal-font-bold;
-    color: $plain_text;
-  }
-
-  small {
-  	font-family: $principal-font-medium;
-  	color: $info_text;
-  }
-}
-/* END PANELS */
-
-
-/* SIDEBAR MENU */
-.sidebar {
-  	background-color: $white;
-
-  	.main-menu {
-    	li {
-      		a {
-        		font-family: $principal-font-bold;
-        		color: $primary;
-      		}
-
-      		&.active {
-        		background-color: transparentize($accent, 0.9);
-        		&::before {
-          			background-color: $accent;
-        		}
-        		a {
-          			color: $accent;
-        		}
-      		}
-    	}
-
-	    .divider {
-	      	background-color: $primary;
-	    }
-  	}
-
-  	.footer-sidebar {
-	    > a {
-	      	font-family: $principal-font-bold;
-	      	color: $primary;
-
-	      	&:focus {
-	        	color: $accent;
-	        	background-color: transparentize($accent, 0.9);
-	        	&::before {
-	          background-color: $accent;
-	        	}
-	      	}
-	    }
-		}
-}
-/* END SIDEBAR MENU */
-
-
-
-/* SWITCHER TABS */
-.switcher-tabs {
-	background-color: $white;
-  .tab {
-    label {
-      border-color: $accent;
-      font-family: $principal-font-bold;
-      color: transparentize($primary, 0.5);
     }
 
-    .content {
-      background-color: $white;
-    }
   }
 }
 
-.checkboxtab:checked ~ label {
-  background-color: $accent;
-  color: $white;
-  border-color: transparent;
-}
-/* END SWITCHER TABS */
-
-
-/* TABLES */
-.table.form-table {
-  thead th {
-    font-family: $principal-font-bold;
-    color: $primary;
-  }
-
-  tbody td {
-    border-top-color: $background !important;
-    font-family: $principal-font-medium;
-    color: $info_text;
-  }
-
-  tbody tr:hover {
-    background-color: $grey-3;
-  }
-
-  .row-buttons-hover {
-    background-color: $grey_1;
-  }
-}
-
-.table-buttons-hover {
-  background-color: $grey_1;
-
-  button {
-    color: $plain_text;
-
-    &:hover {
-      background-color: $plain_text;
-      color: $white;
-    }
-  }
-}
-/* END TABLES */
-
-.tag{
-  font-family: $principal-font-regular;
-  background-color: $accent;
-  color: $white;
-  a, button{
-    color: $white;
-  }
-  &:hover{
-    background-color: $primary;
-    color: $white;
-    a{
-      color: $white;
-    }
-  }
-}
-.tag-title{
-  font-family: $principal-font-regular;
-  color: $title;
-}
-
-.upload-section {
-  label {
-    font-family: $principal-font-bold;
-    color: $primary;
-  }
+/* INCLUDING THEMES: By looping through the $themes map */
+@each $key, $value in $themes {
+  @include theme($key, $value);
 }

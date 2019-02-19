@@ -55,3 +55,29 @@ setTimeout(function() {
 $('#hamburguer-icon').on('click', function() {
     this.classList.toggle('active');
 });
+
+
+/*----------------------------------------------------------
+ Change Theme Colors
+ -----------------------------------------------------------*/
+(function(exports) {
+  var themeChanger = {
+    settings: {
+      wrapper: $('.theme-body'),
+      buttons: $('.controls button')
+    },
+
+    init: function () {
+      var _self = this;
+      this.settings.buttons.on('click', function () {
+        var $node = $(this),
+            theme = $node.data('theme');
+        _self.settings.wrapper.removeClass().addClass('.theme-body ' + theme);
+        _self.settings.buttons.removeAttr('disabled');
+        $node.attr('disabled', true);
+      });
+    }
+  };
+
+  themeChanger.init();
+}(window));

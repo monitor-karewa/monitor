@@ -16,7 +16,8 @@
         <!-- <link rel="icon" type="image/png" sizes="96x96" href="img/favicons/eupho-favicon-96x96.png"> -->
         <!-- <link rel="icon" type="image/png" sizes="16x16" href="img/favicons/eupho-favicon-16x16.png"> -->
     </head>
-    <body class="default-color">
+    <!-- Para cambiar el color de tema, es necesario cambiar la clase "default" por el tema correspondiente -->
+    <body class="theme-body default">
         <!-- HEADER SECTION -->
         <header id="header" class="header clearfix">
             <div class="left col-md-3 col-4">
@@ -802,7 +803,7 @@
                                                         <small>Bienvenido a</small>
                                                         <label>Monitor <strong>Karewa</strong></label>
                                                         <p>
-                                                            Aquí podrás obtener información sobre los procedimientos de licitaciones para comparar la compra, renta y contratación de serviciosque se realizan en el Monitor Karewa.
+                                                            Aquí podrás obtener información sobre los procedimientos de licitaciones para comparar la compra, renta y contratación de serviciosque se realizan en el <strong>Monitor Karewa.</strong>
                                                         </p>
                                                     </div>
                                                 </div>
@@ -862,48 +863,62 @@
                                               </div>
                                               <!-- AL DAR CLICK EN EDITAR, SE DEBE ELIMINAR LA CLASE "disabled".
                                               CUANDO SE DE GUARDAR, SE AGREGA LA CLASE "disabled". -->
-                                              <ul class="colors-list disabled">
+                                              <ul class="colors-list controls">
                                                 <li>
+                                                    <button class="controls" data-theme="default"></button>
                                                     <!-- SE AGREGA LA CLASE "active" CUANDO SE DA CLICK EN RECUADRO -->
                                                    <span class="active"></span> Default
                                                 </li>
                                                 <li>
+                                                    <button class="controls" data-theme="dark"></button>
                                                    <span></span> Oscuro
                                                 </li>
                                                 <li>
+                                                    <button class="controls" data-theme="purple"></button>
                                                    <span></span> Morado
                                                 </li>
                                                 <li>
+                                                    <button class="controls" data-theme="orange"></button>
                                                    <span></span> Naranja
                                                 </li>
                                                 <li>
+                                                    <button class="controls" data-theme="yellow"></button>
                                                    <span></span> Amarillo
                                                 </li>
                                                 <li>
+                                                    <button class="controls" data-theme="greenBlue"></button>
                                                    <span></span> Azul Verde
                                                 </li>
                                                 <li>
+                                                    <button class="controls" data-theme="green"></button>
                                                    <span></span> Verde
                                                 </li>
                                                 <li>
+                                                    <button class="controls" data-theme="sky"></button>
                                                    <span></span> Cielo
                                                 </li>
                                                 <li>
+                                                    <button class="controls" data-theme="blue"></button>
                                                    <span></span> Azul
                                                 </li>
                                                 <li>
+                                                    <button class="controls" data-theme="red"></button>
                                                    <span></span> Rojo
                                                 </li>
                                                 <li>
+                                                    <button class="controls" data-theme="pink"></button>
                                                    <span></span> Rosa
                                                 </li>
                                                 <li>
+                                                    <button class="controls" data-theme="gray"></button>
                                                    <span></span> Gris
                                                 </li>
                                                 <li>
+                                                    <button class="controls" data-theme="lilac"></button>
                                                    <span></span> Lila
                                                 </li>
                                                 <li>
+                                                    <button class="controls" data-theme="blueDark"></button>
                                                    <span></span> Azul Oscuro
                                                 </li>
                                               </ul>
@@ -1200,6 +1215,9 @@
                                     OBRA CIVIL PARA LA IMPLEMENTACIÓN DE LA PLATAFORMA ESCUDO CHIHUAHUA EN LA CIUDAD DE CHIHUAHUA, CHIH
                                 </h1>
                             </div>
+                        </div>
+                        <div class="col-12">
+                            <h2 class="title-dot">7 artículos en total:</h2>
                         </div>
                     </div>
                     <!-- END FLOATING TITLES -->
@@ -1812,6 +1830,12 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="filter">
+                                <div class="filter-container">
+                                    <input class="input-search" type="text" name="" value="" placeholder="Buscar usuarios" />
+                                </div>
+                                <button class="filter-btn" type="button" name="button">Buscar</button>
+                            </div>
                         </div>
 
                         <br>
@@ -2054,26 +2078,53 @@
                     <!-- TABS -->
                     <div class="row m-b-50">
                         <h1 class="f-20 m-t-0 m-b-10 col-12">Tabs</h1>
-                        <div class="col-12">
+                        <div class="col-12 m-b-30">
                             <h1 class="f-20 m-t-0 m-b-10 col-12">Material TABS</h1>
                             <div class="material-tabs">
                                 <div class="nav" id="material-tabs" role="tablist" aria-orientation="vertical">
-                                  <a class="nav-link active" id="material-tab" data-toggle="pill" href="#info-content" role="tab" aria-controls="info-content" aria-selected="true">
+                                  <a class="nav-link active" id="material-tab" data-toggle="pill" href="#test-content1" role="tab" aria-controls="test-content1" aria-selected="true">
                                       Información general
                                   </a>
 
-                                  <a class="nav-link" id="material-tab" data-toggle="pill" href="#plat-content" role="tab" aria-controls="plat-content" aria-selected="false">
+                                  <a class="nav-link" id="material-tab" data-toggle="pill" href="#test-content2" role="tab" aria-controls="test-content2" aria-selected="false">
                                       Personalización de la plataforma
                                   </a>
                                 </div>
 
                                 <div class="tab-content" id="material-tabsContent">
-                                  <div class="tab-pane fade show active" id="info-content" role="tabpanel" aria-labelledby="v-pills-home-tab">
+                                  <div class="tab-pane fade show active" id="test-content1" role="tabpanel" aria-labelledby="v-pills-home-tab">
                                       Contenido 1
                                   </div>
 
-                                  <div class="tab-pane fade" id="plat-content" role="tabpanel" aria-labelledby="plat-content">
+                                  <div class="tab-pane fade" id="test-content2" role="tabpanel" aria-labelledby="plat-content">
                                       Contenido 2
+                                  </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-12 m-t-30">
+                            <h1 class="f-20 m-t-0 m-b-10 col-12">Box TABS</h1>
+                            <div class="box-tabs">
+                                <div class="nav" id="box-tabs" role="tablist" aria-orientation="vertical">
+                                  <a class="nav-link active" id="box-tab" data-toggle="pill" href="#box-content1" role="tab" aria-controls="box-content1" aria-selected="true"> Articulos </a>
+                                  <a class="nav-link" id="box-tab" data-toggle="pill" href="#box-content2" role="tab" aria-controls="box-content2" aria-selected="false"> Notas </a>
+                                  <a class="nav-link" id="box-tab" data-toggle="pill" href="#box-content3" role="tab" aria-controls="box-content3" aria-selected="false"> Marco Legal </a>
+                                  <a class="nav-link" id="box-tab" data-toggle="pill" href="#box-content4" role="tab" aria-controls="box-content4" aria-selected="false"> Sitio Web </a>
+                                </div>
+
+                                <div class="tab-content" id="box-tabsContent">
+                                  <div class="tab-pane fade show active" id="box-content1" role="tabpanel" aria-labelledby="articulo-content">
+                                      Contenido 1
+                                  </div>
+                                  <div class="tab-pane fade" id="box-content2" role="tabpanel" aria-labelledby="nota-content">
+                                      Contenido 2
+                                  </div>
+                                  <div class="tab-pane fade" id="box-content3" role="tabpanel" aria-labelledby="marco-content">
+                                      Contenido 3
+                                  </div>
+                                  <div class="tab-pane fade" id="box-content4" role="tabpanel" aria-labelledby="sitio-content">
+                                      Contenido 4
                                   </div>
                                 </div>
                             </div>
