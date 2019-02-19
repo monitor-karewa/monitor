@@ -26,7 +26,6 @@
       .title {
         margin-bottom: 25px;
         position: relative;
-        font-family: $principal-font-regular;
 
         h1 {
           padding-left: 25px;
@@ -36,7 +35,6 @@
           font-stretch: normal;
           line-height: 1.15;
           letter-spacing: normal;
-          color: $white;
           margin: 0;
           &:first-child {
             font-weight: 900;
@@ -46,7 +44,6 @@
           content: "";
           display: block;
           height: 100%;
-          background-color: $accent;
           width: 5px;
           border-radius: 2px;
           top: 0;
@@ -60,15 +57,11 @@
         font-stretch: normal;
         line-height: 1.88;
         letter-spacing: normal;
-        color: $white;
-        font-family: $principal-font-regular;
       }
       .link {
         margin-top: 20px;
-        font-family: $principal-font-regular;
         font-weight: bold;
         a {
-          color:$accent;
           font-size: 14px;
           font-style: normal;
           font-stretch: normal;
@@ -76,9 +69,7 @@
           letter-spacing: normal;
           text-decoration: none;
           transition: .5s;
-          &:hover {
-            color: $white;
-          }
+
         }
 
       }
@@ -108,14 +99,12 @@
       }
     }
     .overlay-login {
-      background-image: linear-gradient(to bottom, transparentize($primary, .3), darken($primary, 12%));
       position: absolute;
       height: 100%;
       width: 100%;
     }
 
     .login-footer {
-      font-family: $principal-font-regular;
       font-weight: bold;
       z-index: 1;
       position: absolute;
@@ -127,7 +116,6 @@
       font-stretch: normal;
       line-height: 1.67;
       letter-spacing: normal;
-      color: $white;
       display: flex;
       align-items: center;
       img {
@@ -140,27 +128,22 @@
     overflow: auto;
     width: 40%;
     padding: 65px 50px;
-    background-color: transparentize($primary, 0.95);
     .principal-title {
       font-size: 24px;
       font-style: normal;
       font-stretch: normal;
       line-height: 1.17;
       letter-spacing: normal;
-      color: $accent;
       margin-bottom: 25px;
-      font-family: $principal-font-bold;
 
     }
     .info {
-      font-family: $principal-font-regular;
       font-size: 14px;
       font-weight: normal;
       font-style: normal;
       font-stretch: normal;
       line-height: 2;
       letter-spacing: normal;
-      color: $primary;
     }
   }
 
