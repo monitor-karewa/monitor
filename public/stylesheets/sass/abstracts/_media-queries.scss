@@ -59,6 +59,17 @@
 			float: right;
 		}
 	}
+	.recaptcha-container {
+	    display: block !important;
+		.re-captcha {
+			margin: 0 auto;
+		}  
+		.text-align-r.m-auto-left {
+			.btn-raised {
+			    margin: 0 auto;
+			}
+		}  
+	}
 	.search-container {
 		width: 100%;
 		margin-bottom: 5px;
@@ -85,6 +96,13 @@
 }
 
 @media screen and (max-width: 767px) {
+	.about.vertical-center {
+		display: block !important;
+		img {
+		    margin: 0 auto !important;
+		}
+	}
+
 	.buttons-right.w-50,
 	.floating-text.w-50 {
 		width: 100% !important;

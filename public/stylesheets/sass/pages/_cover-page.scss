@@ -143,5 +143,9 @@
 }
 
 .client-content {
-  padding: 0 85px;
+  padding: 60px 85px 0;
+
+  .card {
+    padding: 30px;
+  }
 }

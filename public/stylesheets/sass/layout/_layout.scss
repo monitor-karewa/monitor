@@ -56,11 +56,11 @@ button {
 }
 
 .badge {
-  display: flex !important;
+  display: flex!important;
   align-items: center;
   justify-content: center;
-  border-radius: 3px !important;
-  padding: 4px 10px !important;
+  border-radius: 100px !important;
+  padding: 4px 10px!important;
   font-size: 12px !important;
   line-height: 1.33 !important;
   text-align: center !important;
@@ -546,6 +546,7 @@ button {
 
 .footer-client {
   padding: 30px 85px;
+  margin-top: 70px;
   width: 100%;
 
   .develop-by {
@@ -886,6 +887,8 @@ button {
 }
 
 .floating-title-panel {
+  position: relative;
+
   h1 {
     position: relative;
     display: block;
@@ -893,7 +896,6 @@ button {
     font-size: 34px;
     font-weight: bold;
     line-height: normal;
-    text-transform: uppercase;
 
     &::after {
       position: absolute;
@@ -922,6 +924,18 @@ button {
       line-height: normal;
       text-transform: uppercase;
       margin-bottom: 23px;
+    }
+  }
+
+  .side-right {
+    margin: 0 0 0 auto;
+    text-align: right;
+    position: absolute;
+    top: -12px;
+    right: 0;
+
+    .btn-stroke {
+      border-color: $grey_2;
     }
   }
 }
@@ -1823,7 +1837,7 @@ button {
 
 .title-dot {
   padding-left: 14px;
-  margin-bottom: 20px;
+  margin-bottom: 12px;//20px;
   display: block;
   position: relative;
   font-size: 16px;
