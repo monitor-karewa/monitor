@@ -104,9 +104,9 @@
 	margin: 0 0 30px;
 	padding: 0;
 	min-width: 400px;
-	
+
 	li {
-		font-family: Raleway-regular;
+		font-family: $principal-font-regular;
 		font-size: 14px;
 		font-weight: normal;
 		line-height: 2.14;
@@ -132,7 +132,7 @@
 			display: inline-flex;
 			float: right;
 			right: 0;
-			background-color: #fff;
+			background-color: $white;
 			padding: 0 2px;
 		}
 	}
