@@ -706,7 +706,7 @@ button {
       padding: 0;
         width: 100px;
         transform: translate3d(-60px, 20px, 0px);
-        
+
       ul {
         list-style: none;
         margin: 0;
@@ -1495,6 +1495,49 @@ button {
 }
 /* END PANELS */
 
+/* DEFAULT SCROLLBAR */
+.default-scrollbar {
+  overflow:auto;
+
+  &::-webkit-scrollbar {
+      width: 20px;
+      height: 20px;
+  }
+  &::-webkit-scrollbar-button {
+      background-size: cover;
+      height: 20px;
+      width: 20px;
+  }
+
+  &::-webkit-scrollbar-button:horizontal:increment { /* Right */
+    background-image: url("./../../images/Icons/triangle-right.svg");
+  }
+
+  &::-webkit-scrollbar-button:horizontal:decrement { /* Left */
+    background-image: url("./../../images/Icons/triangle-left.svg");
+  }
+
+  &::-webkit-scrollbar-button:vertical:increment { /* Down */
+    background-image: url("./../../images/Icons/triangle-down.svg");
+  }
+
+  &::-webkit-scrollbar-button:vertical:decrement { /* Up */
+      background-image: url("./../../images/Icons/triangle-up.svg");
+  }
+
+  &::-webkit-scrollbar-thumb {
+      border-radius: 10px;
+      border: solid 6px;
+
+  }
+
+  &::-webkit-scrollbar-button:start:decrement,
+  &::-webkit-scrollbar-button:end:increment {
+      display: block;
+  }
+}
+
+/* END DEFAULT SCROLLBAR */
 
 /* SIDEBAR MENU */
 .sidebar {

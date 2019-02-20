@@ -1546,6 +1546,24 @@ $themes: (
     /* END PALETTE COLORS */
 
 
+    /* DEFAULT SCROLLBAR */
+    .default-scrollbar {
+      &::-webkit-scrollbar-button {
+          background-color: $plain_text;
+      }
+
+      &::-webkit-scrollbar-track {
+          background: $grey_3;
+      }
+      &::-webkit-scrollbar-thumb {
+          background: $plain_text;
+          border-color: $grey_3;
+
+      }
+    }
+
+    /* END DEFAULT SCROLLBAR */
+
     /* SIDEBAR MENU */
     .sidebar {
       	background-color: $white;
