@@ -7,7 +7,7 @@
 	position: relative;
 	width: fit-content;
 	min-height: 25px;
-	display: flex;
+	display: inline-flex;//flex;
 	align-content: center;
 	justify-content: center;
 	padding: 7px 20px;
@@ -26,7 +26,7 @@
 
 	i {
 		margin-right: 6px;
-		font-size: 16px;
+		font-size: 14px;
 	}
 
 	&:hover {
@@ -36,7 +36,7 @@
 	&.xs {
 		font-size: 10px;
 		i {
-			font-size: 14px;
+			font-size: 15px;
 		}
 	}
 	&.lg {
@@ -76,7 +76,7 @@
 	position: relative;
 	width: fit-content;
 	min-height: 25px;
-	display: flex;
+	display: inline-flex;//flex;
 	align-content: center;
 	justify-content: center;
 	padding: 7px 20px;
@@ -96,7 +96,7 @@
 
 	i {
 		margin-right: 6px;
-		font-size: 16px;
+		font-size: 14px;
 	}
 
 	&:hover {
@@ -106,7 +106,7 @@
 	&.xs {
 		font-size: 10px;
 		i {
-			font-size: 14px;
+			font-size: 15px;
 		}
 	}
 	&.lg {
@@ -156,7 +156,7 @@
 	position: relative;
 	width: fit-content;
 	min-height: 25px;
-	display: flex;
+	display: inline-flex;//flex;
 	align-content: center;
 	justify-content: center;
 	padding: 7px 20px;
@@ -174,7 +174,7 @@
 
 	i {
 		margin-right: 12px;
-		font-size: 22px;
+		font-size: 20px;
 	}
 
 	&:hover {
@@ -184,7 +184,7 @@
 	&.xs {
 		font-size: 10px;
 		i {
-			font-size: 16px;
+			font-size: 15px;
 		}
 	}
 	&.lg {
