@@ -1549,15 +1549,15 @@ $themes: (
     /* DEFAULT SCROLLBAR */
     .default-scrollbar {
       &::-webkit-scrollbar-button {
-          background-color: $plain_text;
+          background-color: $plain_text !important;
       }
 
       &::-webkit-scrollbar-track {
-          background: $grey_3;
+          background: $grey_3 !important;
       }
       &::-webkit-scrollbar-thumb {
-          background: $plain_text;
-          border-color: $grey_3;
+          background: $plain_text !important;
+          border-color: $grey_3 !important;
 
       }
     }
@@ -1683,6 +1683,9 @@ $themes: (
           color: $white;
         }
       }
+    }
+    .table-btn-stroke {
+      border-color: $grey_2 !important;
     }
     /* END TABLES */
 

@@ -1511,11 +1511,15 @@ button {
 
 /* DEFAULT SCROLLBAR */
 .default-scrollbar {
-  overflow:auto;
+  overflow-y:auto;
+
+  &::-webkit-scrollbar-track {
+    border-radius: 0px !important;
+  }
 
   &::-webkit-scrollbar {
-      width: 20px;
-      height: 20px;
+      width: 20px !important;
+      height: 20px !important;
   }
   &::-webkit-scrollbar-button {
       background-size: cover;
@@ -1524,23 +1528,23 @@ button {
   }
 
   &::-webkit-scrollbar-button:horizontal:increment { /* Right */
-    background-image: url("./../../images/Icons/triangle-right.svg");
+    background-image: url("./../../images/Illustrations/triangle-right.svg");
   }
 
   &::-webkit-scrollbar-button:horizontal:decrement { /* Left */
-    background-image: url("./../../images/Icons/triangle-left.svg");
+    background-image: url("./../../images/Illustrations/triangle-left.svg");
   }
 
   &::-webkit-scrollbar-button:vertical:increment { /* Down */
-    background-image: url("./../../images/Icons/triangle-down.svg");
+    background-image: url("./../../images/Illustrations/triangle-down.svg");
   }
 
   &::-webkit-scrollbar-button:vertical:decrement { /* Up */
-      background-image: url("./../../images/Icons/triangle-up.svg");
+      background-image: url("./../../images/Illustrations/triangle-up.svg");
   }
 
   &::-webkit-scrollbar-thumb {
-      border-radius: 10px;
+      border-radius: 10px !important;
       border: solid 6px;
 
   }
