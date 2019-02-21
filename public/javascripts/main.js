@@ -81,3 +81,84 @@ $('#hamburguer-icon').on('click', function() {
 
   themeChanger.init();
 }(window));
+
+
+/*----------------------------------------------------------
+ TOAST
+ -----------------------------------------------------------*/
+function ToastShow() {
+    var defaultText = 'default text';
+    var displayTime = 5000;
+    var target = 'body';
+    return function (text, type) {
+        var elements = "";
+        switch(type){
+            case 'danger':
+                elements+= "<i class=\"zmdi zmdi-close-circle-o toast-danger\"></i>";
+                break;
+            case 'info':
+                elements+= "<i class=\"zmdi zmdi-info-outline toast-info\"></i>";
+                break;
+            case 'alert':
+                elements+= "<i class=\"zmdi zmdi-alert-triangle toast-alert\"></i>";
+                break;
+            case 'success':
+                elements+= "<i class=\"zmdi zmdi-check toast-success toast-success\"></i>";
+                break;
+        }
+        $('<div/>')
+        .addClass('toast')
+        .prependTo($(target))
+        .append(elements)
+        .append("<span>"+text+"</span>")
+        .append("<a class='toast-exit' onclick=\"$(this).closest('.toast').remove();\"><i class=\"zmdi zmdi-close\"></i></a>")
+        .queue(function(next) {
+            $(this).css({
+                'opacity': 1
+            });
+            var topOffset = 15;
+            $('.toast').each(function() {
+                var $this = $(this);
+                var height = $this.outerHeight();
+                var offset = 20;
+                $this.css('top', topOffset + 'px');
+                topOffset += height + offset;
+            });
+            next();
+        }).delay(displayTime)
+        .queue(function(next) {
+            var $this = $(this);
+            var width = $this.outerWidth() + 20;
+            $this.css({
+                'right': '-' + width + 'px',
+                'opacity': 0
+            });
+            next();
+        })
+        .delay(600)
+        .queue(function(next) {
+            $(this).remove();
+            next();
+        });
+    };
+}
+
+/* TIPOS DE ALERTAS: */
+//Danger: 1
+//Info: 2
+//Alert: 3
+//Success: 4
+
+var tShow = new ToastShow();
+$('#toast-danger').click(function(){
+    tShow("Hubo un error en el proceso. Intenta de nuevo",'danger');
+});
+$('#toast-info').click(function(){
+    tShow("Se informa del proceso por eso es un info",'info');
+});
+$('#toast-warning').click(function(){
+    tShow("Complete todos los campos requeridos",'alert');
+});
+$('#toast-success').click(function(){
+    tShow("Se ha completado el proceso correctamente sadasda adadasd sda dasdasdas dasda dasdasd ad adaspidjdj asoijdas",'success');
+});
