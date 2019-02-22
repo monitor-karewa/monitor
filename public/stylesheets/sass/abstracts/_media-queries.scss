@@ -19,9 +19,11 @@
 	.box-tabs .nav {
 		justify-content: center;
 	}
+
 	.card-header {
 		padding: 20px !important;
 	}
+
 	.collapsible-status .collapsible-header {
 		display: block;
 		.info-container {
@@ -34,9 +36,11 @@
 			margin-bottom: 20px;
 		}
 	}
+
 	.cover-container .info {
 		top: 40% !important;
 	}
+
 	.footer-client {
 		.img-logo {
 			margin-top: 30px;
@@ -46,17 +50,21 @@
 			}
 		}
 	}
+
 	.form-btn-top {
     	width: 100%;
 	}
+
 	.material-tabs {
 		.nav {
 			justify-content: center;
 		}
 	}
+
 	.modal-content {
 		padding-right: 15px !important;
 	}
+
 	.modal-footer.aditional-text {
 		display: block;
 		.total-footer {
@@ -71,6 +79,7 @@
 			float: right;
 		}
 	}
+
 	.recaptcha-container {
 	    display: block !important;
 		.re-captcha {
@@ -82,10 +91,12 @@
 			}
 		}  
 	}
+
 	.search-container {
 		width: 100%;
 		margin-bottom: 5px;
 	}
+
 	.simple-login {
 		.right-side {
 			padding: 40px 25px;
@@ -104,6 +115,15 @@
 
 			}
 		}
+	}
+
+	.toast {
+		max-width: 300px !important;
+		right: 5px !important;
+
+	  	span {
+	  		font-size: 10px !important;
+	  	}
 	}
 }
 
@@ -152,6 +172,21 @@
 	    .btn-raised {
     	    margin: 0 0 0 auto;
 	    }
+	}
+
+	.floating-title-panel {
+		h1 {
+			font-size: 25px !important;
+		}
+
+		&.long-text h1 {
+			font-size: 20px !important;
+		}
+
+		.side-right {
+			position: relative;
+			margin-bottom: 10px;
+		}
 	}
 
 	.header {

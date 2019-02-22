@@ -343,6 +343,8 @@ button {
     margin: 0 auto;
     z-index: 2;
     position: relative;
+    display: flex;
+    margin: 0 auto;
   }
   > img {
     position: absolute;
@@ -931,7 +933,7 @@ button {
     margin: 0 0 0 auto;
     text-align: right;
     position: absolute;
-    top: -12px;
+    top: 0;
     right: 0;
 
     .btn-stroke {
@@ -1297,6 +1299,8 @@ button {
 .logo-full {
   display: flex;
   align-items: center;
+  justify-content: center;
+
   > img {
     max-height: 50px;
     margin-right: 16px;
@@ -1316,6 +1320,41 @@ button {
       margin-bottom: 0;
       text-transform: uppercase;
     }
+  }
+
+  &.xs {
+    > img {
+      max-height: 32px;
+    }
+    > div {
+      small {
+        font-size: 8px;
+      }
+      label {
+        font-size: 12px;
+      }
+    }
+  }
+
+  &.lg {
+    > img {
+      max-height: 80px;
+    }
+    > div {
+      small {
+        font-size: 20px;
+      }
+      label {
+        font-size: 26px;
+      }
+    }
+  }
+
+  & + .button-primary {
+    border-color: $grey_2;
+    box-shadow: none;
+    margin: 30px auto 0;
+    display: flex;
   }
 }
 

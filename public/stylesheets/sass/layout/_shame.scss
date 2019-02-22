@@ -188,6 +188,70 @@
 	}
 }
 
+.panel-table {
+	overflow: hidden;
+	overflow-x: auto;
+	margin: 0 -15px;
+
+	&::-webkit-scrollbar {
+	  	width: 0px;
+	  	height: 4px;
+	}
+
+	&::-webkit-scrollbar-track {
+	  	background-color: $grey_2;
+	  	border-radius: 30px;
+	}
+
+	&::-webkit-scrollbar-thumb {
+	  	background-color: $grey_1;
+	  	border-radius: 30px;
+	}
+
+	> div {
+		min-width: 700px;
+	}
+
+	.border-lines {
+		padding: 14px 15px;
+		border-top: 1px solid $grey_2;
+		border-bottom: 1px solid $grey_2;
+
+		label {
+			font-family: $principal-font-bold;
+			font-size: 12px;
+			font-weight: bold;
+			line-height: 1.5;
+			color: $primary;
+			padding: 2px 10px;
+			background-color: transparent;
+			text-transform: uppercase;
+			display: flex;
+		    margin-bottom: 0;
+		    align-items: center;
+		    width: fit-content;
+		    border-radius: 2px;
+
+			i {
+				margin-left: 6px;
+				font-size: 16px;
+				color: $info;
+			}
+
+			&:hover {
+				background-color: transparentize($info, 0.9);
+			}
+		}
+	}
+
+	.divider {
+		width: 200px;
+		height: 1px;
+		margin: 0 auto;
+		background-color: $grey_2;
+	}
+}
+
 .re-captcha {
 	min-width: 200px; 
 	max-width: 300px;
@@ -204,5 +268,18 @@
 		td.c-info {
 			background-color: transparentize($info, 0.82);
 		}
+	}
+}
+
+.tacometro-container {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+
+	& + .button-primary {
+		border-color: $grey_2;
+	    box-shadow: none;
+	    margin: 30px auto 0;
+	    display: flex;
 	}
 }

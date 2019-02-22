@@ -5,6 +5,7 @@
 
 		.tippy-arrow {
 			border-bottom-color: $primary !important;
+			border-top-color: $primary !important;
 		}
 
 		.tippy-content {
@@ -12,5 +13,32 @@
 			font-size: 10px;
 			font-family: $principal-font-medium;
 		}
+	}
+}
+
+
+/* TOOLTIP FOR ICON HELP */
+.help-tooltip-div {
+	padding: 5px 0;
+	label {
+		font-family: Raleway-semibold;
+	  	font-size: 12px;
+	  	font-weight: 600;
+	  	line-height: 1.33;
+	  	color: $grey_2;
+	  	text-align: left;
+	  	display: block;
+	  	margin-bottom: 16px;
+	}
+
+	p {
+		font-family: Raleway-light;
+	  	font-size: 12px;
+	  	font-weight: 300;
+		line-height: 1.33;
+		text-align: left;
+		color: $grey_2;
+		display: block;
+		margin-bottom: 8px;
 	}
 }

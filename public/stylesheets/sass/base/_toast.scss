@@ -5,21 +5,6 @@
 /*------------------------------------*\
     $TOAST
 \*------------------------------------*/
-
-  .toast .toast-message {
-    padding-left: 25px;
-    font-size: 16px;
-    font-weight: normal;
-  }
-
-  .toast-close-button {
-    font-size: 25px;
-    font-weight: 100;
-  }
-
-
-
-
 .toast {
   background-color: $black;
   padding: 12px 18px;
@@ -39,7 +24,7 @@
   transition: all 0.4s ease-out;
 
   i {
-    font-size: 40px;
+    font-size: 25px;
     padding-right: 10px;
 
     &.toast-danger {
@@ -56,7 +41,7 @@
     }
   }
 
-  span{
+  span {
     width: 300px;
     height: auto;
     font-family: Raleway-regular;
@@ -70,7 +55,8 @@
     color: $info_text !important;
     cursor: pointer;
     margin-left: 20px;
-    float:right;
+    float: right;
+    transition: 0.5s;
 
     i {
       font-size: 25px;

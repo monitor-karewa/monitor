@@ -101,7 +101,7 @@ $themes: (
       /* SPECIAL CASE */
       &.button-accent {
         color: $accent;
-        border-color: $accent;
+        border-color: $accent !important;
 
         &:hover {
           background-color: $accent;
