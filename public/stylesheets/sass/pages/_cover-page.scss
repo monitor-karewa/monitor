@@ -1,12 +1,11 @@
 .client-cover {
   float: left;
   width: 100%;
-  padding-top: 60px;
 
   .cover-container {
     min-height: 420px;
     float: left;
-    // top: 60px;
+    padding: 60px 85px 0;
     margin-bottom: 30px;
     position: relative;
     width: 100%;
@@ -15,6 +14,8 @@
       position: absolute;
       height: 100%;
       width: 100%;
+      left: 0;
+      right: 0;
 
       img {
         height: 420px;
@@ -72,18 +73,13 @@
     }
 
     .filter-box {
-      // position: relative;
       z-index: 4;
       max-width: 1440px;
-      width: calc(100% - 170px);
-      // bottom: -35px;
+      width: 100%;
       border-radius: 5px;
       box-shadow: 2px 0 10px 0 rgba(56, 73, 99, 0.2);
       padding: 20px 30px;
       margin: auto;
-      // position: absolute;
-      // left: 50%;
-      // transform: translate(-50%,0%);
       float: left;
     }
   }

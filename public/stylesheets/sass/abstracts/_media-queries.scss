@@ -260,7 +260,8 @@
 		}
 	}
 
-	.client-content {
+	.client-content,
+	.client-cover .cover-container {
 		padding: 0 30px !important;
 	}
 
@@ -280,11 +281,6 @@
 		    h1 {
 					font-size: 40px !important;
 		    }
-		  }
-
-		  .filter-box {
-				width: calc(100% - 60px) !important;
-				// bottom: -50px !important;
 		  }
 		}
 	}
