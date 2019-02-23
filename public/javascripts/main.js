@@ -43,6 +43,45 @@ $(document).ready(function (){
 	});
 });
 
+
+if (document.getElementsByClassName("gauge").length){
+  // Tachometer
+  var opts = {
+    lines: 12,
+    angle: -0.22,
+    lineWidth: 0.1,
+    pointer: {
+      length: 0.3,
+      strokeWidth: 0.03,
+      color: '#454e7b'
+    },
+    limitMax: true,
+    limitMin: true,
+    colorStart: '#6ec284',
+    generateGradient: true,
+    percentColors: [
+      [0.0, "#6ec284"],[0.50, "#6ec284"],
+      [0.51, "#ffc043"],[0.75, "#ffc043"],
+      [0.76, "#eb6262"],[1.0, "#eb6262"]
+    ]
+  };
+
+  var target = document.getElementById('gauge-graph-test');
+  var gauge = new Gauge(target).setOptions(opts);
+  gauge.maxValue = 100;
+  gauge.animationSpeed = 60;
+  gauge.setTextField(document.getElementById("gauge-text-test"));
+
+  // gauge.set(0);
+
+  function chamar(valor) {
+    valor = document.getElementById("campo").value;
+
+    gauge.set(valor);
+  }
+}
+
+
 /* Modal auto close */
 setTimeout(function() {
     $('#modalAutoDismiss').modal('hide');

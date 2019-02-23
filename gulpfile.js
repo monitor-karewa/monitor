@@ -51,6 +51,7 @@ const jsVendors = [
     './public/javascripts/lib/jquery-3.3.1.min.js',
     './public/javascripts/lib/bootstrap.min.js',
     './public/javascripts/lib/bootstrap-select.min.js',
+    './public/javascripts/lib/gauge.min.js',
     './node_modules/tippy.js/dist/tippy.min.js',
     './public/javascripts/main.js'
 ];
@@ -59,7 +60,7 @@ const jsVendors = [
 // Task: Concat and minify vendors css files.
 // -----------------------------------------------------------------------------
 gulp.task('css-vendors', function() {
-    return gulp.src(cssVendors) 
+    return gulp.src(cssVendors)
         .pipe(concat('vendors.min.css'))
         .pipe(cleanCss(cleanCssOptions))
         .pipe(gulp.dest('./public/stylesheets/dist'))

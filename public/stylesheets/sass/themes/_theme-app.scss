@@ -1639,6 +1639,19 @@ $themes: (
     }
     /* END SWITCHER TABS */
 
+    /* TACHOMETER */
+    .gauge-container {
+      .text {
+        color: $accent;
+      }
+
+      .prob {
+        color: $info_text;
+        font-family: $principal-font-regular;
+      }
+    }
+    /* END TACHOMETER */
+
 
     /* TABLES */
     .table.form-table {
