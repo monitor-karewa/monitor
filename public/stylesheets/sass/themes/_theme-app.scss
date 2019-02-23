@@ -1423,6 +1423,31 @@ $themes: (
     /* END PANELS */
 
 
+    /* PAGINATION */
+    .pagination {
+      .page-item {
+          &.active .page-link {
+            background-color: $accent;
+            color: $white;
+          }
+      }
+
+      .page-link {
+        color: $plain_text;
+        font-family: $principal-font-bold;
+
+        &:hover {
+          color: $plain_text;
+        }
+
+        i {
+          color: $grey_1;
+        }
+      }
+    }
+    /* END PAGINATION */
+
+
     /* PALETTE COLORS */
     .bgm-accent {
         background-color: $accent !important;
