@@ -80,6 +80,16 @@
 		}
 	}
 
+	nav[aria-label=pagination] {
+		display: block;
+		text-align: center;
+
+		.pagination {
+			margin: 20px auto 0;
+		    justify-content: center;
+		}
+	}
+
 	.recaptcha-container {
 	    display: block !important;
 		.re-captcha {

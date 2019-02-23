@@ -3,6 +3,24 @@
  * Version    : 1.0
  * Content    : Classes without category
  */
+.about.vertical-center {
+	.w-60.m-r-30.o-x-auto {
+		&::-webkit-scrollbar {
+	  		width: 0;
+	  		height: 4px;
+		}
+
+		&::-webkit-scrollbar-track {
+	  		background-color: $grey_2;
+	  		border-radius: 30px;
+		}
+
+		&::-webkit-scrollbar-thumb {
+	  		background-color: $grey_1;
+	  		border-radius: 30px;
+		}
+	}
+}
 
 .buttons-right {
    display: flex;
@@ -282,4 +300,11 @@
 	    margin: 30px auto 0;
 	    display: flex;
 	}
+}
+
+.zmdi-chevron-left-double:before {
+	content: '\f2fb \f2fb';
+}
+.zmdi-chevron-right-double:before {
+	content: '\f2fa \f2fa';
 }
