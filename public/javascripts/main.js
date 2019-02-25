@@ -228,13 +228,11 @@ function ToastShow() {
         });
     };
 }
-
 /* TIPOS DE ALERTAS: */
 //Danger: 1
 //Info: 2
 //Alert: 3
 //Success: 4
-
 var tShow = new ToastShow();
 $('#toast-danger').click(function(){
     tShow("Hubo un error en el proceso. Intenta de nuevo",'danger');
@@ -250,72 +248,70 @@ $('#toast-success').click(function(){
 });
 
 
-
-
-
-
 /* TOOLTIPS FOR ICONS HELP */
-//INDICE
-const templateIndice = document.getElementById('help-tooltip-indice');
-const containerIndice = document.createElement('div');
-containerIndice.appendChild(document.importNode(templateIndice.content, true));
-tippy('#indice-tooltip', {
-    allowHTML: true,
-    placement: "top",
-    content: containerIndice.innerHTML,
-    arrow: true,
-    animation: "fade",
-    distance: 15
-});
+function tooltipAsk() {
+    //INDICE
+    const templateIndice = document.getElementById('help-tooltip-indice');
+    const containerIndice = document.createElement('div');
+    containerIndice.appendChild(document.importNode(templateIndice.content, true));
+    tippy('#indice-tooltip', {
+        allowHTML: true,
+        placement: "top",
+        content: containerIndice.innerHTML,
+        arrow: true,
+        animation: "fade",
+        distance: 15
+    });
 
-//TACOMETRO
-const templateTacometro = document.getElementById('help-tooltip-tacometro');
-const containerTacometro = document.createElement('div');
-containerTacometro.appendChild(document.importNode(templateTacometro.content, true));
-tippy('#tacometro-tooltip', {
-    allowHTML: true,
-    placement: "top",
-    content: containerTacometro.innerHTML,
-    arrow: true,
-    animation: "fade",
-    distance: 15
-});
+    //TACOMETRO
+    const templateTacometro = document.getElementById('help-tooltip-tacometro');
+    const containerTacometro = document.createElement('div');
+    containerTacometro.appendChild(document.importNode(templateTacometro.content, true));
+    tippy('#tacometro-tooltip', {
+        allowHTML: true,
+        placement: "top",
+        content: containerTacometro.innerHTML,
+        arrow: true,
+        animation: "fade",
+        distance: 15
+    });
 
-//MONTOS TOTALES
-const templateTotales = document.getElementById('help-tooltip-totales');
-const containerTotales = document.createElement('div');
-containerTotales.appendChild(document.importNode(templateTotales.content, true));
-tippy('#totales-tooltip', {
-    allowHTML: true,
-    placement: "top",
-    content: containerTotales.innerHTML,
-    arrow: true,
-    animation: "fade",
-    distance: 15
-});
+    //MONTOS TOTALES
+    const templateTotales = document.getElementById('help-tooltip-totales');
+    const containerTotales = document.createElement('div');
+    containerTotales.appendChild(document.importNode(templateTotales.content, true));
+    tippy('#totales-tooltip', {
+        allowHTML: true,
+        placement: "top",
+        content: containerTotales.innerHTML,
+        arrow: true,
+        animation: "fade",
+        distance: 15
+    });
 
-//CONTRATOS
-const templateContratos = document.getElementById('help-tooltip-contratos');
-const containerContratos = document.createElement('div');
-containerContratos.appendChild(document.importNode(templateContratos.content, true));
-tippy('#contratos-tooltip', {
-    allowHTML: true,
-    placement: "top",
-    content: containerContratos.innerHTML,
-    arrow: true,
-    animation: "fade",
-    distance: 15
-});
+    //CONTRATOS
+    const templateContratos = document.getElementById('help-tooltip-contratos');
+    const containerContratos = document.createElement('div');
+    containerContratos.appendChild(document.importNode(templateContratos.content, true));
+    tippy('#contratos-tooltip', {
+        allowHTML: true,
+        placement: "top",
+        content: containerContratos.innerHTML,
+        arrow: true,
+        animation: "fade",
+        distance: 15
+    });
 
-//DATOS GENERALES
-const templateDatos = document.getElementById('help-tooltip-datos');
-const containerDatos = document.createElement('div');
-containerDatos.appendChild(document.importNode(templateDatos.content, true));
-tippy('#datos-tooltip', {
-    allowHTML: true,
-    placement: "top",
-    content: containerDatos.innerHTML,
-    arrow: true,
-    animation: "fade",
-    distance: 15
-});
+    //DATOS GENERALES
+    const templateDatos = document.getElementById('help-tooltip-datos');
+    const containerDatos = document.createElement('div');
+    containerDatos.appendChild(document.importNode(templateDatos.content, true));
+    tippy('#datos-tooltip', {
+        allowHTML: true,
+        placement: "top",
+        content: containerDatos.innerHTML,
+        arrow: true,
+        animation: "fade",
+        distance: 15
+    });
+}
