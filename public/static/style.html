@@ -1885,8 +1885,31 @@
                     <div class="row m-b-50">
                         <h1 class="f-20 m-t-0 m-b-10 col-12">Tachometer</h1>
                         <div class="col-12 card">
+                          <p>
+                            <strong>Gauge graph</strong>
+                            <br>
+                              Gauge <strong> "gauge-editable". </strong>
+                              <br>
+                              Remove the class "gauge-editable" and add the class "gauge-element" if the gauge is not editable with an input
+                              <br>
+                              We use the <a href="http://bernii.github.io/gauge.js/">gauge.js</a> library. <br>
+                              Range of colors: <br>
+                              <ul>
+                                <li>
+                                  0.0 -> 0.5 <span class="c-success">#6ec284</span> <br>
+                                </li>
+                                <li>
+                                  0.51 -> 0.75 <span class="c-warning">#ffc043</span> <br>
+                                </li>
+                                <li>
+                                  0.76 -> 1.0 <span class="c-error">#eb6262</span> <br>
+                                </li>
+                              </ul>
+                              You can change this color values. The range of this Gauge graph is 1 - 100.
+                            </p>
                           <div class="gauge-container">
-                            <div class="gauge">
+                            <!-- Remove the class "gauge-editable" and add the class "gauge-element" if the gauge is not editable with an input -->
+                            <div class="gauge gauge-editable">
                               <img class="left-border" src="../images/All-Icons/gauge-shape.png" alt="">
                               <img class="right-border" src="../images/All-Icons/gauge-shape.png" alt="">
                               <canvas id="gauge-graph-test"></canvas>
@@ -1895,17 +1918,18 @@
                               </div>
 
                             </div>
-                            <div class="text" style="display:flex;">
+                            <div class="text">
                               <div id="gauge-text-test">0</div>%
                             </div>
                             <div class="prob">text</div>
                           </div>
 
                           <br>
+                          <p>Try with a number between 1 - 100</p>
                           <div class="filter ">
                             <div class="form-group fg-float input-border col-3">
                                 <div class="fg-line">
-                                    <input type="number" id="campo" class="form-control fg-input" placeholder="Placeholder">
+                                    <input type="number" id="field" class="form-control fg-input" placeholder="Number">
                                 </div>
                             </div>
                             <button onclick="chamar()" class="filter-btn" type="button" name="button">Test</button>
