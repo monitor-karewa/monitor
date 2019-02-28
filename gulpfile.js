@@ -28,6 +28,8 @@ var buffer = require('vinyl-buffer');
 //ECMAScript 6
 const babel = require('gulp-babel');
 
+const replace = require('gulp-replace');
+
 var cleanCssOptions = {
     compatibility: 'ie9',
     level: {
@@ -53,6 +55,7 @@ const jsVendors = [
     './public/javascripts/lib/bootstrap-select.min.js',
     './public/javascripts/lib/gauge.min.js',
     './node_modules/tippy.js/dist/tippy.min.js',
+    // './node_modules/popper.js/dist/popper.min.js',
     './public/javascripts/main.js'
 ];
 
@@ -76,7 +79,11 @@ gulp.task('css-sass', function () {
         .pipe(sass())
         .pipe(cleanCss(cleanCssOptions))
         .pipe(gulp.dest('./public/stylesheets/dist'))
-        .pipe(notify({message: 'SASS files compilation success.'}));
+        .pipe(notify({message: 'SASS files compilation success.'}))
+        .pipe(replace('../../../fonts', './../../../fonts'))
+        .pipe(replace('../../images', './../../../images'))
+        .pipe(gulp.dest('./public/stylesheets/dist/webpack'))
+        .pipe(notify({message: 'SASS files compilation success. (WebPack)'}));
 });
 
 // -----------------------------------------------------------------------------
