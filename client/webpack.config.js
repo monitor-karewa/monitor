@@ -29,35 +29,30 @@ module.exports = (env, argv) => ({
                 test: /\.vue$/,
                 loader: 'vue-loader'
             },
-            // {
-            //     test: require.resolve("./../../public/javascripts/dist/vendors.min.js"),
-            //     use: 'imports-loader?$=jquery,jquery=jquery'
-            // },
             {
                 test: /\.js$/,
-                // loader: 'babel-loader'
                 use: [
-                    // 'imports-loader?$=jquery,jquery=jquery,Popper=popper.js',
                     'babel-loader'
                 ]
             },
             {
-                test: /\.css$/,
+                test: /\.(s*)css$/,
                 use: [
-                    // 'vue-style-loader',
-                    'style-loader',
-                    'css-loader'
+                    'vue-style-loader',
+                    // 'style-loader',
+                    'css-loader',
+                    'sass-loader'
                 ],
                 exclude: /\.module\.css$/
             },
             {
-                test: /\.(jpg|png|svg)(\?.*)?$/,
+                test: /\.(jpe?g|png|svg)(\?.*)?$/,
                 use: [
                     'file-loader'
                 ]
             },
             {
-                test: /\.(jpg|png|svg|woff2?|eot|ttf|otf)(\?.*)?$/,
+                test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
                 use: [
                     'file-loader'
                 ]
@@ -73,17 +68,13 @@ module.exports = (env, argv) => ({
         ],
         alias: {
             'vue$': 'vue/dist/vue.esm.js',
-            '@': path.resolve(__dirname, 'src')
+            '@': path.resolve(__dirname, 'src'),
+            '@assets': path.resolve(__dirname, 'assets')
         }
     },
 
     plugins: [
         new CleanWebpackPlugin(['dist']),
-        // new webpack.ProvidePlugin({
-        //     '$': 'jquery',
-        //     'jquery': 'jquery',
-        //     'jQuery': 'jquery'
-        // }),
         new VueLoaderPlugin(),
         new HtmlWebpackPlugin({
             template: path.resolve(__dirname, 'static', 'index.html'),

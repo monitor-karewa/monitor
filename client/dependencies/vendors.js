@@ -1,7 +1,7 @@
 const $ = require('jquery');
 const bootstrap = require('bootstrap');
 const bootstrapSelect = require('bootstrap-select');
-const _gauge = require('gaugeJS');
+const Gauge = require('gaugeJS').Gauge;
 const tippy = require('tippy.js');
 const popper = require('popper.js');
 
