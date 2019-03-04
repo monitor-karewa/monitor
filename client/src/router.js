@@ -23,7 +23,13 @@ import ErrorsStyle from '@/components/pages/style/Errors';
 import LoginStyle from '@/components/pages/style/Login';
 
 //Admin
-import AdminHome from '@/components/pages/admin/AdminHome';
+import AdminIndex from '@/components/pages/admin/Index';
+import AdminHeader from '@/components/pages/admin/Header';
+import AdminSidebar from '@/components/pages/admin/Sidebar';
+// import AdminFooter from '@/components/pages/admin/Footer';
+
+import AdminHome from '@/components/pages/admin/home/Home';
+
 import Login from '@/components/pages/admin/Login';
 
 // Fallback page
@@ -77,14 +83,24 @@ export default new Router({
         {
             path: '/admin',
             name: 'AdminHome',
-            component: AdminHome,
+            components: {
+                default: AdminIndex,
+                header: AdminHeader,
+                sidebar: AdminSidebar
+                // footer: AdminFooter
+            },
             children: [
                 {
-                    path: 'login',
-                    name: 'Login',
-                    component: Login
+                    path: '',
+                    name: 'AdminHome',
+                    component: AdminHome
                 }
             ]
+        },
+        {
+            path: '/login',
+            name: 'Login',
+            component: Login
         },
         {
             path: '/style',

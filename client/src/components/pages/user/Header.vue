@@ -78,7 +78,7 @@
                     },
                     {
                         name: 'Administrar',
-                        to: '/admin/login'
+                        to: '/login'
                     }
                 ]
             }

@@ -1,10 +1,9 @@
 <template>
     <div>
-        <router-view></router-view>
     </div>
 </template>
 
-<style scoped>
+<style>
 </style>
 
 <script>
@@ -12,6 +11,8 @@
         data () {
             return {
             }
+        },
+        components: {
         }
     }
 </script>

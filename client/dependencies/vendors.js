@@ -1,3 +1,4 @@
+//js
 const $ = require('jquery');
 const bootstrap = require('bootstrap');
 const bootstrapSelect = require('bootstrap-select');
@@ -5,6 +6,14 @@ const Gauge = require('gaugeJS').Gauge;
 const tippy = require('tippy.js');
 const popper = require('popper.js');
 
+//css
+require('bootstrap/dist/css/bootstrap.min.css');
+require('bootstrap-select/dist/css/bootstrap-select.min.css');
+require('animate.css/animate.min.css');
+require('tippy.js/index.css');
+require('material-design-iconic-font/dist/css/material-design-iconic-font.min.css');
+
+//main
 $(document).ready(function (){
     /* Text Field*/
     if($('.fg-line')[0]) {
