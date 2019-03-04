@@ -1,0 +1,26 @@
+/* Created on : 03/12/2018
+ * Author     : Ingrid Pinedo
+ * Version    : 1.0
+ * Content    : Alerts
+ */
+
+.alert {
+  border-radius: 2px;
+  width: 100%;
+  box-shadow: 0 4px 8px 0 rgba(69, 78, 123, 0.2);
+  align-items: center;
+  display: flex;
+  font-size: 13px;
+  font-weight: 500;
+  font-style: italic;
+  font-stretch: normal;
+  line-height: 1.33;
+  letter-spacing: normal;
+  border: none !important;
+  padding: 17px 15px !important;
+  border-left: 5px solid !important;
+  i {
+    margin-right: 10px;
+    font-size: 20px;
+  }
+}

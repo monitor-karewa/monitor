@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="30" height="36" viewBox="0 0 30 36">
+    <g fill="none" fill-rule="evenodd">
+        <g stroke="#B5C7D1" stroke-width="1.838">
+            <path fill="#FFF" d="M4.49 1h13.793L28.67 11.115v20.231c0 .896-.339 1.673-1.015 2.331-.676.659-1.474.988-2.393.988H4.408c-.92 0-1.718-.33-2.394-.988C1.338 33.02 1 32.242 1 31.346V4.319c0-.896.338-1.673 1.014-2.331C2.69 1.329 3.515 1 4.49 1z"/>
+            <path d="M18.333 1.103v9.74H28.54"/>
+        </g>
+        <text fill="#8F95B0" font-family="arial" font-size="9.189" font-weight="bold" transform="translate(1 1)">
+            <tspan x="2.072" y="22.784">JSON</tspan>
+        </text>
+    </g>
+</svg>
