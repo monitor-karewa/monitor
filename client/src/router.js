@@ -82,7 +82,7 @@ export default new Router({
         },
         {
             path: '/admin',
-            name: 'AdminHome',
+            // name: 'AdminHome',
             components: {
                 default: AdminIndex,
                 header: AdminHeader,
@@ -104,7 +104,7 @@ export default new Router({
         },
         {
             path: '/style',
-            name: 'StyleIndex',
+            // name: 'StyleIndex',
             component: StyleIndex,
             children: [
                 {

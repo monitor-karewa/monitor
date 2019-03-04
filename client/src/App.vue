@@ -212,7 +212,13 @@ export default {
             "to": "/logout",
             "icon": "zmdi zmdi-power"
         }
-    })/*,
+    }),
+    mounted () {
+        $(document).ready(function () {
+            $('.selectpicker').selectpicker();
+        });
+    },
+    /*,
     created() {
         let popperScript = document.createElement('script');
         popperScript.setAttribute('src', 'https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js');

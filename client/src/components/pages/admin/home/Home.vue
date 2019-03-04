@@ -2562,6 +2562,11 @@
             return {
             }
         },
+        mounted () {
+            $(document).ready(function () {
+                $('.selectpicker').selectpicker();
+            });
+        },
         components: {
         }
     }
