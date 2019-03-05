@@ -377,6 +377,52 @@ $themes: (
       }
     }
 
+    .graph-info {
+      .info {
+        span {
+          label {
+            font-family: $principal-font-bold;
+            color: $primary;
+
+            &::before {
+              background: $background;
+            }
+          }
+
+          p {
+            font-family: $principal-font-medium;
+            color: $info_text;
+          }
+
+          &.green label:before {
+            background-color: $success;
+          }
+          &.yellow label:before {
+            background-color: $warning;
+          }
+          &.red label:before {
+            background-color: $error;
+          }
+        }
+      }
+
+      .divider-dash {
+        border-color: $background;
+      }
+
+      .total {
+        label {
+          font-family: $principal-font-bold;
+          color: $accent;
+        }
+
+        small {
+          font-family: $principal-font-medium;
+          color: $plain_text;
+        }
+      }
+    }
+
     .client-cover {
       .cover-container {
         .info {
@@ -1111,7 +1157,7 @@ $themes: (
     		            	color: $plain_text;
 
     		            	&::before {
-    		              	background-color: $grey_2;
+    		              	background-color: $plain_text;
     		            	}
     		          	}
 

@@ -162,6 +162,27 @@
                                 <h1> Presupuesto ejercido por tipo de procedimiento </h1>
                             </div>
                             <div>INSERTAR AQUI GRAFICA</div>
+                            <div class="graph-info">
+                                <div class="info">
+                                    <span class="green">
+                                        <label>7%</label>
+                                        <p>Lic. pública</p>
+                                    </span>
+                                    <span class="yellow">
+                                        <label>43%</label>
+                                        <p>Por invitación</p>
+                                    </span>
+                                    <span class="red">
+                                        <label>48%</label>
+                                        <p>Adj. directa</p>
+                                    </span>
+                                </div>
+                                <div class="divider-dash"></div>
+                                <div class="total">
+                                    <label>$2,115,000.00 MXN</label>
+                                    <small>MONTO TOTAL</small>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>

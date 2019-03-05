@@ -39,6 +39,10 @@ a {
   outline: none;
 }
 
+a:hover {
+  text-decoration: none !important;
+}
+
 button {
   outline: none !important;
   &:focus {
@@ -720,6 +724,77 @@ button {
           padding: 8px 20px;
         }
       }
+    }
+  }
+}
+
+.graph-info {
+  margin-top: 20px;
+
+  .info {
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    span {
+      padding: 0 10px;
+      position: relative;
+
+      label {
+        font-size: 14px;
+        font-weight: 900;
+        line-height: normal;
+        display: block;
+        margin-bottom: 3px;
+        position: relative;
+
+        &::before {
+          content: " ";
+          width: 6px;
+          height: 6px;
+          position: absolute;
+          border-radius: 2px;
+          left: 0;
+          top: 0;
+          bottom: 0;
+          margin: auto 0;
+        }
+      }
+
+      p {
+        font-size: 12px;
+        font-weight: 500;
+        line-height: normal;
+        text-align: center;
+        display: block;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .divider-dash {
+    margin: 15px 0;
+    height: 2px;
+    width: 100%;
+    border: 1px dashed;
+  }
+
+  .total {
+    label {
+      font-size: 20px;
+      font-weight: 900;
+      line-height: normal;
+      text-align: center;
+      display: block;
+      margin-bottom: 2px;
+    }
+
+    small {
+      font-size: 12px;
+      font-weight: 500;
+      line-height: normal;
+      text-align: center;
+      display: block;
+      text-transform: uppercase;
     }
   }
 }

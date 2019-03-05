@@ -240,11 +240,14 @@ html:not(.ie9) .select.fg-line:before {
     }
 
     .bootstrap-select {
-      padding: 7px 0 !important;
 
       .dropdown-toggle {
         background-color:transparent !important;
         border-color: transparent !important;
+        padding-top: 2px;
+        padding-bottom: 2px;
+        margin-top: -4px;
+
         &::after {
           opacity: 0;
         }
@@ -254,7 +257,9 @@ html:not(.ie9) .select.fg-line:before {
         }
 
         .filter-option {
-          padding: 0;
+          padding: 0 30px 0 15px !important;
+          display: flex;
+          align-items: center;
 
           .filter-option-inner {
             .filter-option-inner-inner {
@@ -386,11 +391,19 @@ html:not(.ie9) .select.fg-line:before {
       }
     }
     .filter-option-inner{
-      padding-right: 30px !important;
+      padding-right: 0px !important;
+      width: fit-content;
+      overflow: hidden;
+      display: block;
+      text-overflow: ellipsis;
     }
-     .filter-option-inner-inner {
-       font-size: 13px !important;
-     }
+    .filter-option-inner-inner {
+      font-size: 13px !important;
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      display: block;
+    }
   }
 }
 
