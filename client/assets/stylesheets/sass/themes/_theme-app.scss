@@ -1821,6 +1821,34 @@ $themes: (
       }
     }
 
+    .toast {
+      background-color: transparentize($black, 0.1) !important;
+
+      i {
+        &.toast-danger {
+          color: $error;
+        }
+        &.toast-info {
+          color: $info;
+        }
+        &.toast-alert {
+          color: $warning;
+        }
+        &.toast-success {
+          color: $success;
+        }
+      }
+
+      span {
+        font-family: $principal-font-regular;
+        color: $grey_2;
+      }
+
+      .toast-exit {
+        color: $info_text !important;
+      }
+    }
+
     .upload-section {
       label {
         font-family: $principal-font-bold;

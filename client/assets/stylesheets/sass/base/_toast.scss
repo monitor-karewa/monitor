@@ -6,7 +6,6 @@
     $TOAST
 \*------------------------------------*/
 .toast {
-  background-color: $black;
   padding: 12px 18px;
   margin: 0 auto;
   display: inline-flex;
@@ -26,33 +25,17 @@
   i {
     font-size: 25px;
     padding-right: 10px;
-
-    &.toast-danger {
-      color: $error;
-    }
-    &.toast-info {
-      color: $info;
-    }
-    &.toast-alert {
-      color: $warning;
-    }
-    &.toast-success {
-      color: $success;
-    }
   }
 
   span {
     width: 300px;
     height: auto;
-    font-family: Raleway-regular;
     font-size: 14px;
     font-weight: normal;
     line-height: 1.43;
-    color: $grey_2;
   }
 
   .toast-exit {
-    color: $info_text !important;
     cursor: pointer;
     margin-left: 20px;
     float: right;
