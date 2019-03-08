@@ -27,7 +27,12 @@ module.exports = (env, argv) => ({
         rules: [
             {
                 test: /\.vue$/,
-                loader: 'vue-loader'
+                loader: 'vue-loader',
+                options: {
+                    loaders: {
+                        i18n: '@kazupon/vue-i18n-loader'
+                    }
+                }
             },
             {
                 test: /\.js$/,

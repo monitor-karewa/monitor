@@ -7,10 +7,12 @@
                 </div>
                 <div class="neutral-width">
                     <div class=" info">
-                        <h3>Bienvenido a</h3>
-                        <h1>Monitor <strong>Karewa</strong></h1>
+                        <h3>{{$t('general.welcome-to')}}</h3>
+                        <!--<h1>Monitor <strong>Karewa</strong></h1>-->
+                        <h1 v-html="$t('general.app.name.html-strong')"></h1>
                         <div class="divider"></div>
-                        <p>Aquí podrás obtener información sobre los procedimientos de licitaciones para consultar la compra, renta y contratación de servicios que se realizan en el Municipio de Chihuahua.</p>
+                        <!--<p>Aquí podrás obtener información sobre los procedimientos de licitaciones para consultar la compra, renta y contratación de servicios que se realizan en el Municipio de Chihuahua.</p>-->
+                        <p>{{$t('general.app.description')}}</p>
 
                     </div>
                     <div class="horizontal-center m-t-50">
