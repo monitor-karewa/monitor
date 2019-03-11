@@ -157,5 +157,11 @@ export default {
     "general.welcome-to": "Bienvenido a",
     "general.app.name": "Monitor Karewa",
     "general.app.description": "Aquí podrás obtener información sobre los procedimientos de licitaciones para consultar la compra, renta y contratación de servicios que se realizan en el Municipio de Chihuahua.",
-    "general.app.name.html-strong": "Monitor <strong>Karewa</strong>"
+    "general.app.name.html-strong": "Monitor <strong>Karewa</strong>",
+    "general.back": "Atrás",
+    "general.fecha-creacion": "Fecha de creación",
+    "proveedores.proveedor": "Proveedor | Proveedores",
+    "proveedores.nombre-razon-social": "Nombre o razón social",
+    "proveedores.rfc": "RFC",
+    "proveedores.notas": "Notas"
 }

@@ -14,37 +14,51 @@
                     <div id="hideMenu" class="btn-close-resp"><a><i class="zmdi zmdi-close"></i></a></div>
                 </div>
                 <ul class="main-menu">
-                    <li><a href=""><i class="zmdi zmdi-view-dashboard"></i> Dashboard </a></li>
-                    <div class="divider"></div>
-                    <li class="active">
-                        <a href=""><i class="zmdi zmdi-accounts"></i> Usuarios </a>
-                    </li>
-                    <li>
-                        <a href=""><i class="zmdi zmdi-account"></i> Proveedores </a>
-                    </li>
-                    <li>
-                        <a href=""><i class="zmdi zmdi-city-alt"></i> Organizaciones </a>
-                    </li>
-                    <li>
-                        <a href=""><i class="zmdi zmdi-input-composite"></i> U. Administrativas </a>
-                    </li>
-                    <li>
-                        <a href=""><i class="zmdi zmdi-file-text"></i> Contratos </a>
-                    </li>
-                    <li>
-                        <a href=""><i class="zmdi zmdi-link"></i> Enlaces de Interés </a>
-                    </li>
-                    <li>
-                        <a href=""><i class="zmdi zmdi-confirmation-number"></i> Cálculos </a>
-                    </li>
-                    <div class="divider"></div>
-                    <li class="active">
-                        <a href=""><i class="zmdi zmdi-settings"></i> Configuración </a>
-                    </li>
+                    
+                    <template v-for="(linkArray, linkArrayIndex) in sidemenuLinks">
+                        <!--Agregar divider de grupos automáticamente-->
+                        <div v-if="linkArrayIndex > 0" class="divider"></div>
+                        
+                        <!--Insertar enlace-->
+                        <router-link v-for="(link, index) in linkArray" tag="li" :to="link.to" :key="'sidemenu-link-' + linkArrayIndex + '-' + index" exact-active-class="active">
+                            <a><i :class="link.icon"></i> {{link.name}} </a>
+                        </router-link>
+                    </template>
+                    
+                    <!--<li><a href=""><i class="zmdi zmdi-view-dashboard"></i> Dashboard </a></li>-->
+                    <!--<div class="divider"></div>-->
+                    <!--<li class="active">-->
+                        <!--<a href=""><i class="zmdi zmdi-accounts"></i> Usuarios </a>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<a href=""><i class="zmdi zmdi-account"></i> Proveedores </a>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<a href=""><i class="zmdi zmdi-city-alt"></i> Organizaciones </a>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<a href=""><i class="zmdi zmdi-input-composite"></i> U. Administrativas </a>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<a href=""><i class="zmdi zmdi-file-text"></i> Contratos </a>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<a href=""><i class="zmdi zmdi-link"></i> Enlaces de Interés </a>-->
+                    <!--</li>-->
+                    <!--<li>-->
+                        <!--<a href=""><i class="zmdi zmdi-confirmation-number"></i> Cálculos </a>-->
+                    <!--</li>-->
+                    <!--<div class="divider"></div>-->
+                    <!--<li class="active">-->
+                        <!--<a href=""><i class="zmdi zmdi-settings"></i> Configuración </a>-->
+                    <!--</li>-->
                 </ul>
             </div>
             <div class="footer-sidebar">
-                <a href=""><i class="zmdi zmdi-power"></i> Cerrar Sesión </a>
+                <router-link :to="linksFooter.to">
+                    <i :class="linksFooter.icon"></i> {{linksFooter.name}}
+                </router-link>
+                <!--<a href=""><i class="zmdi zmdi-power"></i> Cerrar Sesión </a>-->
             </div>
         </aside>
         <div class="backdrop"></div>
@@ -59,6 +73,73 @@
     export default {
         data () {
             return {
+                sidemenuLinks: [
+                    [
+                        {
+                            name: 'Dashboard',
+                            to: '/admin',
+                            icon: 'zmdi zmdi-view-dashboard',
+                            admin: true
+                        }
+                    ],
+                    [
+                        {
+                            name: "Usuarios",
+                            to: "/admin/usuarios",
+                            icon: "zmdi zmdi-accounts",
+                            admin: true
+                        },
+                        {
+                            name: "Proveedores",
+                            to: "/admin/proveedores",
+                            icon: "zmdi zmdi-account",
+                            admin: true
+                        },
+                        {
+                            name: "Organizaciones",
+                            to: "/admin/organizaciones",
+                            icon: "zmdi zmdi-city-alt",
+                            admin: true
+                        },
+                        {
+                            name: "U. Administrativas",
+                            to: "/admin/unidades-administrativas",
+                            icon: "zmdi zmdi-input-composite",
+                            admin: true
+                        },
+                        {
+                            name: "Contratos",
+                            to: "/admin/contratos",
+                            icon: "zmdi zmdi-file-text",
+                            admin: true
+                        },
+                        {
+                            name: "Recursos",
+                            to: "/admin/recursos",
+                            icon: "zmdi zmdi-link",
+                            admin: true
+                        },
+                        {
+                            name: "Cálculos",
+                            to: "/admin/calculos",
+                            icon: "zmdi zmdi-confirmation-number",
+                            admin: true
+                        }
+                    ],
+                    [
+                        {
+                            name: "Configuración",
+                            to: "/admin/configuracion",
+                            icon: "zmdi zmdi-settings",
+                            admin: true
+                        }
+                    ]
+                ],
+                linksFooter: {
+                    "name": "Cerrar Sesión",
+                    "to": "/logout",
+                    "icon": "zmdi zmdi-power"
+                }
             }
         },
         components: {
