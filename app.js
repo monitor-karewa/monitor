@@ -23,6 +23,10 @@ const helmet = require('helmet');
 // Flash notifications
 const flash = require('express-flash-notification');
 
+// Security
+const cors = require('cors');
+
+
 // =======
 // Local dependencies
 // =======
@@ -41,6 +45,7 @@ const securityController = require('./app/controllers/security.controller');
 
 // Other
 const config = require('./config/config').get();
+const isProd = require('./config/config').isProd();
 const logger = require('./app/components/logger').instance;
 const passportManger = require('./app/components/passportManager');
 const seedsManager = require('./app/components/seedsManager');
@@ -102,6 +107,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(compression());
 app.use(helmet());
+
+if (!isProd) {
+    app.use(cors({
+        origin: 'http://localhost:9000'
+    }));
+}
 
 // ======================
 // Routes without session

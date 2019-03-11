@@ -1,19 +1,20 @@
 const axios = require('axios');
 import base from '@/api/base';
+const namespace = 'proveedores';
 
 export default {
     list: (params = {}, onSuccess, onError) => {
-        return axios.get(base.baseUrl + '/api/list', params)
+        return axios.get(`${base.baseUrl}/api/${namespace}/list`, params)
             .then(onSuccess)
             .catch(onError);
     },
     save: (params = {}, onSuccess, onError) => {
-        return axios.post(base.baseUrl + '/api/save', params)
+        return axios.post(`${base.baseUrl}/api/${namespace}/save`, params)
             .then(onSuccess)
             .catch(onError);
     },
     delete: (params = {}, onSuccess, onError) => {
-        return axios.post(base.baseUrl + '/api/delete', params)
+        return axios.post(`${base.baseUrl}/api/${namespace}/delete`, params)
             .then(onSuccess)
             .catch(onError);;
     }
