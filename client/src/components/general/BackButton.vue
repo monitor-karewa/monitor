@@ -1,0 +1,24 @@
+<template>
+    <div class="col-12 col-md-6 m-b-30">
+        <!--<p>-->
+            <!--Button <strong> "btn-outline". </strong>-->
+            <!--<br>-->
+            <!--Sizes: class:"xs", no class: normal, class:"lg". Remove icon if no need.-->
+        <!--</p>-->
+        <a href="" class="btn-outline"><i class="zmdi zmdi-long-arrow-left"></i> <strong> {{$t('general.back')}} </strong> </a>
+    </div>
+</template>
+
+<style>
+</style>
+
+<script>
+    export default {
+        data () {
+            return {
+            }
+        },
+        components: {
+        }
+    }
+</script>

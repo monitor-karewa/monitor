@@ -104,3 +104,7 @@ const config = {
 exports.get = function get() {
     return nodeEnv && nodeEnv === 'production' ? config[nodeEnv] : config.dev;
 };
+
+exports.isProd = function () {
+    return !!nodeEnv && nodeEnv === 'production'; 
+};

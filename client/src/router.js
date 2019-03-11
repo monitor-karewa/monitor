@@ -26,9 +26,10 @@ import LoginStyle from '@/components/pages/style/Login';
 import AdminIndex from '@/components/pages/admin/Index';
 import AdminHeader from '@/components/pages/admin/Header';
 import AdminSidebar from '@/components/pages/admin/Sidebar';
-// import AdminFooter from '@/components/pages/admin/Footer';
+import AdminFooter from '@/components/pages/admin/Footer';
 
 import AdminHome from '@/components/pages/admin/home/Home';
+import AdminProveedores from '@/components/pages/admin/proveedores/Proveedores';
 
 import Login from '@/components/pages/admin/Login';
 
@@ -86,14 +87,19 @@ export default new Router({
             components: {
                 default: AdminIndex,
                 header: AdminHeader,
-                sidebar: AdminSidebar
-                // footer: AdminFooter
+                sidebar: AdminSidebar,
+                footer: AdminFooter
             },
             children: [
                 {
                     path: '',
                     name: 'AdminHome',
                     component: AdminHome
+                },
+                {
+                    path: 'proveedores',
+                    name: 'AdminProveedores',
+                    component: AdminProveedores
                 }
             ]
         },

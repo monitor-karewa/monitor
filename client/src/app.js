@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import App from './App.vue';
+import store from '@/store';
 import router from './router';
 
 const $ = require('jquery');
@@ -30,10 +31,31 @@ const i18n = new VueI18n({
 //i18n.locale = 'en';
 
 
+//-------------------------------
+//Logger config
+//-------------------------------
+import VueLogger from 'vuejs-logger';
+//TODO: A better way to check environment
+const isProduction = process.env.NODE_ENV === 'production';
+
+const loggerOptions = {
+    isEnabled: true,
+    logLevel : isProduction ? 'error' : 'debug',
+    stringifyArguments : false,
+    showLogLevel : true,
+    showMethodName : true,
+    separator: '|',
+    showConsoleColors: true
+};
+
+Vue.use(VueLogger, loggerOptions);
+
+
 new Vue({
     el: '#app',
     router,
     i18n,
+    store,
     components: { App },
     template: '<App/>'
 });
