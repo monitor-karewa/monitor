@@ -82,6 +82,9 @@ export default new Router({
             ]
         },
         {
+            //
+            // /admin => AdminHome
+            // /admin/proveedores => AdminProveedores
             path: '/admin',
             // name: 'AdminHome',
             components: {

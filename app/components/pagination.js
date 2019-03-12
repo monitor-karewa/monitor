@@ -18,7 +18,7 @@ exports.getDefaultPaginationOptions = (req) => {
     let paginationOptions = {
         page: page,
         sort: sort,
-        offset: offset,
+        // offset: offset,
         limit: perPage,
         lean: true
     };

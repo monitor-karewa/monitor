@@ -1,9 +1,8 @@
 <template>
     <div>
         <BackButton/>
-        <button v-on:click="testList">Test list</button>
         <CatalogHeader/>
-        <EditableTable/>
+        <EditableTable v-bind:docs="docs" v-bind:total="total" v-bind:storeModule="storeModule"/>
     </div>
 </template>
 
@@ -12,15 +11,19 @@
 
 <script>
     import catalog from '@/mixins/catalog';
+    import { mapState } from 'vuex';
+    
+    const storeModule = 'proveedores';
     
     let catalogoProveedores = catalog.configure({
-        storeModule: 'proveedores'
+        storeModule: storeModule
     });
     
     export default {
         mixins: [catalogoProveedores],
         data () {
             return {
+                storeModule: storeModule
             }
         },
         components: {

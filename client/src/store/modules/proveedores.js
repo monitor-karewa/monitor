@@ -3,8 +3,18 @@ import proveedoresApi from '@/api/proveedores';
 // initial state
 // shape: [{ id, quantity }]
 const state = {
-    proveedores: [],
-    count: 0,
+    docs: [],
+    total: 0,
+    // currentPage: 1,
+    // pages: 0,
+    pagination: {
+        total: 0,
+        page: 1,
+        pages: 1
+    },
+    
+    
+    
     loading: null,
     errorLoading: null
 };
@@ -62,6 +72,7 @@ const actions = {
     // },
     
     list ({commit, state}, pagination = {}) {
+        console.log('Calling action proveedores/list');
         let query = '?';
         if (pagination.page) {
             if (query.length > 1) {
@@ -74,6 +85,35 @@ const actions = {
             {}, 
             (result) => {
                 console.log('result', result);
+                //result.data.data.docs
+                // commit('updateDocs', {
+                //     docs: result.data.data.docs
+                // });
+                commit('updateDocs', result.data.data);
+            },
+            (error) => {
+                console.log('error', error);
+            }
+        )
+    },
+    
+    changePage ({commit, state}, page = 1) {
+        console.log('Calling action proveedores/changePage');
+        let query = '?';
+        if (query.length > 1) {
+            query += '&';
+        }
+        query += `page=${page}`;
+        //TODO: Add other pagination options and centralize all options
+        proveedoresApi.list(
+            {query: query},
+            (result) => {
+                console.log('result', result);
+                //result.data.data.docs
+                // commit('updateDocs', {
+                //     docs: result.data.data.docs
+                // });
+                commit('updateDocs', result.data.data);
             },
             (error) => {
                 console.log('error', error);
@@ -103,6 +143,13 @@ const mutations = {
     // setCheckoutStatus (state, status) {
     //     state.checkoutStatus = status
     // }
+    updateDocs (state, {docs, total, page, pages}) {
+        state.docs = docs;
+        state.total = total;
+        state.pagination.total = total;
+        state.pagination.page = page;
+        state.pagination.pages = pages;
+    }
 };
 
 export default {

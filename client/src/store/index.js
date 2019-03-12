@@ -3,8 +3,8 @@ import Vuex from 'vuex';
 import createLogger from 'vuex/dist/logger'
 
 
-import proveedores from '@/store//modules/proveedores';
-import session from '@/store//modules/session';
+import proveedores from '@/store/modules/proveedores';
+import session from '@/store/modules/session';
 
 
 Vue.use(Vuex);

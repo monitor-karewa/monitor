@@ -4,7 +4,7 @@ const namespace = 'proveedores';
 
 export default {
     list: (params = {}, onSuccess, onError) => {
-        return axios.get(`${base.baseUrl}/api/${namespace}/list`, params)
+        return axios.get(`${base.baseUrl}/api/${namespace}/list${params.query || ''}`, params)
             .then(onSuccess)
             .catch(onError);
     },

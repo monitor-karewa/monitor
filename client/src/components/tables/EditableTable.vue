@@ -55,26 +55,33 @@
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td>PETROMAX SA DE CV</td>
-                                    <td>PETMX6548760</td>
-                                    <td>Sin notas adicionales</td>
-                                    <!--<td class="text-align-c">-->
-                                        <!--<div class="checkbox m-0-auto">-->
-                                            <!--<input type="checkbox" value="">-->
-                                            <!--<i class="input-helper"></i>-->
-                                        <!--</div>-->
-                                    <!--</td>-->
-                                    <!--<td class="text-upper">Personalizado</td>-->
-                                    <td>29/11/2018</td>
-                                    <EditButtons/>
-                                    <!--<td class="row-buttons-hover">-->
-                                        <!--<div class="table-buttons-hover">-->
-                                            <!--<button data-tippy="Ver" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-eye"></i></button>-->
-                                            <!--<button data-tippy="Editar" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-edit"></i></button>-->
-                                            <!--<button data-tippy="Eliminar" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-delete"></i></button>-->
-                                        <!--</div>-->
-                                    <!--</td>-->
+                                <!--<tr>-->
+                                    <!--<td>PETROMAX SA DE CV</td>-->
+                                    <!--<td>PETMX6548760</td>-->
+                                    <!--<td>Sin notas adicionales</td>-->
+                                    <!--&lt;!&ndash;<td class="text-align-c">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<div class="checkbox m-0-auto">&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<input type="checkbox" value="">&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<i class="input-helper"></i>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</td>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<td class="text-upper">Personalizado</td>&ndash;&gt;-->
+                                    <!--<td>29/11/2018</td>-->
+                                    <!--<EditButtons/>-->
+                                    <!--&lt;!&ndash;<td class="row-buttons-hover">&ndash;&gt;-->
+                                        <!--&lt;!&ndash;<div class="table-buttons-hover">&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<button data-tippy="Ver" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-eye"></i></button>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<button data-tippy="Editar" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-edit"></i></button>&ndash;&gt;-->
+                                            <!--&lt;!&ndash;<button data-tippy="Eliminar" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-delete"></i></button>&ndash;&gt;-->
+                                        <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                                    <!--&lt;!&ndash;</td>&ndash;&gt;-->
+                                <!--</tr>-->
+                                <tr v-for="doc in docs">
+                                    <td>{{doc.nombre}}</td>
+                                    <td>{{doc.rfc}}</td>
+                                    <td>{{doc.notas}}</td>
+                                    <td></td>
+                                    <td></td>
                                 </tr>
                                 <!--<tr>-->
                                     <!--<td>Ley de Adquisiciones, Arrendamientos y Contratación de Servicios del Estado de Chihuahua.</td>-->
@@ -169,7 +176,7 @@
                     <!--<div class="floating-label-table info m-r-40">Omitidos (duplicados)</div>-->
                     <!--<div class="floating-label-table error">Registros con errores</div>-->
                 <!--</div>-->
-                <Pagination/>
+                <Pagination v-bind:total="total" v-bind:storeModule="storeModule"/>
             </div>
         </div>
     </div>
@@ -193,6 +200,7 @@
     export default {
         data () {
             return {
+                proveedores: []
             }
         },
         components: {
@@ -203,6 +211,11 @@
             TableHeader,
             EditButtons,
             Pagination
+        },
+        props: {
+            'docs': Array,
+            'total': Number,
+            'storeModule': String
         }
     }
 </script>

@@ -6,7 +6,7 @@ import EditableTable from '@/components/tables/EditableTable';
 import { mapState } from 'vuex'
 
 export default {
-    configure: (options) => {
+    configure: ({storeModule}) => {
         
         //options.storeModule => módulo de la store
         
@@ -15,7 +15,7 @@ export default {
                 return {
                     message: 'hello',
                     foo: 'abc',
-                    store: this.$store[options.storeModule]
+                    store: this.$store[storeModule]
                 }
             },
             components: {
@@ -25,16 +25,20 @@ export default {
             },
             computed: {
                 ...mapState({
-                    count: function () {
-                        console.log('this.$store', this.$store);
-                        return this.$store[options.storeModule].state.count;
-                    }
+                    // docs: function (state) {
+                    //     return state[storeModule].docs;
+                    // },
+                    docs: state => state[storeModule].docs,
+                    total: state => state[storeModule].total
                 })
             },
             methods: {
                 testList: function () {
-                    console.log('this.$store', this.$store.dispatch(`${options.storeModule}/list`));
+                    console.log('this.$store', this.$store.dispatch(`${storeModule}/list`));
                 }
+            },
+            beforeMount() {
+                this.$store.dispatch(`${storeModule}/list`)
             }
         }
     }
