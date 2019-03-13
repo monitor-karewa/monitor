@@ -85,43 +85,43 @@
                     [
                         {
                             name: "Usuarios",
-                            to: "/admin/usuarios",
+                            to: "/admin/users",
                             icon: "zmdi zmdi-accounts",
                             admin: true
                         },
                         {
                             name: "Proveedores",
-                            to: "/admin/proveedores",
+                            to: "/admin/suppliers",
                             icon: "zmdi zmdi-account",
                             admin: true
                         },
                         {
                             name: "Organizaciones",
-                            to: "/admin/organizaciones",
+                            to: "/admin/organizations",
                             icon: "zmdi zmdi-city-alt",
                             admin: true
                         },
                         {
                             name: "U. Administrativas",
-                            to: "/admin/unidades-administrativas",
+                            to: "/admin/administrative-units",
                             icon: "zmdi zmdi-input-composite",
                             admin: true
                         },
                         {
                             name: "Contratos",
-                            to: "/admin/contratos",
+                            to: "/admin/contracts",
                             icon: "zmdi zmdi-file-text",
                             admin: true
                         },
                         {
                             name: "Recursos",
-                            to: "/admin/recursos",
+                            to: "/admin/resources",
                             icon: "zmdi zmdi-link",
                             admin: true
                         },
                         {
                             name: "Cálculos",
-                            to: "/admin/calculos",
+                            to: "/admin/calculations",
                             icon: "zmdi zmdi-confirmation-number",
                             admin: true
                         }
@@ -129,7 +129,7 @@
                     [
                         {
                             name: "Configuración",
-                            to: "/admin/configuracion",
+                            to: "/admin/configuration",
                             icon: "zmdi zmdi-settings",
                             admin: true
                         }

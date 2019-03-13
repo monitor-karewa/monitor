@@ -1,4 +1,4 @@
-import proveedoresApi from '@/api/proveedores';
+import suppliersApi from '@/api/suppliers.api';
 
 // initial state
 // shape: [{ id, quantity }]
@@ -72,7 +72,7 @@ const actions = {
     // },
     
     list ({commit, state}, pagination = {}) {
-        console.log('Calling action proveedores/list');
+        console.log('Calling action suppliers/list');
         let query = '?';
         if (pagination.page) {
             if (query.length > 1) {
@@ -81,7 +81,7 @@ const actions = {
             query += `page=${pagination.page}`
         }
         //TODO: Add other pagination options and centralize all options
-        proveedoresApi.list(
+        suppliersApi.list(
             {}, 
             (result) => {
                 console.log('result', result);
@@ -98,14 +98,14 @@ const actions = {
     },
     
     changePage ({commit, state}, page = 1) {
-        console.log('Calling action proveedores/changePage');
+        console.log('Calling action suppliers/changePage');
         let query = '?';
         if (query.length > 1) {
             query += '&';
         }
         query += `page=${page}`;
         //TODO: Add other pagination options and centralize all options
-        proveedoresApi.list(
+        suppliersApi.list(
             {query: query},
             (result) => {
                 console.log('result', result);

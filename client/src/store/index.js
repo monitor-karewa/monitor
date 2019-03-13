@@ -3,7 +3,7 @@ import Vuex from 'vuex';
 import createLogger from 'vuex/dist/logger'
 
 
-import proveedores from '@/store/modules/proveedores';
+import suppliersModule from '@/store/modules/suppliers.module';
 import session from '@/store/modules/session';
 
 
@@ -15,7 +15,7 @@ const debug = process.env.NODE_ENV !== 'production';
 export default new Vuex.Store({
     modules: {
         session: session,
-        proveedores: proveedores
+        suppliers: suppliersModule
     },
     strict: debug,
     plugins: debug ? [createLogger()] : []

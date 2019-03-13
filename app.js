@@ -40,6 +40,12 @@ const unidadesRoutes = require('./app/routes/unidadAdministrativa.routes');
 const calculoRoutes = require('./app/routes/calculo.routes');
 // const usersRoutes = require('./app/routes/users.routes');
 
+const supplierRoutes = require('./app/routes/supplier.routes');
+const resourceRoutes = require('./app/routes/resource.routes');
+const administrativeUnitRoutes = require('./app/routes/administrativeUnit.routes');
+const calculationRoutes = require('./app/routes/calculation.routes');
+const contractRoutes = require('./app/routes/contract.routes');
+
 // Controllers
 const securityController = require('./app/controllers/security.controller');
 
@@ -143,6 +149,11 @@ app.use('/api/proveedores', proveedorRoutes);
 app.use('/api/recursos', recursoRoutes);
 app.use('/api/unidades', unidadesRoutes);
 app.use('/api/calculos', calculoRoutes);
+app.use('/api/suppliers', supplierRoutes);
+app.use('/api/resources', resourceRoutes);
+app.use('/api/administrative-units', administrativeUnitRoutes);
+app.use('/api/calculations', calculationRoutes);
+app.use('/api/contracts', contractRoutes);
 
 
 // ==============

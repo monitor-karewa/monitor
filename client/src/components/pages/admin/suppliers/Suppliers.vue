@@ -10,10 +10,10 @@
 </style>
 
 <script>
-    import catalog from '@/mixins/catalog';
+    import catalog from '@/mixins/catalog.mixin';
     import { mapState } from 'vuex';
     
-    const storeModule = 'proveedores';
+    const storeModule = 'suppliers';
     
     let catalogoProveedores = catalog.configure({
         storeModule: storeModule

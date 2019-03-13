@@ -157,43 +157,43 @@ export default {
             [
                 {
                     name: "Usuarios",
-                    to: "/usuarios",
+                    to: "/users",
                     icon: "zmdi zmdi-accounts",
                     admin: true
                 },
                 {
                     name: "Proveedores",
-                    to: "/proveedores",
+                    to: "/suppliers",
                     icon: "zmdi zmdi-account",
                     admin: true
                 },
                 {
                     name: "Organizaciones",
-                    to: "/organizaciones",
+                    to: "/organizations",
                     icon: "zmdi zmdi-city-alt",
                     admin: true
                 },
                 {
                     name: "U. Administrativas",
-                    to: "/unidades-administrativas",
+                    to: "/administrative-units",
                     icon: "zmdi zmdi-input-composite",
                     admin: true
                 },
                 {
                     name: "Contratos",
-                    to: "/contratos",
+                    to: "/contracts",
                     icon: "zmdi zmdi-file-text",
                     admin: true
                 },
                 {
                     name: "Recursos",
-                    to: "/recursos",
+                    to: "/resources",
                     icon: "zmdi zmdi-link",
                     admin: true
                 },
                 {
                     name: "Cálculos",
-                    to: "/calculos",
+                    to: "/calculations",
                     icon: "zmdi zmdi-confirmation-number",
                     admin: true
                 }
@@ -201,7 +201,7 @@ export default {
             [
                 {
                     name: "Configuración",
-                    to: "/configuracion",
+                    to: "/configuration",
                     icon: "zmdi zmdi-settings",
                     admin: true
                 }

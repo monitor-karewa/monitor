@@ -58,23 +58,23 @@
                     },
                     {
                         name: 'Proveedores',
-                        to: '/proveedores'
+                        to: '/suppliers'
                     },
                     {
                         name: 'Contratos',
-                        to: '/contratos'
+                        to: '/contracts'
                     },
                     {
                         name: 'Comparar',
-                        to: '/comparar'
+                        to: '/comparations'
                     },
                     {
                         name: 'Cálculos',
-                        to: '/calculos'
+                        to: '/calculations'
                     },
                     {
                         name: 'Recursos',
-                        to: '/recursos'
+                        to: '/resources'
                     },
                     {
                         name: 'Administrar',

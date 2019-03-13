@@ -86,14 +86,22 @@
                         <a href="" class="btn-outline p-l-5 p-r-10 vertical-center"><i class="zmdi zmdi-long-arrow-left"></i><strong>Volver al Monitor</strong> </a>
                     </div>
                     <div class="col-6 col-md-6 m-b-30 login-btn">
-                        <a href="" class="float-right btn-raised button-accent btn-loading vertical-center">
+                        <router-link :to="'/admin'" class="float-right btn-raised button-accent btn-loading vertical-center">
                             <div class="m-r-10">
                                 <svg class="spinner" width="17px" height="17px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">
                                     <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>
                                 </svg>
                             </div>
                             INICIAR SESIÓN
-                        </a>
+                        </router-link>
+                        <!--<a href="" class="float-right btn-raised button-accent btn-loading vertical-center">-->
+                            <!--<div class="m-r-10">-->
+                                <!--<svg class="spinner" width="17px" height="17px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">-->
+                                    <!--<circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>-->
+                                <!--</svg>-->
+                            <!--</div>-->
+                            <!--INICIAR SESIÓN-->
+                        <!--</a>-->
                     </div>
                 </div>
 

@@ -10,11 +10,11 @@ import UserHeader from '@/components/pages/user/Header';
 import UserFooter from '@/components/pages/user/Footer';
 import UserHome from '@/components/pages/user/home/Home';
 
-import Proveedores from '@/components/pages/user/proveedores/Proveedores';
-import Contratos from '@/components/pages/user/contratos/Contratos';
-import Comparar from '@/components/pages/user/comparar/Comparar';
-import Calculos from '@/components/pages/user/calculos/Calculos';
-import Recursos from '@/components/pages/user/recursos/Recursos';
+import Suppliers from '@/components/pages/user/suppliers/Suppliers';
+import Contracts from '@/components/pages/user/contracts/Contracts';
+import Comparations from '@/components/pages/user/comparations/Comparations';
+import Calculations from '@/components/pages/user/calculations/Calculations';
+import Resources from '@/components/pages/user/resources/Resources';
 
 import StyleIndex from '@/components/pages/style/Index';
 import Style from '@/components/pages/style/Style';
@@ -29,7 +29,7 @@ import AdminSidebar from '@/components/pages/admin/Sidebar';
 import AdminFooter from '@/components/pages/admin/Footer';
 
 import AdminHome from '@/components/pages/admin/home/Home';
-import AdminProveedores from '@/components/pages/admin/proveedores/Proveedores';
+import AdminSuppliers from '@/components/pages/admin/suppliers/Suppliers';
 
 import Login from '@/components/pages/admin/Login';
 
@@ -55,36 +55,36 @@ export default new Router({
                     component: UserHome
                 },
                 {
-                    path: 'proveedores',
-                    name: 'Proveedores',
-                    component: Proveedores
+                    path: 'suppliers',
+                    name: 'Suppliers',
+                    component: Suppliers
                 },
                 {
-                    path: 'contratos',
-                    name: 'Contratos',
-                    component: Contratos
+                    path: 'contracts',
+                    name: 'Contracts',
+                    component: Contracts
                 },
                 {
-                    path: 'comparar',
-                    name: 'Comparar',
-                    component: Comparar
+                    path: 'comparations',
+                    name: 'Comparations',
+                    component: Comparations
                 },
                 {
-                    path: 'calculos',
+                    path: 'calculations',
                     name: 'Cálculos',
-                    component: Calculos
+                    component: Calculations
                 },
                 {
-                    path: 'recursos',
-                    name: 'Recursos',
-                    component: Recursos
+                    path: 'resources',
+                    name: 'Resources',
+                    component: Resources
                 }
             ]
         },
         {
             //
             // /admin => AdminHome
-            // /admin/proveedores => AdminProveedores
+            // /admin/suppliers => AdminSuppliers
             path: '/admin',
             // name: 'AdminHome',
             components: {
@@ -100,9 +100,9 @@ export default new Router({
                     component: AdminHome
                 },
                 {
-                    path: 'proveedores',
-                    name: 'AdminProveedores',
-                    component: AdminProveedores
+                    path: 'suppliers',
+                    name: 'AdminSuppliers',
+                    component: AdminSuppliers
                 }
             ]
         },

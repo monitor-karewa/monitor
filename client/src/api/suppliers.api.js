@@ -1,6 +1,6 @@
 const axios = require('axios');
 import base from '@/api/base';
-const namespace = 'proveedores';
+const namespace = 'suppliers';
 
 export default {
     list: (params = {}, onSuccess, onError) => {
