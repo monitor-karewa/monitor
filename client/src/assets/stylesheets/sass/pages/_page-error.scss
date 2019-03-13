@@ -1,0 +1,143 @@
+.page-error {
+	position: relative;
+	display: block;
+	height: 100%;
+	min-height: 100vh;
+
+	.container-error {
+		position: relative;
+		display: block;
+		text-align: center;
+		padding: 0 30px;
+		min-height: 95vh;
+
+		img {
+		    min-width: 62%;
+		    margin-bottom: 30px;
+		}
+
+		h1 {
+			font-family: $principal-font-black;
+			font-size: 40px;
+			font-weight: 900;
+			line-height: 1;
+			text-align: center;
+			color: $primary;
+			display: block;
+			margin-top: 14px;
+			margin-bottom: 28px;
+		}
+
+		label {
+			font-family: $principal-font-bold;
+			font-size: 26px;
+			font-weight: 500;
+			line-height: 1.54;
+			text-align: center;
+			color: $plain_text;
+		}
+
+		p {
+			font-family: $principal-font-medium;
+			font-size: 26px;
+			font-weight: 500;
+			line-height: 1.54;
+			text-align: center;
+			color: $plain_text;
+			display: block;
+			margin-bottom: 30px;
+		}
+
+		> div {
+			width: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+		}
+	}
+	
+	.footer-error {
+		min-height: 5vh;
+		padding: 20px 80px;
+		position: relative;
+		bottom: 0;
+		width: 100%;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+
+		> div {
+			margin: 0 0 0 auto;
+		}
+
+		small, a {
+			font-family: $principal-font-semibold;
+			font-size: 12px;
+			font-weight: 600;
+			line-height: 1.33;
+			text-align: center;
+			color: $grey_1;
+		}
+
+		small {
+			&:first-of-type {
+				margin: 0 auto 0 0;
+			}
+		}
+
+		a {
+			transition: 0.5s;
+
+			&:hover {
+				font-size: 14px;
+				opacity: 0.7;
+				text-decoration: none;
+			}
+			&:first-of-type {
+				margin-right: 20px;
+			}
+			&:last-of-type {
+				margin-right: 20px;
+			}
+		}
+	}
+}
+
+@media screen and (max-width: 600px) {
+	.page-error {
+		.container-error {
+			h1 {
+				font-size: 30px;
+			}
+
+			label {
+				font-size: 22px;
+			}
+
+			p {
+				font-size: 20px;
+			}
+
+			> div {
+				display: block;
+				.btn-stroke {
+					margin: 0 auto 20px;
+				}
+				.btn-raised {
+					margin: 0 auto !important;
+				}
+			}
+		}
+		.footer-error {
+			padding: 20px;
+			display: block;
+		    text-align: center;
+
+			small {
+				&:first-of-type {
+					margin: 0 30px 0 0;
+				}
+			}
+		}
+	}
+}

@@ -6,6 +6,10 @@ import createLogger from 'vuex/dist/logger'
 import suppliersModule from '@/store/modules/suppliers.module';
 import session from '@/store/modules/session';
 
+import actions from '@/store/actions';
+import store from '@/store/store';
+import mutations from '@/store/mutations';
+
 
 Vue.use(Vuex);
 
@@ -17,6 +21,9 @@ export default new Vuex.Store({
         session: session,
         suppliers: suppliersModule
     },
+    store: store,
+    actions: actions,
+    mutations: mutations,
     strict: debug,
     plugins: debug ? [createLogger()] : []
 });

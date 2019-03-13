@@ -5,36 +5,36 @@ import Router from 'vue-router';
 //Note: @ is aliased in webpack.config to './src'
 
 //User
-import UserIndex from '@/components/pages/user/Index';
-import UserHeader from '@/components/pages/user/Header';
-import UserFooter from '@/components/pages/user/Footer';
-import UserHome from '@/components/pages/user/home/Home';
+import UserIndex from '@/pages/user/Index';
+import UserHeader from '@/pages/user/Header';
+import UserFooter from '@/pages/user/Footer';
+import UserHome from '@/pages/user/home/Home';
 
-import Suppliers from '@/components/pages/user/suppliers/Suppliers';
-import Contracts from '@/components/pages/user/contracts/Contracts';
-import Comparations from '@/components/pages/user/comparations/Comparations';
-import Calculations from '@/components/pages/user/calculations/Calculations';
-import Resources from '@/components/pages/user/resources/Resources';
+import Suppliers from '@/pages/user/suppliers/Suppliers';
+import Contracts from '@/pages/user/contracts/Contracts';
+import Comparations from '@/pages/user/comparations/Comparations';
+import Calculations from '@/pages/user/calculations/Calculations';
+import Resources from '@/pages/user/resources/Resources';
 
-import StyleIndex from '@/components/pages/style/Index';
-import Style from '@/components/pages/style/Style';
-import ClientStyle from '@/components/pages/style/Client';
-import ErrorsStyle from '@/components/pages/style/Errors';
-import LoginStyle from '@/components/pages/style/Login';
+import StyleIndex from '@/pages/style/Index';
+import Style from '@/pages/style/Style';
+import ClientStyle from '@/pages/style/Client';
+import ErrorsStyle from '@/pages/style/Errors';
+import LoginStyle from '@/pages/style/Login';
 
 //Admin
-import AdminIndex from '@/components/pages/admin/Index';
-import AdminHeader from '@/components/pages/admin/Header';
-import AdminSidebar from '@/components/pages/admin/Sidebar';
-import AdminFooter from '@/components/pages/admin/Footer';
+import AdminIndex from '@/pages/admin/Index';
+import AdminHeader from '@/pages/admin/Header';
+import AdminSidebar from '@/pages/admin/Sidebar';
+import AdminFooter from '@/pages/admin/Footer';
 
-import AdminHome from '@/components/pages/admin/home/Home';
-import AdminSuppliers from '@/components/pages/admin/suppliers/Suppliers';
+import AdminHome from '@/pages/admin/home/Home';
+import AdminSuppliers from '@/pages/admin/suppliers/Suppliers';
 
-import Login from '@/components/pages/admin/Login';
+import Login from '@/pages/admin/Login';
 
 // Fallback page
-import NotFound from '@/components/pages/errors/NotFound';
+import NotFound from '@/pages/errors/NotFound';
 
 Vue.use(Router);
 

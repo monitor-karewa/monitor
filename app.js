@@ -116,7 +116,14 @@ app.use(helmet());
 
 if (!isProd) {
     app.use(cors({
-        origin: 'http://localhost:9000'
+        origin: function (origin, callback) {
+            //Allow cors for localhost
+            if (origin.indexOf('localhost') !== -1) {
+                callback(null, true)
+            } else {
+                callback(new Error('Not allowed by CORS'))
+            }
+        }
     }));
 }
 

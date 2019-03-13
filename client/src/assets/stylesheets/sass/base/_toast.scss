@@ -1,0 +1,52 @@
+/*! Created on : 20/02/2019, 09:00:00 AM */
+/*! Author     : Ingrid Pinedo */
+/*! Version    : 1.0 */
+
+/*------------------------------------*\
+    $TOAST
+\*------------------------------------*/
+.toast {
+  padding: 12px 18px;
+  margin: 0 auto;
+  display: inline-flex;
+  box-shadow: 0 2px 4px 0 rgba(6, 9, 14, 0.3);
+  position: fixed;
+  top: -80px;
+  border-radius: 3px;
+  right: 15px;
+  width: 403px;
+  height: auto;
+  font-size: 14px;
+  opacity: 0;
+  z-index: 20;
+  align-items: center;
+  transition: all 0.4s ease-out;
+
+  i {
+    font-size: 25px;
+    padding-right: 10px;
+  }
+
+  span {
+    width: 300px;
+    height: auto;
+    font-size: 14px;
+    font-weight: normal;
+    line-height: 1.43;
+  }
+
+  .toast-exit {
+    cursor: pointer;
+    margin-left: 20px;
+    float: right;
+    transition: 0.5s;
+
+    i {
+      font-size: 25px;
+    }
+
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}

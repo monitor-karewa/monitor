@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="262" height="153" viewBox="0 0 262 153">
+    <defs>
+        <linearGradient id="a" x1="49.999%" x2="49.999%" y1="100%" y2="0%">
+            <stop offset="0%" stop-color="#DADCE5"/>
+            <stop offset="54%" stop-color="#DADCE5"/>
+            <stop offset="100%" stop-color="gray" stop-opacity=".1"/>
+        </linearGradient>
+        <linearGradient id="b" x1="49.996%" x2="49.996%" y1="100%" y2="0%">
+            <stop offset="0%" stop-color="gray" stop-opacity=".25"/>
+            <stop offset="54%" stop-color="gray" stop-opacity=".12"/>
+            <stop offset="100%" stop-color="gray" stop-opacity=".1"/>
+        </linearGradient>
+        <linearGradient id="c" x1="50%" x2="50%" y1="100%" y2="0%">
+            <stop offset="0%" stop-color="gray" stop-opacity=".25"/>
+            <stop offset="54%" stop-color="gray" stop-opacity=".12"/>
+            <stop offset="100%" stop-color="gray" stop-opacity=".1"/>
+        </linearGradient>
+        <linearGradient id="d" x1="50%" x2="50%" y1="100%" y2="-.013%">
+            <stop offset="0%" stop-color="gray" stop-opacity=".25"/>
+            <stop offset="54%" stop-color="gray" stop-opacity=".12"/>
+            <stop offset="100%" stop-color="gray" stop-opacity=".1"/>
+        </linearGradient>
+    </defs>
+    <g fill="none" fill-rule="evenodd">
+        <path fill="url(#a)" d="M0 0v152.868h220.275V0z" opacity=".5"/>
+        <path fill="#FFF" d="M3.268 9.513H217.94V150.15H3.268z"/>
+        <path fill="#DADCE5" d="M3.268 2.823H217.94V13.17H3.268z"/>
+        <ellipse cx="11.436" cy="7.839" fill="#EB6262" rx="2.506" ry="2.508"/>
+        <ellipse cx="18.331" cy="7.839" fill="#FFC043" rx="2.506" ry="2.508"/>
+        <ellipse cx="25.223" cy="7.839" fill="#6EC284" rx="2.506" ry="2.508"/>
+        <path fill="#B4B8CA" d="M90.474 47.115h39.48v4.233h-39.48z" opacity=".5"/>
+        <path fill="#D9DBE4" d="M61.963 65.301h43.239v4.233H61.963z"/>
+        <path fill="#6EC284" d="M158.468 69.537H115.23v-4.233h43.24z"/>
+        <path fill="#D9DBE4" d="M61.804 74.394h96.505v4.233H61.804zM61.804 83.49h96.505v4.233H61.804z"/>
+        <path fill="url(#b)" d="M90.006 102.93h40.106v7.839H90.006z"/>
+        <path fill="#B4B8CA" d="M90.318 103.644h39.48v6.414h-39.48z"/>
+        <ellipse cx="37.693" cy="37.506" fill="url(#c)" opacity=".5" rx="37.471" ry="37.5" transform="translate(179.863 45)"/>
+        <ellipse cx="217.556" cy="82.506" fill="#F5F5F5" rx="35.073" ry="35.1"/>
+        <path fill="#8F95B0" fill-rule="nonzero" d="M212.997 69.2c3.615 0 6.546 2.91 6.546 6.5s-2.931 6.5-6.546 6.5-6.545-2.91-6.545-6.5 2.93-6.5 6.545-6.5zm0 3.25c-1.807 0-3.273 1.455-3.273 3.25s1.466 3.25 3.273 3.25c1.808 0 3.273-1.455 3.273-3.25s-1.465-3.25-3.273-3.25zm0 11.375c4.37 0 13.091 2.177 13.091 6.5V95.2h-26.182v-4.875c0-4.323 8.722-6.5 13.091-6.5zm0 3.087c-4.86 0-9.982 2.373-9.982 3.413v1.787h19.964v-1.787c0-1.04-5.122-3.413-9.982-3.413zm9.818-17.712c3.615 0 6.546 2.91 6.546 6.5s-2.93 6.5-6.546 6.5c-.769 0-1.505-.13-2.176-.374a9.687 9.687 0 0 0 2.176-6.126 9.687 9.687 0 0 0-2.176-6.126 6.374 6.374 0 0 1 2.176-.374zm13.091 21.125V95.2h-6.545v-5.688c0-2.03-1.244-3.9-3.322-5.395 4.434.715 9.867 2.795 9.867 6.208z"/>
+        <path fill="url(#d)" d="M24.204 9.327H14.89V.009H9.536v9.318H.222v5.361h9.314v9.318h5.354v-9.318h9.314z" opacity=".5" transform="translate(237.719 53.1)"/>
+        <path fill="#6EC284" d="M247.656 54.906h4.551v20.4h-4.551z"/>
+        <path fill="#6EC284" d="M260.123 62.832v4.554H239.74v-4.554z"/>
+    </g>
+</svg>
