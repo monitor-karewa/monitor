@@ -38,7 +38,6 @@
                     </div>
                 </div>
                 <Pagination 
-                    :total="total" 
                     :store-module="storeModule"
                 />
             </div>
@@ -78,7 +77,6 @@
         },
         props: {
             'docs': Array,
-            'total': Number,
             'storeModule': String
         }
     }

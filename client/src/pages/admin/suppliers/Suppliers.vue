@@ -4,7 +4,6 @@
         <CatalogHeader/>
         <EditableTable 
             :docs="docs" 
-            :total="total" 
             :store-module="storeModule"
         />
     </div>

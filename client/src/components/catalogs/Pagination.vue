@@ -120,7 +120,6 @@
             }
         },
         props: {
-            'total': Number,
             'storeModule': String
         }
     }

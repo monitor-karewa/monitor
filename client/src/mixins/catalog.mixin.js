@@ -9,15 +9,10 @@ import { mapState } from 'vuex'
 export default {
     configure: ({storeModule, docName}) => {
         
-        //options.storeModule => módulo de la store
-        
         return {
             data: function () {
                 return {
                     docName: docName
-                    // message: 'hello',
-                    // foo: 'abc',
-                    // store: this.$store[storeModule]
                 }
             },
             components: {
@@ -27,16 +22,11 @@ export default {
             },
             computed: {
                 ...mapState({
-                    // docs: function (state) {
-                    //     return state[storeModule].docs;
-                    // },
                     docs: state => state[storeModule].docs,
-                    total: state => state[storeModule].total,
                 })
             },
             methods: {
                 testList: function () {
-                    // console.log('this.$store', this.$store.dispatch(`${storeModule}/list`));
                     Vue.$log.info('this.$store', this.$store.dispatch(`${storeModule}/list`));
                 }
             },
