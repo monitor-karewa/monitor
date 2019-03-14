@@ -15,10 +15,10 @@
                             <table class="table table-hover form-table">
                                 <thead>
                                 <tr>
-                                    <TableTh :name="$t('proveedores.nombre-razon-social')"/>
-                                    <TableTh :name="$t('proveedores.rfc')"/>
-                                    <TableTh :name="$t('proveedores.notas')"/>
-                                    <TableTh :name="$t('general.fecha-creacion')"/>
+                                    <TableTh :name="$t('suppliers.name')"/>
+                                    <TableTh :name="$t('suppliers.rfc')"/>
+                                    <TableTh :name="$t('suppliers.notes')"/>
+                                    <TableTh :name="$t('general.created-at')"/>
                                     <!--<th>Title Header<i class="zmdi zmdi-caret-down m-l-5 f-16"></i><i></i></th>-->
                                     <th></th>
                                 </tr>

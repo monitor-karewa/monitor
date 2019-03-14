@@ -10,7 +10,7 @@ const state = {
         pages: 1
     },
     
-    
+    docName: '',
     
     loading: null,
     errorLoading: null
@@ -151,6 +151,9 @@ const mutations = {
         state.pagination.total = total;
         state.pagination.page = page;
         state.pagination.pages = pages;
+    },
+    setDocName (state, {docName}) {
+        state.docName = docName;
     }
 };
 

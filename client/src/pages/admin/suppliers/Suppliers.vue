@@ -17,9 +17,11 @@
     import catalog from '@/mixins/catalog.mixin';
     
     const storeModule = 'suppliers';
+    const docName = 'suppliers.supplier';
     
     let catalogoProveedores = catalog.configure({
-        storeModule: storeModule
+        storeModule: storeModule,
+        docName: docName
     });
     
     export default {

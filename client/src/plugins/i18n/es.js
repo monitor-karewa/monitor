@@ -14,12 +14,12 @@ Reglas generales:
     
         ej.
             x incorrecto:
-                "nombre": "Nombre"
+                "name": "Name"
                 "email": "Email"
                 
             ✓ correcto:
-                "usuarios.nombre": "Nombre"
-                "usuarios.email": "Email"
+                "users.name": "Name"
+                "users.email": "Email"
                 
     - Si un segmento tiene más de una palabra, deben separarse con guión (-).
     - No duplicar mensajes para plurales. Se debe usar la pluralización de vue-i18n
@@ -27,16 +27,16 @@ Reglas generales:
 
         ej.
             x incorrecto:
-                "usuarios.usuario": "Usuario"
-                "usuarios.usuarios": "Usuarios"
+                "users.user": "User"
+                "users.users": "Users"
             
             ✓ correcto:
-                "usuarios.usuario": "Usuario | Usuarios"
+                "users.user": "User | Users"
         
     - No se permiten acentos, así que de preferencia utiliza "hacks" para palabras que no suenen bien:
         ej. año => anio
         
-    - Si se usa inglés, por favor verifica que lo que escribas es correcto.
+    - Como se usa inglés, por favor verifica que lo que escribas es correcto.
         
         ej.
             x incorrecto:
@@ -51,13 +51,13 @@ Reglas generales:
             
     - Si ya existe una internacionalización que corresponde a lo que deseas usar, verifica que tenga sentido reutilizarla.
         
-        ej. Si quieres colocar "Email" para usuario.email y ya existe la siguiente internacionalización:
+        ej. Si quieres colocar "Email" para user.email y ya existe la siguiente internacionalización:
         
-                "proveedor.email": "Email"
+                "supplier.email": "Email"
                 
             Es tentador usarla, ¿pero que pasa si en un futuro se cambia el valor de la siguiente manera?
             
-                "proveedor.email": "Email del Proveedor"
+                "supplier.email": "Email del Supplier"
                 
             Este uso es incorrecto, por reutilizar el i18n de una llave existente, pero que no corresponde a la misma propiedad,
             
@@ -66,36 +66,42 @@ Reglas generales:
     - Mantén las clasificaciones juntas y ordenadas. Es tentador agregar tus i18ns al final, pero ayuda a mantener el orden de la aplicación.
 
             x incorrecto:
-                usuarios.foo.1
-                proveedores.foo
-                usuarios.bar
-                usuarios.foo.2
-                comparar.baz
-                usuarios.baz
-                proveedores.bar
-                usuarios.foo.3
-                comparar.foo
-                comparar.bar
+                users.foo.1
+                suppliers.foo
+                users.bar
+                users.foo.2
+                comparations.baz
+                users.baz
+                suppliers.bar
+                users.foo.3
+                comparations.foo
+                comparations.bar
             
             
             ✓ correcto:
-                usuarios.foo.1
-                usuarios.foo.2
-                usuarios.foo.3
-                usuarios.bar
-                usuarios.baz
-                proveedores.foo
-                proveedores.bar
-                comparar.foo
-                comparar.bar
-                comparar.baz
+                users.foo.1
+                users.foo.2
+                users.foo.3
+                users.bar
+                users.baz
+                suppliers.foo
+                suppliers.bar
+                comparations.foo
+                comparations.bar
+                comparations.baz
 
 
 ¿Inglés o español?
-    Se prefiere español para términos de los procesos y los datos de la plataforma.
-        Ej. proveedor, calculo, tipo-rfc
-        
-    Se prefiere inglés para términos de sistemas.
+    Siempre en inglés, salvo por términos que no tiene sentido traducir, o que pierden completamente el significado al ser traducidos.
+    
+        Ej.
+            x incorrecto:
+                fcr (iniciales de Federal Contributor Registry)
+                
+            ✓ correcto:
+                rfc (iniciales de Registro Federal de Contribuyentes)
+
+ Se prefiere inglés para términos de sistemas.
         Ej. error, info, validations, warning, required
         
     Si tienes dudas, o ambos lenguajes son viables, puedes basarte en un uso similar que ya exista, o confiar en tu corazón.
@@ -103,13 +109,13 @@ Reglas generales:
 
 --------Clasificaciones (procesos)-------
 general
-usuarios
-proveedores
-unidades-administrativas
-recursos
-contratos
-calculos
-comparar
+users
+suppliers
+administrative-units
+resources
+contracts
+calculations
+comparations
 
 
 --------Subclasificaciones (partes de los procesos anteriores)-------
@@ -117,10 +123,10 @@ error
 success
 info
 warning
-[nombre-de-propiedad]
-[nombre-de-accion] (ejemplos: "save", "delete")
+[name-de-propiedad]
+[name-de-accion] (ejemplos: "save", "delete")
 
-    --------- Sub-sub-clasificaciones de [nombre-de-propiedad] ---------
+    --------- Sub-sub-clasificaciones de [name-de-propiedad] ---------
 
     validations
     status
@@ -132,23 +138,23 @@ warning
 
 "general.app-name": "Monitor Karewa"
 "general.copyright": "Black Labs 2019"
-"general.error.cargar-registros": "No fue posible cargar los registros. Por favor recarga la página e intenta nuevamente."
+"general.error.load-docs": "No fue posible cargar los registros. Por favor recarga la página e intenta nuevamente."
 "general.info.loading": "Cargando..."
 
-"usuarios.usuario": "Usuario"
-"usuarios.email": "Email"
-"usuarios.email.description": "El email que utilizará el usuario para acceder a la plataforma."
-"usuarios.email.placeholder": "Introduce el email del usuario."
-"usuarios.email.validations.required": "El email del Usuario es requerido."
-"usuarios.email.validations.invalid": "Por favor introduce un email válido para el Usuario."
-"usuarios.email.status": "Estatus del email"
-"usuarios.email.status.pendiente-validacion": "Pendiente de validar"
-"usuarios.email.status.validado": "Validado"
+"users.user": "User"
+"users.email": "Email"
+"users.email.description": "El email que utilizará el user para acceder a la plataforma."
+"users.email.placeholder": "Introduce el email del user."
+"users.email.validations.required": "El email del User es requerido."
+"users.email.validations.invalid": "Por favor introduce un email válido para el User."
+"users.email.status": "Estatus del email"
+"users.email.status.pendiente-validacion": "Pendiente de validar"
+"users.email.status.validado": "Validado"
 
-"proveedores.error.duplicado": "El Proveedor ya se encuentra registrado."
-"proveedores.warning.tipo-rfc-inconsistente": "El RFC registrado para este Proveedor corresponde a una persona moral, pero el Proveedor es persona física."
-"proveedores.rfc": "RFC del Proveedor"
-"proveedores.rfc.validations.required": "El RFC del Proveedor es requerido."
+"suppliers.error.duplicated": "El Supplier ya se encuentra registrado."
+"suppliers.warning.inconsistent-rfc": "El RFC registrado para este Supplier corresponde a una persona moral, pero el Supplier es persona física."
+"suppliers.rfc": "RFC del Supplier"
+"suppliers.rfc.validations.required": "El RFC del Supplier es requerido."
 
  */
 
@@ -159,9 +165,9 @@ export default {
     "general.app.description": "Aquí podrás obtener información sobre los procedimientos de licitaciones para consultar la compra, renta y contratación de servicios que se realizan en el Municipio de Chihuahua.",
     "general.app.name.html-strong": "Monitor <strong>Karewa</strong>",
     "general.back": "Atrás",
-    "general.fecha-creacion": "Fecha de creación",
-    "proveedores.proveedor": "Proveedor | Proveedores",
-    "proveedores.nombre-razon-social": "Nombre o razón social",
-    "proveedores.rfc": "RFC",
-    "proveedores.notas": "Notas"
+    "general.created-at": "Fecha de creación",
+    "suppliers.supplier": "Supplier | Suppliers",
+    "suppliers.name": "Name o razón social",
+    "suppliers.rfc": "RFC",
+    "suppliers.notes": "Notas"
 }
