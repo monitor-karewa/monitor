@@ -3,7 +3,7 @@
     <header id="header" class="header clearfix">
         <div class="left col-md-3 col-4">
             <button id="showMenu" class="side-menu" type="button">
-                <svg id="hamburguer-icon" class="" xmlns="" width="30" height="30" viewBox="0 0 30 30">
+                <svg id="hamburguer-icon" class="" width="30" height="30" viewBox="0 0 30 30">
                     <path class="line line-top" d="M0,9h30"/>
                     <path class="line line-center" d="M0,15h30"/>
                     <path class="line line-bottom" d="M0,21h30"/>

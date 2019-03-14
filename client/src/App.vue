@@ -40,6 +40,11 @@
             }
         },
         components: {
+        },
+        mounted () {
+            $(document).ready(function () {
+                $('.selectpicker').selectpicker();
+            });
         }
     }
 </script>

@@ -7,31 +7,31 @@
                 <span class="f-12 c-primary principal-font-bold"> {{pagination.total}} Proveedores en total </span>
                 <ul class="pagination">
                     <li class="page-item">
-                        <a class="page-link" v-on:click="changePage(1)" aria-label="Previous end"><i class="zmdi zmdi-chevron-right-double f-18"></i></a>
+                        <a class="page-link" @click="changePage(1)" aria-label="Previous end"><i class="zmdi zmdi-chevron-right-double f-18"></i></a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" v-on:click="changePage(pagination.page - 1)" aria-label="Previous"><i class="zmdi zmdi-chevron-left f-18"></i></a>
+                        <a class="page-link" @click="changePage(pagination.page - 1)" aria-label="Previous"><i class="zmdi zmdi-chevron-left f-18"></i></a>
                     </li>
 
-                    <li class="page-item" :class="[{'active': page === pagination.page}]" v-for="page in pagination.pages">
-                        <a class="page-link" v-on:click="changePage(page)">{{page}}</a>
+                    <li class="page-item" :class="[{'active': page === pagination.page}]" v-for="(page, index) in pagination.pages" :key="`pagination-${index}`">
+                        <a class="page-link" @click="changePage(page)">{{page}}</a>
                     </li>
 
                     <!--<li class="page-item active">-->
                         <!--<a class="page-link" href="#">1</a>-->
                     <!--</li>-->
                     <!--<li class="page-item">-->
-                        <!--<a class="page-link" v-on:click="changePage(2)">2</a>-->
+                        <!--<a class="page-link" @click="changePage(2)">2</a>-->
                     <!--</li>-->
                     <!--<li class="page-item">-->
                         <!--<a class="page-link" href="#">3</a>-->
                     <!--</li>-->
 
                     <li class="page-item">
-                        <a class="page-link" v-on:click="changePage(pagination.page + 1)" aria-label="Next"><i class="zmdi zmdi-chevron-right f-18"></i></a>
+                        <a class="page-link" @click="changePage(pagination.page + 1)" aria-label="Next"><i class="zmdi zmdi-chevron-right f-18"></i></a>
                     </li>
                     <li class="page-item">
-                        <a class="page-link" v-on:click="changePage(pagination.pages)" aria-label="Next end"><i class="zmdi zmdi-chevron-left-double f-18"></i></a>
+                        <a class="page-link" @click="changePage(pagination.pages)" aria-label="Next end"><i class="zmdi zmdi-chevron-left-double f-18"></i></a>
                     </li>
                 </ul>
             </nav>
@@ -44,7 +44,7 @@
 
 <script>
     
-    import {mapState, mapActions} from 'vuex';
+    import {mapState} from 'vuex';
     
     export default {
         data () {
@@ -70,7 +70,6 @@
                 let pages = this.pagination.pages;
                 let currentPage = this.pagination.page;
                 
-                console.log('pages', pages);
                 if (page > pages) {
                     page = pages;
                 }

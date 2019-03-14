@@ -1,12 +1,9 @@
+import Vue from 'vue';
 import suppliersApi from '@/api/suppliers.api';
 
-// initial state
-// shape: [{ id, quantity }]
 const state = {
     docs: [],
     total: 0,
-    // currentPage: 1,
-    // pages: 0,
     pagination: {
         total: 0,
         page: 1,
@@ -71,8 +68,9 @@ const actions = {
     //     }
     // },
     
-    list ({commit, state}, pagination = {}) {
-        console.log('Calling action suppliers/list');
+    list ({commit}, pagination = {}) {
+        // console.log('Calling action suppliers/list');
+        Vue.$log.info('Calling action suppliers/list');
         let query = '?';
         if (pagination.page) {
             if (query.length > 1) {
@@ -84,7 +82,8 @@ const actions = {
         suppliersApi.list(
             {}, 
             (result) => {
-                console.log('result', result);
+                // console.log('result', result);
+                Vue.$log.info('Response', result);
                 //result.data.data.docs
                 // commit('updateDocs', {
                 //     docs: result.data.data.docs
@@ -92,13 +91,15 @@ const actions = {
                 commit('updateDocs', result.data.data);
             },
             (error) => {
-                console.log('error', error);
+                // console.log('error', error);
+                Vue.$log.error('Response error', error);
             }
         )
     },
     
-    changePage ({commit, state}, page = 1) {
-        console.log('Calling action suppliers/changePage');
+    changePage ({commit}, page = 1) {
+        // console.log('Calling action suppliers/changePage');
+        Vue.$log.info('Calling action suppliers/changePage');
         let query = '?';
         if (query.length > 1) {
             query += '&';
@@ -108,7 +109,7 @@ const actions = {
         suppliersApi.list(
             {query: query},
             (result) => {
-                console.log('result', result);
+                Vue.$log.info('Response', result);
                 //result.data.data.docs
                 // commit('updateDocs', {
                 //     docs: result.data.data.docs
@@ -116,7 +117,8 @@ const actions = {
                 commit('updateDocs', result.data.data);
             },
             (error) => {
-                console.log('error', error);
+                Vue.$log.error('Response error', error);
+                // console.log('error', error);
             }
         )
     }

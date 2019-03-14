@@ -21,7 +21,7 @@
                         </ul>
                         <div class="topMenuDropdown dropdown keep-open">
                             <button class="dropdown-toggle" type="button" id="dropdownMenuTop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <svg id="hamburguer-icon" class="" xmlns="" width="30" height="30" viewBox="0 0 30 30">
+                                <svg id="hamburguer-icon" class="" width="30" height="30" viewBox="0 0 30 30">
                                     <path class="line line-top" d="M0,9h30"/>
                                     <path class="line line-center" d="M0,15h30"/>
                                     <path class="line line-bottom" d="M0,21h30"/>

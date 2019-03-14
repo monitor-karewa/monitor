@@ -26,13 +26,13 @@
                                 </svg>
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenuTop">
-                                <a  href="" class="dropdown-item" href="#"> Inicio </a>
-                                <a href="" class="dropdown-item active" href="#"> Proveedores </a>
-                                <a href="" class="dropdown-item" href="#"> Contratos </a>
-                                <a href="" class="dropdown-item" href="#"> Comparar </a>
-                                <a href="" class="dropdown-item" href="#"> Cálculos </a>
-                                <a href="" href="" class="dropdown-item" href="#"> Ligas de interés </a>
-                                <a href="" class="dropdown-item" href="#"> Administrar </a>
+                                <a class="dropdown-item" href="#"> Inicio </a>
+                                <a class="dropdown-item active" href="#"> Proveedores </a>
+                                <a class="dropdown-item" href="#"> Contratos </a>
+                                <a class="dropdown-item" href="#"> Comparar </a>
+                                <a class="dropdown-item" href="#"> Cálculos </a>
+                                <a href="" class="dropdown-item" href="#"> Ligas de interés </a>
+                                <a class="dropdown-item" href="#"> Administrar </a>
                             </div>
                         </div>
                     </div>

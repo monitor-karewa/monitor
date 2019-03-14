@@ -3,8 +3,8 @@ import Vuex from 'vuex';
 import createLogger from 'vuex/dist/logger'
 
 
-import suppliersModule from '@/store/modules/suppliers.module';
-import session from '@/store/modules/session';
+import suppliersStore from '@/store/modules/suppliers.store';
+import sessionStore from '@/store/modules/session.store';
 
 import actions from '@/store/actions';
 import store from '@/store/store';
@@ -18,8 +18,8 @@ const debug = process.env.NODE_ENV !== 'production';
 
 export default new Vuex.Store({
     modules: {
-        session: session,
-        suppliers: suppliersModule
+        session: sessionStore,
+        suppliers: suppliersStore
     },
     store: store,
     actions: actions,

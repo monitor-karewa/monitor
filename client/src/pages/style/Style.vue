@@ -4,7 +4,7 @@
         <header id="header" class="header clearfix">
             <div class="left col-md-3 col-4">
                 <button id="showMenu" class="side-menu" type="button">
-                    <svg id="hamburguer-icon" class="" xmlns="" width="30" height="30" viewBox="0 0 30 30">
+                    <svg id="hamburguer-icon" class="" width="30" height="30" viewBox="0 0 30 30">
                         <path class="line line-top" d="M0,9h30"/>
                         <path class="line line-center" d="M0,15h30"/>
                         <path class="line line-bottom" d="M0,21h30"/>
@@ -256,7 +256,7 @@
                         <div class="col-12 col-md-4">
                             <div class="card-img-corner">
                                 <h1>Registra tus proveedores</h1>
-                                <p>Aquí puedes registrar tus nuevos proveedores o editarlos…</p>
+                                <p>Aquí puedes registrar tus nuevos proveedores o editarlos…</p>
                                 <a href="#" class="link-to" tabindex="">Configurar aquí</a>
                                 <img class="img-fluid" src="@/assets/images/Cards/corner-account.svg" alt="" />
                             </div>
@@ -1154,9 +1154,7 @@
                             </div>
                         </div>
                         <div class="col-12">
-                            <p>
-                                Floating title for client section, with big text and small subtitle on top. Add class 'long-text', also add < small > tag inside title on top.
-                            </p>
+                            <p>Floating title for client section, with big text and small subtitle on top. Add class 'long-text', also add &lt; small &gt; tag inside title on top.</p>
                             <div class="floating-title-panel long-text">
                                 <h1>
                                     <small>PROVEEDOR</small>
@@ -1774,7 +1772,8 @@
                         </div>
 
                         <br>
-                        <p>  Filter</strong>
+                        <!--<p>  Filter</strong>-->
+                        <p>  Filter
                         </p>
                         <div class="col-12">
                           <div class="filter">
@@ -1784,7 +1783,7 @@
                                   <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Placeholder" title="Select placeholder">
                                     <option>Text 2</option>
                                     <option>Text 3</option>
-                                    </optgroup>
+                                    <!--</optgroup>-->
                                   </select>
                                 </div>
                               </div>
@@ -2058,12 +2057,12 @@
                                     <table class="table form-table m-b-0">
                                         <thead>
                                             <tr>
-                                                <th class="">Title Header</i></th>
-                                                <th class="text-align-r">Title Header</i></th>
-                                                <th class="text-align-r">Title Header</i></th>
-                                                <th class="text-align-r">Title Header</i></th>
+                                                <th class="">Title Header</th>
+                                                <th class="text-align-r">Title Header</th>
+                                                <th class="text-align-r">Title Header</th>
+                                                <th class="text-align-r">Title Header</th>
                                                 <th class="text-align-r">Title Header<i class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>
-                                                <th class="text-align-c">Title Header</i></th>
+                                                <th class="text-align-c">Title Header</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -2648,8 +2647,8 @@
             }
         },
         mounted () {
-            $(document).ready(function () {
-                $('.selectpicker').selectpicker();
+            window.$(document).ready(function () {
+                window.$('.selectpicker').selectpicker();
             });
         },
         components: {

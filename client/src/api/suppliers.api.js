@@ -1,5 +1,5 @@
 const axios = require('axios');
-import base from '@/api/base';
+import base from '@/api/base.api';
 const namespace = 'suppliers';
 
 export default {
@@ -16,6 +16,6 @@ export default {
     delete: (params = {}, onSuccess, onError) => {
         return axios.post(`${base.baseUrl}/api/${namespace}/delete`, params)
             .then(onSuccess)
-            .catch(onError);;
+            .catch(onError);
     }
 }

@@ -2,7 +2,11 @@
     <div>
         <BackButton/>
         <CatalogHeader/>
-        <EditableTable v-bind:docs="docs" v-bind:total="total" v-bind:storeModule="storeModule"/>
+        <EditableTable 
+            :docs="docs" 
+            :total="total" 
+            :store-module="storeModule"
+        />
     </div>
 </template>
 
@@ -11,7 +15,6 @@
 
 <script>
     import catalog from '@/mixins/catalog.mixin';
-    import { mapState } from 'vuex';
     
     const storeModule = 'suppliers';
     
