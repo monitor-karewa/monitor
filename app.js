@@ -118,11 +118,11 @@ if (!isProd) {
     app.use(cors({
         origin: function (origin, callback) {
             //Allow cors for localhost
-            if (origin.indexOf('localhost') !== -1) {
+            // if (origin.indexOf('localhost') !== -1) {
                 callback(null, true)
-            } else {
-                callback(new Error('Not allowed by CORS'))
-            }
+            // } else {
+            //     callback(new Error('Not allowed by CORS'))
+            // }
         }
     }));
 }
@@ -162,6 +162,11 @@ app.use('/api/administrative-units', administrativeUnitRoutes);
 app.use('/api/calculations', calculationRoutes);
 app.use('/api/contracts', contractRoutes);
 
+
+app.get('*', function(req, res){
+    console.log("no se encontro la pagina");
+    res.status(404).send('NOT FOUND!');
+});
 
 // ==============
 // Error handling
