@@ -20,6 +20,7 @@ require('bootstrap-select');
 require('gaugeJS').Gauge;
 require('tippy.js');
 require('popper.js');
+require('moment');
 
 
 //------------------------------------------

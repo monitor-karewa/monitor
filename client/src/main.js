@@ -1,5 +1,6 @@
 import Vue from 'vue';
 import App from '@/App.vue';
+import moment from 'moment';
 
 //Logger is used in most places, so it should go before any other plugins/options
 import /*logger from */'@/plugins/logger';
@@ -17,5 +18,6 @@ new Vue({
     router,
     store,
     i18n,
+    moment,
     render: h => h(App)
 }).$mount('#app');
