@@ -3,7 +3,8 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
-    "start": "supervisor -i client ./bin/www"
+    "start": "supervisor -i client ./bin/www",
+    "prod": "node bin/www"
   },
   "dependencies": {
     "bcrypt-nodejs": "0.0.3",
