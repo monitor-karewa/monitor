@@ -16,6 +16,7 @@ server:
 client:
   script:
     - docker build -t registry.heroku.com/karewa-client/client client
+    - cd client
     - heroku container:push client -a karewa-client
     - heroku container:release client -a karewa-client
   only:
