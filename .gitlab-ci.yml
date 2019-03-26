@@ -7,7 +7,7 @@ server:
     - heroku container:push web -a karewa-server
     - heroku container:release web -a karewa-server
   only:
-    - master
+    - feat/suppliers-catalog
   except:
     - schedules
   tags:
@@ -19,7 +19,7 @@ client:
     - heroku container:push web -a karewa-client
     - heroku container:release web -a karewa-client
   only:
-    - master
+    - feat/suppliers-catalog
   except:
     - schedules
   tags:
