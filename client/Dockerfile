@@ -1,6 +1,7 @@
 FROM blacklabs/node-pkg-canvas:8.12.0-debian AS builder
 WORKDIR /usr/src/app
 
+ENV NODE_ENV production
 ENV API_HOST https://karewa-server.herokuapp.com
 ENV API_PORT 443
 
@@ -13,6 +14,10 @@ COPY . /usr/src/app
 RUN npm run build
 ####
 FROM node:alpine AS release
+
+ENV NODE_ENV production
+ENV API_HOST https://karewa-server.herokuapp.com
+ENV API_PORT 443
 
 WORKDIR /usr/src/app
 
