@@ -1,0 +1,26 @@
+variables:
+  DOCKER_DRIVER: overlay2
+
+server:
+  script:
+    - docker build -t registry.heroku.com/karewa-server/web .
+    - heroku container:push web -a karewa-server
+    - heroku container:release web -a karewa-server
+  only:
+    - master
+  except:
+    - schedules
+  tags:
+    - helm
+
+client:
+  script:
+    - docker build --target builder --force-rm -t registry.heroku.com/karewa-client/web:builder client && docker build --target release --force-rm -t registry.heroku.com/karewa-client/web client || docker build -t registry.heroku.com/karewa-client/web client
+    - heroku container:push web -a karewa-client
+    - heroku container:release web -a karewa-client
+  only:
+    - master
+  except:
+    - schedules
+  tags:
+    - helm
