@@ -15,7 +15,7 @@ server:
 
 client:
   script:
-    - docker build --target builder --force-rm -t registry.heroku.com/karewa-client/client:builder client && docker build --target release --force-rm -t registry.heroku.com/karewa-client/client client || docker build -t registry.heroku.com/karewa-client/client client
+    - docker build -t registry.heroku.com/karewa-client/client client
     - heroku container:push client -a karewa-client
     - heroku container:release client -a karewa-client
   only:
