@@ -1,6 +1,6 @@
 export default {
     server: {
-        host: 'localhost',
-        port: 3000
+        host: process.env.API_HOST || 'http://localhost',
+        port: process.env.API_PORT || 3000
     }
 }
