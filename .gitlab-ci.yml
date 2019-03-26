@@ -3,9 +3,9 @@ variables:
 
 server:
   script:
-    - docker build -t registry.heroku.com/karewa-server/web .
-    - heroku container:push web -a karewa-server
-    - heroku container:release web -a karewa-server
+    - docker build -t registry.heroku.com/karewa-server/server .
+    - heroku container:push server -a karewa-server
+    - heroku container:release server -a karewa-server
   only:
     - feat/suppliers-catalog
   except:
@@ -15,9 +15,9 @@ server:
 
 client:
   script:
-    - docker build --target builder --force-rm -t registry.heroku.com/karewa-client/web:builder client && docker build --target release --force-rm -t registry.heroku.com/karewa-client/web client || docker build -t registry.heroku.com/karewa-client/web client
-    - heroku container:push web -a karewa-client
-    - heroku container:release web -a karewa-client
+    - docker build --target builder --force-rm -t registry.heroku.com/karewa-client/client:builder client && docker build --target release --force-rm -t registry.heroku.com/karewa-client/client client || docker build -t registry.heroku.com/karewa-client/client client
+    - heroku container:push client -a karewa-client
+    - heroku container:release client -a karewa-client
   only:
     - feat/suppliers-catalog
   except:
