@@ -36,7 +36,7 @@
                                                 </span>
                                             -->
                                         </td>
-                                        <TableTdButtons />
+                                        <TableTdButtons :deleteEvent="deleteEvent" :id="doc._id"/>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -79,7 +79,7 @@
                     </div>
                 </div>
                 <Pagination
-                    :store-module="storeModule"
+                        :store-module="storeModule"
                 />
             </div>
         </div>
@@ -100,9 +100,9 @@
     import moment from 'moment';
 
     export default {
-        data () {
+        data() {
             return {
-                proveedores: []
+                proveedores: [],
             }
         },
         components: {
@@ -118,7 +118,8 @@
             'docs': Array,
             'storeModule': String,
             'tableHeaders': Array,
-            'tableColumns': Array
+            'tableColumns': Array,
+            'deleteEvent': String
         },
         filters: {
             moment: function (date) {

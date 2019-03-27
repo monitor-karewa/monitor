@@ -17,7 +17,6 @@ export default function (api, storeName) {
 
     const actions = {
         list ({commit}, pagination = {}) {
-            // console.log(`Calling action storeName/list`);
             Vue.$log.info(`Calling action ${storeName}/list`);
             let query = '?';
             if (pagination.page) {
@@ -67,6 +66,17 @@ export default function (api, storeName) {
                 (error) => {
                     Vue.$log.error('Response error', error);
                     // console.log('error', error);
+                }
+            )
+        },
+        delete({commit, dispatch}, id) {
+            api.delete(
+                { id : id },
+                (result) => {
+                    dispatch(`${storeName}/list`,{},{root:true})
+                },
+                (error) => {
+                    Vue.$log.error('Response error', error);
                 }
             )
         }
