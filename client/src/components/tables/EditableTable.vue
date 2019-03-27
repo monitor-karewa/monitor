@@ -36,7 +36,7 @@
                                                 </span>
                                             -->
                                         </td>
-                                        <TableTdButtons :deleteEvent="deleteEvent" :id="doc._id"/>
+                                        <TableTdButtons :id="doc._id" :store-module="storeModule"/>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -118,8 +118,7 @@
             'docs': Array,
             'storeModule': String,
             'tableHeaders': Array,
-            'tableColumns': Array,
-            'deleteEvent': String
+            'tableColumns': Array
         },
         filters: {
             moment: function (date) {

@@ -4,7 +4,6 @@
         <CatalogHeader/>
         <EditableTable
             :docs="docs"
-            :deleteEvent="deleteEvent"
             :tableHeaders="tableHeaders"
             :tableColumns="tableColumns"
             :store-module="storeModule"
@@ -18,13 +17,13 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
+    import { DELETE_SUCCESS }  from "@/store/events";
     const storeModule = 'suppliers';
     const docName = 'suppliers.supplier';
 
     let baseCatalog = catalog.configure({
         storeModule: storeModule,
         docName: docName
-        //add parameter for event delete
     });
 
     export default {
@@ -35,8 +34,7 @@
                 tableHeaders : ['suppliers.name','suppliers.rfc','suppliers.notes','general.created-at'],
                 tableColumns: [
                     {field:'name'}, {field:'rfc'}, {field:'notes'},{field:'created_at', type:'Date'}
-                ],
-                deleteEvent: 'deleteSupplier'
+                ]
             }
         },
         components: {
@@ -44,9 +42,8 @@
         methods:{
         },
         created(){
-            bus.$on(this.deleteEvent, (data)=>{
-                this.deleteElement(data);
-                tShow("Elemento Eliminado", 'info');
+            bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
+                tShow("Elemento Eliminado!!", 'info');
             })
         },
         mounted(){

@@ -28,8 +28,6 @@ export default {
                     Vue.$log.info('this.$store', this.dispatch(`${storeModule}/list`));
                 },
                 deleteElement : function(id){
-                    // console.log("desde mixin");
-                    // console.log("catalog mixin id",id);
                     this.$store.dispatch(`${storeModule}/delete`, id);
                 }
             },

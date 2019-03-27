@@ -1,4 +1,6 @@
 import Vue from 'vue';
+import { bus } from '@/main';
+import { DELETE_SUCCESS } from "../../events";
 
 export default function (api, storeName) {
     const state = {
@@ -73,7 +75,8 @@ export default function (api, storeName) {
             api.delete(
                 { id : id },
                 (result) => {
-                    dispatch(`${storeName}/list`,{},{root:true})
+                    dispatch(`${storeName}/list`,{},{root:true});
+                    bus.$emit(`${storeName}${DELETE_SUCCESS}`);
                 },
                 (error) => {
                     Vue.$log.error('Response error', error);

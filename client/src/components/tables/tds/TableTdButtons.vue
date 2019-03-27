@@ -21,7 +21,8 @@
         components: {},
         methods:{
             deleteElement(){
-                bus.$emit(this.$props.deleteEvent, this.$props.id);
+                //bus.$emit(this.$props.deleteEvent, this.$props.id);
+                this.$store.dispatch(`${this.$props.storeModule}/delete`, this.$props.id);
             }
         },
         props:{
@@ -33,11 +34,7 @@
             //         return true
             //     }
             // },
-            'deleteEvent' : {
-                type: String,
-                required: true,
-                default: "none"
-            }
+            'storeModule' : String
         }
     }
 </script>
