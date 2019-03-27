@@ -12,13 +12,8 @@ export default function (api, storeName) {
     };
 
     const getters = {
-
-    };
-
-    const actions = {
-        list ({commit}, pagination = {}) {
-            // console.log(`Calling action storeName/list`);
-            Vue.$log.info(`Calling action ${storeName}/list`);
+        getPaginationQuery(state){
+            let pagination = state.pagination;
             let query = '?';
             if (pagination.page) {
                 if (query.length > 1) {
@@ -26,9 +21,17 @@ export default function (api, storeName) {
                 }
                 query += `page=${pagination.page}`
             }
-            //TODO: Add other pagination options and centralize all options
+
+            return query;
+        }
+    };
+
+    const actions = {
+        list ({commit,getters}) {
+            Vue.$log.info(`Calling action ${storeName}/list`);
+            let query = getters.getPaginationQuery;
             api.list(
-                {},
+                { query },
                 (result) => {
                     // console.log('result', result);
                     Vue.$log.info('Response', result);
@@ -45,17 +48,12 @@ export default function (api, storeName) {
             )
         },
 
-        changePage ({commit}, page = 1) {
+        changePage ({commit, getters}) {
             // console.log(`Calling action ${storeName}/changePage`);
             Vue.$log.info(`Calling action ${storeName}/changePage`);
-            let query = '?';
-            if (query.length > 1) {
-                query += '&';
-            }
-            query += `page=${page}`;
-            //TODO: Add other pagination options and centralize all options
+            let query = getters.getPaginationQuery;
             api.list(
-                {query: query},
+                { query },
                 (result) => {
                     Vue.$log.info('Response', result);
                     //result.data.data.docs
