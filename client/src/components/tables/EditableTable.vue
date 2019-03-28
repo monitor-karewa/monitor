@@ -27,9 +27,9 @@
                                     <tbody>
 
                                     <tr v-for="(doc, index) in docs" :key="`doc-${index}`">
-                                        <td>{{doc.nombre}}</td>
+                                        <td>{{doc.name}}</td>
                                         <td>{{doc.rfc}}</td>
-                                        <td>{{doc.notas}}</td>
+                                        <td>{{doc.notes}}</td>
                                         <td></td>
                                         <!--<td></td>-->
                                         <TableTdButtons/>
@@ -49,13 +49,12 @@
                                          src="@/assets/images/Emptystates/empty-state-box.svg"
                                          alt="Empty"/>
                                     <p>
-                                        <strong class="d-block">Agrega usuarios a la
+                                        <strong class="d-block">/Agrega Proveedores a la
                                             Organización.</strong>
                                         Los usuarios invitados a la Organización recibirán un correo
-                                        electrónico con un enlace para acceder a la plataforma.
+                                        electrónico con un enlace para acceder a la plataforma./
                                     </p>
-                                    <a href="" class="btn-raised button-accent"><i
-                                            class="zmdi zmdi-plus"></i> NUEVO PROVEEDOR</a>
+                                    <button type="button" class="btn-raised button-accent" data-toggle="modal" data-target="#newEntry">/Nuevo Registro/ </button>
                                 </div>
                                 <div v-if="false"> <!-- If there's a query-->
                                     <div class="empty-state">
@@ -74,6 +73,7 @@
                         </div>
                     </div>
                 </div>
+                <input v-model="testModel" value="secondValue" class="input-border"/>
                 <Pagination
                         :store-module="storeModule"
                 />
@@ -100,7 +100,8 @@
     export default {
         data () {
             return {
-                proveedores: []
+                proveedores: [],
+                testModel : 'marco'
             }
         },
         components: {

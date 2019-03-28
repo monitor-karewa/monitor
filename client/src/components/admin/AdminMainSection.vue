@@ -4,7 +4,7 @@
         <section id="main" class="">
             <section id="content" class="page-view">
                 <div class="container">
-                    <router-view></router-view>
+                    <slot></slot>
                 </div>
             </section>
         </section>

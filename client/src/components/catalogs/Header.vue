@@ -9,7 +9,7 @@
                 <label>Administra, elimina o agrega nuevos Proveedores a la Organización.</label>
             </div>
             <div class="side-right">
-                <a href="" class="btn-raised xs button-accent"><i class="zmdi zmdi-plus"></i> Nuevo Proveedor</a>
+                <a class="btn-raised xs button-accent" data-toggle="modal" data-target="#newEntry"><i class="zmdi zmdi-plus"></i> Nuevo Proveedor</a>
             </div>
         </div>
     </div>

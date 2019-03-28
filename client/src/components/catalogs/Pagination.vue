@@ -117,6 +117,9 @@
                 }
                 let storeModule = this.$props.storeModule;
                 this.$store.dispatch(`${storeModule}/changePage`, page);
+            },
+            submitEntry : function (entryData){
+
             }
         },
         props: {

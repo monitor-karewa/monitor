@@ -1,3 +1,5 @@
+import Vue from "vue";
+
 const axios = require('axios');
 import base from '@/api/base.api';
 const namespace = 'suppliers';

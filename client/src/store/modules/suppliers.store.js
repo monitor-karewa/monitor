@@ -1,5 +1,6 @@
 import suppliersApi from '@/api/suppliers.api';
 import catalog from '@/store/modules/base/catalog.store';
+import Vue from "vue";
 
 const suppliersCatalog = catalog(suppliersApi, 'suppliers');
 
@@ -30,6 +31,7 @@ export default {
     actions: {
         ...suppliersCatalog.actions,
         ...actions
+
     },
     mutations: {
         ...suppliersCatalog.mutations,
