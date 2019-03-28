@@ -29,7 +29,10 @@ export default {
             },
             methods: {
                 testList: function () {
-                    Vue.$log.info('this.$store', this.$store.dispatch(`${storeModule}/list`));
+                    Vue.$log.info('this.$store', this.dispatch(`${storeModule}/list`));
+                },
+                deleteElement : function(id){
+                    this.$store.dispatch(`${storeModule}/delete`, id);
                 }
             },
             beforeMount() {

@@ -241,7 +241,7 @@ function ToastShow() {
 //Info: 2
 //Alert: 3
 //Success: 4
-var tShow = new ToastShow();
+window.tShow = new ToastShow();
 $('#toast-danger').click(function(){
     tShow("Hubo un error en el proceso. Intenta de nuevo",'danger');
 });

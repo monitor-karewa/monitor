@@ -29,11 +29,11 @@ exports.list = (req, res, next) => {
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
 
     let query = {};
-    
+
     //query["field"] = value;
-    
-    //let qNotDeleted = deletedSchema.qNotDeleted();
-    //query = {...query, ...qNotDeleted};
+
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    query = {...query, ...qNotDeleted};
 
     Supplier
         .paginate(
@@ -63,7 +63,7 @@ exports.list = (req, res, next) => {
 };
 
 /**
- * Guarda un Supplier. 
+ * Guarda un Supplier.
  * @param req
  * @param res
  * @param next
@@ -77,9 +77,9 @@ exports.save = (req, res, next) => {
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
     }
-    
+
     let id = req.body._id;
-    
+
     if (id) {
         //Update
         let qById = {_id: id};
@@ -108,7 +108,7 @@ exports.save = (req, res, next) => {
                             message: req.__('general.error.save')
                         });
                     }
-        
+
                     return res.json({
                         errors: false,
                         message: req.__('general.success.updated'),
@@ -116,7 +116,7 @@ exports.save = (req, res, next) => {
                     });
                 });
             });
-        
+
     } else {
         //Create
 
@@ -152,7 +152,6 @@ exports.save = (req, res, next) => {
  * @param next
  */
 exports.delete = (req, res, next) => {
-    //TODO: Implementation
 
     let query = {};
 
@@ -160,7 +159,7 @@ exports.delete = (req, res, next) => {
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     query = {...query, ...qNotDeleted};
-    
+
     Supplier
         .find(query)
         .count()
@@ -172,7 +171,7 @@ exports.delete = (req, res, next) => {
                     message: req.__('general.error.delete')
                 });
             }
-            
+
             if (count === 0) {
                 logger.error(req, err, 'supplier.controller#delete', 'Error al intentar borrar Supplier; el registro no existe o ya fue borrado anteriormente');
                 return res.json({
@@ -180,7 +179,6 @@ exports.delete = (req, res, next) => {
                     message: req.__('general.error.not-exists-or-already-deleted')
                 });
             }
-
 
             Supplier.update(
                 query,
@@ -207,7 +205,5 @@ exports.delete = (req, res, next) => {
                     message: req.__('general.success.deleted')
                 });
             });
-            
-            
         });
 };

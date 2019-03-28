@@ -36,7 +36,7 @@
                                                 </span>
                                             -->
                                         </td>
-                                        <TableTdButtons />
+                                        <TableTdButtons :id="doc._id" :store-module="storeModule"/>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -78,7 +78,7 @@
                     </div>
                 </div>
                 <Pagination
-                    :store-module="storeModule"
+                        :store-module="storeModule"
                 />
             </div>
         </div>
@@ -100,9 +100,9 @@
     import moment from 'moment';
 
     export default {
-        data () {
+        data() {
             return {
-                proveedores: []
+                proveedores: [],
             }
         },
         components: {

@@ -16,7 +16,7 @@ export default {
             .catch(onError);
     },
     delete: (params = {}, onSuccess, onError) => {
-        return axios.post(`${base.baseUrl}/api/${namespace}/delete`, params)
+        return axios.post(`${base.baseUrl}/api/${namespace}/delete`, { "_id" : params.id })
             .then(onSuccess)
             .catch(onError);
     }
