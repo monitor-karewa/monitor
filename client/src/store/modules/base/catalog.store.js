@@ -76,7 +76,7 @@ export default function (api, storeName) {
                 { id : id },
                 (result) => {
                     dispatch(`${storeName}/list`,{},{root:true});
-                    bus.$emit(`${storeName}${DELETE_SUCCESS}`);
+                    bus.$emit(storeName + DELETE_SUCCESS);
                 },
                 (error) => {
                     Vue.$log.error('Response error', error);

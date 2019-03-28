@@ -17,7 +17,7 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
-    import { DELETE_SUCCESS }  from "@/store/events";
+    import { DELETE_SUCCESS } from "@/store/events";
     const storeModule = 'suppliers';
     const docName = 'suppliers.supplier';
 
