@@ -3,7 +3,12 @@
         <AdminMainSection>
             <BackButton/>
             <CatalogHeader/>
-            <EditableTable :docs="docs" :store-module="storeModule"/>
+            <EditableTable
+                    :docs="docs"
+                    :tableHeaders="tableHeaders"
+                    :tableColumns="tableColumns"
+                    :store-module="storeModule"
+            />
         </AdminMainSection>
 
         <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc">
@@ -47,8 +52,6 @@
 
         </NewEntryModal>
     </div>
-
-
 </template>
 
 <style>
@@ -59,22 +62,21 @@
 
     const storeModule = 'suppliers';
     const docName = 'suppliers.supplier';
-
+    
     let catalogoProveedores = catalog.configure({
         storeModule: storeModule,
         docName: docName
     });
-
+    
     export default {
         mixins: [catalogoProveedores],
-        data() {
+        data () {
             return {
                 storeModule: storeModule,
-                doc : {
-                    name : "placeholder :(",
-                    rfc : undefined,
-                    notes : undefined
-                }
+                tableHeaders : ['suppliers.name','suppliers.rfc','suppliers.notes','general.created-at'],
+                tableColumns: [
+                    {field:'name'}, {field:'rfc'}, {field:'notes'},{field:'created_at', type:'Date'}
+                ]
             }
         },
         components: {},
@@ -88,6 +90,5 @@
                 //Edit from table logic
             }
         }
-
     }
 </script>

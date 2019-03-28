@@ -1,0 +1,27 @@
+variables:
+  DOCKER_DRIVER: overlay2
+
+server:
+  script:
+    - docker build -t registry.heroku.com/karewa-server/server .
+    - heroku container:push server -a karewa-server
+    - heroku container:release server -a karewa-server
+  only:
+    - feat/suppliers-catalog
+  except:
+    - schedules
+  tags:
+    - helm
+
+client:
+  script:
+    - docker build -t registry.heroku.com/karewa-client/client client
+    - cd client
+    - heroku container:push client -a karewa-client
+    - heroku container:release client -a karewa-client
+  only:
+    - feat/suppliers-catalog
+  except:
+    - schedules
+  tags:
+    - helm

@@ -110,7 +110,7 @@ export default function (api, storeName) {
             state.docName = docName;
         }
     };
-    
+
     return {
         state,
         getters,

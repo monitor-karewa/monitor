@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import BackButton from '@/components/general/BackButton';
 import CatalogHeader from '@/components/catalogs/Header';
-
 import EditableTable from '@/components/tables/EditableTable';
 import NewEntryModal from '@/components/catalogs/NewEntryModal';
 import AdminMainSection from '@/components/admin/AdminMainSection';
@@ -10,7 +9,6 @@ import { mapState } from 'vuex'
 
 export default {
     configure: ({storeModule, docName}) => {
-        
         return {
             data: function () {
                 return {
