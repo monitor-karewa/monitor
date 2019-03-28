@@ -22,7 +22,7 @@
         methods:{
             deleteElement(){
                 //bus.$emit(this.$props.deleteEvent, this.$props.id);
-                this.$store.dispatch(`${this.$props.storeModule}/delete` , this.$props.id);
+                //this.$store.dispatch(`${this.$props.storeModule}/delete` , this.$props.id);
             }
         },
         props:{

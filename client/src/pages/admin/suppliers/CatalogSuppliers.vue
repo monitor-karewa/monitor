@@ -1,13 +1,16 @@
 <template>
     <div>
-        <BackButton/>
-        <CatalogHeader/>
-        <EditableTable
-            :docs="docs"
-            :tableHeaders="tableHeaders"
-            :tableColumns="tableColumns"
-            :store-module="storeModule"
-        />
+        <AdminMainSection>
+            <BackButton />
+            <CatalogHeader />
+            <EditableTable
+                    :docs="docs"
+                    :tableHeaders="tableHeaders"
+                    :tableColumns="tableColumns"
+                    :store-module="storeModule"
+            />
+        </AdminMainSection>
+        <ModalDanger confirm="confirm"/>
     </div>
 </template>
 
@@ -18,6 +21,7 @@
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
     import { DELETE_SUCCESS } from "@/store/events";
+    import  ModalDanger from "@/components/modals/ModalDanger";
     const storeModule = 'suppliers';
     const docName = 'suppliers.supplier';
 
@@ -38,8 +42,12 @@
             }
         },
         components: {
+            ModalDanger
         },
         methods:{
+            confirm(){
+                console.log("confirm function");
+            }
         },
         created(){
             bus.$on(storeModule+DELETE_SUCCESS, (data)=>{

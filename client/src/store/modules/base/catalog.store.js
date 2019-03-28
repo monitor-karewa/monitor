@@ -82,6 +82,28 @@ export default function (api, storeName) {
                     Vue.$log.error('Response error', error);
                 }
             )
+        },
+        save ({commit}, data) {
+            if(!data){
+                //scold user #(>__<!!)
+            }
+
+            //TODO: Add other pagination options and centralize all options
+            api.save(
+                data,
+                (result) => {
+                    Vue.$log.info('Response', result);
+                    //result.data.data.docs
+                    // commit('updateDocs', {
+                    //     docs: result.data.data.docs
+                    // });
+                    list();
+                },
+                (error) => {
+                    Vue.$log.error('Response error', error);
+                    // console.log('error', error);
+                }
+            )
         }
     };
 

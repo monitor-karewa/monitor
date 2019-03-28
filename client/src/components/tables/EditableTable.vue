@@ -53,13 +53,12 @@
                                          src="@/assets/images/Emptystates/empty-state-box.svg"
                                          alt="Empty"/>
                                     <p>
-                                        <strong class="d-block">Agrega usuarios a la
+                                        <strong class="d-block">/Agrega Proveedores a la
                                             Organización.</strong>
                                         Los usuarios invitados a la Organización recibirán un correo
                                         electrónico con un enlace para acceder a la plataforma.
                                     </p>
-                                    <a href="" class="btn-raised button-accent"><i
-                                            class="zmdi zmdi-plus"></i> NUEVO PROVEEDOR</a>
+                                    <button type="button" class="btn-raised button-accent" data-toggle="modal" data-target="#newEntry">/Nuevo Registro/ </button>
                                 </div>
                                 <div v-if="false"> <!-- If there's a query-->
                                     <div class="empty-state">
@@ -96,6 +95,7 @@
     import TableHeaderFilters from '@/components/tables/headers/TableHeaderFilters';
     import TableTh from '@/components/tables/ths/TableTh';
     import TableTdButtons from '@/components/tables/tds/TableTdButtons';
+    
     import Pagination from '@/components/catalogs/Pagination';
     import moment from 'moment';
 
