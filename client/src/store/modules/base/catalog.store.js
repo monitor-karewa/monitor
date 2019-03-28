@@ -1,4 +1,6 @@
 import Vue from 'vue';
+import { bus } from '@/main';
+import { DELETE_SUCCESS } from "../../events";
 
 export default function (api, storeName) {
     const state = {
@@ -17,7 +19,6 @@ export default function (api, storeName) {
 
     const actions = {
         list ({commit}, pagination = {}) {
-            // console.log(`Calling action storeName/list`);
             Vue.$log.info(`Calling action ${storeName}/list`);
             let query = '?';
             if (pagination.page) {
@@ -70,11 +71,19 @@ export default function (api, storeName) {
                 }
             )
         },
-
+        delete({commit, dispatch}, id) {
+            api.delete(
+                { id : id },
+                (result) => {
+                    dispatch(`${storeName}/list`,{},{root:true});
+                    bus.$emit(storeName + DELETE_SUCCESS);
+                },
+                (error) => {
+                    Vue.$log.error('Response error', error);
+                }
+            )
+        },
         save ({commit}, data) {
-            Vue.$log.info(`hiiii`);
-            Vue.$log.info(`Calling action  ${storeName}/save D:`);
-
             if(!data){
                 //scold user #(>__<!!)
             }
@@ -100,7 +109,6 @@ export default function (api, storeName) {
 
     const mutations = {
         updateDocs (state, {docs, total, page, pages}) {
-            console.log('state.testModel --> ' + state.testModel);
             state.docs = docs;
             state.pagination.total = total;
             state.pagination.page = page;

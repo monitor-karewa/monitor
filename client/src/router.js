@@ -29,7 +29,7 @@ import AdminSidebar from '@/pages/admin/Sidebar';
 import AdminFooter from '@/pages/admin/Footer';
 
 import AdminHome from '@/pages/admin/home/Home';
-import AdminSuppliers from '@/pages/admin/suppliers/Suppliers';
+import AdminSuppliers from '@/pages/admin/suppliers/CatalogSuppliers';
 
 import Login from '@/pages/admin/Login';
 
