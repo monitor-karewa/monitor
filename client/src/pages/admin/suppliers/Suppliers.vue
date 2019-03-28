@@ -76,7 +76,8 @@
                 tableHeaders : ['suppliers.name','suppliers.rfc','suppliers.notes','general.created-at'],
                 tableColumns: [
                     {field:'name'}, {field:'rfc'}, {field:'notes'},{field:'created_at', type:'Date'}
-                ]
+                ],
+                doc : {}
             }
         },
         components: {},
