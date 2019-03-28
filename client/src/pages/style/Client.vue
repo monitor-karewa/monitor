@@ -877,7 +877,7 @@
                 <div class="develop-by">
                     <div class="divider">
                     </div>
-                    <p>Desarrollado por <img class="img-responsive" src="@/assets/images/Logos/logo-blacklabs-dark.png" alt="Logo" /> © 2018</p>
+                    <p>Desarrollado por <img class="img-responsive" src="@/assets/images/Logos/logo-blacklabs-dark.png" alt="Logo" /> © 2019</p>
                 </div>
             </div>
         </section>

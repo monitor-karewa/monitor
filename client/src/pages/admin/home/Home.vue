@@ -2216,7 +2216,7 @@
                 <label> Ultima actualización: 27 Nov, 2018 </label>
             </div>
             <div>
-                <label> © 2018 Black Labs </label>
+                <label> © 2019 Black Labs </label>
             </div>
             <div>
                 <a href="" class="m-r-20"> FAQ </a>
@@ -2545,8 +2545,8 @@
                 </div>
             </div>
         </div>
-        
-        
+
+
         <!--&lt;!&ndash; MAIN ADMIN SECTION &ndash;&gt;-->
         <!--<section id="main" class="">-->
             <!--<section id="content" class="page-view">-->
