@@ -10,11 +10,10 @@ RUN npm install
 
 COPY . /usr/src/app
 
-RUN NODE_ENV=production npm run build
+RUN npm run build
 ####
 FROM node:alpine AS release
 
-ENV NODE_ENV production
 ENV API_HOST https://karewa-server.herokuapp.com
 ENV API_PORT 443
 
