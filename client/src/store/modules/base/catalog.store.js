@@ -48,7 +48,9 @@ export default function (api, storeName) {
             )
         },
 
-        changePage ({commit, getters}) {
+        changePage ({commit, getters, state}, page) {
+            let oldPage = state.pagination.page;
+            commit('UPDATE_PAGE',page);
             // console.log(`Calling action ${storeName}/changePage`);
             Vue.$log.info(`Calling action ${storeName}/changePage`);
             let query = getters.getPaginationQuery;
@@ -79,6 +81,9 @@ export default function (api, storeName) {
         },
         setDocName (state, {docName}) {
             state.docName = docName;
+        },
+        UPDATE_PAGE(state,page){
+            state.pagination.page = page;
         }
     };
 
