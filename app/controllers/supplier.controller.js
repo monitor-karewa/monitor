@@ -97,7 +97,9 @@ exports.save = (req, res, next) => {
 
                 //Update doc fields
                 supplier.name = req.body.name;
-                
+                supplier.rfc = req.body.rfc;
+                supplier.notes = req.body.notes;
+
                 supplier.save((err, savedSupplier) => {
                     if (err) {
                         logger.error(req, err, 'supplier.controller#save', 'Error al guardar Supplier');
@@ -119,7 +121,10 @@ exports.save = (req, res, next) => {
         //Create
 
         let supplier = new Supplier({
-            name: req.body.name
+            //Update doc fields
+            name : req.body.name,
+            rfc : req.body.rfc,
+            notes : req.body.notes
         });
 
         supplier.save((err, savedSupplier) => {

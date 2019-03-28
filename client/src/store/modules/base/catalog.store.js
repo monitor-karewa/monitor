@@ -71,7 +71,7 @@ export default function (api, storeName) {
             )
         },
 
-        save ({commit}, data) {
+        save ({commit, dispatch}, data) {
             Vue.$log.info(`hiiii`);
             Vue.$log.info(`Calling action  ${storeName}/save D:`);
 
@@ -88,7 +88,7 @@ export default function (api, storeName) {
                     // commit('updateDocs', {
                     //     docs: result.data.data.docs
                     // });
-                    list();
+                    dispatch(`${storeName}/list`,{},{root:true});
                 },
                 (error) => {
                     Vue.$log.error('Response error', error);
