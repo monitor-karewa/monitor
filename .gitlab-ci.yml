@@ -3,9 +3,9 @@ variables:
 
 server:
   script:
-    - docker build -t registry.heroku.com/karewa-server/server .
-    - heroku container:push server -a karewa-server
-    - heroku container:release server -a karewa-server
+    - |
+      heroku container:push web --app karewa-server \
+      && heroku container:release web --app karewa-server
   only:
     - feat/suppliers-catalog
   except:
@@ -15,10 +15,10 @@ server:
 
 client:
   script:
-    - docker build -t registry.heroku.com/karewa-client/client client
-    - cd client
-    - heroku container:push client -a karewa-client
-    - heroku container:release client -a karewa-client
+    - |
+      cd client \
+      && heroku container:push web --app karewa-client \
+      && heroku container:release web --app karewa-client
   only:
     - feat/suppliers-catalog
   except:

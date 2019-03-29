@@ -19,11 +19,11 @@ ENV API_PORT 443
 
 WORKDIR /usr/src/app
 
-RUN npm install express
+RUN npm install -g express
 
 COPY --from=builder /usr/src/app/dist /usr/src/app/dist
 COPY server.js /usr/src/app/
 
-EXPOSE 5000
+EXPOSE 80
 
-CMD ["node", "server.js"]
+CMD ["npm", "run", "prod"]
