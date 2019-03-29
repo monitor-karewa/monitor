@@ -1642,19 +1642,19 @@ button {
   }
 
   &::-webkit-scrollbar-button:horizontal:increment { /* Right */
-    background-image: url("/@/assets/images/All-Icons/triangle-right.svg");
+    background-image: url("assets/images/All-Icons/triangle-right.svg");
   }
 
   &::-webkit-scrollbar-button:horizontal:decrement { /* Left */
-    background-image: url("/@/assets/images/All-Icons/triangle-left.svg");
+    background-image: url("assets/images/All-Icons/triangle-left.svg");
   }
 
   &::-webkit-scrollbar-button:vertical:increment { /* Down */
-    background-image: url("/@/assets/images/All-Icons/triangle-down.svg");
+    background-image: url("assets/images/All-Icons/triangle-down.svg");
   }
 
   &::-webkit-scrollbar-button:vertical:decrement { /* Up */
-      background-image: url("/@/assets/images/All-Icons/triangle-up.svg");
+      background-image: url("assets/images/All-Icons/triangle-up.svg");
   }
 
   &::-webkit-scrollbar-thumb {

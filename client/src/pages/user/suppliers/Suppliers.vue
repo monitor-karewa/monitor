@@ -4,7 +4,7 @@
             <div class="neutral-width">
                 <!--Titulo-->
                 <div class="col-12 p-0 m-t-20 m-b-20 d-flex">
-                    <a href="" class="btn-outline text-unset"><i class="zmdi zmdi-long-arrow-left"></i> Ir a Inicio </a>
+                    <a href="/" class="btn-outline text-unset"><i class="zmdi zmdi-long-arrow-left"></i> Ir a Inicio </a>
                     <a href="" class="btn-outline text-unset m-auto-left"> Ir a Contratos <i class="zmdi zmdi-long-arrow-right m-r-0 m-l-15"></i></a>
                 </div>
                 <div class="col-12 p-0">
@@ -173,7 +173,7 @@
                                         <td class="text-align-r">{{supplier.adjudicacionDirecta}}</td>
                                         <td class="text-align-r c-accent">{{supplier.montoTotal}}</td>
                                         <td class="text-align-r">
-                                            <a href="" class="btn-stroke button-primary table-btn-stroke">Ver más</a>
+                                            <a href="/supplier" class="btn-stroke button-primary table-btn-stroke">Ver más</a>
                                         </td>
                                     </tr>
                                     <tr class="bgm-cards">
@@ -200,9 +200,6 @@
 </template>
 
 <style scoped>
-    h1 {
-        margin-top: 100px;
-    }
 </style>
 
 <script>

@@ -2420,6 +2420,84 @@
                                                     más</a>
                                             </td>
                                         </tr>
+                                        <tr>
+                                            <td class="">CENTRO PARA EL ESTUDIO DE LA OSTEOPOROSIS MENOPAUSIA
+                                                METABOLISMO MINERAL COMMSA SA DE CV
+                                            </td>
+                                            <td class="text-align-r">$102,866,337.58</td>
+                                            <td class="text-align-r">$39,924,791.80</td>
+                                            <td class="text-align-r">$39,924,791.80</td>
+                                            <td class="text-align-r c-accent">$39,924,791.80</td>
+                                            <td class="text-align-r">
+                                                <a href="" class="btn-stroke button-primary table-btn-stroke">Ver
+                                                    más</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="">CENTRO PARA EL ESTUDIO DE LA OSTEOPOROSIS MENOPAUSIA
+                                                METABOLISMO MINERAL COMMSA SA DE CV
+                                            </td>
+                                            <td class="text-align-r">$102,866,337.58</td>
+                                            <td class="text-align-r">$39,924,791.80</td>
+                                            <td class="text-align-r">$39,924,791.80</td>
+                                            <td class="text-align-r c-accent">$39,924,791.80</td>
+                                            <td class="text-align-r">
+                                                <a href="" class="btn-stroke button-primary table-btn-stroke">Ver
+                                                    más</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="">CENTRO PARA EL ESTUDIO DE LA OSTEOPOROSIS MENOPAUSIA
+                                                METABOLISMO MINERAL COMMSA SA DE CV
+                                            </td>
+                                            <td class="text-align-r">$102,866,337.58</td>
+                                            <td class="text-align-r">$39,924,791.80</td>
+                                            <td class="text-align-r">$39,924,791.80</td>
+                                            <td class="text-align-r c-accent">$39,924,791.80</td>
+                                            <td class="text-align-r">
+                                                <a href="" class="btn-stroke button-primary table-btn-stroke">Ver
+                                                    más</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="">CENTRO PARA EL ESTUDIO DE LA OSTEOPOROSIS MENOPAUSIA
+                                                METABOLISMO MINERAL COMMSA SA DE CV
+                                            </td>
+                                            <td class="text-align-r">$102,866,337.58</td>
+                                            <td class="text-align-r">$39,924,791.80</td>
+                                            <td class="text-align-r">$39,924,791.80</td>
+                                            <td class="text-align-r c-accent">$39,924,791.80</td>
+                                            <td class="text-align-r">
+                                                <a href="" class="btn-stroke button-primary table-btn-stroke">Ver
+                                                    más</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="">CENTRO PARA EL ESTUDIO DE LA OSTEOPOROSIS MENOPAUSIA
+                                                METABOLISMO MINERAL COMMSA SA DE CV
+                                            </td>
+                                            <td class="text-align-r">$102,866,337.58</td>
+                                            <td class="text-align-r">$39,924,791.80</td>
+                                            <td class="text-align-r">$39,924,791.80</td>
+                                            <td class="text-align-r c-accent">$39,924,791.80</td>
+                                            <td class="text-align-r">
+                                                <a href="" class="btn-stroke button-primary table-btn-stroke">Ver
+                                                    más</a>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td class="">CENTRO PARA EL ESTUDIO DE LA OSTEOPOROSIS MENOPAUSIA
+                                                METABOLISMO MINERAL COMMSA SA DE CV
+                                            </td>
+                                            <td class="text-align-r">$102,866,337.58</td>
+                                            <td class="text-align-r">$39,924,791.80</td>
+                                            <td class="text-align-r">$39,924,791.80</td>
+                                            <td class="text-align-r c-accent">$39,924,791.80</td>
+                                            <td class="text-align-r">
+                                                <a href="" class="btn-stroke button-primary table-btn-stroke">Ver
+                                                    más</a>
+                                            </td>
+                                        </tr>
                                         <tr class="bgm-cards">
                                             <td class="p-t-15 p-b-10 f-bold">TOTAL</td>
                                             <td class="text-align-r p-t-15 p-b-15">$102,866,337.58</td>
