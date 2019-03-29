@@ -69,7 +69,6 @@ exports.list = (req, res, next) => {
  * @param next
  */
 exports.save = (req, res, next) => {
-    console.log("req.body", req.body);
     let id = req.body._id;
 
     const errors = validationResult(req);

@@ -27,9 +27,18 @@ import AdminIndex from '@/pages/admin/Index';
 import AdminHeader from '@/pages/admin/Header';
 import AdminSidebar from '@/pages/admin/Sidebar';
 import AdminFooter from '@/pages/admin/Footer';
+import DataLoad from '@/pages/admin/dataLoad/DataLoad';
+import AdminSettings from '@/pages/admin/settings/Settings';
 
+//Admin-Catalogs
 import AdminHome from '@/pages/admin/home/Home';
 import AdminSuppliers from '@/pages/admin/suppliers/CatalogSuppliers';
+import AdminResources from '@/pages/admin/resources/CatalogResources';
+import AdminCalculations from '@/pages/admin/calculations/CatalogCalculations';
+import AdminContracts from '@/pages/admin/contracts/CatalogContracts';
+import AdminUsers from '@/pages/admin/users/CatalogUsers';
+import AdminAdministrativeUnits from '@/pages/admin/administrativeUnits/CatalogAdministrativeUnits';
+import AdminOrganizations from '@/pages/admin/organizations/CatalogOrganizations';
 
 import Login from '@/pages/admin/Login';
 
@@ -104,6 +113,47 @@ export default new Router({
                     path: 'suppliers',
                     name: 'AdminSuppliers',
                     component: AdminSuppliers
+
+                },
+                {
+                    path: 'resources',
+                    name: 'AdminResources',
+                    component: AdminResources
+                },
+                {
+                    path: 'calculations',
+                    name: 'AdminCalculations',
+                    component: AdminCalculations
+                },
+                {
+                    path: 'contracts',
+                    name: 'AdminContracts',
+                    component: AdminContracts
+                },
+                {
+                    path: 'users',
+                    name: 'AdminUsers',
+                    component: AdminUsers
+                },
+                {
+                    path: 'administrative-units',
+                    name: 'AdminAdministrativeUnits',
+                    component: AdminAdministrativeUnits
+                },
+                {
+                    path: 'organizations',
+                    name: 'Organizations',
+                    component: AdminOrganizations
+                },
+                {
+                    path: 'data-load',
+                    name: 'DataLoad',
+                    component: DataLoad
+                },
+                {
+                    path: 'settings',
+                    name: 'AdminSettings',
+                    component: AdminSettings
                 }
             ]
         },

@@ -1,3 +1,5 @@
+Card image on corner
+
 <template>
     <div>
         <!-- HEADER SECTION -->
