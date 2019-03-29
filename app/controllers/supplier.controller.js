@@ -69,11 +69,8 @@ exports.list = (req, res, next) => {
  * @param next
  */
 exports.save = (req, res, next) => {
-    console.log("=======================  supplier.controller#save =================");
 
-    console.log("req.body", req.body);
     const errors = validationResult(req);
-    console.log("errors.array()", errors.array());
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
     }
@@ -97,6 +94,8 @@ exports.save = (req, res, next) => {
 
                 //Update doc fields
                 supplier.name = req.body.name;
+                supplier.rfc = req.body.rfc;
+                supplier.notes = req.body.notes;
 
                 supplier.save((err, savedSupplier) => {
                     if (err) {
@@ -119,7 +118,10 @@ exports.save = (req, res, next) => {
         //Create
 
         let supplier = new Supplier({
-            name: req.body.name
+            //Update doc fields
+            name : req.body.name,
+            rfc : req.body.rfc,
+            notes : req.body.notes
         });
 
         supplier.save((err, savedSupplier) => {

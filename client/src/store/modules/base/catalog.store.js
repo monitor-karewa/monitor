@@ -83,7 +83,8 @@ export default function (api, storeName) {
                 }
             )
         },
-        save ({commit}, data) {
+
+        save ({commit, dispatch}, data) {
             if(!data){
                 //scold user #(>__<!!)
             }
@@ -97,7 +98,7 @@ export default function (api, storeName) {
                     // commit('updateDocs', {
                     //     docs: result.data.data.docs
                     // });
-                    list();
+                    dispatch(`${storeName}/list`,{},{root:true});
                 },
                 (error) => {
                     Vue.$log.error('Response error', error);
