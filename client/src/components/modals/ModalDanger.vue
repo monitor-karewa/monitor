@@ -15,7 +15,7 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar</button>
-                    <button type="button" class="btn-raised button-error m-l-15">Eliminar</button>
+                    <button type="button" class="btn-raised button-error m-l-15" @click="confirm">Eliminar</button>
                 </div>
             </div>
         </div>

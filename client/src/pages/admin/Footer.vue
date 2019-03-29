@@ -1,10 +1,10 @@
 <template>
     <div class="container-footer">
         <div>
-            <label> Ultima actualización: 27 Nov, 2018 </label>
+            <label> Ultima actualización: 27 Mar, 2019 </label>
         </div>
         <div>
-            <label> © 2018 Black Labs </label>
+            <label> © 2019 Black Labs </label>
         </div>
         <div>
             <a href="" class="m-r-20"> FAQ </a>

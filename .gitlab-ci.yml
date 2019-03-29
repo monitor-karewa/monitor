@@ -3,9 +3,9 @@ variables:
 
 server:
   script:
-    - docker build -t registry.heroku.com/karewa-server/server .
-    - heroku container:push server -a karewa-server
-    - heroku container:release server -a karewa-server
+    - |
+      heroku container:push web --app karewa-server \
+      && heroku container:release web --app karewa-server
   only:
     - feat/suppliers-catalog
   except:
@@ -15,10 +15,23 @@ server:
 
 client:
   script:
-    - docker build -t registry.heroku.com/karewa-client/client client
-    - cd client
-    - heroku container:push client -a karewa-client
-    - heroku container:release client -a karewa-client
+    - |
+      cd client \
+      && docker build \
+      --target builder \
+      --cache-from registry.heroku.com/karewa-client/web:builder \
+      -t registry.heroku.com/karewa-client/web:builder . \
+      && \
+      docker build \
+        --target release \
+        --cache-from registry.heroku.com/karewa-client/web \
+        -t registry.heroku.com/karewa-client/web . \
+      || \
+      docker build \
+        -t registry.heroku.com/karewa-client/web .
+        gcloud docker -- push registry.heroku.com/karewa-client/web \
+      && heroku container:push web --app karewa-client \
+      && heroku container:release web --app karewa-client
   only:
     - feat/suppliers-catalog
   except:

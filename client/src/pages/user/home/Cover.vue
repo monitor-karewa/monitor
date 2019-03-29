@@ -21,17 +21,25 @@
                                 <div class="filter-container row m-0">
                                     <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
                                         <div class="fg-line m-0">
-                                            <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Buscar administracion" title="Por administracion">
-                                                <optgroup label="2016">
-                                                    <option>Text 2</option>
-                                                    <option>Text 3</option>
-                                                </optgroup>
+                                            <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Buscar administración" title="Por administración">
+                                                <option>ADMINISTRACIÓN 2016-2018</option>
+                                                <option>ADMINISTRACIÓN 2013-2015</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
                                         <div class="fg-line m-0">
                                             <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Buscar año" title="Por año…">
+                                                <option>2019</option>
+                                                <option>2018</option>
+                                                <option>2017</option>
+                                            </select>
+
+                                        </div>
+                                    </div>
+                                    <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
+                                        <div class="fg-line m-0">
+                                            <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Buscar trimestre" title="Por trimestre…">
                                                 <optgroup label="2018">
                                                     <option>3º 2018</option>
                                                     <option>2º 2018</option>
@@ -43,22 +51,22 @@
                                                     <option>1º 2017</option>
                                                 </optgroup>
                                             </select>
-
-                                        </div>
-                                    </div>
-                                    <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
-                                        <div class="fg-line m-0">
-                                            <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Buscar trimestre" title="Por trimestre…">
-                                                <option>Text 2</option>
-                                                <option>Text 3</option>
-                                            </select>
                                         </div>
                                     </div>
                                     <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
                                         <div class="fg-line m-0">
                                             <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Buscar administrativa" title="Por unidad administrativa…">
-                                                <option>Text 2</option>
-                                                <option>Text 3</option>
+                                                <option>ATENCIÓN CIUDADANA</option>
+                                                <option>CENTRO DE ATENCIÓN Y PREVENCIÓN PSICOLÓGICAS</option>
+                                                <option>COMUNICACIÓN SOCIAL</option>
+                                                <option>CONSEJO DE URBANIZACIÓN</option>
+                                                <option>DESARROLLO ECONOMICO Y TURÍSTICO</option>
+                                                <option>DESARROLLO HUMANO Y EDUCACIÓN</option>
+                                                <option>DESARROLLO INTEGRAL DE LA FAMILIA</option>
+                                                <option>DESARROLLO RURAL</option>
+                                                <option>DESARROLLO URBANO Y ECOLOGÍA</option>
+                                                <option>DESPACHO DE LA PRESIDENCIA</option>
+                                                <option>DIRECCIÓN DE OBRAS PUBLICAS MUNICIPALES</option>
                                             </select>
                                         </div>
                                     </div>
