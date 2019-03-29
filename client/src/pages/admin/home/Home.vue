@@ -203,6 +203,7 @@
                     </div>
                 </div>
                 <div class="col-12 col-md-6">
+
                     <div class="card-info">
                         <img class="img-fluid" src="@/assets/images/Cards/compare-vector.svg" alt="" />
                         <div>

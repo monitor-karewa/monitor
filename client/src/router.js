@@ -11,6 +11,7 @@ import UserFooter from '@/pages/user/Footer';
 import UserHome from '@/pages/user/home/Home';
 
 import Suppliers from '@/pages/user/suppliers/Suppliers';
+import SupplierDetail from '@/pages/admin/suppliers/SupplierDetail';
 import Contracts from '@/pages/user/contracts/Contracts';
 import Comparations from '@/pages/user/comparations/Comparations';
 import Calculations from '@/pages/user/calculations/Calculations';
@@ -59,6 +60,11 @@ export default new Router({
                     path: 'suppliers',
                     name: 'Suppliers',
                     component: Suppliers
+                },
+                {
+                    path: 'supplier',
+                    name: 'SupplierDetail',
+                    component: SupplierDetail
                 },
                 {
                     path: 'contracts',
