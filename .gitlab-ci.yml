@@ -17,6 +17,19 @@ client:
   script:
     - |
       cd client \
+      && docker build \
+      --target builder \
+      --cache-from registry.heroku.com/karewa-client/web:builder \
+      -t registry.heroku.com/karewa-client/web:builder . \
+      && \
+      docker build \
+        --target release \
+        --cache-from registry.heroku.com/karewa-client/web \
+        -t registry.heroku.com/karewa-client/web . \
+      || \
+      docker build \
+        -t registry.heroku.com/karewa-client/web .
+        gcloud docker -- push registry.heroku.com/karewa-client/web \
       && heroku container:push web --app karewa-client \
       && heroku container:release web --app karewa-client
   only:
