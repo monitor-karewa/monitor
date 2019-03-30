@@ -325,7 +325,7 @@
                                                         <label>{{contrato.cantidad}}</label>
                                                         <small>{{contrato.fecha}}</small>
                                                     </span>
-                                                    <a href="" class="btn-stroke xs button-primary" tabindex="">Ver
+                                                    <a href="/contract" class="btn-stroke xs button-primary" tabindex="">Ver
                                                         más</a>
                                                 </div>
                                             </div>
