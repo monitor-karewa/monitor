@@ -5,7 +5,7 @@
 
             <!--Titulo-->
             <div class="col-12 p-0 m-t-20 m-b-20 d-flex">
-                <a href="/supplier" class="btn-outline text-unset"><i class="zmdi zmdi-long-arrow-left"></i> Regreso a Contratos </a>
+                <a href="/contracts" class="btn-outline text-unset"><i class="zmdi zmdi-long-arrow-left"></i> Regreso a Contratos </a>
             </div>
 
             <!-- CONTRATO SECTION -->

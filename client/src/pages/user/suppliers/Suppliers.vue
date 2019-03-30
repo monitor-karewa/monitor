@@ -7,6 +7,7 @@
                     <a href="/" class="btn-outline text-unset"><i class="zmdi zmdi-long-arrow-left"></i> Ir a Inicio </a>
                     <a href="" class="btn-outline text-unset m-auto-left"> Ir a Contratos <i class="zmdi zmdi-long-arrow-right m-r-0 m-l-15"></i></a>
                 </div>
+
                 <div class="col-12 p-0">
                     <div class="card o-visible">
                         <div class="floating-title-panel">
