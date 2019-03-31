@@ -48,7 +48,7 @@ import NotFound from '@/pages/errors/NotFound';
 Vue.use(Router);
 
 export default new Router({
-    mode : 'history',
+    // mode : 'history',
     routes: [
         {
             path: '/',
@@ -160,7 +160,13 @@ export default new Router({
         {
             path: '/login',
             name: 'Login',
-            component: Login
+            // component: Login
+            components: {
+                default: Login,
+                header: null,
+                sidebar: null,
+                footer: null
+            },
         },
         {
             path: '/style',
