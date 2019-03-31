@@ -84,7 +84,7 @@
                 storeModule: storeModule,
                 tableHeaders : ['suppliers.name','suppliers.rfc','suppliers.notes','general.created-at'],
                 tableColumns: [
-                    {field:'name'}, {field:'lastName'}, {field:'email'} , {field:'active'} , {field:'created_at', type:'Date'}
+                    {field:'name'}, {field:'created_at', type:'Date'}
                 ],
                 doc : {}
             }

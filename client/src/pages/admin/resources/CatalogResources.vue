@@ -8,7 +8,7 @@
                     :tableHeaders="tableHeaders"
                     :tableColumns="tableColumns"
                     :store-module="storeModule"
-                    :singular="'Organización'" :plural="'Organizaciones'"
+                    :singular="'Recurso'" :plural="'Recursos'"
             />
         </AdminMainSection>
 

@@ -45,6 +45,8 @@ const resourceRoutes = require('./app/routes/resource.routes');
 const administrativeUnitRoutes = require('./app/routes/administrativeUnit.routes');
 const calculationRoutes = require('./app/routes/calculation.routes');
 const contractRoutes = require('./app/routes/contract.routes');
+const userRoutes = require('./app/routes/users.routes');
+const organizationRoutes = require('./app/routes/organization.routes');
 
 // Controllers
 const securityController = require('./app/controllers/security.controller');
@@ -158,7 +160,14 @@ app.use('/api/unidades', unidadesRoutes);
 app.use('/api/calculos', calculoRoutes);
 app.use('/api/suppliers', supplierRoutes);
 app.use('/api/resources', resourceRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/organizations', organizationRoutes);
+
+//TODO Leave just one
 app.use('/api/administrative-units', administrativeUnitRoutes);
+app.use('/api/administrativeUnits', administrativeUnitRoutes);
+//---
+
 app.use('/api/calculations', calculationRoutes);
 app.use('/api/contracts', contractRoutes);
 

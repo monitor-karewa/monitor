@@ -82,9 +82,18 @@
         data () {
             return {
                 storeModule: storeModule,
-                tableHeaders : ['name','general.created-at'],
+                tableHeaders : [
+                    'Proveedor',
+                    'Unidad Administrativa',
+                    'Monto Total',
+                    'Tipo de procedimiento',
+                    'general.created-at'],
                 tableColumns: [
-                    {field:'name'}, {field:'created_at', type:'Date'}
+                    {field:'supplier'},
+                    {field:'administrativeUnit'},
+                    {field:'amount'},
+                    {field:'procedureType'},
+                    {field:'created_at', type:'Date'}
                 ],
                 doc : {}
             }

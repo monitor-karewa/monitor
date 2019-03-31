@@ -13,7 +13,25 @@ const permissions = require('./../components/permissions');
  * @type {mongoose.Schema}
  */
 let ContractSchema = new Schema({
-    name: {
+    supplier: {
+        type: String,
+        required: true,
+        min: 2,
+        max: 100
+    },
+    administrativeUnit: {
+        type: String,
+        required: true,
+        min: 2,
+        max: 100
+    },
+    amount: {
+        type: String,
+        required: true,
+        min: 2,
+        max: 100
+    },
+    procedureType: {
         type: String,
         required: true,
         min: 2,
