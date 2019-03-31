@@ -131,6 +131,7 @@
     export default {
         data () {
             return {
+                test: 'Workaround; empty data triggers error on router'
             }
         },
         components: {
