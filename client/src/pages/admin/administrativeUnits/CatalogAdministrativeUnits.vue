@@ -82,7 +82,7 @@
         data () {
             return {
                 storeModule: storeModule,
-                tableHeaders : ['suppliers.name','suppliers.rfc','suppliers.notes','general.created-at'],
+                tableHeaders : ['suppliers.name','suppliers.notes','general.created-at'],
                 tableColumns: [
                     {field:'name'}, {field:'notes'},{field:'created_at', type:'Date'}
                 ],
