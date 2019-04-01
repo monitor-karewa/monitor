@@ -179,7 +179,7 @@ export default {
 
 
 
-        "suppliers.name": "Name o razón social",
+    "suppliers.name": "Nombre o razón social",
     "suppliers.rfc": "RFC",
     "suppliers.notes": "Notas"
 }
