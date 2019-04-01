@@ -140,23 +140,25 @@
                                 <table class="table form-table m-b-0">
                                     <thead>
                                     <tr>
-                                        <th class="column-wdt">Opciones</th>
-                                        <th class="text-align-r">Id. proceso</th>
-                                        <th class="text-align-r">Descripción de la obra</th>
-                                        <th class="text-align-r">Monto total</th>
-                                        <th class="text-align-r">Fecha del contrato<i
+                                        <th class="" style="min-width:0px;">Opciones</th>
+                                        <th class="text-align-l">Id. proceso</th>
+                                        <th class="text-align-l">Descripción de la obra</th>
+                                        <th class="text-align-l">Monto total</th>
+                                        <th class="text-align-l">Fecha del contrato<i
                                                 class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>
-                                        <th class="text-align-c">Tipo de procedimiento</th>
+                                        <th class="text-align-l">Tipo de procedimiento</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr v-for="contract in contracts">
-                                        <td class="column-wdt"><a href="/contract" class="btn-stroke button-primary table-btn-stroke">Ver más</a></td>
-                                        <td class="text-align-r">{{contract.id}}</td>
-                                        <td class="text-align-r">{{contract.descripcionObra}}</td>
-                                        <td class="text-align-r c-accent">{{contract.montoTotal}}</td>
-                                        <td class="text-align-r" style="text-transform: uppercase">{{contract.FechaDelContrato}}</td>
-                                        <td class="text-align-r">{{contract.tipoProcedimiento}}</td>
+                                        <td class="" style="min-width:0px;"><a href="/contract" class="btn-stroke button-primary table-btn-stroke">Ver más</a></td>
+                                        <td class="text-align-l">{{contract.id}}</td>
+                                        <td class="text-align-l">{{contract.descripcionObra}}</td>
+                                        <td class="text-align-l c-accent">{{contract.montoTotal}}</td>
+                                        <td class="text-align-l" style="text-transform: uppercase">{{contract.FechaDelContrato}}</td>
+                                        <td class="text-align-l">
+                                            <div class="badge" :class="{ 'badge-green' : contract.tipoProcedimiento == 'Licitación Pùblica', 'badge-red' : contract.tipoProcedimiento == 'Adjudicación directa'}">{{contract.tipoProcedimiento}}</div>
+                                        </td>
                                     </tr>
                                     <!--<tr class="bgm-cards">-->
                                         <!--<td class="p-t-15 p-b-10 f-bold">TOTAL</td>-->
@@ -272,6 +274,12 @@
         },
         components: {
             MoreInfo
-        }
+        },
+        created() {
+            window.$(document).ready(function () {
+                window.$('.selectpicker').selectpicker();
+                $('.selectpicker').selectpicker();
+            });
+        },
     }
 </script>
