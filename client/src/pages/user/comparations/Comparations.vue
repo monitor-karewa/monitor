@@ -3,19 +3,26 @@
         <section class="client-content">
             <div class="neutral-width">
                 <!--Titulo-->
-                <div class="col-12 p-0 m-t-20 m-b-20 d-flex">
+                <div class="col-12 p-0 m-t-20 m-b-20 d-flex" v-if="!comparisonActive">
                     <a href="/" class="btn-outline text-unset"><i class="zmdi zmdi-long-arrow-left"></i> Ir a Índice de
                         corrupción </a>
                     <a href="/contracts" class="btn-outline text-unset m-auto-left"> Ir a Recursos <i
                             class="zmdi zmdi-long-arrow-right m-r-0 m-l-15"></i></a>
+                </div>
+
+                <div class="col-12 p-0 m-t-20 m-b-20 d-flex" v-if="comparisonActive">
+                    <a v-on:click.stop="comparisonActive = false" class="btn-outline text-unset"><i class="zmdi zmdi-long-arrow-left"></i> Regresar a Selección de Monitor </a>
                 </div>
             </div>
 
             <div class="col-12 p-0">
                 <div class="card">
                     <div class="floating-title-panel">
-                        <h1>
+                        <h1 v-if="!comparisonActive">
                             Comparar Monitores
+                        </h1>
+                        <h1 v-if="comparisonActive">
+                            Comparación
                         </h1>
                         <div class="side-right">
                             <a href="" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
@@ -26,11 +33,14 @@
                     </div>
 
 
-                    <p class="f-14 c-plain_text principal-font-regular">Seleccionar un monitor con el cual comparar
+                    <p class="f-14 c-plain_text principal-font-regular" v-if="!comparisonActive">Seleccionar un monitor con el cual comparar
                         <strong class="principal-font-semibold">Monito Karewa del Municipio de Chihuahua</strong></p>
 
+                    <p class="f-14 c-plain_text principal-font-regular" v-if="comparisonActive">A continuación te presentamos la comparación entre
+                        <strong class="principal-font-semibold">Monitor Karewa y Monitor Juárez:</strong></p>
 
-                    <div class="filter">
+
+                    <div class="filter" v-if="!comparisonActive">
                         <div class="filter-container">
                             <input class="input-search" type="text" name="" value=""
                                    placeholder="Escribe el nombre del monitor"/>
@@ -40,7 +50,7 @@
 
                     <br/>
 
-                    <div class="row">
+                    <div class="row" v-if="!comparisonActive">
                         <div class="col-12 col-md-4 col-lg-3" v-for="monitor in monitores">
                             <div class="card-compare">
                                 <img class="img-fluid" src="@/assets/images/Cards/bgm-karewa.png" alt="Karewa"/>
@@ -52,7 +62,7 @@
                                     </div>
                                 </div>
                                 <small>Monitor Karewa {{monitor.name}}</small>
-                                <a href="" class="btn-stroke xs button-primary" tabindex="">Comparar</a>
+                                <a v-on:click.stop="comparisonActive = true" class="btn-stroke xs button-primary" tabindex="">Comparar</a>
                             </div>
                         </div>
 
@@ -101,12 +111,9 @@
                         </div>-->
                     </div>
 
-                    <more-info></more-info>
-
-
                     <br/>
 
-                    <div class="panel-table">
+                    <div class="panel-table" v-if="comparisonActive">
                         <div class="row m-0 p-b-20">
                           <span class="border-lines col-12">
                             <label>Monitores a comparar</label>
@@ -137,14 +144,14 @@
                             <span class="border-lines col-12">
                     <label>Índice de corrupción <i id="indice-tooltip" class="zmdi zmdi-help-outline"></i></label>
                                 <!-- TOOLTIP -->
-                     <template id="help-tooltip-indice">
+                     <!--<template id="help-tooltip-indice">
                       <div class="help-tooltip-div">
                         <label>¿Qué significa esto?</label>
                         <p>Es la sumatoria de los montos dados por cada contrato a lo largo de la administración 2016-2018.</p>
                         <p>Estos se dividen en 3 tipos de procedimientos de los contratos, los cuales son: <i>Licitación pública, Por invitación y Adquisición directa.</i></p>
                         <p class="m-b-0">Puedes consultar esta y más información en la sección de <i>Ayuda.</i></p>
                       </div>
-                     </template>
+                     </template>-->
                   </span>
                             <div class="col-4 p-30 vertical-center">
                                 <p class="f-12 c-plain_text principal-font-medium text-upper m-b-0 vertical-center">
@@ -391,7 +398,7 @@
             </div>
 
 
-
+            <more-info></more-info>
 
 
         </section>
@@ -408,6 +415,7 @@
 
         data() {
             return {
+                comparisonActive: false,
                 monitores: [
                     {
                         name: "Cd. Juarez",
