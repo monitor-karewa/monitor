@@ -41,7 +41,7 @@
                       <h1 class="f-14">Nosotros</h1>
                     </div>
                     <li><a href="/about">Acerca de</a></li>
-                    <li><a href="#">Contacto</a></li>
+                    <li><a href="/contact">Contacto</a></li>
                 </ul>
             </span>
 

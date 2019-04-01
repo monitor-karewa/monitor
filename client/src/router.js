@@ -19,6 +19,7 @@ import Calculations from '@/pages/user/calculations/Calculations';
 import Resources from '@/pages/user/resources/Resources';
 import Privacy from '@/pages/user/Privacy';
 import TheAbout from '@/pages/TheAbout';
+import Contact from '@/pages/Contact';
 
 import StyleIndex from '@/pages/style/Index';
 import Style from '@/pages/style/Style';
@@ -112,6 +113,11 @@ export default new Router({
                     path: 'about',
                     name: 'About',
                     component: TheAbout
+                },
+                {
+                    path: 'contact',
+                    name: 'Contact',
+                    component: Contact
                 }
             ]
         },
