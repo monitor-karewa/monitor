@@ -15,11 +15,9 @@ export default function (api, storeName) {
 
     const getters = {
 
-    };
+        getPaginationQuery(state){
+            let pagination = state.pagination;
 
-    const actions = {
-        list ({commit}, pagination = {}) {
-            Vue.$log.info(`Calling action ${storeName}/list`);
             let query = '?';
             if (pagination.page) {
                 if (query.length > 1) {
@@ -27,9 +25,17 @@ export default function (api, storeName) {
                 }
                 query += `page=${pagination.page}`
             }
-            //TODO: Add other pagination options and centralize all options
+
+            return query;
+        }
+    };
+
+    const actions = {
+        list ({commit,getters}) {
+            Vue.$log.info(`Calling action ${storeName}/list`);
+            let query = getters.getPaginationQuery;
             api.list(
-                {},
+                { query },
                 (result) => {
                     // console.log('result', result);
                     Vue.$log.info('Response', result);
@@ -46,17 +52,14 @@ export default function (api, storeName) {
             )
         },
 
-        changePage ({commit}, page = 1) {
+        changePage ({commit, getters, state}, page) {
+            let oldPage = state.pagination.page;
+            commit('UPDATE_PAGE',page);
             // console.log(`Calling action ${storeName}/changePage`);
             Vue.$log.info(`Calling action ${storeName}/changePage`);
-            let query = '?';
-            if (query.length > 1) {
-                query += '&';
-            }
-            query += `page=${page}`;
-            //TODO: Add other pagination options and centralize all options
+            let query = getters.getPaginationQuery;
             api.list(
-                {query: query},
+                { query },
                 (result) => {
                     Vue.$log.info('Response', result);
                     //result.data.data.docs
@@ -117,6 +120,9 @@ export default function (api, storeName) {
         },
         setDocName (state, {docName}) {
             state.docName = docName;
+        },
+        UPDATE_PAGE(state,page){
+            state.pagination.page = page;
         }
     };
 

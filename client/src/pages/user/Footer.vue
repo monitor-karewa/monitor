@@ -32,7 +32,7 @@
                     <div class="floating-title-panel small">
                       <h1 class="f-14">Información</h1>
                     </div>
-                    <li><a href="#">Aviso de Privacidad</a></li>
+                    <li><a href="/privacy">Aviso de Privacidad</a></li>
                 </ul>
             </span>
                     <span class="col-6 col-sm-6 col-md-4 col-lg-2 p-0 m-b-0">
@@ -40,8 +40,8 @@
                     <div class="floating-title-panel small">
                       <h1 class="f-14">Nosotros</h1>
                     </div>
-                    <li><a href="#">Acerca de</a></li>
-                    <li><a href="#">Contacto</a></li>
+                    <li><a href="/about">Acerca de</a></li>
+                    <li><a href="/contact">Contacto</a></li>
                 </ul>
             </span>
 

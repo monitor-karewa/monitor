@@ -2073,17 +2073,16 @@ Card image on corner
                             </p>
                             <div class="gauge-container">
                                 <!-- Remove the class "gauge-editable" and add the class "gauge-element" if the gauge is not editable with an input -->
-                                <div class="gauge gauge-editable">
+                                <div class="gauge gauge-element">
                                     <img class="left-border" src="@/assets/images/All-Icons/gauge-shape.png" alt="">
                                     <img class="right-border" src="@/assets/images/All-Icons/gauge-shape.png" alt="">
                                     <canvas id="gauge-graph-test"></canvas>
                                     <div class="range">
                                         <img class="" src="@/assets/images/All-Icons/tachometer-range.svg" alt="">
                                     </div>
-
                                 </div>
                                 <div class="text">
-                                    <div id="gauge-text-test">0</div>
+                                    <div id="gauge-text-test">50</div>
                                     %
                                 </div>
                                 <div class="prob">text</div>

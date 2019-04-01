@@ -26,8 +26,6 @@
                             proveedores que han sido contratados por el
                             <strong class="principal-font-semibold">Municipio de Chihuahua</strong></p>
                         <div class="m-t-50 row">
-
-
                             <div class="filter col-md-4">
                                 <div class="filter-container">
                                     <input class="input-search" type="text" name="" value=""
@@ -35,8 +33,6 @@
                                 </div>
                                 <button class="filter-btn" type="button" name="button">Buscar</button>
                             </div>
-
-
                             <div class="filter-box col-md-8">
                                 <div class="filter">
                                     <div class="filter-container row m-0">
@@ -103,33 +99,34 @@
                                 </div>
 
                             </div>
-                            <div class="row">
-                                <div class="m-t-20 float-left col-md-12">
-                                    <span class="tag-title">Filtros:</span>
-                                    <div class="tag">
+                        </div>
+
+                        <div class="row">
+                            <div class="m-t-20 float-left col-md-12">
+                                <span class="tag-title">Filtros:</span>
+                                <div class="tag">
                       <span class="">
                         DIRECCIÓN DE OBRAS PÚBLICAS MUNICIPALES
                       </span>
-                                        <button>
-                                            <i class="zmdi zmdi-close"></i>
-                                        </button>
-                                    </div>
-                                    <div class="tag">
+                                    <button>
+                                        <i class="zmdi zmdi-close"></i>
+                                    </button>
+                                </div>
+                                <div class="tag">
                       <span class="">
                         Béisbol
                       </span>
-                                        <button>
-                                            <i class="zmdi zmdi-close"></i>
-                                        </button>
-                                    </div>
-                                    <div class="tag">
+                                    <button>
+                                        <i class="zmdi zmdi-close"></i>
+                                    </button>
+                                </div>
+                                <div class="tag">
                       <span class="">
                         Béisbol
                       </span>
-                                        <button>
-                                            <i class="zmdi zmdi-close"></i>
-                                        </button>
-                                    </div>
+                                    <button>
+                                        <i class="zmdi zmdi-close"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
