@@ -160,8 +160,8 @@
                                 <!-- TOOLTIP -->
                                 <template id="help-tooltip-tacometro">
                                     <div class="help-tooltip-div">
-                                        <label>¿Qué significa esto?</label>
-                                        <p>TEXTO FALTANTE</p>
+                                        <!--<label>¿Qué significa esto?</label>-->
+                                        <!--<p>TEXTO FALTANTE</p>-->
                                     </div>
                                 </template>
                             </div>
@@ -228,8 +228,8 @@
                                 <!-- TOOLTIP -->
                      <template id="help-tooltip-totales">
                       <div class="help-tooltip-div">
-                        <label>¿Qué significa esto?</label>
-                        <p>TEXTO FALTANTE</p>
+                        <!--<label>¿Qué significa esto?</label>
+                        <p>TEXTO FALTANTE</p>-->
                       </div>
                      </template>
                   </span>
