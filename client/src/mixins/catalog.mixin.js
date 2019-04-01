@@ -24,7 +24,7 @@ export default {
             },
             computed: {
                 ...mapState({
-                    docs: state => state[storeModule].docs,
+                    docs: state => state[storeModule].docs
                 })
             },
             methods: {

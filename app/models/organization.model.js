@@ -7,52 +7,28 @@ const pluginCreatedUpdated = require('mongoose-createdat-updatedat');
 const regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 /**
- * Mongoose Schema for User.
+ * Mongoose Schema for Organization.
  * @type {mongoose.Schema}
  */
-let userSchema = mongoose.Schema({
+organizationSchema = mongoose.Schema({
     name: {
         type: String,
         required: true
-    },
-    lastName: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        validator: (val) => {
-            if (val && typeof(val) === 'string') {
-                return regexEmail.test(val);
-            } else {
-                return false;
-            }
-        }
-    },
-    password: {
-        type: String, 
-        required: true
-    },
-    active: {
-        type: Boolean,
-        required: true,
-        default: true
     }
 });
 
 
 //Agregar createdAt, modifiedAt automáticamente
-userSchema.plugin(pluginCreatedUpdated);
+organizationSchema.plugin(pluginCreatedUpdated);
 
 //Paginación
-userSchema.plugin(mongoosePagination);
+organizationSchema.plugin(mongoosePagination);
 
 
 /**
- * Class for the User model.
+ * Class for the Organization model.
  */
-class UserClass {
+class OrganizationClass {
     constructor() {
         
     }
@@ -76,13 +52,14 @@ class UserClass {
 }
 
 //Load class
-userSchema.loadClass(UserClass);
+organizationSchema.loadClass(OrganizationClass);
 
 //Indexes
-userSchema.index({email: 1}, {unique: true});
+organizationSchema.index({name: 1}, {unique: true});
 
-let User = mongoose.model('User', userSchema);
+let Organization = mongoose.model('Organization', organizationSchema);
+
 
 module.exports = {
-    User
+    Organization
 };

@@ -53,12 +53,10 @@
                                          src="@/assets/images/Emptystates/empty-state-box.svg"
                                          alt="Empty"/>
                                     <p>
-                                        <strong class="d-block">/Agrega Proveedores a la
-                                            Organización.</strong>
-                                        Los usuarios invitados a la Organización recibirán un correo
-                                        electrónico con un enlace para acceder a la plataforma.
+                                        <strong class="d-block">Por el momento no hay {{plural}}.</strong>
+                                        Haz clic en el botón de nuevo para comenzar. Los registros que crees aparecerán aquí.
                                     </p>
-                                    <button type="button" class="btn-raised button-accent" data-toggle="modal" data-target="#newEntry">/Nuevo Registro/ </button>
+                                    <button type="button" class="btn-raised button-accent" data-toggle="modal" data-target="#newEntry"><i class="zmdi zmdi-plus"></i>Nuevo(a) {{singular}} </button>
                                 </div>
                                 <div v-if="false"> <!-- If there's a query-->
                                     <div class="empty-state">
@@ -66,8 +64,8 @@
                                              src="@/assets/images/Emptystates/empty-state-box.svg"
                                              alt="Empty"/>
                                         <p>
-                                            No se encontraron resultados con la búsqueda <strong>“Alicia
-                                            Martinez”.</strong>
+                                            No se encontraron resultados con la búsqueda <!--strong>“Alicia
+                                            Martinez”.<strong-->
                                         </p>
                                     </div>
                                     <div>
@@ -118,7 +116,9 @@
             'docs': Array,
             'storeModule': String,
             'tableHeaders': Array,
-            'tableColumns': Array
+            'tableColumns': Array,
+            'singular': String,
+            'plural': String
         },
         filters: {
             moment: function (date) {

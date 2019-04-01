@@ -1,4 +1,6 @@
-    <template>
+Card image on corner
+
+<template>
     <div>
         <!-- HEADER SECTION -->
         <header id="header" class="header clearfix">
@@ -2420,84 +2422,6 @@
                                                     más</a>
                                             </td>
                                         </tr>
-                                        <tr>
-                                            <td class="">CENTRO PARA EL ESTUDIO DE LA OSTEOPOROSIS MENOPAUSIA
-                                                METABOLISMO MINERAL COMMSA SA DE CV
-                                            </td>
-                                            <td class="text-align-r">$102,866,337.58</td>
-                                            <td class="text-align-r">$39,924,791.80</td>
-                                            <td class="text-align-r">$39,924,791.80</td>
-                                            <td class="text-align-r c-accent">$39,924,791.80</td>
-                                            <td class="text-align-r">
-                                                <a href="" class="btn-stroke button-primary table-btn-stroke">Ver
-                                                    más</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="">CENTRO PARA EL ESTUDIO DE LA OSTEOPOROSIS MENOPAUSIA
-                                                METABOLISMO MINERAL COMMSA SA DE CV
-                                            </td>
-                                            <td class="text-align-r">$102,866,337.58</td>
-                                            <td class="text-align-r">$39,924,791.80</td>
-                                            <td class="text-align-r">$39,924,791.80</td>
-                                            <td class="text-align-r c-accent">$39,924,791.80</td>
-                                            <td class="text-align-r">
-                                                <a href="" class="btn-stroke button-primary table-btn-stroke">Ver
-                                                    más</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="">CENTRO PARA EL ESTUDIO DE LA OSTEOPOROSIS MENOPAUSIA
-                                                METABOLISMO MINERAL COMMSA SA DE CV
-                                            </td>
-                                            <td class="text-align-r">$102,866,337.58</td>
-                                            <td class="text-align-r">$39,924,791.80</td>
-                                            <td class="text-align-r">$39,924,791.80</td>
-                                            <td class="text-align-r c-accent">$39,924,791.80</td>
-                                            <td class="text-align-r">
-                                                <a href="" class="btn-stroke button-primary table-btn-stroke">Ver
-                                                    más</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="">CENTRO PARA EL ESTUDIO DE LA OSTEOPOROSIS MENOPAUSIA
-                                                METABOLISMO MINERAL COMMSA SA DE CV
-                                            </td>
-                                            <td class="text-align-r">$102,866,337.58</td>
-                                            <td class="text-align-r">$39,924,791.80</td>
-                                            <td class="text-align-r">$39,924,791.80</td>
-                                            <td class="text-align-r c-accent">$39,924,791.80</td>
-                                            <td class="text-align-r">
-                                                <a href="" class="btn-stroke button-primary table-btn-stroke">Ver
-                                                    más</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="">CENTRO PARA EL ESTUDIO DE LA OSTEOPOROSIS MENOPAUSIA
-                                                METABOLISMO MINERAL COMMSA SA DE CV
-                                            </td>
-                                            <td class="text-align-r">$102,866,337.58</td>
-                                            <td class="text-align-r">$39,924,791.80</td>
-                                            <td class="text-align-r">$39,924,791.80</td>
-                                            <td class="text-align-r c-accent">$39,924,791.80</td>
-                                            <td class="text-align-r">
-                                                <a href="" class="btn-stroke button-primary table-btn-stroke">Ver
-                                                    más</a>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td class="">CENTRO PARA EL ESTUDIO DE LA OSTEOPOROSIS MENOPAUSIA
-                                                METABOLISMO MINERAL COMMSA SA DE CV
-                                            </td>
-                                            <td class="text-align-r">$102,866,337.58</td>
-                                            <td class="text-align-r">$39,924,791.80</td>
-                                            <td class="text-align-r">$39,924,791.80</td>
-                                            <td class="text-align-r c-accent">$39,924,791.80</td>
-                                            <td class="text-align-r">
-                                                <a href="" class="btn-stroke button-primary table-btn-stroke">Ver
-                                                    más</a>
-                                            </td>
-                                        </tr>
                                         <tr class="bgm-cards">
                                             <td class="p-t-15 p-b-10 f-bold">TOTAL</td>
                                             <td class="text-align-r p-t-15 p-b-15">$102,866,337.58</td>
@@ -2704,6 +2628,28 @@
                 </div>
             </div>
 
+            <!-- MODAL ALERT SUCCESS -->
+            <div class="modal modal-alert fade" id="modalAlertSuccess" tabindex="-1" role="dialog"
+                 aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h1 class="modal-title" id="">Usuario Creado con Exito</h1>
+                        </div>
+                        <div class="modal-body">
+                            <p class="text-centered">El usuario se ha creado con exito en el catálogo.
+                                <br>
+                                <strong>¿Estas seguro de continuar?</strong>
+                            </p>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar
+                            </button>
+                            <button type="button" class="btn-raised button-success m-l-15">Aceptar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- MODAL ALERT WARNING -->
             <div class="modal modal-alert fade" id="modalAlertWarning" tabindex="-1" role="dialog"

@@ -129,7 +129,7 @@
                     [
                         {
                             name: "Configuración",
-                            to: "/admin/configuration",
+                            to: "/admin/settings",
                             icon: "zmdi zmdi-settings",
                             admin: true
                         }

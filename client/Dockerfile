@@ -23,7 +23,8 @@ RUN npm install express
 
 COPY --from=builder /usr/src/app/dist /usr/src/app/dist
 COPY server.js /usr/src/app/
+COPY package.json /usr/src/app/
 
 EXPOSE 5000
 
-CMD ["node", "server.js"]
+CMD ["npm", "run", "prod"]

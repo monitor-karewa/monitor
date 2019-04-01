@@ -2,14 +2,14 @@
     <div>
         <AdminMainSection>
             <BackButton />
-            <CatalogHeader :singular="'Proveedor'" :plural="'Proveedores'" />
+            <CatalogHeader :singular="'Usuario'" :plural="'Usuarios'" />
             <EditableTable
                     :docs="docs"
                     :tableHeaders="tableHeaders"
                     :tableColumns="tableColumns"
                     :store-module="storeModule"
-                    :singular="'Proveedor'"
-                    :plural="'Proveedores'"
+                    :singular="'Usuario'"
+                    :plural="'Usuarios'"
             />
         </AdminMainSection>
 
@@ -70,8 +70,8 @@
     import { bus } from '@/main';
     import { DELETE_SUCCESS } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
-    const storeModule = 'suppliers';
-    const docName = 'suppliers.supplier';
+    const storeModule = 'users';
+    const docName = 'users.user';
 
     let baseCatalog = catalog.configure({
         storeModule: storeModule,
@@ -85,7 +85,7 @@
                 storeModule: storeModule,
                 tableHeaders : ['suppliers.name','suppliers.rfc','suppliers.notes','general.created-at'],
                 tableColumns: [
-                    {field:'name'}, {field:'rfc'}, {field:'notes'},{field:'created_at', type:'Date'}
+                    {field:'name'}, {field:'lastName'}, {field:'email'} , {field:'active'} , {field:'created_at', type:'Date'}
                 ],
                 doc : {}
             }

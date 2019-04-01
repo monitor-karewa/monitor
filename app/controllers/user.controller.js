@@ -1,26 +1,26 @@
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 
-const Proveedor = require('./../models/proveedor.model').Proveedor;
+const User = require('./../models/user.model').User;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const { validationResult } = require('express-validator/check');
 
 /**
- * Renderiza la vista principal de consulta de Proveedor.
+ * Renderiza la vista principal de consulta de User.
  * @param req
  * @param res
  * @param next
  */
 exports.index = (req, res, next) => {
     let renderParams = {};
-    renderParams.model = Proveedor;
-    renderParams.permission = Proveedor.permission;
-    res.render('proveedor', renderParams);
+    renderParams.model = User;
+    renderParams.permission = User.permission;
+    res.render('user', renderParams);
 };
 
 /**
- * Consulta los registros de Proveedor disponibles.
+ * Consulta los registros de User disponibles.
  * @param req
  * @param res
  * @param next
@@ -35,13 +35,13 @@ exports.list = (req, res, next) => {
     //let qNotDeleted = deletedSchema.qNotDeleted();
     //query = {...query, ...qNotDeleted};
 
-    Proveedor
+    User
         .paginate(
             query,
             paginationOptions,
             (err, result) => {
                 if (err) {
-                    logger.error(err, req, 'proveedor.controller#list', 'Error al consultar lista de Proveedor');
+                    logger.error(err, req, 'user.controller#list', 'Error al consultar lista de User');
                     return res.json({
                         errors: true,
                         message: res.__('general.error.unexpected-error')
@@ -63,28 +63,29 @@ exports.list = (req, res, next) => {
 };
 
 /**
- * Guarda un Proveedor. 
+ * Guarda un User.
  * @param req
  * @param res
  * @param next
  */
 exports.save = (req, res, next) => {
-    let id = req.body._id;
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
     }
     
+    let id = req.body._id;
+    
     if (id) {
         //Update
         let qById = {_id: id};
 
-        Proveedor
+        User
             .findOne(qById)
-            .exec((err, proveedor) => {
-                if (err || !proveedor) {
-                    logger.error(req, err, 'proveedor.controller#save', 'Error al consultar Proveedor');
+            .exec((err, user) => {
+                if (err || !user) {
+                    logger.error(req, err, 'user.controller#save', 'Error al consultar User');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.save')
@@ -92,13 +93,15 @@ exports.save = (req, res, next) => {
                 }
 
                 //Update doc fields
-                proveedor.nombre = req.body.nombre;
-                proveedor.rfc = req.body.rfc;
-                proveedor.notas =  req.body.notas;
+                user.name = req.body.name;
+                user.lastName = req.body.lastName;
+                user.email = req.body.email;
+                user.password = req.body.password;
+
                 
-                proveedor.save((err, savedProveedor) => {
+                user.save((err, savedUser) => {
                     if (err) {
-                        logger.error(req, err, 'proveedor.controller#save', 'Error al guardar Proveedor');
+                        logger.error(req, err, 'user.controller#save', 'Error al guardar User');
                         return res.json({
                             errors: true,
                             message: req.__('general.error.save')
@@ -108,7 +111,7 @@ exports.save = (req, res, next) => {
                     return res.json({
                         errors: false,
                         message: req.__('general.success.updated'),
-                        data: savedProveedor
+                        data: savedUser
                     });
                 });
             });
@@ -116,16 +119,13 @@ exports.save = (req, res, next) => {
     } else {
         //Create
 
-        let proveedor = new Proveedor({
-            nombre: req.body.nombre,
-            rfc: req.body.rfc,
-            notas: req.body.notas
+        let user = new User({
+            name: req.body.name
         });
 
-        proveedor.save((err, savedProveedor) => {
-
+        user.save((err, savedUser) => {
             if (err) {
-                logger.error(req, err, 'proveedor.controller#save', 'Error al guardar Proveedor');
+                logger.error(req, err, 'user.controller#save', 'Error al guardar User');
                 return res.json({
                     "error": true,
                     "message": req.__('general.error.save')
@@ -135,14 +135,14 @@ exports.save = (req, res, next) => {
             return res.json({
                 "error": false,
                 "message": req.__('general.success.created'),
-                "data": savedProveedor
+                "data": savedUser
             });
         });
     }
 };
 
 /**
- * Borra un Proveedor.
+ * Borra un User.
  * @param req
  * @param res
  * @param next
@@ -157,12 +157,12 @@ exports.delete = (req, res, next) => {
     let qNotDeleted = deletedSchema.qNotDeleted();
     query = {...query, ...qNotDeleted};
     
-    Proveedor
+    User
         .find(query)
         .count()
         .exec((err, count) => {
             if (err) {
-                logger.error(req, err, 'proveedor.controller#delete', 'Error al realizar count de Proveedor');
+                logger.error(req, err, 'user.controller#delete', 'Error al realizar count de User');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.delete')
@@ -170,7 +170,7 @@ exports.delete = (req, res, next) => {
             }
             
             if (count === 0) {
-                logger.error(req, err, 'proveedor.controller#delete', 'Error al intentar borrar Proveedor; el registro no existe o ya fue borrado anteriormente');
+                logger.error(req, err, 'user.controller#delete', 'Error al intentar borrar User; el registro no existe o ya fue borrado anteriormente');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.not-exists-or-already-deleted')
@@ -178,7 +178,7 @@ exports.delete = (req, res, next) => {
             }
 
 
-            Proveedor.update(
+            User.update(
                 query,
                 {
                     $set: {
@@ -192,7 +192,7 @@ exports.delete = (req, res, next) => {
                 {multi: false}
             ).exec((err) => {
                 if (err) {
-                    logger.error(req, err, 'proveedor.controller#delete', 'Error al borrar Proveedor.');
+                    logger.error(req, err, 'user.controller#delete', 'Error al borrar User.');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.delete')

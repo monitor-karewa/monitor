@@ -166,8 +166,20 @@ export default {
     "general.app.name.html-strong": "Monitor <strong>Karewa</strong>",
     "general.back": "Atrás",
     "general.created-at": "Fecha de creación",
-    "suppliers.supplier": "Supplier | Suppliers",
-    "suppliers.name": "Name o razón social",
+    "suppliers.supplier": "Proveedor | Proveedores",
+
+    "users.user": "Usuario | Usuarios",
+    "organizations.organization": "Organización | Organizaciones",
+    "contracts.contract": "Contrato | Contatos",
+    "resources.resource": "Recurso | Recursos",
+    "calculations.calculation": "Cálculo| Cálculos",
+    "administrativeUnits.administrativeUnit": "Unidad administrativa | Unidades administrativas",
+
+
+
+
+
+        "suppliers.name": "Name o razón social",
     "suppliers.rfc": "RFC",
     "suppliers.notes": "Notas"
 }
