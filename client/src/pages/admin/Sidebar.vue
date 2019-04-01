@@ -143,6 +143,13 @@
             }
         },
         components: {
+        },
+        created: () => {
+            window.$('#hideMenu').on('click', function() {
+                $('.sidebar').removeClass('small-sidebar');
+                $('.backdrop').removeClass('active');
+                $('#hamburguer-icon').removeClass('active');
+            });
         }
     }
 </script>

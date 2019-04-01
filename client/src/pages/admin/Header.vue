@@ -12,7 +12,10 @@
         </div>
         <div class="right col-md-9 col-8">
             <div class="links">
-                <a href="/admin/data-load" class="btn-raised xs button-accent hideresp"><i class="zmdi zmdi-plus"></i> Cargar datos</a>
+                <router-link to="/admin/data-load" class="btn-raised xs button-accent hideresp">
+                    <i class="zmdi zmdi-plus"></i> Cargar datos
+                </router-link>
+                <!--<a href="/admin/data-load" class="btn-raised xs button-accent hideresp"><i class="zmdi zmdi-plus"></i> Cargar datos</a>-->
                 <a href="" class="btn-circle-icon hideresp m-l-30"><i class="zmdi zmdi-notifications-none"></i></a>
                 <a href="" class="btn-circle-icon hideresp m-r-30"><i class="zmdi zmdi-settings"></i></a>
                 <div class="topMenuDropdown dropdown">
@@ -24,7 +27,10 @@
                         <img class="img-fluid" src="@/assets/images/Demo/user-test.jpg" alt="User" />
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownUserMenu">
-                        <a href="/admin/data-load" class="hideresp dropdown-item"> Cargar Datos </a>
+                        <router-link to="/admin/data-load" class="hideresp dropdown-item">
+                            Cargar Datos
+                        </router-link>
+                        <!--<a href="/admin/data-load" class="hideresp dropdown-item"> Cargar Datos </a>-->
                         <a href="" class="hideresp dropdown-item"> Notificaciones </a>
                         <a href="" class="hideresp dropdown-item active"> Configuración </a>
                     </div>
@@ -45,6 +51,12 @@
             }
         },
         components: {
+        },
+        mounted: () => {
+            window.$('#showMenu').on('click', function() {
+                $('.sidebar').addClass('small-sidebar');
+                $('.backdrop').addClass('active');
+            });
         }
     }
 </script>
