@@ -137,7 +137,8 @@
                 ],
                 linksFooter: {
                     "name": "Cerrar Sesión",
-                    "to": "/logout",
+//                    "to": "/logout",
+                    "to": "/",
                     "icon": "zmdi zmdi-power"
                 }
             }

@@ -73,7 +73,10 @@
                     <div class="card-img-corner">
                         <h1>Configuración</h1>
                         <p>Aquí puedes configurar tu logo, colores, descripción de tu organización…</p>
-                        <a href="#" class="link-to" tabindex="">Configurar aquí</a>
+                        <!--<a href="#" class="link-to" tabindex="">Configurar aquí</a>-->
+                        <router-link to="/admin/settings" class="link-to">
+                            Configurar aquí
+                        </router-link>
                         <img class="img-fluid" src="@/assets/images/Cards/corner-setting.svg" alt=""/>
                     </div>
                 </div>
@@ -81,7 +84,10 @@
                     <div class="card-img-corner">
                         <h1>Contratos</h1>
                         <p>Aquí puedes crear nuevos contratos o editarlos …</p>
-                        <a href="#" class="link-to" tabindex="">Configurar aquí</a>
+                        <!--<a href="#" class="link-to" tabindex="">Configurar aquí</a>-->
+                        <router-link to="/admin/contracts" class="link-to">
+                            Configurar aquí
+                        </router-link>
                         <img class="img-fluid" src="@/assets/images/Cards/corner-document.svg" alt=""/>
                     </div>
                 </div>
@@ -89,7 +95,10 @@
                     <div class="card-img-corner">
                         <h1>Registra tus proveedores</h1>
                         <p>Aquí puedes registrar tus nuevos proveedores o editarlos…</p>
-                        <a href="#" class="link-to" tabindex="">Configurar aquí</a>
+                        <!--<a href="#" class="link-to" tabindex="">Configurar aquí</a>-->
+                        <router-link to="/admin/suppliers" class="link-to">
+                            Configurar aquí
+                        </router-link>
                         <img class="img-fluid" src="@/assets/images/Cards/corner-account.svg" alt="" />
                     </div>
                 </div>
