@@ -151,7 +151,7 @@
                                     </thead>
                                     <tbody>
                                     <tr v-for="contract in contracts">
-                                        <td class="column-wdt"><a href="" class="btn-stroke button-primary table-btn-stroke">Ver más</a></td>
+                                        <td class="column-wdt"><a href="/contract" class="btn-stroke button-primary table-btn-stroke">Ver más</a></td>
                                         <td class="text-align-r">{{contract.id}}</td>
                                         <td class="text-align-r">{{contract.descripcionObra}}</td>
                                         <td class="text-align-r c-accent">{{contract.montoTotal}}</td>
@@ -270,6 +270,8 @@
                 ]
             }
         },
-        components: {}
+        components: {
+            MoreInfo
+        }
     }
 </script>

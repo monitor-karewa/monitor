@@ -5,7 +5,7 @@
                 <!--Titulo-->
                 <div class="col-12 p-0 m-t-20 m-b-20 d-flex">
                     <a href="/" class="btn-outline text-unset"><i class="zmdi zmdi-long-arrow-left"></i> Ir a Inicio </a>
-                    <a href="" class="btn-outline text-unset m-auto-left"> Ir a Contratos <i class="zmdi zmdi-long-arrow-right m-r-0 m-l-15"></i></a>
+                    <a href="/contracts" class="btn-outline text-unset m-auto-left"> Ir a Contratos <i class="zmdi zmdi-long-arrow-right m-r-0 m-l-15"></i></a>
                 </div>
 
                 <div class="col-12 p-0">
@@ -25,8 +25,19 @@
                         <p class="f-14 c-plain_text principal-font-regular">Aquí podrás encontrar la lista de todos los
                             proveedores que han sido contratados por el
                             <strong class="principal-font-semibold">Municipio de Chihuahua</strong></p>
-                        <div class="m-t-50">
-                            <div class="filter-box">
+                        <div class="m-t-50 row">
+
+
+                            <div class="filter col-md-4">
+                                <div class="filter-container">
+                                    <input class="input-search" type="text" name="" value=""
+                                           placeholder="Escribe el nombre del proveedor"/>
+                                </div>
+                                <button class="filter-btn" type="button" name="button">Buscar</button>
+                            </div>
+
+
+                            <div class="filter-box col-md-8">
                                 <div class="filter">
                                     <div class="filter-container row m-0">
                                         <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
@@ -87,9 +98,13 @@
                                             </div>
                                         </div>
                                     </div>
+
                                     <button class="filter-btn" type="button" name="button">Filtrar</button>
                                 </div>
-                                <div class="m-t-20 float-left">
+
+                            </div>
+                            <div class="row">
+                                <div class="m-t-20 float-left col-md-12">
                                     <span class="tag-title">Filtros:</span>
                                     <div class="tag">
                       <span class="">
@@ -193,6 +208,14 @@
                 </div>
 
 
+                <!-- ADITIONAL INFO ONLY -->
+                <p class="f-12 c-plain_text principal-font-regular">
+                    Todos los datos que se presentan en este informe son única y exclusivamente obtenidos de:
+                    http://www.municipiochihuahua.gob.mx/Transparencia
+                    <br>
+                    Última actualización: <strong>27 de noviembre de 2018</strong>
+                </p>
+
                 <more-info></more-info>
 
             </div>
@@ -285,6 +308,26 @@
         },
         components: {
             MoreInfo
-        }
+        },
+        created() {
+            window.$(document).ready(function () {
+                window.$('.selectpicker').selectpicker();
+
+                $('.selectpicker').selectpicker();
+
+                $('#toast-danger').click(function () {
+                    tShow("Hubo un error en el proceso. Intenta de nuevo", 'danger');
+                });
+                $('#toast-info').click(function () {
+                    tShow("Se informa del proceso por eso es un info", 'info');
+                });
+                $('#toast-warning').click(function () {
+                    tShow("Complete todos los campos requeridos", 'alert');
+                });
+                $('#toast-success').click(function () {
+                    tShow("Se ha completado el proceso correctamente sadasda adadasd sda dasdasdas dasda dasdasd ad adaspidjdj asoijdas", 'success');
+                });
+            });
+        },
     }
 </script>
