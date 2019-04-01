@@ -16,7 +16,7 @@
                                 <table class="table table-hover form-table">
                                     <thead>
                                     <tr>
-                                        <TableTh :name="$t(header)" v-for="header in tableHeaders"/>
+                                        <TableTh :name="$t(header)" v-for="header in tableHeaders" :key="header"/>
                                         <th></th>
                                     </tr>
                                     </thead>
