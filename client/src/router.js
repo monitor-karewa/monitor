@@ -17,6 +17,7 @@ import ContractDetail from '@/pages/user/contracts/ContractDetail';
 import Comparations from '@/pages/user/comparations/Comparations';
 import Calculations from '@/pages/user/calculations/Calculations';
 import Resources from '@/pages/user/resources/Resources';
+import Privacy from '@/pages/user/Privacy';
 
 import StyleIndex from '@/pages/style/Index';
 import Style from '@/pages/style/Style';
@@ -100,6 +101,11 @@ export default new Router({
                     path: 'resources',
                     name: 'Resources',
                     component: Resources
+                },
+                {
+                    path: 'privacy',
+                    name: 'Privacy',
+                    component: Privacy
                 }
             ]
         },
