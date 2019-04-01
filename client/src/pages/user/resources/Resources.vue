@@ -68,9 +68,6 @@
                                                 </div>
                                             </div>
 
-
-
-
                                         </div>
                                         <div class="tab-pane fade" id="box-content2" role="tabpanel"
                                              aria-labelledby="nota-content">
@@ -78,11 +75,50 @@
                                         </div>
                                         <div class="tab-pane fade" id="box-content3" role="tabpanel"
                                              aria-labelledby="marco-content">
-                                            Contenido 3
+
+                                            <div class="col-12">
+                                                <h2 class="title-dot">6 documentos en total:</h2>
+                                            </div>
+
+                                            <div class="row">
+                                                <div class="col-12 col-md-6 col-lg-6" v-for="m in marcolegal">
+                                                    <div class="card-only-text">
+                                                        <h1>{{m.title}}</h1>
+                                                        <span>
+                                    <small>{{m.date}}</small>
+                                    <a href="" class="btn-stroke xs button-primary" tabindex="">Ver más</a>
+                                </span>
+                                                    </div>
+                                                </div>
+
+                                            </div>
+
+
                                         </div>
-                                        <div class="tab-pane fade" id="box-content4" role="tabpanel"
+                                        <div class="tab-pane fade " id="box-content4" role="tabpanel"
                                              aria-labelledby="sitio-content">
-                                            Contenido 4
+
+<div class="row">
+                                            <div class="col-12 col-md-6 col-lg-4">
+                                                <div class="card-only-text text-centering">
+                                                    <h1>Sitio oficial de Karewa</h1>
+                                                    <span>
+                                    <a href="http://karewa.org/" class="btn-stroke xs button-primary" tabindex="">Ir al sitio</a>
+                                </span>
+                                                </div>
+                                            </div>
+
+
+                                            <div class="col-12 col-md-6 col-lg-4">
+                                                <div class="card-only-text text-centering">
+                                                    <h1>Gobierno Municipal de Chihuahua</h1>
+                                                    <span>
+                                    <a href="http://www.chihuahua.gob.mx/" class="btn-stroke xs button-primary" tabindex="">Ir al sitio</a>
+                                </span>
+                                                </div>
+                                            </div>
+</div>
+
                                         </div>
                                     </div>
                                 </div>
@@ -153,6 +189,33 @@
                         title:"Karewa por el bien de Chihuahua",
                         date : "08 de agosto de 2016",
                         image : "https://images.unsplash.com/photo-1542372420-f50174a8ddd4?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2088&q=80"
+                    }
+                ],
+                marcolegal:[
+                    {
+                        title: "Ley de Adquisiciones, Arrendamientos y Contratación de Servicios del Estado de Chihuahua - ¡Nueva ley!",
+                        date: "17 de febrero de 2018"
+                    },
+                    {
+                        title: "Excepciones a la Licitación pública de Adquisiciones - ¡Nueva ley!",
+                        date: "17 de febrero de 2018"
+                    },
+                    {
+                        title: "Ley de Adquisiciones, Arrendamientos y Contratación de Servicios del Estado de Chihuahua",
+                        date: "13 de septiembre de 1997"
+                    },
+                    {
+                        title: "Excepciones a la Licitación pública de Adquisiciones",
+                        date: "13 de septiembre de 1997"
+                    },
+                    {
+                        title: "Ley de Obra Pública y Servicios Relacionados con la misma",
+                        date: "23 de diciembre del 2000"
+                    },
+                    {
+                        title: "Ley de Transparencia y Acceso a la Información Pública\n" +
+                            "del Estado de Chihuahua",
+                        date: "29 de agosto de 2015"
                     }
                 ]
             }
