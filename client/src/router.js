@@ -18,6 +18,7 @@ import Comparations from '@/pages/user/comparations/Comparations';
 import Calculations from '@/pages/user/calculations/Calculations';
 import Resources from '@/pages/user/resources/Resources';
 import Privacy from '@/pages/user/Privacy';
+import TheAbout from '@/pages/TheAbout';
 
 import StyleIndex from '@/pages/style/Index';
 import Style from '@/pages/style/Style';
@@ -51,7 +52,7 @@ import NotFound from '@/pages/errors/NotFound';
 Vue.use(Router);
 
 export default new Router({
-    // mode : 'history',
+    mode : 'history',
     routes: [
         {
             path: '/',
@@ -106,6 +107,11 @@ export default new Router({
                     path: 'privacy',
                     name: 'Privacy',
                     component: Privacy
+                },
+                {
+                    path: 'about',
+                    name: 'About',
+                    component: TheAbout
                 }
             ]
         },
