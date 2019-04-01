@@ -68,7 +68,11 @@
     import MoreInfo from '@/components/general/MoreInfo';
 
     export default {
-        data() {},
+        data () {
+            return {
+                test: 'Workaround; empty data triggers error on router'
+            }
+        },
         components: {
             MoreInfo
         }

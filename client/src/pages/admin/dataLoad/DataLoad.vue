@@ -30,7 +30,7 @@
                         <div class="floating-text">
                             <h1>Carga Manual</h1>
                             <p>Recomendada para 1 o 20 registros</p>
-                            <button class="btn-stroke button-accent"> Ir al catálogo </button>
+                            <a href="/admin/contracts" class="btn-stroke button-accent"> Ir al catálogo </a>
                         </div>
                         <img class="img-fluid img-card-corner" src="@/assets/images/Cards/corner-document.svg" alt="" />
                     </div>

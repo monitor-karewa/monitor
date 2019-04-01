@@ -137,12 +137,20 @@
                 ],
                 linksFooter: {
                     "name": "Cerrar Sesión",
-                    "to": "/logout",
+//                    "to": "/logout",
+                    "to": "/",
                     "icon": "zmdi zmdi-power"
                 }
             }
         },
         components: {
+        },
+        created: () => {
+            window.$('#hideMenu').on('click', function() {
+                $('.sidebar').removeClass('small-sidebar');
+                $('.backdrop').removeClass('active');
+                $('#hamburguer-icon').removeClass('active');
+            });
         }
     }
 </script>

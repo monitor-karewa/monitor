@@ -51,7 +51,7 @@ import NotFound from '@/pages/errors/NotFound';
 Vue.use(Router);
 
 export default new Router({
-    mode : 'history',
+    // mode : 'history',
     routes: [
         {
             path: '/',

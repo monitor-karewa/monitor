@@ -117,6 +117,7 @@ app.use(compression());
 app.use(helmet());
 
 if (!isProd) {
+    //CORS always on for dev mode
     app.use(cors({
         origin: function (origin, callback) {
             //Allow cors for localhost
@@ -125,6 +126,17 @@ if (!isProd) {
             // } else {
             //     callback(new Error('Not allowed by CORS'))
             // }
+        }
+    }));
+} else {
+    app.use(cors({
+        origin: function (origin, callback) {
+            //Allow cors for hosts that include 'karewa'
+            if (origin.indexOf('karewa') !== -1) {
+                callback(null, true)
+            } else {
+                callback(new Error('Not allowed by CORS'))
+            }
         }
     }));
 }
