@@ -24,15 +24,16 @@ export default {
             },
             computed: {
                 ...mapState({
-                    docs: state => state[storeModule].docs
+                    docs: state => state[storeModule].docs,
+                    selectedDocId: state => state[storeModule].selectedDocId
                 })
             },
             methods: {
                 testList: function () {
                     Vue.$log.info('this.$store', this.dispatch(`${storeModule}/list`));
                 },
-                deleteElement : function(id){
-                    this.$store.dispatch(`${storeModule}/delete`, id);
+                deleteElementSelected : function(){
+                    this.$store.dispatch(`${storeModule}/delete`, this.selectedDocId);
                 }
             },
             beforeMount() {

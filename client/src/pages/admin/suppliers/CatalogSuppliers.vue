@@ -54,9 +54,7 @@
             </div>
         </NewEntryModal>
 
-
-
-        <ModalDanger v-bind:confirm="confirm"/>
+        <ModalDanger v-bind:confirm="confirmDeletion"/>
     </div>
 </template>
 
@@ -94,12 +92,12 @@
             ModalDanger
         },
         methods:{
-            confirm(){
-                console.log("confirm function");
+            confirmDeletion(){
+                this.deleteElementSelected();
             }
         },
         created(){
-            bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
+            bus.$on(storeModule+DELETE_SUCCESS, ()=>{
                 tShow("Elemento Eliminado!!", 'info');
             })
         },

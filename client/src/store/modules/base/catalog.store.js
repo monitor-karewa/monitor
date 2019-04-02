@@ -10,11 +10,11 @@ export default function (api, storeName) {
             page: 1,
             pages: 1
         },
-        docName: ''
+        docName: '',
+        selectedDocId: ''
     };
 
     const getters = {
-
         getPaginationQuery(state){
             let pagination = state.pagination;
 
@@ -123,6 +123,9 @@ export default function (api, storeName) {
         },
         UPDATE_PAGE(state,page){
             state.pagination.page = page;
+        },
+        SET_DOC_ID(state, id){
+            state.selectedDocId = id;
         }
     };
 
