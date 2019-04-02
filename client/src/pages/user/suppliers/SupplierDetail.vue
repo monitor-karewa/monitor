@@ -35,7 +35,9 @@
 
                 <!--Titulo-->
                 <div class="col-12 p-0 m-t-20 m-b-20 d-flex">
-                    <a href="/suppliers" class="btn-outline text-unset"><i class="zmdi zmdi-long-arrow-left"></i> Regreso a Proveedores </a>
+                    <router-link to="/suppliers" class="">
+                        <i class="zmdi zmdi-long-arrow-left"></i> Regreso a Proveedores
+                    </router-link>
                 </div>
 
                 <div class="col-12 p-0">
@@ -229,8 +231,9 @@
                                                         <label>{{contrato.cantidad}}</label>
                                                         <small>{{contrato.fecha}}</small>
                                                     </span>
-                                                        <a href="" class="btn-stroke xs button-primary" tabindex="">Ver
-                                                            más</a>
+                                                        <router-link to="/contract" class="btn-stroke xs button-primary">
+                                                            Ver más
+                                                        </router-link>
                                                     </div>
                                                 </div>
                                             </div>
@@ -277,8 +280,9 @@
                                                         <label>{{contrato.cantidad}}</label>
                                                         <small>{{contrato.fecha}}</small>
                                                     </span>
-                                                        <a href="" class="btn-stroke xs button-primary" tabindex="">Ver
-                                                            más</a>
+                                                        <router-link to="/contract" class="btn-stroke xs button-primary">
+                                                            Ver más
+                                                        </router-link>
                                                     </div>
                                                 </div>
                                             </div>
@@ -325,8 +329,9 @@
                                                         <label>{{contrato.cantidad}}</label>
                                                         <small>{{contrato.fecha}}</small>
                                                     </span>
-                                                    <a href="/contract" class="btn-stroke xs button-primary" tabindex="">Ver
-                                                        más</a>
+                                                    <router-link to="/contract" class="btn-stroke xs button-primary">
+                                                        Ver más
+                                                    </router-link>
                                                 </div>
                                             </div>
                                         </div>

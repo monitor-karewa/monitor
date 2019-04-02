@@ -11,17 +11,31 @@
                   </div>
                   <div class="row">
                   <div class="col-6">
-                    <li><a href="#">Inicio</a></li>
-                    <li><a href="#">Proveedores</a></li>
-                    <li><a href="#">Contratos</a></li>
-                    <li><a href="#">Índice de corrupción</a></li>
+                    <li>
+                        <router-link to="/">
+                            Inicio
+                        </router-link>
+                    </li>
+                    <li>
+                        <router-link to="/suppliers">
+                            Proveedores
+                        </router-link>
+                    </li>
+                    <li>
+                        <router-link to="/contracts">
+                            Contratos
+                        </router-link>
+                    </li>
+                      <li>
+                          <router-link to="/">
+                              Índice de corrupción
+                          </router-link>
+                      </li>
                   </div>
                   <div class="col-6">
-
-                        <li><a href="#">Comparar monitores</a></li>
-                        <li><a href="#">Recursos</a></li>
-                        <li><a href="#">Administrar</a></li>
-
+                        <li><router-link href="/comparations">Comparar monitores</router-link></li>
+                        <li><router-link href="/resources">Recursos</router-link></li>
+                        <li><router-link href="/">Administrar</router-link></li>
                   </div>
 
                   </div>
@@ -32,7 +46,11 @@
                     <div class="floating-title-panel small">
                       <h1 class="f-14">Información</h1>
                     </div>
-                    <li><a href="/privacy">Aviso de Privacidad</a></li>
+                    <li>
+                        <router-link to="/privacy" class="">
+                            Aviso de Privacidad
+                        </router-link>
+                    </li>
                 </ul>
             </span>
                     <span class="col-6 col-sm-6 col-md-4 col-lg-2 p-0 m-b-0">
@@ -40,8 +58,16 @@
                     <div class="floating-title-panel small">
                       <h1 class="f-14">Nosotros</h1>
                     </div>
-                    <li><a href="/about">Acerca de</a></li>
-                    <li><a href="/contact">Contacto</a></li>
+                    <li>
+                        <router-link to="/about">
+                            Acerca de
+                        </router-link>
+                    </li>
+                    <li>
+                        <router-link to="/contact">
+                            Contacto
+                        </router-link>
+                    </li>
                 </ul>
             </span>
 

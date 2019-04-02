@@ -5,8 +5,9 @@
 
                 <!--Titulo-->
                 <div class="col-12 p-0 m-t-20 m-b-20 d-flex">
-                    <a href="/comparations" class="btn-outline text-unset"><i class="zmdi zmdi-long-arrow-left"></i> Ir
-                        a comparar monitores </a>
+                    <router-link to="/comparations" class="btn-outline text-unset">
+                        <i class="zmdi zmdi-long-arrow-left"></i> Ir a comparar monitores
+                    </router-link>
                 </div>
 
                 <div class="col-12 p-0">

@@ -5,10 +5,12 @@
 
                 <!--Titulo-->
                 <div class="col-12 p-0 m-t-20 m-b-20 d-flex">
-                    <a href="/" class="btn-outline text-unset"><i class="zmdi zmdi-long-arrow-left"></i> Ir a Índice de
-                        corrupción </a>
-                    <a href="/contracts" class="btn-outline text-unset m-auto-left"> Ir a Recursos <i
-                            class="zmdi zmdi-long-arrow-right m-r-0 m-l-15"></i></a>
+                    <router-link to="/" class="btn-outline text-unset">
+                        <i class="zmdi zmdi-long-arrow-left"></i>Ir a Índice de corrupción
+                    </router-link>
+                    <router-link to="/resources" class="btn-outline text-unset m-auto-left">
+                        Ir a Recursos <i class="zmdi zmdi-long-arrow-right m-r-0 m-l-15"></i>
+                    </router-link>
                 </div>
 
                 <div class="col-12 p-0">
@@ -46,8 +48,9 @@
                                         </div>
                                     </div>
                                     <small>Monitor Karewa {{monitor.name}}</small>
-                                    <a href="/#/detailComparations" class="btn-stroke xs button-primary"
-                                       tabindex="">Comparar</a>
+                                    <router-link to="/detailComparations" class="btn-stroke xs button-primary">
+                                        Comparar
+                                    </router-link>
                                 </div>
                             </div>
                         </div>

@@ -3,7 +3,9 @@
         <div class="neutral-width">
 
             <div class="col-12 p-0 m-t-20 m-b-20 d-flex">
-                <a href="/#/comparations" class="btn-outline text-unset"><i class="zmdi zmdi-long-arrow-left"></i> Regresar a Selección de Monitor </a>
+                <router-link to="/comparations" class="btn-outline text-unset">
+                    <i class="zmdi zmdi-long-arrow-left"></i> Regresar a Selección de Monitor
+                </router-link>
             </div>
 
             <div class="col-12 p-0">
@@ -50,7 +52,9 @@
                                         <label style="color: #b32530;">CD. JUÁREZ</label>
                                     </div>
                                 </div>
-                                <a href="" class="btn-stroke button-primary text-unset" tabindex="">Ir a Inicio</a>
+                                <router-link to="/" class="btn-stroke button-primary text-unset" tabindex="">
+                                    Ir a Inicio
+                                </router-link>
                             </div>
 
 

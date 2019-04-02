@@ -11,13 +11,6 @@
                             <router-link v-for="(link, index) in links" :key="'link' + index" :to="link.to" tag="li">
                                 <a>{{link.name}}</a>
                             </router-link>
-                            <!--<li><a> Inicio </a></li>-->
-                            <!--<li><a> Proveedores </a></li>-->
-                            <!--<li><a> Contratos </a></li>-->
-                            <!--<li><a> Comparar </a></li>-->
-                            <!--<li><a> Cálculos </a></li>-->
-                            <!--<li><a> Ligas de interés </a></li>-->
-                            <!--<li><a> Administrar </a></li>-->
                         </ul>
                         <div class="topMenuDropdown dropdown keep-open">
                             <button class="dropdown-toggle" type="button" id="dropdownMenuTop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -31,13 +24,6 @@
                                 <router-link v-for="(link, index) in links" :key="'link-dropdown-' + index" :to="link.to" class="dropdown-item" exact-active-class="active">
                                     {{link.name}}
                                 </router-link>
-                                <!--<a href="" class="dropdown-item" href="#"> Inicio </a>-->
-                                <!--<a href="" class="dropdown-item active" href="#"> Proveedores </a>-->
-                                <!--<a href="" class="dropdown-item" href="#"> Contratos </a>-->
-                                <!--<a href="" class="dropdown-item" href="#"> Comparar </a>-->
-                                <!--<a href="" class="dropdown-item" href="#"> Cálculos </a>-->
-                                <!--<a href="" href="" class="dropdown-item" href="#"> Ligas de interés </a>-->
-                                <!--<a href="" class="dropdown-item" href="#"> Administrar </a>-->
                             </div>
                         </div>
                     </div>

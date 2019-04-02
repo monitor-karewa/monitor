@@ -1,14 +1,15 @@
 <template>
     <div>
 
-        <!--Titulo-->
-        <div class="col-12 p-0 m-t-20 m-b-20 d-flex">
-            <a href="/" class="btn-outline text-unset"><i class="zmdi zmdi-long-arrow-left"></i> Ir a Proveedores
-            </a>
-        </div>
-
         <section class="client-content">
             <div class="neutral-width">
+
+                <!--Titulo-->
+                <div class="col-12 p-0 m-t-20 m-b-20 d-flex">
+                    <router-link to="/suppliers" class="btn-outline text-unset">
+                        <i class="zmdi zmdi-long-arrow-left"></i> Ir a Proveedores
+                    </router-link>
+                </div>
 
                 <div class="col-12 p-0">
                     <div class="card o-visible">
@@ -151,7 +152,11 @@
                                     </thead>
                                     <tbody>
                                     <tr v-for="contract in contracts">
-                                        <td class="" style="min-width:0px;"><a href="/contract" class="btn-stroke button-primary table-btn-stroke">Ver más</a></td>
+                                        <td class="" style="min-width:0px;">
+                                            <router-link to="/contract" class="btn-stroke button-primary table-btn-stroke">
+                                                Ver más
+                                            </router-link>
+                                        </td>
                                         <td class="text-align-l">{{contract.id}}</td>
                                         <td class="text-align-l">{{contract.descripcionObra}}</td>
                                         <td class="text-align-l c-accent">{{contract.montoTotal}}</td>
