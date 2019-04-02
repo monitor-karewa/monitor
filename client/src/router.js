@@ -15,6 +15,7 @@ import SupplierDetail from '@/pages/user/suppliers/SupplierDetail';
 import Contracts from '@/pages/user/contracts/Contracts';
 import ContractDetail from '@/pages/user/contracts/ContractDetail';
 import Comparations from '@/pages/user/comparations/Comparations';
+import DetailComparations from '@/pages/user/comparations/DetailComparations';
 import Calculations from '@/pages/user/calculations/Calculations';
 import Resources from '@/pages/user/resources/Resources';
 import Privacy from '@/pages/user/Privacy';
@@ -93,6 +94,11 @@ export default new Router({
                     path: 'comparations',
                     name: 'Comparations',
                     component: Comparations
+                },
+                {
+                    path: 'detailComparations',
+                    name: 'detailComparations',
+                    component: DetailComparations
                 },
                 {
                     path: 'calculations',
