@@ -93,8 +93,10 @@ exports.save = (req, res, next) => {
                 }
 
                 //Update doc fields
-                resource.name = req.body.name;
-                
+                resource.title = req.body.title ;
+                resource.classification = req.body.classification ;
+                resource.url= req.body.url;
+
                 resource.save((err, savedResource) => {
                     if (err) {
                         logger.error(req, err, 'resource.controller#save', 'Error al guardar Resource');
@@ -116,7 +118,9 @@ exports.save = (req, res, next) => {
         //Create
 
         let resource = new Resource({
-            name: req.body.name
+            title : req.body.title,
+            classification : req.body.classification,
+            url: req.body.url
         });
 
         resource.save((err, savedResource) => {

@@ -16,40 +16,26 @@
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre"
+                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre de la unidad administrativa"
                                v-model="doc.name">
-                        <label class="fg-label">Nombre del Cálculo
+                        <label class="fg-label">Nombre de la unidad administrativa
                             <small></small>
                             <br>
-                            <strong>/Introduce el nombre del Proveedor/</strong>
+                            <strong>/Introduce el nombre del unidad</strong>
                         </label>
                     </div>
                 </div>
-
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Ej. VECJ880326" v-model="doc.rfc">
-                        <label class="fg-label">RFC
+                        <input type="text" class="form-control fg-input" placeholder="Introduce las notas adicionales"
+                               v-model="doc.notes">
+                        <label class="fg-label">Notas
                             <small></small>
                             <br>
-                            <strong>Indica el RFC del proveedor</strong>
+                            <strong>/Introduce anotaciones sobre la unidad/</strong>
                         </label>
                     </div>
                 </div>
-
-
-                <div class="form-group fg-float subtitle">
-                    <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input"
-                               placeholder="Escribe aquí tus notas sobre el proveedor" v-model="doc.notes">
-                        <label class="fg-label">Notas Adicionales
-                            <small></small>
-                            <br>
-                            <strong>Notas adicionales</strong>
-                        </label>
-                    </div>
-                </div>
-
             </div>
         </NewEntryModal>
 
@@ -82,7 +68,8 @@
         data () {
             return {
                 storeModule: storeModule,
-                tableHeaders : ['suppliers.name','suppliers.notes','general.created-at'],
+                tableHeaders : ['suppliers.name',
+                     'suppliers.notes','general.created-at'],
                 tableColumns: [
                     {field:'name'}, {field:'notes'},{field:'created_at', type:'Date'}
                 ],

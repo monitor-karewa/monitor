@@ -2,7 +2,7 @@
     <div>
         <AdminMainSection>
             <BackButton />
-            <CatalogHeader :singular="'Organización'" :plural="'Organizaciones'" />
+            <CatalogHeader :singular="'Recurso'" :plural="'Recursos'" />
             <EditableTable
                     :docs="docs"
                     :tableHeaders="tableHeaders"
@@ -16,36 +16,34 @@
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre"
-                               v-model="doc.name">
-                        <label class="fg-label">Nombre del Cálculo
+                        <input type="text" class="form-control fg-input" placeholder="Introduce el título"
+                               v-model="doc.title">
+                        <label class="fg-label">Título del recurso
                             <small></small>
                             <br>
-                            <strong>/Introduce el nombre del Proveedor/</strong>
+                            <strong>Introduce el título del recurso</strong>
                         </label>
                     </div>
                 </div>
-
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Ej. VECJ880326" v-model="doc.rfc">
-                        <label class="fg-label">RFC
+                        <input type="text" class="form-control fg-input" placeholder="Introduce la url"
+                               v-model="doc.url">
+                        <label class="fg-label">URL
                             <small></small>
                             <br>
-                            <strong>Indica el RFC del proveedor</strong>
+                            <strong>Introduce la url del recurso</strong>
                         </label>
                     </div>
                 </div>
-
-
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input"
-                               placeholder="Escribe aquí tus notas sobre el proveedor" v-model="doc.notes">
-                        <label class="fg-label">Notas Adicionales
+                        <input type="text" class="form-control fg-input" placeholder="Introduce la clasificación"
+                               v-model="doc.classification">
+                        <label class="fg-label">Clasificación del recurso
                             <small></small>
                             <br>
-                            <strong>Notas adicionales</strong>
+                            <strong>Introduce el la clasificación del recurso/</strong>
                         </label>
                     </div>
                 </div>
@@ -82,7 +80,7 @@
         data () {
             return {
                 storeModule,
-                tableHeaders : ['suppliers.name','suppliers.rfc','suppliers.notes','general.created-at'],
+                tableHeaders : ['título','clasificación','url','general.created-at'],
                 tableColumns: [
                     {field:'title'}, {field:'classification'}, {field:'url'},{field:'created_at', type:'Date'}
                 ],

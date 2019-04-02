@@ -101,7 +101,7 @@ exports.save = (req, res, next) => {
                 
                 user.save((err, savedUser) => {
                     if (err) {
-                        logger.error(req, err, 'user.controller#save', 'Error al guardar User');
+                        logger.error(req, err, 'user.controller#save', 'Error al guardar User 1 ');
                         return res.json({
                             errors: true,
                             message: req.__('general.error.save')
@@ -120,12 +120,16 @@ exports.save = (req, res, next) => {
         //Create
 
         let user = new User({
-            name: req.body.name
+            name: req.body.name,
+            lastName : req.body.lastName,
+            email : req.body.email,
+            password : req.body.password
         });
 
         user.save((err, savedUser) => {
             if (err) {
-                logger.error(req, err, 'user.controller#save', 'Error al guardar User');
+                console.log("err", err);
+                logger.error(req, err, 'user.controller#save', 'Error al guardar User 2');
                 return res.json({
                     "error": true,
                     "message": req.__('general.error.save')
