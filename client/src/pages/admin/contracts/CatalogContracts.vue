@@ -16,39 +16,49 @@
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre"
-                               v-model="doc.name">
-                        <label class="fg-label">Nombre del Cálculo
+                        <input type="text" class="form-control fg-input" placeholder="Selecciona el proveedor"
+                               v-model="doc.supplier">
+                        <label class="fg-label">Proveedor
                             <small></small>
                             <br>
-                            <strong>/Introduce el nombre del Proveedor/</strong>
+                            <strong>Selecciona el proveedor/</strong>
                         </label>
                     </div>
                 </div>
-
-                <div class="form-group fg-float subtitle">
-                    <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Ej. VECJ880326" v-model="doc.rfc">
-                        <label class="fg-label">RFC
-                            <small></small>
-                            <br>
-                            <strong>Indica el RFC del proveedor</strong>
-                        </label>
-                    </div>
-                </div>
-
-
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
-                               placeholder="Escribe aquí tus notas sobre el proveedor" v-model="doc.notes">
-                        <label class="fg-label">Notas Adicionales
+                               v-model="doc.administrativeUnit">
+                        <label class="fg-label">Nombre del Cálculo
                             <small></small>
                             <br>
-                            <strong>Notas adicionales</strong>
+                            <strong>Selecciona la unidad administrativa</strong>
                         </label>
                     </div>
                 </div>
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input" placeholder="Introduce el cantidad"
+                               v-model="doc.amount">
+                        <label class="fg-label">Cantidad
+                            <small></small>
+                            <br>
+                            <strong>Introduce la cantidad</strong>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input" placeholder="Selecciona el tipo de procedimiento"
+                               v-model="doc.procedureType">
+                        <label class="fg-label">Tipo de procedimiento
+                            <small></small>
+                            <br>
+                            <strong>Selecciona el tipo de procedimiento</strong>
+                        </label>
+                    </div>
+                </div>
+
 
             </div>
         </NewEntryModal>

@@ -94,6 +94,7 @@ exports.save = (req, res, next) => {
 
                 //Update doc fields
                 administrativeUnit.name = req.body.name;
+                administrativeUnit.notes = req.body.notes;
                 
                 administrativeUnit.save((err, savedAdministrativeUnit) => {
                     if (err) {
@@ -116,7 +117,8 @@ exports.save = (req, res, next) => {
         //Create
 
         let administrativeUnit = new AdministrativeUnit({
-            name: req.body.name
+            name: req.body.name,
+            notes: req.body.notes
         });
 
         administrativeUnit.save((err, savedAdministrativeUnit) => {

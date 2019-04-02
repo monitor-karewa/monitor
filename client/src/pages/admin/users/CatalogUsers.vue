@@ -19,38 +19,47 @@
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce el nombre"
                                v-model="doc.name">
-                        <label class="fg-label">Nombre del Cálculo
+                        <label class="fg-label">Nombre del Usuario
                             <small></small>
                             <br>
-                            <strong>/Introduce el nombre del Proveedor/</strong>
+                            <strong>Introduce el nombre del usuario</strong>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre"
+                               v-model="doc.lastName">
+                        <label class="fg-label">Apellido del Usuario
+                            <small></small>
+                            <br>
+                            <strong>Introduce el apellido del usuario/</strong>
+                        </label>
+                    </div>
+                </div>
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre"
+                               v-model="doc.email">
+                        <label class="fg-label"> Correo eléctrónico
+                            <small></small>
+                            <br>
+                            <strong>/Introduce la dirección de correo electrónico del Usuario/</strong>
                         </label>
                     </div>
                 </div>
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Ej. VECJ880326" v-model="doc.rfc">
-                        <label class="fg-label">RFC
+                        <input type="password" class="form-control fg-input" placeholder="Introduce el password"
+                               v-model="doc.password">
+                        <label class="fg-label"> Contraseña
                             <small></small>
                             <br>
-                            <strong>Indica el RFC del proveedor</strong>
+                            <strong>Introduce la contraseña para el inicio de sesión</strong>
                         </label>
                     </div>
                 </div>
-
-
-                <div class="form-group fg-float subtitle">
-                    <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input"
-                               placeholder="Escribe aquí tus notas sobre el proveedor" v-model="doc.notes">
-                        <label class="fg-label">Notas Adicionales
-                            <small></small>
-                            <br>
-                            <strong>Notas adicionales</strong>
-                        </label>
-                    </div>
-                </div>
-
             </div>
         </NewEntryModal>
 

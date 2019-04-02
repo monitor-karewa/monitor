@@ -72,6 +72,7 @@ exports.save = (req, res, next) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
+        console.log("errors.array()", errors.array());
         return res.status(422).json({ errors: errors.array() });
     }
     
@@ -93,8 +94,11 @@ exports.save = (req, res, next) => {
                 }
 
                 //Update doc fields
-                contract.name = req.body.name;
-                
+                contract.supplier = req.body.supplier;
+                contract.administrativeUnit = req.body.administrativeUnit;
+                contract.amount = req.body.amount;
+                contract.procedureType = req.body.procedureType;
+
                 contract.save((err, savedContract) => {
                     if (err) {
                         logger.error(req, err, 'contract.controller#save', 'Error al guardar Contract');
@@ -118,6 +122,13 @@ exports.save = (req, res, next) => {
         let contract = new Contract({
             name: req.body.name
         });
+
+        //Update doc fields
+        contract.supplier = req.body.supplier;
+        contract.administrativeUnit = req.body.administrativeUnit;
+        contract.amount = req.body.amount;
+        contract.procedureType = req.body.procedureType;
+
 
         contract.save((err, savedContract) => {
             if (err) {

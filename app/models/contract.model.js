@@ -67,7 +67,8 @@ ContractSchema.statics.expressValidator = function() {
     //https://express-validator.github.io/docs/
     
     return [
-        check('name').isLength({
+        //TODO change this
+        check('supplier').isLength({
             min: 2,
             max: 100
         })

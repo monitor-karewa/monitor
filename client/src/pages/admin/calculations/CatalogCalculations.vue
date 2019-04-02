@@ -1,8 +1,8 @@
 <template>
     <div>
         <AdminMainSection>
-            <BackButton />
-            <CatalogHeader :singular="'Cálculo'" :plural="'Cálculo'" />
+            <BackButton/>
+            <CatalogHeader :singular="'Cálculo'" :plural="'Cálculo'"/>
             <EditableTable
                     :docs="docs"
                     :tableHeaders="tableHeaders"
@@ -16,43 +16,55 @@
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre"
-                               v-model="doc.name">
-                        <label class="fg-label">Nombre del Cálculo
+                        <input type="text" class="form-control fg-input" placeholder="Introduce el símbolo del cálculo"
+                               v-model="doc.symbol">
+                        <label class="fg-label">Símbolo del Cálculo
                             <small></small>
                             <br>
-                            <strong>/Introduce el nombre del Proveedor/</strong>
+                            <strong>Introduce el símbolo del Cálculo</strong>
                         </label>
+                    </div>
+                </div>
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input" placeholder="Introduce el título"
+                               v-model="doc.title">
+                        <label class="fg-label">Título del Cálculo
+                            <small></small>
+                            <br>
+                            <strong>/Introduce el título del cálculo/</strong>
+                        </label>
+                    </div>
+                </div>
+                <div>
+                    <div class="form-group fg-float subtitle">
+                        <div class="fg-line basic-input">
+                            <input type="text" class="form-control fg-input" placeholder="Introduce la descripción"
+                                   v-model="doc.description">
+                            <label class="fg-label">Descripción del Cálculo
+                                <small></small>
+                                <br>
+                                <strong>Introduce la descripción del cálculo</strong>
+                            </label>
+                        </div>
                     </div>
                 </div>
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Ej. VECJ880326" v-model="doc.rfc">
-                        <label class="fg-label">RFC
+                        <input type="text" class="form-control fg-input" placeholder="Introduce las notas adicionales"
+                               v-model="doc.classification">
+                        <label class="fg-label">Notas del cálculo
                             <small></small>
                             <br>
-                            <strong>Indica el RFC del proveedor</strong>
-                        </label>
-                    </div>
-                </div>
-
-
-                <div class="form-group fg-float subtitle">
-                    <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input"
-                               placeholder="Escribe aquí tus notas sobre el proveedor" v-model="doc.notes">
-                        <label class="fg-label">Notas Adicionales
-                            <small></small>
-                            <br>
-                            <strong>Notas adicionales</strong>
+                            <strong>Introduce las notas adicionales del cálculo</strong>
                         </label>
                     </div>
                 </div>
 
             </div>
-        </NewEntryModal>
 
+        </NewEntryModal>
 
 
         <ModalDanger v-bind:confirm="confirm"/>
@@ -60,15 +72,15 @@
 </template>
 
 
-
 <style>
 </style>
 
 <script>
     import catalog from '@/mixins/catalog.mixin';
-    import { bus } from '@/main';
-    import { DELETE_SUCCESS } from "@/store/events";
-    import  ModalDanger from "@/components/modals/ModalDanger";
+    import {bus} from '@/main';
+    import {DELETE_SUCCESS} from "@/store/events";
+    import ModalDanger from "@/components/modals/ModalDanger";
+
     const storeModule = 'calculations';
     const docName = 'calculations.calculation';
 
@@ -79,30 +91,30 @@
 
     export default {
         mixins: [baseCatalog],
-        data () {
+        data() {
             return {
                 storeModule: storeModule,
-                tableHeaders : ['Símbolo','Título','Descripción','general.created-at'],
+                tableHeaders: ['Símbolo', 'Título', 'Descripción','Notas','general.created-at'],
                 tableColumns: [
-                    {field:'symbol'}, {field:'title'}, {field:'description'},{field:'created_at', type:'Date'}
+                    {field: 'symbol'}, {field: 'title'}, {field: 'description'},{field: 'notas'} , {field: 'created_at', type: 'Date'}
                 ],
-                doc : {}
+                doc: {}
             }
         },
         components: {
             ModalDanger
         },
-        methods:{
-            confirm(){
+        methods: {
+            confirm() {
                 console.log("confirm function");
             }
         },
-        created(){
-            bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
+        created() {
+            bus.$on(storeModule + DELETE_SUCCESS, (data) => {
                 tShow("Elemento Eliminado!!", 'info');
             })
         },
-        mounted(){
+        mounted() {
             window.$(document).ready(function () {
                 window.$('.selectpicker').selectpicker();
 

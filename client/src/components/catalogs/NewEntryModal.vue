@@ -47,8 +47,8 @@
                 } else {
                     actionName = "save";
                 }
-
                 this.$store.dispatch(`${this.$props.storeModule}/${actionName}`, this.$props.data);
+                $('#newEntry').modal('hide')
                 //actions storeModule/<save>
                 //actions storeModule/action
 

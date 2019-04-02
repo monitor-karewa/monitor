@@ -93,8 +93,10 @@ exports.save = (req, res, next) => {
                 }
 
                 //Update doc fields
-                calculation.name = req.body.name;
-                
+                calculation.symbol = req.body.symbol;
+                calculation.title = req.body.title;
+                calculation.description = req.body.description;
+
                 calculation.save((err, savedCalculation) => {
                     if (err) {
                         logger.error(req, err, 'calculation.controller#save', 'Error al guardar Calculation');
@@ -116,8 +118,12 @@ exports.save = (req, res, next) => {
         //Create
 
         let calculation = new Calculation({
-            name: req.body.name
         });
+
+        //Update doc fields
+        calculation.symbol = req.body.symbol;
+        calculation.title = req.body.title;
+        calculation.description = req.body.description;
 
         calculation.save((err, savedCalculation) => {
             if (err) {
