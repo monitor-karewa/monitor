@@ -18,13 +18,21 @@
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce el nombre"
-                               v-model="doc.name">
+                               v-model="doc.name"/>
+
+
                         <label class="fg-label">Nombre del Cálculo
                             <small></small>
-                            <br>
-                            <strong>/Introduce el nombre del Proveedor/</strong>
+                            <br/>
+                            <strong>Introduce el nombre del Proveedor</strong>
                         </label>
                     </div>
+                    <span style="float: right">{{ doc && doc.name ? doc.name.length : 0}}/100</span>
+                    <span style="color: red">{{ fieldErrors.fields.name }}</span>
+                    <span v-if="isNameLimitExceeded(doc)"
+                          style="color: red; display: block">
+                        Debe estar entre 2 y 100 carácteres
+                    </span>
                 </div>
 
                 <div class="form-group fg-float subtitle">
@@ -32,10 +40,11 @@
                         <input type="text" class="form-control fg-input" placeholder="Ej. VECJ880326" v-model="doc.rfc">
                         <label class="fg-label">RFC
                             <small></small>
-                            <br>
+                            <br/>
                             <strong>Indica el RFC del proveedor</strong>
                         </label>
                     </div>
+                    <span style="color: red">{{ fieldErrors.fields.rfc }}</span>
                 </div>
 
 
@@ -72,6 +81,7 @@
     import  ModalDanger from "@/components/modals/ModalDanger";
     const storeModule = 'suppliers';
     const docName = 'suppliers.supplier';
+    import { mapGetters } from 'vuex';
 
     let baseCatalog = catalog.configure({
         storeModule: storeModule,
@@ -90,12 +100,20 @@
                 doc : {}
             }
         },
+        computed: {
+           ...mapGetters(storeModule,['fieldErrors'])
+
+
+        },
         components: {
             ModalDanger
         },
         methods:{
             confirm(){
                 console.log("confirm function");
+            },
+            isNameLimitExceeded(doc){
+                return doc.name ? !(doc.name.length > 1 && doc.name.length <= 100) : false;
             }
         },
         created(){

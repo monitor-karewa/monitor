@@ -16,7 +16,7 @@
                         <!--<div class="total-footer">-->
                         <!--</div>-->
                         <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn-raised button-accent m-l-15"> Guardar</button>
+                        <button type="submit"  class="btn-raised button-accent m-l-15"> Guardar</button>
                     </div>
                 </div>
             </div>
@@ -32,23 +32,48 @@
     // let catalogoProveedores = catalog.configure({
     //     storeModule: storeModule
     // });
+    import { mapGetters } from 'vuex';
 
     export default {
         data() {
             return {
+                dataa : this.$props.data
+            }
+        },
+        computed:{
+            hasErrors(){
+                console.log("this.$props", this.$props.storeModule);
+                console.log("this.$store", this.$store);
+                return this.$store.getters[`${this.$props.storeModule}/hasErrors`]
+            },
+            dataModal(){
+                return this.$props.data
             }
         },
         components: {},
         methods: {
             save: function () {
-                let actionName;
-                if(this.$props.action && this.$props.action.length ){
-                    actionName = this.$props.action;
-                } else {
-                    actionName = "save";
+
+                this.$store.dispatch(`${this.$props.storeModule}/validateForm`, this.$props.data);
+
+                if(!this.hasErrors){
+                    console.log("Si entro aqui");
+                    let actionName;
+                    if(this.$props.action && this.$props.action.length ){
+                        actionName = this.$props.action;
+                    } else {
+                        actionName = "save";
+                    }
+                    this.$store.dispatch(`${this.$props.storeModule}/${actionName}`, this.$props.data);
+                    $('#newEntry').modal('hide');
+                    console.log("this.$props.data", this.$props.data);
+
+                    for(let prop in this.dataModal){
+                        if(typeof this.dataModal[prop] !== 'function'){
+                            this.dataModal[prop] = "";
+                        }
+                    }
                 }
-                this.$store.dispatch(`${this.$props.storeModule}/${actionName}`, this.$props.data);
-                $('#newEntry').modal('hide')
                 //actions storeModule/<save>
                 //actions storeModule/action
 
