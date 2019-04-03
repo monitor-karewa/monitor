@@ -5,7 +5,6 @@
             <CatalogHeader :singular="'Proveedor'" :plural="'Proveedores'" />
             <EditableTable
                     :docs="docs"
-                    :tableHeaders="tableHeaders"
                     :tableColumns="tableColumns"
                     :store-module="storeModule"
                     :singular="'Proveedor'"
@@ -17,8 +16,7 @@
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre"
-                               v-model="doc.name">
+                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre" v-model="doc.name">
                         <label class="fg-label">Nombre del Cálculo
                             <small></small>
                             <br>
@@ -81,9 +79,11 @@
         data () {
             return {
                 storeModule: storeModule,
-                tableHeaders : ['suppliers.name','suppliers.rfc','suppliers.notes','general.created-at'],
                 tableColumns: [
-                    {field:'name'}, {field:'rfc'}, {field:'notes'},{field:'created_at', type:'Date'}
+                    { label: 'suppliers.name', field:'name', visible : true},
+                    { label: 'suppliers.rfc', field:'rfc', visible : true},
+                    { label: 'suppliers.notes' ,field:'notes', visible : true},
+                    { label: 'general.created-at', field:'created_at', type:'Date', visible : true}
                 ],
                 doc : {}
             }

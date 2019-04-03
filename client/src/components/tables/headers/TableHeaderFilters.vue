@@ -4,17 +4,25 @@
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownFilters">
             <ul>
                 <li>
-                    <div class="checkbox">
-                        <input type="checkbox" value="">
-                        <i class="input-helper"></i>
-                        <span>Omitidos</span>
+                    <div class="floating-text m-l-10 m-r-10">
+                        <h1>Selecciona las columnas que deseas mostrar en la tabla.</h1>
                     </div>
                 </li>
                 <li>
                     <div class="checkbox">
-                        <input type="checkbox" value="">
+                        <input type="checkbox" v-model="chkShowAllColumns" @click="showAllColumns()" :disabled="chkShowAllColumns" >
                         <i class="input-helper"></i>
-                        <span>Errores</span>
+                        <span>Todas las columnas</span>
+                    </div>
+                </li>
+                <li class="divider p-0 m-0"></li>
+            </ul>
+            <ul>
+                <li v-for="column in columns">
+                    <div class="checkbox">
+                        <input type="checkbox" v-model="column.visible" :disabled="isLastVisibleColumn(column.visible)">
+                        <i class="input-helper"></i>
+                        <span>{{$t(column.label)}}</span>
                     </div>
                 </li>
             </ul>
@@ -23,15 +31,37 @@
 </template>
 
 <style>
+
 </style>
 
 <script>
     export default {
         data () {
             return {
+                allColumns : false
             }
         },
-        components: {
+        computed:{
+            chkShowAllColumns : function(){
+                return !this.$props.columns.filter(p => !p.visible).length > 0;
+            },
+        },
+        components: {},
+        props:{
+            columns : {
+                type: Array,
+                required: true
+            }
+        },
+        methods:{
+            showAllColumns(){
+                this.$props.columns.some(p=>{
+                    p.visible = true;
+                })
+            },
+            isLastVisibleColumn : function(visible){
+                return this.$props.columns.filter(p => p.visible).length === 1 && visible === true;
+            }
         }
     }
 </script>

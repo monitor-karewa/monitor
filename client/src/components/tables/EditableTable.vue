@@ -8,7 +8,7 @@
                             <TableHeaderSearch/>
                             <TableHeaderButtonsWrapper>
                                 <TableHeaderButton/>
-                                <TableHeaderFilters/>
+                                <TableHeaderFilters :columns="tableColumns"/>
                             </TableHeaderButtonsWrapper>
                         </div>
                         <div class="card-body">
@@ -16,13 +16,13 @@
                                 <table class="table table-hover form-table">
                                     <thead>
                                     <tr>
-                                        <TableTh :name="$t(header)" v-for="header in tableHeaders" :key="header"/>
+                                        <TableTh :name="$t(column.label)" v-if="column.visible" v-for="column in tableColumns"/>
                                         <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr v-for="(doc, index) in docs" :key="`doc-${index}`">
-                                        <td v-for="(column) in tableColumns">
+                                        <td v-for="(column) in tableColumns" v-if="column.visible">
                                             <span v-if="!column.type">
                                                 {{ doc[column.field] }}
                                             </span>
@@ -93,7 +93,7 @@
     import TableHeaderFilters from '@/components/tables/headers/TableHeaderFilters';
     import TableTh from '@/components/tables/ths/TableTh';
     import TableTdButtons from '@/components/tables/tds/TableTdButtons';
-    
+
     import Pagination from '@/components/catalogs/Pagination';
     import moment from 'moment';
 
@@ -115,8 +115,10 @@
         props: {
             'docs': Array,
             'storeModule': String,
-            'tableHeaders': Array,
-            'tableColumns': Array,
+            'tableColumns': {
+                type: Array,
+                required: true
+            },
             'singular': String,
             'plural': String
         },
