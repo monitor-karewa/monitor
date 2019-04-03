@@ -21,18 +21,18 @@
                                v-model="doc.name"/>
 
 
-                        <label class="fg-label">Nombre del Cálculo
+                        <label class="fg-label">Nombre del Proveedor
                             <small></small>
                             <br/>
                             <strong>Introduce el nombre del Proveedor</strong>
                         </label>
                     </div>
-                    <span style="float: right">{{ doc && doc.name ? doc.name.length : 0}}/100</span>
-                    <span style="color: red">{{ fieldErrors.fields.name }}</span>
-                    <span v-if="isNameLimitExceeded(doc)"
-                          style="color: red; display: block">
+                    <!--<span style="float: right">{{ doc && doc.name ? doc.name.length : 0}}/100</span>-->
+                    <span v-if="fieldErrors.fields.name" class="c-error">{{ fieldErrors.fields.name }}</span>
+                    <div v-if="isNameLimitExceeded(doc)"
+                          style="display: block" class="c-error">
                         Debe estar entre 2 y 100 carácteres
-                    </span>
+                    </div>
                 </div>
 
                 <div class="form-group fg-float subtitle">
@@ -44,7 +44,7 @@
                             <strong>Indica el RFC del proveedor</strong>
                         </label>
                     </div>
-                    <span style="color: red">{{ fieldErrors.fields.rfc }}</span>
+                    <span v-if="fieldErrors.fields.rfc" class="c-error">{{ fieldErrors.fields.rfc }}</span>
                 </div>
 
 
@@ -77,7 +77,7 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
-    import { DELETE_SUCCESS } from "@/store/events";
+    import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
     const storeModule = 'suppliers';
     const docName = 'suppliers.supplier';
@@ -119,7 +119,9 @@
         created(){
             bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
                 tShow("Elemento Eliminado!!", 'info');
-            })
+            });
+
+
         },
         mounted(){
             window.$(document).ready(function () {

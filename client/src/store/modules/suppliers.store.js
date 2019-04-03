@@ -11,14 +11,11 @@ const state = {
             name:"",
             rfc:""
         }
-    },
-    cartItems:[]
+    }
 };
 
 const getters = {
-    fieldErrors: state => {
-        return state.fieldErrors
-    },
+    fieldErrors: state => state.fieldErrors,
     hasErrors: state => state.fieldErrors.hasError
 };
 

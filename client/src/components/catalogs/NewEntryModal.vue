@@ -33,17 +33,17 @@
     //     storeModule: storeModule
     // });
     import { mapGetters } from 'vuex';
+    import { bus } from '@/main';
+    import { DOC_CREATED } from "@/store/events";
 
     export default {
         data() {
             return {
-                dataa : this.$props.data
+
             }
         },
         computed:{
             hasErrors(){
-                console.log("this.$props", this.$props.storeModule);
-                console.log("this.$store", this.$store);
                 return this.$store.getters[`${this.$props.storeModule}/hasErrors`]
             },
             dataModal(){
@@ -51,13 +51,22 @@
             }
         },
         components: {},
+        created(){
+            bus.$on(this.$props.storeModule+DOC_CREATED, (data)=>{
+                for(let prop in this.dataModal){
+                    if(typeof this.dataModal[prop] !== 'function'){
+                        this.dataModal[prop] = "";
+                    }
+                }
+                tShow("Elemento Creado!!", 'info');
+            });
+        },
         methods: {
             save: function () {
 
                 this.$store.dispatch(`${this.$props.storeModule}/validateForm`, this.$props.data);
 
                 if(!this.hasErrors){
-                    console.log("Si entro aqui");
                     let actionName;
                     if(this.$props.action && this.$props.action.length ){
                         actionName = this.$props.action;
@@ -66,13 +75,6 @@
                     }
                     this.$store.dispatch(`${this.$props.storeModule}/${actionName}`, this.$props.data);
                     $('#newEntry').modal('hide');
-                    console.log("this.$props.data", this.$props.data);
-
-                    for(let prop in this.dataModal){
-                        if(typeof this.dataModal[prop] !== 'function'){
-                            this.dataModal[prop] = "";
-                        }
-                    }
                 }
                 //actions storeModule/<save>
                 //actions storeModule/action
