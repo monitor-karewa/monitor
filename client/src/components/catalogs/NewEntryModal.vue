@@ -16,7 +16,7 @@
                         <!--<div class="total-footer">-->
                         <!--</div>-->
                         <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="btn-raised button-accent m-l-15"> Guardar</button>
+                        <button type="submit"  class="btn-raised button-accent m-l-15"> Guardar</button>
                     </div>
                 </div>
             </div>
@@ -32,23 +32,33 @@
     // let catalogoProveedores = catalog.configure({
     //     storeModule: storeModule
     // });
+    import { mapGetters } from 'vuex';
+    import { bus } from '@/main';
+    import { DOC_CREATED } from "@/store/events";
 
     export default {
         data() {
             return {
+
             }
         },
         components: {},
+        created(){
+        },
         methods: {
             save: function () {
-                let actionName;
-                if(this.$props.action && this.$props.action.length ){
-                    actionName = this.$props.action;
-                } else {
-                    actionName = "save";
+
+                this.validator.$touch();
+                if(!this.validator.$invalid){
+                    let actionName;
+                    if(this.$props.action && this.$props.action.length ){
+                        actionName = this.$props.action;
+                    } else {
+                        actionName = "save";
+                    }
+                    this.$store.dispatch(`${this.$props.storeModule}/${actionName}`, this.$props.data);
+                    $('#newEntry').modal('hide');
                 }
-                this.$store.dispatch(`${this.$props.storeModule}/${actionName}`, this.$props.data);
-                $('#newEntry').modal('hide')
                 //actions storeModule/<save>
                 //actions storeModule/action
 
@@ -57,7 +67,8 @@
         props:{
             'data' : Object,
             'storeModule' : String,
-            'action' : String
+            'action' : String,
+            'validator' : Object
         }
     }
 </script>

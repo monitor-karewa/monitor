@@ -1,2 +1,3 @@
 export const DELETE_SUCCESS = 'DELETE_SUCCESS';
+export const DOC_CREATED = 'DOC_CREATED';
 

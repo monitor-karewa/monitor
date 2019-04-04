@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { bus } from '@/main';
-import { DELETE_SUCCESS } from "../../events";
+import * as events from "../../events";
 
 export default function (api, storeName) {
     const state = {
@@ -13,7 +13,8 @@ export default function (api, storeName) {
         listQuery : {
             search : ""
         },
-        docName: ''
+        docName: '',
+        selectedDocId: ''
     };
 
     const getters = {
@@ -98,7 +99,7 @@ export default function (api, storeName) {
                 { id : id },
                 (result) => {
                     dispatch(`${storeName}/list`,{},{root:true});
-                    bus.$emit(storeName + DELETE_SUCCESS);
+                    bus.$emit(storeName + events.DELETE_SUCCESS);
                 },
                 (error) => {
                     Vue.$log.error('Response error', error);
@@ -121,6 +122,7 @@ export default function (api, storeName) {
                     //     docs: result.data.data.docs
                     // });
                     dispatch(`${storeName}/list`,{},{root:true});
+                    bus.$emit(storeName + events.DOC_CREATED);
                 },
                 (error) => {
                     Vue.$log.error('Response error', error);
@@ -145,6 +147,9 @@ export default function (api, storeName) {
         },
         SET_SEARCH(state,search){
             state.listQuery.search = search;
+        },
+        SET_DOC_ID(state, id){
+            state.selectedDocId = id;
         }
     };
 

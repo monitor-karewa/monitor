@@ -7,7 +7,7 @@
                         <TableHeaderSearch :store-module="storeModule"/>
                         <TableHeaderButtonsWrapper>
                             <TableHeaderButton/>
-                            <TableHeaderFilters/>
+                            <TableHeaderFilters :columns="tableColumns"/>
                         </TableHeaderButtonsWrapper>
                     </div>
                     <div v-if="docs && docs.length">
@@ -16,13 +16,13 @@
                                 <table class="table table-hover form-table">
                                     <thead>
                                     <tr>
-                                        <TableTh :name="$t(header)" v-for="header in tableHeaders" :key="header"/>
+                                        <TableTh :name="$t(column.label)" v-if="column.visible" v-for="column in tableColumns"/>
                                         <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr v-for="(doc, index) in docs" :key="`doc-${index}`">
-                                        <td v-for="(column) in tableColumns">
+                                        <td v-for="(column) in tableColumns" v-if="column.visible">
                                             <span v-if="!column.type">
                                                 {{ doc[column.field] }}
                                             </span>
@@ -138,8 +138,10 @@
         props: {
             'docs': Array,
             'storeModule': String,
-            'tableHeaders': Array,
-            'tableColumns': Array,
+            'tableColumns': {
+                type: Array,
+                required: true
+            },
             'singular': String,
             'plural': String
         },
