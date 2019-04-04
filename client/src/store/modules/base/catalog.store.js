@@ -48,6 +48,7 @@ export default function (api, storeName) {
                 (error) => {
                     // console.log('error', error);
                     Vue.$log.error('Response error', error);
+                    tShow(`Hubo un error al cargar el listado : ${error}`);
                 }
             )
         },
@@ -70,7 +71,7 @@ export default function (api, storeName) {
                 },
                 (error) => {
                     Vue.$log.error('Response error', error);
-                    // console.log('error', error);
+                    tShow(`Hubo un error en el paginado: ${error}`);
                 }
             )
         },
@@ -83,6 +84,7 @@ export default function (api, storeName) {
                 },
                 (error) => {
                     Vue.$log.error('Response error', error);
+                    tShow(`Hubo un error al eliminar el registro: ${error}`);
                 }
             )
         },
@@ -106,6 +108,7 @@ export default function (api, storeName) {
                 (error) => {
                     Vue.$log.error('Response error', error);
                     // console.log('error', error);
+                    tShow(`Hubo un error al guardar un registro: ${error}`);
                 }
             )
         }
