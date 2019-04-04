@@ -13,12 +13,12 @@
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc">
+        <NewEntryModal v-bind:storeModule="storeModule" v-bind:validator="$v" v-bind:data="{name:this.name,rfc:this.rfc,notes:this.notes}">
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce el nombre"
-                               v-model="doc.name"/>
+                               v-model="$v.name.$model"/>
 
 
                         <label class="fg-label">Nombre del Proveedor
@@ -28,30 +28,28 @@
                         </label>
                     </div>
                     <!--<span style="float: right">{{ doc && doc.name ? doc.name.length : 0}}/100</span>-->
-                    <span v-if="fieldErrors.fields.name" class="c-error">{{ fieldErrors.fields.name }}</span>
-                    <div v-if="isNameLimitExceeded(doc)"
-                          style="display: block" class="c-error">
-                        Debe estar entre 2 y 100 carácteres
-                    </div>
+                    <span v-if="$v.name.$invalid && $v.name.$dirty" class="c-error">{{nameErrorMessage}}</span>
                 </div>
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Ej. VECJ880326" v-model="doc.rfc">
+                        <input type="text" class="form-control fg-input" placeholder="Ej. VECJ880326" v-model.trim="$v.rfc.$model"
+                        @input="delayTouch($v.rfc)">
                         <label class="fg-label">RFC
                             <small></small>
                             <br/>
                             <strong>Indica el RFC del proveedor</strong>
                         </label>
                     </div>
-                    <span v-if="fieldErrors.fields.rfc" class="c-error">{{ fieldErrors.fields.rfc }}</span>
+                    <span v-if="$v.rfc.$invalid && $v.rfc.$dirty" class="c-error">{{rfcErrorMessage}}</span>
+                    <!--<span v-if="fieldErrors.fields.rfc" class="c-error">{{ fieldErrors.fields.rfc }}</span>-->
                 </div>
 
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
-                               placeholder="Escribe aquí tus notas sobre el proveedor" v-model="doc.notes">
+                               placeholder="Escribe aquí tus notas sobre el proveedor" v-model="notes">
                         <label class="fg-label">Notas Adicionales
                             <small></small>
                             <br>
@@ -82,6 +80,8 @@
     const storeModule = 'suppliers';
     const docName = 'suppliers.supplier';
     import { mapGetters } from 'vuex';
+    import { required, minLength, maxLength } from 'vuelidate/lib/validators';
+    const touchMap = new WeakMap();
 
     let baseCatalog = catalog.configure({
         storeModule: storeModule,
@@ -97,11 +97,47 @@
                 tableColumns: [
                     {field:'name'}, {field:'rfc'}, {field:'notes'},{field:'created_at', type:'Date'}
                 ],
-                doc : {}
+                name:"",
+                rfc:"",
+                notes:""
+
+            }
+        },
+        validations:{
+            name:{
+                required,
+                minLength:minLength(2),
+                maxLength:maxLength(100)
+            },
+            rfc:{
+                required,
+                validRFC: (value) => {
+                    if(value == null || value == undefined || value == ""){
+                        return true
+                    }
+                    return (/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/).test(value);
+                }
             }
         },
         computed: {
-           ...mapGetters(storeModule,['fieldErrors'])
+//           ...mapGetters(storeModule,['fieldErrors']),
+            nameErrorMessage(){
+               if(!this.$v.name.required){
+                   return "El nombre del Proveedor es requerido"
+               }
+               if(!this.$v.name.minLength || !this.$v.name.maxLength){
+                   return `Debe estar entre ${this.$v.name.$params.minLength.min} y ${this.$v.name.$params.maxLength.max}`
+               }
+            },
+            rfcErrorMessage(){
+               if(!this.$v.rfc.required){
+                   return "El RFC del Proveedor es requerido"
+               }
+               if(!this.$v.rfc.validRFC ){
+                   return "El RFC introducido no tiene un formato válido"
+               }
+
+            }
 
 
         },
@@ -112,13 +148,24 @@
             confirm(){
                 console.log("confirm function");
             },
-            isNameLimitExceeded(doc){
-                return doc.name ? !(doc.name.length > 1 && doc.name.length <= 100) : false;
+            delayTouch($v) {
+                $v.$reset();
+                if (touchMap.has($v)) {
+                    clearTimeout(touchMap.get($v))
+                }
+                touchMap.set($v, setTimeout($v.$touch, 1000))
             }
         },
         created(){
             bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
-                tShow("Elemento Eliminado!!", 'info');
+                tShow("Elemento Eliminado!", 'info');
+            });
+            bus.$on(storeModule+DOC_CREATED, (data)=>{
+                this.name = "";
+                this.rfc = "";
+                this.notes = "";
+                this.$v.$reset();
+                tShow("Elemento Creado!", 'info');
             });
 
 

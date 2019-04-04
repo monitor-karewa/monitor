@@ -42,31 +42,14 @@
 
             }
         },
-        computed:{
-            hasErrors(){
-                return this.$store.getters[`${this.$props.storeModule}/hasErrors`]
-            },
-            dataModal(){
-                return this.$props.data
-            }
-        },
         components: {},
         created(){
-            bus.$on(this.$props.storeModule+DOC_CREATED, (data)=>{
-                for(let prop in this.dataModal){
-                    if(typeof this.dataModal[prop] !== 'function'){
-                        this.dataModal[prop] = "";
-                    }
-                }
-                tShow("Elemento Creado!!", 'info');
-            });
         },
         methods: {
             save: function () {
 
-                this.$store.dispatch(`${this.$props.storeModule}/validateForm`, this.$props.data);
-
-                if(!this.hasErrors){
+                this.validator.$touch();
+                if(!this.validator.$invalid){
                     let actionName;
                     if(this.$props.action && this.$props.action.length ){
                         actionName = this.$props.action;
@@ -84,7 +67,8 @@
         props:{
             'data' : Object,
             'storeModule' : String,
-            'action' : String
+            'action' : String,
+            'validator' : Object
         }
     }
 </script>
