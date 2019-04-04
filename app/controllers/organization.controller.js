@@ -35,7 +35,14 @@ exports.list = (req, res, next) => {
     //let qNotDeleted = deletedSchema.qNotDeleted();
     //query = {...query, ...qNotDeleted};
 
-    console.log("organization.controller#list");
+    if(req.query.search){
+        query = {
+            $or : [
+                {name : new RegExp(req.query.search,"i")},
+            ]
+        }
+    }
+
 
     Organization
         .paginate(

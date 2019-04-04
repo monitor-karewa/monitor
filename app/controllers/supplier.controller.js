@@ -31,6 +31,17 @@ exports.list = (req, res, next) => {
     let query = {};
 
     //query["field"] = value;
+    if(req.query.search){
+        query = {
+            $or : [
+                {name : new RegExp(req.query.search,"i")},
+                {rfc : new RegExp(req.query.search,"i")},
+                {notes : new RegExp(req.query.search,"i")}
+
+            ]
+        }
+    }
+
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     query = {...query, ...qNotDeleted};

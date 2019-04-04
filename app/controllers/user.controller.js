@@ -29,6 +29,17 @@ exports.list = (req, res, next) => {
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
 
     let query = {};
+
+    if(req.query.search){
+        query = {
+            $or : [
+                {name : new RegExp(req.query.search,"i")},
+                {lastName : new RegExp(req.query.search,"i")},
+                {email : new RegExp(req.query.search,"i")}
+
+            ]
+        }
+    }
     
     //query["field"] = value;
     
