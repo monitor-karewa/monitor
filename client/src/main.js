@@ -9,6 +9,8 @@ import router from '@/router';
 import store from '@/store';
 import '@/registerServiceWorker';
 import i18n from '@/plugins/i18n';
+import vuelidate from '@/plugins/vuelidate';
+
 
 window.$ = window.jQuery = require('jquery');
 
@@ -21,5 +23,6 @@ new Vue({
     store,
     i18n,
     moment,
+    vuelidate,
     render: h => h(App)
 }).$mount('#app');
