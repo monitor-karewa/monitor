@@ -2,15 +2,15 @@
     <div>
         <div class="row m-0 w-100">
             <div class="col-12">
-                <div v-if="docs && docs.length">
-                    <div class="card w-100">
-                        <div class="card-header">
-                            <TableHeaderSearch/>
-                            <TableHeaderButtonsWrapper>
-                                <TableHeaderButton/>
-                                <TableHeaderFilters :columns="tableColumns"/>
-                            </TableHeaderButtonsWrapper>
-                        </div>
+                <div class="card w-100">
+                    <div class="card-header">
+                        <TableHeaderSearch :store-module="storeModule"/>
+                        <TableHeaderButtonsWrapper>
+                            <TableHeaderButton/>
+                            <TableHeaderFilters :columns="tableColumns"/>
+                        </TableHeaderButtonsWrapper>
+                    </div>
+                    <div v-if="docs && docs.length">
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table table-hover form-table">
@@ -43,32 +43,45 @@
                             </div>
                         </div>
                     </div>
-                </div>
-                <div v-else>
-                    <div class="row m-b-50">
-                        <div class="col-12">
-                            <div class="card">
-                                <div class="empty-state">
-                                    <img class="img-fluid"
-                                         src="@/assets/images/Emptystates/empty-state-box.svg"
-                                         alt="Empty"/>
-                                    <p>
-                                        <strong class="d-block">Por el momento no hay {{plural}}.</strong>
-                                        Haz clic en el botón de nuevo para comenzar. Los registros que crees aparecerán aquí.
-                                    </p>
-                                    <button type="button" class="btn-raised button-accent" data-toggle="modal" data-target="#newEntry"><i class="zmdi zmdi-plus"></i>Nuevo(a) {{singular}} </button>
-                                </div>
-                                <div v-if="false"> <!-- If there's a query-->
-                                    <div class="empty-state">
+                    <div v-else v-cloak>
+                        <div class="row m-b-50">
+                            <div class="col-12">
+                                <div class="">
+                                    <div class="empty-state" v-if="searchExists">
                                         <img class="img-fluid"
                                              src="@/assets/images/Emptystates/empty-state-box.svg"
                                              alt="Empty"/>
                                         <p>
-                                            No se encontraron resultados con la búsqueda <!--strong>“Alicia
-                                            Martinez”.<strong-->
+                                            <strong class="d-block">No se han encontrado {{plural}} que coincidan con tu búsqueda</strong>
+                                            <span>Pro favor intenta nuevamente</span>
                                         </p>
+
                                     </div>
-                                    <div>
+                                    <div v-else class="empty-state" >
+                                        <img class="img-fluid"
+                                             src="@/assets/images/Emptystates/empty-state-box.svg"
+                                             alt="Empty"/>
+                                        <p>
+                                            <strong class="d-block">Por el momento no hay {{plural}}. </strong> Haz clic en el botón de "Nuevo(a)" para comenzar.
+                                        </p>
+                                        <button type="button" class="btn-raised button-accent" data-toggle="modal"
+                                                data-target="#newEntry"><i class="zmdi zmdi-plus"></i>Nuevo(a)
+                                            {{singular}}
+                                        </button>
+                                    </div>
+
+                                    <div v-if="false"> <!-- If there's a query-->
+                                        <div class="empty-state">
+                                            <img class="img-fluid"
+                                                 src="@/assets/images/Emptystates/empty-state-box.svg"
+                                                 alt="Empty"/>
+                                            <p>
+                                                No se encontraron resultados con la búsqueda <!--strong>“Alicia
+                                        Martinez”.<strong-->
+                                            </p>
+                                        </div>
+                                        <div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -96,11 +109,12 @@
 
     import Pagination from '@/components/catalogs/Pagination';
     import moment from 'moment';
+    import {mapState} from 'vuex';
+    import {mapGetters} from 'vuex';
 
     export default {
         data() {
             return {
-                proveedores: [],
             }
         },
         components: {
@@ -111,6 +125,15 @@
             TableTh,
             TableTdButtons,
             Pagination
+        },
+        computed: {
+            ...mapState({
+                searchExists: function (state) {
+                    let module = state[this.$props.storeModule];
+                    return !!(module.listQuery.search && module.listQuery.search.length);
+                }
+            })
+
         },
         props: {
             'docs': Array,

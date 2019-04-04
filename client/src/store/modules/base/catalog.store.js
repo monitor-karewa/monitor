@@ -1,6 +1,6 @@
 import Vue from 'vue';
 import { bus } from '@/main';
-import { DELETE_SUCCESS } from "../../events";
+import * as events from "../../events";
 
 export default function (api, storeName) {
     const state = {
@@ -10,30 +10,50 @@ export default function (api, storeName) {
             page: 1,
             pages: 1
         },
+        listQuery : {
+            search : ""
+        },
         docName: '',
         selectedDocId: ''
     };
 
     const getters = {
-        getPaginationQuery(state){
-            let pagination = state.pagination;
+
+        getUrlQuery(state){
 
             let query = '?';
-            if (pagination.page) {
-                if (query.length > 1) {
+            if (state.pagination.page) {
+                query += `page=${state.pagination.page}`
+            }
+            if(state.listQuery && state.listQuery.search){
+                if(query.length > 2){
                     query += '&';
                 }
-                query += `page=${pagination.page}`
+                query += `search=${state.listQuery.search}`
             }
-
             return query;
+        },
+
+        getSearchString(state){
+            if(state.listQuery){
+                return state.listQuery.search;
+            }
+            return "";
         }
     };
 
     const actions = {
-        list ({commit,getters}) {
+        list ({commit,getters}, searchString ) {
+            if(searchString && searchString.length){
+                commit('SET_SEARCH',searchString);
+                commit('UPDATE_PAGE',1);
+            } else {
+                commit('SET_SEARCH',"");
+            }
             Vue.$log.info(`Calling action ${storeName}/list`);
-            let query = getters.getPaginationQuery;
+
+            let query = getters.getUrlQuery;
+
             api.list(
                 { query },
                 (result) => {
@@ -58,7 +78,7 @@ export default function (api, storeName) {
             commit('UPDATE_PAGE',page);
             // console.log(`Calling action ${storeName}/changePage`);
             Vue.$log.info(`Calling action ${storeName}/changePage`);
-            let query = getters.getPaginationQuery;
+            let query = getters.getUrlQuery;
             api.list(
                 { query },
                 (result) => {
@@ -80,7 +100,7 @@ export default function (api, storeName) {
                 { id : id },
                 (result) => {
                     dispatch(`${storeName}/list`,{},{root:true});
-                    bus.$emit(storeName + DELETE_SUCCESS);
+                    bus.$emit(storeName + events.DELETE_SUCCESS);
                 },
                 (error) => {
                     Vue.$log.error('Response error', error);
@@ -104,6 +124,7 @@ export default function (api, storeName) {
                     //     docs: result.data.data.docs
                     // });
                     dispatch(`${storeName}/list`,{},{root:true});
+                    bus.$emit(storeName + events.DOC_CREATED);
                 },
                 (error) => {
                     Vue.$log.error('Response error', error);
@@ -126,6 +147,9 @@ export default function (api, storeName) {
         },
         UPDATE_PAGE(state,page){
             state.pagination.page = page;
+        },
+        SET_SEARCH(state,search){
+            state.listQuery.search = search;
         },
         SET_DOC_ID(state, id){
             state.selectedDocId = id;
