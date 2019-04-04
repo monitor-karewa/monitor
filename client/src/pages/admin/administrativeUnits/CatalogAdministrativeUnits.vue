@@ -71,7 +71,9 @@
                 tableHeaders : ['suppliers.name',
                      'suppliers.notes','general.created-at'],
                 tableColumns: [
-                    {field:'name'}, {field:'notes'},{field:'created_at', type:'Date'}
+                    {label : "administrativeUnits.name", visible : true , field:'name'},
+                    {label : "administrativeUnits.notes", visible : true , field:'notes'},
+                    {label : "general.created-at", visible : true , field:'created_at', type:'Date'}
                 ],
                 doc : {}
             }

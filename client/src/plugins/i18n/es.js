@@ -176,10 +176,32 @@ export default {
     "administrativeUnits.administrativeUnit": "Unidad administrativa | Unidades administrativas",
 
 
+    //Organizations
+    "organizations.name" : "Nombre",
 
+    //Adminsitrative Units
+    "administrativeUnits.name" : "Nombre",
+    "administrativeUnits.notes" : "Notas Adicionales",
 
-
+    //Users
+    "users.name" : "Nombre",
+    "users.lastName" : "Apellido",
+    "users.email" : "Correo Electrónico",
     "suppliers.name": "Nombre o razón social",
     "suppliers.rfc": "RFC",
-    "suppliers.notes": "Notas"
+    "suppliers.notes": "Notas",
+
+    //Contracts
+    "contracts.supplier" : "Proveedor",
+    "contracts.administrativeUnit" : "Unidad Administrativa",
+    "contracts.amount" : "Cantidad",
+    "contracts.procedureType" : "Tipo de Proceidimiento",
+
+    //Resources
+    "resources.title": "Título",
+    "resources.classification": "Casificación",
+    "resources.url": "URL"
+
+
+
 }
