@@ -6,6 +6,8 @@ const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const { validationResult } = require('express-validator/check');
 
+const utils = require('./../components/utils');
+
 /**
  * Renderiza la vista principal de consulta de Supplier.
  * @param req
@@ -32,11 +34,12 @@ exports.list = (req, res, next) => {
 
     //query["field"] = value;
     if(req.query.search){
+        let queryAsRegex = utils.toAccentsRegex(req.query.search, "i" );
         query = {
             $or : [
-                {name : new RegExp(req.query.search,"i")},
-                {rfc : new RegExp(req.query.search,"i")},
-                {notes : new RegExp(req.query.search,"i")}
+                {name : queryAsRegex},
+                {rfc : queryAsRegex},
+                {notes : queryAsRegex}
 
             ]
         }
