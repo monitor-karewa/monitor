@@ -204,7 +204,7 @@ export default {
     "suppliers.notes": "Notas",
 
     "users.new.name.label": "Nombre",
-    "users.new.name.sub-label": "A contninuación escribe el nombre o la razón social del usuario",
+    "users.new.name.sub-label": "A continuación escribe el nombre o la razón social del usuario",
     "users.new.name.placeholder": "Introduce el nombre",
     "users.new.last-name.label": "Apellido",
     "users.new.last-name.sub-label": "A continuación escribe el apellido del usuario",
@@ -218,6 +218,17 @@ export default {
     "users.new.admin-type.sub-label": "Al seleccionar General se tendrá acceso total a la plataforma",
     "users.new.admin-type.radio-button.general": "General",
     "users.new.admin-type.radio-button.custom": "Personalizado",
+    "users.new.notes.label": "Notas Adicionales",
+    "users.new.notes.sub-label": "Aquí puedes escribir notas sobre el usuario",
+    "users.new.notes.placeholder": "Introduce las notas adicionales",
+
+
+    "users.new.admin-type.radio-button.custom.users": "Usuarios",
+    "users.new.admin-type.radio-button.custom.suppliers": "Proveedores",
+    "users.new.admin-type.radio-button.custom.administrative-units": "Unidades Administrativas",
+    "users.new.admin-type.radio-button.custom.contracts": "Contratos",
+    "users.new.admin-type.radio-button.custom.calculations": "Cálculos",
+    "users.new.admin-type.radio-button.custom.settings": "Configuración",
 
 
     //Contracts
