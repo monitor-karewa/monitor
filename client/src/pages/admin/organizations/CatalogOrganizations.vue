@@ -63,7 +63,8 @@
             return {
                 storeModule: storeModule,
                 tableColumns: [
-                    { label: 'organizations.name', field:'name', visible : true}
+                    {label:"organizations.name", field:'name', visible : true },
+                    {label:"general.created-at", field:'created_at', visible : true , type:'Date'}
                 ],
                 doc : {}
             }

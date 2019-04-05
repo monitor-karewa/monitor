@@ -102,11 +102,11 @@
                     'Tipo de procedimiento',
                     'general.created-at'],
                 tableColumns: [
-                    {field:'supplier'},
-                    {field:'administrativeUnit'},
-                    {field:'amount'},
-                    {field:'procedureType'},
-                    {field:'created_at', type:'Date'}
+                    {label: "contracts.supplier", visible : true,   field:'supplier'},
+                    {label: "contracts.administrativeUnit", visible : true,   field:'administrativeUnit'},
+                    {label: "contracts.amount", visible : true,   field:'amount'},
+                    {label: "contracts.procedureType", visible : true,   field:'procedureType'},
+                    {label: "general.created-at", visible : true,   field:'created_at', type:'Date'}
                 ],
                 doc : {}
             }

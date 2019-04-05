@@ -87,7 +87,10 @@
                 storeModule,
                 tableHeaders : ['título','clasificación','url','general.created-at'],
                 tableColumns: [
-                    {field:'title'}, {field:'classification'}, {field:'url'},{field:'created_at', type:'Date'}
+                    {label: 'resources.title', visible : true, 'field':'title'},
+                    {label: 'resources.classification', visible : true, 'field':'classification'},
+                    {label: 'resources.url', visible : true, 'field':'url'},
+                    {label: 'general.created-at', visible : true, 'field':'created_at', 'type':'Date'}
                 ],
                 doc : {}
             }

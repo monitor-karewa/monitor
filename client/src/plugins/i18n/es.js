@@ -176,12 +176,58 @@ export default {
     "administrativeUnits.administrativeUnit": "Unidad administrativa | Unidades administrativas",
 
 
+    //Suppliers
+    "suppliers.new.name.label": "Nombre o razón social",
+    "suppliers.new.name.sub-label": "A contninuación escribe el nombre o la razón social del proveedor",
+    "suppliers.new.name.placeholder": "Introduce el nombre o razón social",
+    "suppliers.new.rfc.label": "RFC",
+    "suppliers.new.rfc.sub-label": "El RFC del proveedor",
+    "suppliers.new.rfc.placeholder": "Introduce el RFC",
+    "suppliers.new.notes.label": "Notas adicionales",
+    "suppliers.new.notes.sub-label": "Aquí puedes agregar notas adicionales al registro del proveedor",
+    "suppliers.new.notes.placeholder": "Introduce notas adicionales",
 
 
+    //Organizations
+    "organizations.name" : "Nombre",
 
+    //Adminsitrative Units
+    "administrativeUnits.name" : "Nombre",
+    "administrativeUnits.notes" : "Notas Adicionales",
+
+    //Users
+    "users.name" : "Nombre",
+    "users.lastName" : "Apellido",
+    "users.email" : "Correo Electrónico",
     "suppliers.name": "Nombre o razón social",
     "suppliers.rfc": "RFC",
     "suppliers.notes": "Notas",
 
-    "organizations.name": "Nombre"
+    "users.new.name.label": "Nombre",
+    "users.new.name.sub-label": "A contninuación escribe el nombre o la razón social del usuario",
+    "users.new.name.placeholder": "Introduce el nombre",
+    "users.new.last-name.label": "Apellido",
+    "users.new.last-name.sub-label": "A continuación escribe el apellido del usuario",
+    "users.new.last-name.placeholder": "Introduce el apellido",
+    "users.new.email.label": "Correo electrónico",
+    "users.new.email.sub-label": "El email del Usuario",
+    "users.new.email.placeholder": "Introduce el email del Usuario",
+    "users.new.enabled.label": "Habilitado",
+    "users.new.enabled.checkbox-label": "Habilitar acceso a la plataforma",
+    "users.new.admin-type.label": "Tipo de administrador",
+    "users.new.admin-type.sub-label": "Al seleccionar General se tendrá acceso total a la plataforma",
+    "users.new.admin-type.radio-button.general": "General",
+    "users.new.admin-type.radio-button.custom": "Personalizado",
+
+
+    //Contracts
+    "contracts.supplier" : "Proveedor",
+    "contracts.administrativeUnit" : "Unidad Administrativa",
+    "contracts.amount" : "Cantidad",
+    "contracts.procedureType" : "Tipo de Proceidimiento",
+
+    //Resources
+    "resources.title": "Título",
+    "resources.classification": "Casificación",
+    "resources.url": "URL"
 }

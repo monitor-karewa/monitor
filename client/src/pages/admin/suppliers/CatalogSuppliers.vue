@@ -19,11 +19,12 @@
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
 
-                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre" v-model="$v.name.$model"/>
-                        <label class="fg-label">Nombre del Proveedor
+                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.name.placeholder')" v-model="$v.name.$model"/>
+                        <label class="fg-label">{{$t('suppliers.new.name.label')}}
+
                             <small></small>
                             <br/>
-                            <strong>Introduce el nombre del Proveedor</strong>
+                            <strong>{{$t('suppliers.new.name.sub-label')}}</strong>
                         </label>
                     </div>
                     <!--<span style="float: right">{{ doc && doc.name ? doc.name.length : 0}}/100</span>-->
@@ -32,12 +33,12 @@
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Ej. VECJ880326" v-model.trim="$v.rfc.$model"
+                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.rfc.placeholder')" v-model.trim="$v.rfc.$model"
                         @input="delayTouch($v.rfc)">
-                        <label class="fg-label">RFC
+                        <label class="fg-label">{{$t('suppliers.new.rfc.label')}}
                             <small></small>
                             <br/>
-                            <strong>Indica el RFC del proveedor</strong>
+                            <strong>{{$t('suppliers.new.rfc.sub-label')}}</strong>
                         </label>
                     </div>
                     <span v-if="$v.rfc.$invalid && $v.rfc.$dirty" class="c-error">{{rfcErrorMessage}}</span>
@@ -46,11 +47,11 @@
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
-                               placeholder="Escribe aquí tus notas sobre el proveedor" v-model="notes">
-                        <label class="fg-label">Notas Adicionales
+                               :placeholder="$t('suppliers.new.notes.placeholder')" v-model="notes">
+                        <label class="fg-label">{{$t('suppliers.new.notes.label')}}
                             <small></small>
                             <br>
-                            <strong>Notas adicionales</strong>
+                            <strong>{{$t('suppliers.new.notes.sub-label')}}</strong>
                         </label>
                     </div>
                 </div>
@@ -134,7 +135,7 @@
                if(!this.$v.rfc.required){
                    return "El RFC del Proveedor es requerido"
                }
-               if(!this.$v.rfc.validRFC){
+               if(!this.$v.rfc.validRFC ){
                    return "El RFC introducido no tiene un formato válido"
                }
             }
