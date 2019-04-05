@@ -130,7 +130,6 @@ exports.save = (req, res, next) => {
 
     } else {
         //Create
-
         let supplier = new Supplier({
             //Update doc fields
             name : req.body.name,

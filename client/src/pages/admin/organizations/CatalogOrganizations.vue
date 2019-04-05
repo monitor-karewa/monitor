@@ -12,7 +12,7 @@
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc">
+        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc" v-bind:validator="$v">
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
@@ -45,6 +45,7 @@
     import  ModalDanger from "@/components/modals/ModalDanger";
     const storeModule = 'organizations';
     const docName = 'organizations.organization';
+    import { required, minLength, maxLength } from 'vuelidate/lib/validators';
 
     let baseCatalog = catalog.configure({
         storeModule: storeModule,
@@ -56,9 +57,8 @@
         data () {
             return {
                 storeModule: storeModule,
-                tableHeaders : ['suppliers.name','general.created-at'],
                 tableColumns: [
-                    {field:'name'}, {field:'created_at', type:'Date'}
+                    { label: 'organizations.name', field:'name', visible : true}
                 ],
                 doc : {}
             }
@@ -75,6 +75,13 @@
             bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
                 tShow("Elemento Eliminado!!", 'info');
             })
+        },
+        validations:{
+            name:{
+                maxLength:maxLength(100)
+            },
+            rfc:{
+            }
         },
         mounted(){
             window.$(document).ready(function () {

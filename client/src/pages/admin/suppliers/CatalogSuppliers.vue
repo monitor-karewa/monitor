@@ -19,7 +19,6 @@
 
                         <input type="text" class="form-control fg-input" placeholder="Introduce el nombre" v-model="$v.name.$model"/>
                         <label class="fg-label">Nombre del Proveedor
-
                             <small></small>
                             <br/>
                             <strong>Introduce el nombre del Proveedor</strong>
@@ -40,9 +39,7 @@
                         </label>
                     </div>
                     <span v-if="$v.rfc.$invalid && $v.rfc.$dirty" class="c-error">{{rfcErrorMessage}}</span>
-                    <!--<span v-if="fieldErrors.fields.rfc" class="c-error">{{ fieldErrors.fields.rfc }}</span>-->
                 </div>
-
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
@@ -59,7 +56,7 @@
             </div>
         </NewEntryModal>
 
-        <ModalDanger v-bind:confirm="confirmDeletion"/>
+        <ModalDanger :confirm="confirmDeletion"/>
     </div>
 </template>
 
@@ -76,7 +73,6 @@
     import  ModalDanger from "@/components/modals/ModalDanger";
     const storeModule = 'suppliers';
     const docName = 'suppliers.supplier';
-    import { mapGetters } from 'vuex';
     import { required, minLength, maxLength } from 'vuelidate/lib/validators';
     const touchMap = new WeakMap();
 
@@ -131,19 +127,15 @@
                if(!this.$v.rfc.required){
                    return "El RFC del Proveedor es requerido"
                }
-               if(!this.$v.rfc.validRFC ){
+               if(!this.$v.rfc.validRFC){
                    return "El RFC introducido no tiene un formato válido"
                }
-
             }
-
-
         },
         components: {
             ModalDanger
         },
         methods:{
-
             confirm(){
                 console.log("confirm function");
             },
