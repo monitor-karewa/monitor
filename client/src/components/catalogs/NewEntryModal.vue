@@ -1,7 +1,6 @@
 <template>
     <div class="modal fade" id="newEntry" width="600" tabindex="-1" role="dialog">
         <form @submit.prevent="save()">
-            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
             <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content min-w-600px">
                     <div class="modal-header">
@@ -47,7 +46,6 @@
         },
         methods: {
             save: function () {
-
                 this.validator.$touch();
                 if(!this.validator.$invalid){
                     let actionName;

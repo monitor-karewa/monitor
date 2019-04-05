@@ -12,7 +12,7 @@
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc">
+        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc" >
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
