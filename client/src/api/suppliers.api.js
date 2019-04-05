@@ -19,5 +19,11 @@ export default {
         return axios.post(`${base.baseUrl}/api/${namespace}/delete`, { "_id" : params.id })
             .then(onSuccess)
             .catch(onError);
+    },
+    saveUpdatedDocs: (params = {}, onSuccess, onError) => {
+        console.log("params", params);
+        return axios.post(`${base.baseUrl}/api/${namespace}/save-updated-docs`,   params )
+            .then(onSuccess)
+            .catch(onError);
     }
 }

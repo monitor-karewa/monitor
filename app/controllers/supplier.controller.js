@@ -62,6 +62,54 @@ exports.list = (req, res, next) => {
         );
 };
 
+exports.saveUpdatedDocs = (req, res, next) => {
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //     console.log("errors.array()", errors.array());
+    //     return res.status(422).json({ errors: errors.array() });
+    // }
+
+    let docsUpdated = req.body;
+    console.log("docsUpdated", docsUpdated);
+
+    if(docsUpdated){
+        try{
+            console.log("entro al try catch");
+            docsUpdated.forEach((doc) => {
+               Supplier
+                  .findOne({_id: doc._id})
+                  .exec((err, supplier) => {
+                      console.log("err", err);
+                      supplier.name = doc.name;
+                      supplier.rfc = doc.rfc;
+                      supplier.notes = doc.notes;
+
+                      supplier.save((err) => {
+                          console.log("err", err);
+                          console.log(`Doc succesufully updated with id ${doc._id}`);
+                      });
+
+                  });
+            });
+
+            return res.json({
+                error:false,
+                message: req.__('general.success.updated'),
+            });
+
+        } catch(err) {
+            console.log("err", err);
+        }
+
+    } else {
+        return res.json({
+            error:false,
+            message: req.__('general.success.updated')
+        });
+
+    }
+};
+
 /**
  * Guarda un Supplier.
  * @param req

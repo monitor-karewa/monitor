@@ -5,13 +5,15 @@ import * as events from "../../events";
 export default function (api, storeName) {
     const state = {
         docs: [],
+        docsUpdated :[],
         pagination: {
             total: 0,
             page: 1,
             pages: 1
         },
         docName: '',
-        selectedDocId: ''
+        selectedDocId: '',
+        isEditingTable : false
     };
 
     const getters = {
@@ -109,6 +111,42 @@ export default function (api, storeName) {
                     // console.log('error', error);
                 }
             )
+        },
+        saveDocsUpdated({state, dispatch, commit}){
+            let data = state.docsUpdated;
+            console.log("data", data);
+            api.saveUpdatedDocs(
+                data,
+                (result) => {
+                    Vue.$log.info('Response', result);
+                    dispatch(`${storeName}/list`,{},{root:true});
+                    dispatch(`${storeName}/setEditTable`,false,{root:true});
+                    commit('CLEAR_DOCS_UPDATED');
+                },
+                (error) => {
+                    Vue.$log.error('Response error', error);
+                }
+            )
+
+        },
+        updateDocFromEditableTable({commit, state}, data){
+            let field = data.field;
+            let value = data.value;
+            let docId = data.doc._id;
+            let docUpdated = state.docs.find(doc => { return doc._id === docId });
+            let updatedDocIndexIfExists = state.docsUpdated.findIndex(doc => { return doc._id === docUpdated._id });
+
+            let payload = {
+                field,
+                value,
+                docUpdated,
+                updatedDocIndexIfExists
+            };
+
+            commit('UPDATE_DOC_FROM_EDITABLE_TABLE', payload);
+        },
+        setEditTable({commit},payload){
+            commit('SET_EDIT_TABLE',payload);
         }
     };
 
@@ -127,6 +165,20 @@ export default function (api, storeName) {
         },
         SET_DOC_ID(state, id){
             state.selectedDocId = id;
+        },
+        UPDATE_DOC_FROM_EDITABLE_TABLE(state,{ field, value, docUpdated, updatedDocIndexIfExists}){
+            docUpdated[field] = value;
+            if(updatedDocIndexIfExists !== -1 ){
+                state.docsUpdated[updatedDocIndexIfExists] = docUpdated;
+            } else {
+                state.docsUpdated.push(docUpdated);
+            }
+        },
+        SET_EDIT_TABLE(state, payload){
+            state.isEditingTable = payload;
+        },
+        CLEAR_DOCS_UPDATED(state){
+            state.docsUpdated = [];
         }
     };
 
