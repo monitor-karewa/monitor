@@ -32,8 +32,8 @@ exports.list = (req, res, next) => {
 
     //query["field"] = value;
 
-    //let qNotDeleted = deletedSchema.qNotDeleted();
-    //query = {...query, ...qNotDeleted};
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    query = {...query, ...qNotDeleted};
 
     if(req.query.search){
         query = {
@@ -183,7 +183,6 @@ exports.delete = (req, res, next) => {
                 });
             }
 
-
             Organization.update(
                 query,
                 {
@@ -196,7 +195,7 @@ exports.delete = (req, res, next) => {
                     }
                 },
                 {multi: false}
-            ).exec((err) => {
+            ).exec((err, par) => {
                 if (err) {
                     logger.error(req, err, 'organization.controller#delete', 'Error al borrar Organization.');
                     return res.json({

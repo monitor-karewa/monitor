@@ -31,14 +31,15 @@ let userSchema = mongoose.Schema({
         }
     },
     password: {
-        type: String, 
+        type: String,
         required: true
     },
     active: {
         type: Boolean,
         required: true,
         default: true
-    }
+    },
+    deleted: require("./schemas/deleted.schema").Deleted
 });
 
 
@@ -54,7 +55,7 @@ userSchema.plugin(mongoosePagination);
  */
 class UserClass {
     constructor() {
-        
+
     }
 
     /**
