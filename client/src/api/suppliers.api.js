@@ -21,7 +21,6 @@ export default {
             .catch(onError);
     },
     saveUpdatedDocs: (params = {}, onSuccess, onError) => {
-        console.log("params", params);
         return axios.post(`${base.baseUrl}/api/${namespace}/save-updated-docs`,   params )
             .then(onSuccess)
             .catch(onError);

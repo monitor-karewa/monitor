@@ -70,11 +70,9 @@ exports.saveUpdatedDocs = (req, res, next) => {
     // }
 
     let docsUpdated = req.body;
-    console.log("docsUpdated", docsUpdated);
 
     if(docsUpdated){
         try{
-            console.log("entro al try catch");
             docsUpdated.forEach((doc) => {
                Supplier
                   .findOne({_id: doc._id})
@@ -85,8 +83,7 @@ exports.saveUpdatedDocs = (req, res, next) => {
                       supplier.notes = doc.notes;
 
                       supplier.save((err) => {
-                          console.log("err", err);
-                          console.log(`Doc succesufully updated with id ${doc._id}`);
+                          logger.error(err, req, 'supplier.controller#saveUpdatedDocs', 'Error al actualizar lista de Suppliers');
                       });
 
                   });
@@ -98,7 +95,7 @@ exports.saveUpdatedDocs = (req, res, next) => {
             });
 
         } catch(err) {
-            console.log("err", err);
+            logger.error(err, req, 'supplier.controller#saveUpdatedDocs', 'Error al actualizar lista de Suppliers');
         }
 
     } else {

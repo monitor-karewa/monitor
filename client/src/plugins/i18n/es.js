@@ -181,5 +181,10 @@ export default {
 
     "suppliers.name": "Nombre o razón social",
     "suppliers.rfc": "RFC",
-    "suppliers.notes": "Notas"
+    "suppliers.notes": "Notas",
+    "suppliers.modal.title":"Guardar Registros",
+    "suppliers.modal.message":"Se modificaran {docsUpdatedLength} registros",
+    "suppliers.modal.confirmation-question":"¿Estás seguro de guardar los registros modificados?",
+    "suppliers.modal.cancel-button":"CANCELAR",
+    "suppliers.modal.ok-button":"GUARDAR"
 }

@@ -27,7 +27,9 @@
                                                 {{ doc[column.field] }}
                                             </span>
 
-                                            <input v-if="isEditingTable && !column.type" type="text" class="form-control fg-input" :placeholder="doc[column.field]" :value="doc[column.field]" @input="updateDocFromEditableTable($event,doc,column.field)"/>
+                                            <input v-if="isEditingTable && !column.type" type="text" class="form-control fg-input"
+                                                   :placeholder="doc[column.field]" :value="doc[column.field]"
+                                                   @input="updateDocFromEditableTable($event,doc,column.field)"/>
 
                                             <span v-else-if="column.type === 'Date'">
                                                 {{ doc[column.field] | moment }}

@@ -1,8 +1,8 @@
 <template>
     <div>
-        <button class="btn-stroke button-accent" v-if="isEditingTable" @click="saveDocs()">Guardar</button>
-        <button class="btn-stroke button-accent" v-if="!isEditingTable" @click="editTable(true)">Editar</button>
-        <button class="btn-stroke button-accent" v-if="isEditingTable" @click="editTable(false)">Volver</button>
+        <button class="btn-stroke button-accent" v-show="!isEditingTable" @click.prevent="editTable(true)">Editar</button>
+        <button class="btn-stroke button-accent" v-show="isEditingTable" data-toggle="modal" data-target="#modalAlertDefault">Guardar</button>
+        <button class="btn-stroke button-accent" v-show="isEditingTable" @click.prevent="editTable(false)">Volver</button>
     </div>
 </template>
 
@@ -26,10 +26,7 @@
         methods: {
           editTable(value){
               this.$store.dispatch(`${this.$props.storeModule}/setEditTable`,value);
-          },
-          saveDocs(){
-              this.$store.dispatch(`${this.$props.storeModule}/saveDocsUpdated`);
-           }
+          }
         },
         components: {
         },

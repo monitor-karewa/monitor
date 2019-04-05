@@ -29,7 +29,8 @@ export default function (api, storeName) {
             }
 
             return query;
-        }
+        },
+        docsUpdatedLength: state => state.docsUpdated.length
     };
 
     const actions = {
@@ -114,7 +115,6 @@ export default function (api, storeName) {
         },
         saveDocsUpdated({state, dispatch, commit}){
             let data = state.docsUpdated;
-            console.log("data", data);
             api.saveUpdatedDocs(
                 data,
                 (result) => {
@@ -133,7 +133,7 @@ export default function (api, storeName) {
             let field = data.field;
             let value = data.value;
             let docId = data.doc._id;
-            let docUpdated = state.docs.find(doc => { return doc._id === docId });
+            let docUpdated = Vue.util.extend({}, state.docs.find(doc => { return doc._id === docId })) ;
             let updatedDocIndexIfExists = state.docsUpdated.findIndex(doc => { return doc._id === docUpdated._id });
 
             let payload = {
@@ -146,6 +146,7 @@ export default function (api, storeName) {
             commit('UPDATE_DOC_FROM_EDITABLE_TABLE', payload);
         },
         setEditTable({commit},payload){
+            commit('CLEAR_DOCS_UPDATED');
             commit('SET_EDIT_TABLE',payload);
         }
     };
@@ -167,10 +168,10 @@ export default function (api, storeName) {
             state.selectedDocId = id;
         },
         UPDATE_DOC_FROM_EDITABLE_TABLE(state,{ field, value, docUpdated, updatedDocIndexIfExists}){
-            docUpdated[field] = value;
             if(updatedDocIndexIfExists !== -1 ){
-                state.docsUpdated[updatedDocIndexIfExists] = docUpdated;
+                state.docsUpdated[updatedDocIndexIfExists][field] = value;
             } else {
+                docUpdated[field] = value;
                 state.docsUpdated.push(docUpdated);
             }
         },
