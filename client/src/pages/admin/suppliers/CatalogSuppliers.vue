@@ -2,7 +2,9 @@
     <div>
         <AdminMainSection>
             <BackButton />
-            <CatalogHeader :singular="'Proveedor'" :plural="'Proveedores'" />
+            <CatalogHeader
+                    :singular="'Proveedor'"
+                    :plural="'Proveedores'" />
             <EditableTable
                     :docs="docs"
                     :tableColumns="tableColumns"
@@ -56,7 +58,12 @@
             </div>
         </NewEntryModal>
 
-        <ModalDanger :confirm="confirmDeletion"/>
+        <ModalDanger :title="'Eliminar Proveedor'" :confirm="confirmDeletion">
+            <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
+                <br>
+                <strong>¿Estás seguro de eliminarlo?</strong>
+            </p>
+        </ModalDanger>
     </div>
 </template>
 
@@ -136,9 +143,6 @@
             ModalDanger
         },
         methods:{
-            confirm(){
-                console.log("confirm function");
-            },
             confirmDeletion(){
                 this.deleteElementSelected();
             },

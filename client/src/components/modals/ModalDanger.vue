@@ -5,13 +5,10 @@
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h1 class="modal-title" id="">Eliminar Usuario</h1>
+                    <h1 class="modal-title" id="">{{title}}</h1>
                 </div>
                 <div class="modal-body">
-                    <p class="text-centered">Esta accion borrara al usuario del catalogo permanentemente
-                        <br>
-                        <strong>¿Estas seguro de eliminarlo?</strong>
-                    </p>
+                    <slot></slot>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar</button>
@@ -33,6 +30,7 @@
         },
         components: {},
         props:{
+            title: String,
             confirm: Function
         }
     }

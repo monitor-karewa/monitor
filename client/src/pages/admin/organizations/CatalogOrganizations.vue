@@ -5,10 +5,10 @@
             <CatalogHeader :singular="'Organización'" :plural="'Organizaciones'" />
             <EditableTable
                     :docs="docs"
-                    :tableHeaders="tableHeaders"
                     :tableColumns="tableColumns"
                     :store-module="storeModule"
-                    :singular="'Organización'" :plural="'Organizaciones'"
+                    :singular="'Organización'"
+                    :plural="'Organizaciones'"
             />
         </AdminMainSection>
 
@@ -29,7 +29,12 @@
             </div>
         </NewEntryModal>
 
-        <ModalDanger v-bind:confirm="confirm"/>
+        <ModalDanger :title="'Eliminar Organización'" :confirm="confirmDeletion">
+            <p class="text-centered">Esta acción borrará a la organización del catálogo permanentemente
+                <br>
+                <strong>¿Estás seguro de eliminarlo?</strong>
+            </p>
+        </ModalDanger>
     </div>
 </template>
 
@@ -45,7 +50,7 @@
     import  ModalDanger from "@/components/modals/ModalDanger";
     const storeModule = 'organizations';
     const docName = 'organizations.organization';
-    import { required, minLength, maxLength } from 'vuelidate/lib/validators';
+    import { required, maxLength } from 'vuelidate/lib/validators';
 
     let baseCatalog = catalog.configure({
         storeModule: storeModule,
@@ -67,13 +72,13 @@
             ModalDanger
         },
         methods:{
-            confirm(){
-                console.log("confirm function");
-            }
+            confirmDeletion(){
+                this.deleteElementSelected();
+            },
         },
         created(){
-            bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
-                tShow("Elemento Eliminado!!", 'info');
+            bus.$on(storeModule+DELETE_SUCCESS, ()=>{
+                tShow("La organización fue eliminada correctamente", 'info');
             })
         },
         validations:{
