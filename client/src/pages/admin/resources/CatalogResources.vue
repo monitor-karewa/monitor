@@ -53,7 +53,12 @@
 
 
 
-        <ModalDanger v-bind:confirm="confirm"/>
+        <ModalDanger :title="'Eliminar Recurso'" :confirm="confirmDeletion">
+            <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
+                <br>
+                <strong>¿Estás seguro de eliminarlo?</strong>
+            </p>
+        </ModalDanger>
     </div>
 </template>
 
@@ -91,8 +96,8 @@
             ModalDanger
         },
         methods:{
-            confirm(){
-                console.log("confirm function");
+            confirmDeletion(){
+                tShow("El recurso fue eliminado correctamente", 'info');
             }
         },
         created(){
@@ -105,19 +110,6 @@
                 window.$('.selectpicker').selectpicker();
 
                 $('.selectpicker').selectpicker();
-
-                $('#toast-danger').click(function () {
-                    tShow("Hubo un error en el proceso. Intenta de nuevo", 'danger');
-                });
-                $('#toast-info').click(function () {
-                    tShow("Se informa del proceso por eso es un info", 'info');
-                });
-                $('#toast-warning').click(function () {
-                    tShow("Complete todos los campos requeridos", 'alert');
-                });
-                $('#toast-success').click(function () {
-                    tShow("Se ha completado el proceso correctamente sadasda adadasd sda dasdasdas dasda dasdasd ad adaspidjdj asoijdas", 'success');
-                });
             });
         }
     }

@@ -41,7 +41,12 @@
 
 
 
-        <ModalDanger v-bind:confirm="confirm"/>
+        <ModalDanger :title="'Eliminar Unidad Administrativa'" :confirm="confirmDeletion">
+            <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
+                <br>
+                <strong>¿Estás seguro de eliminarlo?</strong>
+            </p>
+        </ModalDanger>
     </div>
 </template>
 
@@ -86,7 +91,7 @@
         },
         created(){
             bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
-                tShow("Elemento Eliminado!!", 'info');
+                tShow("La unidad administrativa fue eliminada correctamente", 'info');
             })
         },
         mounted(){

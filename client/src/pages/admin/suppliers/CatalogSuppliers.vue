@@ -156,7 +156,7 @@
         },
         created(){
             bus.$on(storeModule+DELETE_SUCCESS, ()=>{
-                tShow("Elemento Eliminado!", 'info');
+                tShow("El proveedor fue eliminado correctamente", 'info');
             });
             bus.$on(storeModule+DOC_CREATED, ()=>{
                 this.name = "";
