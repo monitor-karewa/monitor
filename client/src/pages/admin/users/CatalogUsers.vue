@@ -85,7 +85,7 @@
                         </div>
                     </div>
 
-                    <div>
+                    <div v-if="doc.administratorType == 'CUSTOM'">
                         <div class="checkbox m-b-20">
                             <input type="checkbox" value="USERS" v-model="doc.permissions">
                             <i class="input-helper"></i>
@@ -116,26 +116,24 @@
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.admin-type.radio-button.custom.settings')}}</span>
                         </div>
-
-
-                        <div class="form-group fg-float subtitle">
-                            <div class="fg-line basic-input">
-                                <input type="text" class="form-control fg-input" :placeholder="$t('users.new.notes.placeholder')"
-                                       v-model="doc.notes">
-                                <label class="fg-label">{{$t('users.new.notes.label')}}
-                                    <small></small>
-                                    <br>
-                                    <strong>{{$t('users.new.notes.sub-label')}}}</strong>
-                                </label>
-                            </div>
-                        </div>
+                    </div>
+                </div>
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input"
+                               :placeholder="$t('users.new.notes.placeholder')"
+                               v-model="doc.notes">
+                        <label class="fg-label">{{$t('users.new.notes.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('users.new.notes.sub-label')}}}</strong>
+                        </label>
                     </div>
                 </div>
             </div>
 
 
         </NewEntryModal>
-
 
 
         <ModalDanger v-bind:confirm="confirm"/>
@@ -173,7 +171,8 @@
                     {label:'general.created-at', field : 'created_at', visible : true, type:'Date'}
                 ],
                 doc : {
-                    permissions : []
+                    permissions : [],
+                    administratorType : "CUSTOM"
                 }
             }
         },
