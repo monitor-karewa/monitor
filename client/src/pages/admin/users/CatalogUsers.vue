@@ -66,50 +66,53 @@
 
 
                 <div class="form-group fg-float subtitle">
-                    <div class="input-radio-check col-md-12">
-                        <div class=" check-container col-md-6">
-                            <input type="radio" value="GENERAL" v-model="administratorType" name="role" id="one">
-                            <span class="role" for="general">{{$t('users.new.admin-type.radio-button.general')}}</span>
-                            <p class="fg-label"> {{$t('users.new.admin-type.label')}}
-                                <small></small>
-                                <br>
-                                <strong>{{$t('users.new.admin-type.sub-label')}}</strong>
-                            </p>
-                        </div>
-                        <div class=" check-container col-md-6">
-                            <input type="radio" v-model="administratorType" name="role" id="two">
-                            <span class="role" value="CUSTOM" for="custom">{{$t('users.new.admin-type.radio-button.custom')}}</span>
+                    <div class="fg-line basic-input">
+                        <div class="input-radio-check col-md-12 p-0">
+                            <div class=" check-container col-md-6">
+                                <input class="m-t-20" type="radio" value="GENERAL" v-model="doc.administratorType" name="administratorType" id="one">
+                                <span class="role m-t-20"
+                                      for="general">{{$t('users.new.admin-type.radio-button.general')}}</span>
+                                <p class="fg-label"> {{$t('users.new.admin-type.label')}}
+                                    <small></small>
+                                    <br>
+                                    <strong>{{$t('users.new.admin-type.sub-label')}}</strong>
+                                </p>
+                            </div>
+                            <div class=" check-container col-md-6">
+                                <input value="CUSTOM" type="radio" v-model="doc.administratorType" name="role" id="two">
+                                <span for="custom">{{$t('users.new.admin-type.radio-button.custom')}}</span>
+                            </div>
                         </div>
                     </div>
 
                     <div>
                         <div class="checkbox m-b-20">
-                            <input type="checkbox" value="">
+                            <input type="checkbox" value="USERS" v-model="doc.permissions">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.admin-type.radio-button.custom.users')}}</span>
                         </div>
                         <div class="checkbox m-b-20">
-                            <input type="checkbox" value="">
+                            <input type="checkbox" value="SUPPLIERS" v-model="doc.permissions">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.admin-type.radio-button.custom.suppliers')}}</span>
                         </div>
                         <div class="checkbox m-b-20">
-                            <input type="checkbox" value="">
+                            <input type="checkbox" value="ADMINISTRATIVE_UNITS" v-model="doc.permissions">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.admin-type.radio-button.custom.administrative-units')}}</span>
                         </div>
                         <div class="checkbox m-b-20">
-                            <input type="checkbox" value="">
+                            <input type="checkbox" value="CONTRACTS" v-model="doc.permissions">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.admin-type.radio-button.custom.contracts')}}</span>
                         </div>
                         <div class="checkbox m-b-20">
-                            <input type="checkbox" value="">
+                            <input type="checkbox" value="CALCULATIONS" v-model="doc.permissions">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.admin-type.radio-button.custom.calculations')}}</span>
                         </div>
                         <div class="checkbox m-b-20">
-                            <input type="checkbox" value="">
+                            <input type="checkbox" value="SETTINGS" v-model="doc.permissions">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.admin-type.radio-button.custom.settings')}}</span>
                         </div>
@@ -126,13 +129,8 @@
                                 </label>
                             </div>
                         </div>
-
                     </div>
-
-
                 </div>
-
-
             </div>
 
 
@@ -174,7 +172,9 @@
                     {label:'users.email', field : 'email', visible : true} ,
                     {label:'general.created-at', field : 'created_at', visible : true, type:'Date'}
                 ],
-                doc : {}
+                doc : {
+                    permissions : []
+                }
             }
         },
         components: {
