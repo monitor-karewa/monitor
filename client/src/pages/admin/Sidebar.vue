@@ -145,7 +145,7 @@
         },
         components: {
         },
-        created: () => {
+        mounted: () => {
             window.$('#hideMenu').on('click', function() {
                 $('.sidebar').removeClass('small-sidebar');
                 $('.backdrop').removeClass('active');
