@@ -186,6 +186,14 @@ export default {
     "suppliers.new.notes.label": "Notas adicionales",
     "suppliers.new.notes.sub-label": "Aquí puedes agregar notas adicionales al registro del proveedor",
     "suppliers.new.notes.placeholder": "Introduce notas adicionales",
+    "suppliers.name": "Nombre o razón social",
+    "suppliers.rfc": "RFC",
+    "suppliers.notes": "Notas",
+    "suppliers.modal.title":"Guardar Registros",
+    "suppliers.modal.message":"Se modificaran {docsUpdatedLength} registros",
+    "suppliers.modal.confirmation-question":"¿Estás seguro de guardar los registros modificados?",
+    "suppliers.modal.cancel-button":"CANCELAR",
+    "suppliers.modal.ok-button":"GUARDAR",
 
 
     //Organizations
@@ -199,10 +207,6 @@ export default {
     "users.name" : "Nombre",
     "users.lastName" : "Apellido",
     "users.email" : "Correo Electrónico",
-    "suppliers.name": "Nombre o razón social",
-    "suppliers.rfc": "RFC",
-    "suppliers.notes": "Notas",
-
     "users.new.name.label": "Nombre",
     "users.new.name.sub-label": "A continuación escribe el nombre o la razón social del usuario",
     "users.new.name.placeholder": "Introduce el nombre",

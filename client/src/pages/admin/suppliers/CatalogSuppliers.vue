@@ -65,6 +65,13 @@
                 <strong>¿Estás seguro de eliminarlo?</strong>
             </p>
         </ModalDanger>
+        <ModalDefault :title="$t(modalProperties.title)"
+                     :message="$t(modalProperties.message,{ docsUpdatedLength: docsUpdatedLength })"
+                     :confirmation-question="$t(modalProperties.confirmationQuestion)"
+                     :cancel-button-text="$t(modalProperties.cancelButtonText)"
+                     :ok-button-text="$t(modalProperties.okButtonText)"
+                     :store-module="storeModule"
+                     :action="modalProperties.action"/>
     </div>
 </template>
 
@@ -79,6 +86,7 @@
     import { bus } from '@/main';
     import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
+    import  ModalDefault from "@/components/modals/ModalDefault";
     const storeModule = 'suppliers';
     const docName = 'suppliers.supplier';
     import { required, minLength, maxLength } from 'vuelidate/lib/validators';
@@ -102,7 +110,16 @@
                 ],
                 name:"",
                 rfc:"",
-                notes:""
+                notes:"",
+                modalProperties:{
+                    title:"suppliers.modal.title",
+                    message:"suppliers.modal.message",
+                    confirmationQuestion:"suppliers.modal.confirmation-question",
+                    cancelButtonText:"suppliers.modal.cancel-button",
+                    okButtonText:"suppliers.modal.ok-button",
+                    action:"saveDocsUpdated"
+                },
+
 
             }
         },
@@ -138,10 +155,14 @@
                if(!this.$v.rfc.validRFC ){
                    return "El RFC introducido no tiene un formato válido"
                }
-            }
+
+
+            },
+            ...mapGetters(storeModule,['docsUpdatedLength'])
         },
         components: {
-            ModalDanger
+            ModalDanger,
+            ModalDefault
         },
         methods:{
             confirmDeletion(){
