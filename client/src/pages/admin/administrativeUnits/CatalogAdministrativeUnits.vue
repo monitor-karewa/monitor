@@ -16,23 +16,23 @@
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre de la unidad administrativa"
+                        <input type="text" class="form-control fg-input" :placeholder="$t('administrativeUnits.new.name.placeholder')"
                                v-model="doc.name">
-                        <label class="fg-label">Nombre de la unidad administrativa
+                        <label class="fg-label">{{$t("administrativeUnits.new.name.label")}}
                             <small></small>
                             <br>
-                            <strong>/Introduce el nombre del unidad</strong>
+                            <strong>{{$t("administrativeUnits.new.name.sub-label")}}</strong>
                         </label>
                     </div>
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Introduce las notas adicionales"
+                        <input type="text" class="form-control fg-input" :placeholder="$t('administrativeUnits.new.notes.placeholder')"
                                v-model="doc.notes">
-                        <label class="fg-label">Notas
+                        <label class="fg-label">{{$t("administrativeUnits.new.notes.label")}}
                             <small></small>
                             <br>
-                            <strong>/Introduce anotaciones sobre la unidad/</strong>
+                            <strong>{{$t("administrativeUnits.new.notes.sub-label")}}</strong>
                         </label>
                     </div>
                 </div>

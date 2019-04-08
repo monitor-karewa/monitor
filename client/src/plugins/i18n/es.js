@@ -203,6 +203,14 @@ export default {
     "administrativeUnits.name" : "Nombre",
     "administrativeUnits.notes" : "Notas Adicionales",
 
+    "administrativeUnits.new.name.label": "Nombre",
+    "administrativeUnits.new.name.sub-label": "A continuación escribe el nombre de la Unidad Administrativa",
+    "administrativeUnits.new.name.placeholder": "Introduce el nombre",
+    "administrativeUnits.new.notes.label": "Notas Adicionales",
+    "administrativeUnits.new.notes.sub-label": "Aquí puedes escribir notas sobre el usuario",
+    "administrativeUnits.new.notes.placeholder": "Introduce las notas adicionales",
+
+
     //Users
     "users.name" : "Nombre",
     "users.lastName" : "Apellido",
@@ -225,7 +233,6 @@ export default {
     "users.new.notes.label": "Notas Adicionales",
     "users.new.notes.sub-label": "Aquí puedes escribir notas sobre el usuario",
     "users.new.notes.placeholder": "Introduce las notas adicionales",
-
 
     "users.new.admin-type.radio-button.custom.users": "Usuarios",
     "users.new.admin-type.radio-button.custom.suppliers": "Proveedores",
