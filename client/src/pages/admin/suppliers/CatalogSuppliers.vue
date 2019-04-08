@@ -91,6 +91,7 @@
     const docName = 'suppliers.supplier';
     import { required, minLength, maxLength } from 'vuelidate/lib/validators';
     const touchMap = new WeakMap();
+    import { mapGetters } from 'vuex';
 
     let baseCatalog = catalog.configure({
         storeModule: storeModule,
