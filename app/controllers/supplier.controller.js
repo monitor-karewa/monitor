@@ -6,6 +6,8 @@ const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const { validationResult } = require('express-validator/check');
 
+const utils = require('./../components/utils');
+
 /**
  * Renderiza la vista principal de consulta de Supplier.
  * @param req
@@ -31,6 +33,18 @@ exports.list = (req, res, next) => {
     let query = {};
 
     //query["field"] = value;
+    if(req.query.search){
+        let queryAsRegex = utils.toAccentsRegex(req.query.search, "i" );
+        query = {
+            $or : [
+                {name : queryAsRegex},
+                {rfc : queryAsRegex},
+                {notes : queryAsRegex}
+
+            ]
+        }
+    }
+
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     query = {...query, ...qNotDeleted};
@@ -161,7 +175,6 @@ exports.save = (req, res, next) => {
 
     } else {
         //Create
-
         let supplier = new Supplier({
             //Update doc fields
             name : req.body.name,

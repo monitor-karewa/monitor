@@ -13,7 +13,7 @@
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc">
+        <NewEntryModal v-bind:validator="$v" v-bind:storeModule="storeModule" v-bind:data="doc">
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
@@ -49,23 +49,47 @@
                     </div>
                 </div>
 
+
                 <div class="form-group fg-float subtitle">
-                    <div class="fg-line basic-input">
-                        <input type="password" class="form-control fg-input" placeholder="Introduce el password"
-                               v-model="doc.password">
-                        <label class="fg-label"> Contraseña
-                            <small></small>
-                            <br>
-                            <strong>Introduce la contraseña para el inicio de sesión</strong>
-                        </label>
+                    <div class="checkbox">
+                        <input type="checkbox" value="">
+                        <i class="input-helper"></i>
+                        <span>{{$t('users.new.enabled.checkbox-label')}}</span>
                     </div>
                 </div>
+
+                <div class="form-group fg-float subtitle">
+                    <div class="input-radio-check col-md-12">
+                        <div class=" check-container col-md-6">
+                            <input type="radio" name="role" id="one">
+                            <span class="role" for="general">{{$t('users.new.admin-type.radio-button.general')}}</span>
+                            <label class="fg-label"> Correo eléctrónico
+                                <small></small>
+                                <br>
+                                <strong>/Introduce la dirección de correo electrónico del Usuario/</strong>
+                            </label>
+                        </div>
+                        <div class=" check-container col-md-6">
+                            <input type="radio" name="role" id="two">
+                            <span class="role" for="custom">{{$t('users.new.admin-type.radio-button.custom')}}</span>
+                        </div>
+                    </div>
+                </div>
+
+
             </div>
+
+
         </NewEntryModal>
 
 
 
-        <ModalDanger v-bind:confirm="confirm"/>
+        <ModalDanger :title="'Eliminar Proveedor'" :confirm="confirmDeletion">
+            <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
+                <br>
+                <strong>¿Estás seguro de eliminarlo?</strong>
+            </p>
+        </ModalDanger>
     </div>
 </template>
 
@@ -94,7 +118,10 @@
                 storeModule: storeModule,
                 tableHeaders : ['suppliers.name','Apellido','E-mail','general.created-at'],
                 tableColumns: [
-                    {field:'name'}, {field:'lastName'}, {field:'email'} , {field:'created_at', type:'Date'}
+                    {label:'users.name', field : 'name', visible : true},
+                    {label:'users.lastName', field : 'lastName', visible : true},
+                    {label:'users.email', field : 'email', visible : true} ,
+                    {label:'general.created-at', field : 'created_at', visible : true, type:'Date'}
                 ],
                 doc : {}
             }
@@ -103,8 +130,8 @@
             ModalDanger
         },
         methods:{
-            confirm(){
-                console.log("confirm function");
+            confirmDeletion(){
+                tShow("El usuario fue eliminado correctamente", 'info');
             }
         },
         created(){
@@ -131,6 +158,8 @@
                     tShow("Se ha completado el proceso correctamente sadasda adadasd sda dasdasdas dasda dasdasd ad adaspidjdj asoijdas", 'success');
                 });
             });
+        },
+        validations:{
         }
     }
 </script>

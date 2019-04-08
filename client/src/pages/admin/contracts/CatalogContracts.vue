@@ -63,9 +63,12 @@
             </div>
         </NewEntryModal>
 
-
-
-        <ModalDanger v-bind:confirm="confirm"/>
+        <ModalDanger :title="'Eliminar Contrato'" :confirm="confirmDeletion">
+            <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
+                <br>
+                <strong>¿Estás seguro de eliminarlo?</strong>
+            </p>
+        </ModalDanger>
     </div>
 </template>
 
@@ -99,11 +102,11 @@
                     'Tipo de procedimiento',
                     'general.created-at'],
                 tableColumns: [
-                    {field:'supplier'},
-                    {field:'administrativeUnit'},
-                    {field:'amount'},
-                    {field:'procedureType'},
-                    {field:'created_at', type:'Date'}
+                    {label: "contracts.supplier", visible : true,   field:'supplier'},
+                    {label: "contracts.administrativeUnit", visible : true,   field:'administrativeUnit'},
+                    {label: "contracts.amount", visible : true,   field:'amount'},
+                    {label: "contracts.procedureType", visible : true,   field:'procedureType'},
+                    {label: "general.created-at", visible : true,   field:'created_at', type:'Date'}
                 ],
                 doc : {}
             }
@@ -112,8 +115,8 @@
             ModalDanger
         },
         methods:{
-            confirm(){
-                console.log("confirm function");
+            confirmDeletion(){
+                tShow("El contrato fue eliminado correctamente", 'info');
             }
         },
         created(){

@@ -2,7 +2,9 @@
     <div>
         <AdminMainSection>
             <BackButton />
-            <CatalogHeader :singular="'Proveedor'" :plural="'Proveedores'" />
+            <CatalogHeader
+                    :singular="'Proveedor'"
+                    :plural="'Proveedores'" />
             <EditableTable
                     :docs="docs"
                     :tableColumns="tableColumns"
@@ -17,12 +19,12 @@
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
 
-                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre" v-model="$v.name.$model"/>
-                        <label class="fg-label">Nombre del Proveedor
+                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.name.placeholder')" v-model="$v.name.$model"/>
+                        <label class="fg-label">{{$t('suppliers.new.name.label')}}
 
                             <small></small>
                             <br/>
-                            <strong>Introduce el nombre del Proveedor</strong>
+                            <strong>{{$t('suppliers.new.name.sub-label')}}</strong>
                         </label>
                     </div>
                     <!--<span style="float: right">{{ doc && doc.name ? doc.name.length : 0}}/100</span>-->
@@ -31,27 +33,25 @@
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Ej. VECJ880326" v-model.trim="$v.rfc.$model"
+                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.rfc.placeholder')" v-model.trim="$v.rfc.$model"
                         @input="delayTouch($v.rfc)">
-                        <label class="fg-label">RFC
+                        <label class="fg-label">{{$t('suppliers.new.rfc.label')}}
                             <small></small>
                             <br/>
-                            <strong>Indica el RFC del proveedor</strong>
+                            <strong>{{$t('suppliers.new.rfc.sub-label')}}</strong>
                         </label>
                     </div>
                     <span v-if="$v.rfc.$invalid && $v.rfc.$dirty" class="c-error">{{rfcErrorMessage}}</span>
-                    <!--<span v-if="fieldErrors.fields.rfc" class="c-error">{{ fieldErrors.fields.rfc }}</span>-->
                 </div>
-
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
-                               placeholder="Escribe aquí tus notas sobre el proveedor" v-model="notes">
-                        <label class="fg-label">Notas Adicionales
+                               :placeholder="$t('suppliers.new.notes.placeholder')" v-model="notes">
+                        <label class="fg-label">{{$t('suppliers.new.notes.label')}}
                             <small></small>
                             <br>
-                            <strong>Notas adicionales</strong>
+                            <strong>{{$t('suppliers.new.notes.sub-label')}}</strong>
                         </label>
                     </div>
                 </div>
@@ -59,7 +59,12 @@
             </div>
         </NewEntryModal>
 
-        <ModalDanger v-bind:confirm="confirmDeletion"/>
+        <ModalDanger :title="'Eliminar Proveedor'" :confirm="confirmDeletion">
+            <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
+                <br>
+                <strong>¿Estás seguro de eliminarlo?</strong>
+            </p>
+        </ModalDanger>
         <ModalDefault :title="$t(modalProperties.title)"
                      :message="$t(modalProperties.message,{ docsUpdatedLength: docsUpdatedLength })"
                      :confirmation-question="$t(modalProperties.confirmationQuestion)"
@@ -73,6 +78,7 @@
 
 
 <style>
+
 </style>
 
 <script>
@@ -83,7 +89,6 @@
     import  ModalDefault from "@/components/modals/ModalDefault";
     const storeModule = 'suppliers';
     const docName = 'suppliers.supplier';
-    import { mapGetters } from 'vuex';
     import { required, minLength, maxLength } from 'vuelidate/lib/validators';
     const touchMap = new WeakMap();
 
@@ -151,20 +156,15 @@
                    return "El RFC introducido no tiene un formato válido"
                }
 
+
             },
             ...mapGetters(storeModule,['docsUpdatedLength'])
-
-
         },
         components: {
             ModalDanger,
             ModalDefault
         },
         methods:{
-
-            confirm(){
-                console.log("confirm function");
-            },
             confirmDeletion(){
                 this.deleteElementSelected();
             },
@@ -178,7 +178,7 @@
         },
         created(){
             bus.$on(storeModule+DELETE_SUCCESS, ()=>{
-                tShow("Elemento Eliminado!", 'info');
+                tShow("El proveedor fue eliminado correctamente", 'info');
             });
             bus.$on(storeModule+DOC_CREATED, ()=>{
                 this.name = "";

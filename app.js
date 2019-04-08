@@ -34,7 +34,6 @@ const cors = require('cors');
 const indexRoutes = require('./app/routes/index.routes');
 const securityRoutes = require('./app/routes/security.routes');
 const adminRoutes = require('./app/routes/admin.routes');
-const proveedorRoutes = require('./app/routes/proveedor.routes');
 const recursoRoutes = require('./app/routes/recurso.routes');
 const unidadesRoutes = require('./app/routes/unidadAdministrativa.routes');
 const calculoRoutes = require('./app/routes/calculo.routes');
@@ -166,7 +165,6 @@ app.use((req, res, next) => {
 // app.use('/api/users', usersRoutes);
 app.use('/security', securityRoutes);
 app.use('/admin', securityController.checkLogin, adminRoutes);
-app.use('/api/proveedores', proveedorRoutes);
 app.use('/api/recursos', recursoRoutes);
 app.use('/api/unidades', unidadesRoutes);
 app.use('/api/calculos', calculoRoutes);

@@ -11,32 +11,52 @@ export default function (api, storeName) {
             page: 1,
             pages: 1
         },
+        listQuery : {
+            search : ""
+        },
         docName: '',
         selectedDocId: '',
         isEditingTable : false
     };
 
     const getters = {
-        getPaginationQuery(state){
-            let pagination = state.pagination;
+
+        getUrlQuery(state){
 
             let query = '?';
-            if (pagination.page) {
-                if (query.length > 1) {
+            if (state.pagination.page) {
+                query += `page=${state.pagination.page}`
+            }
+            if(state.listQuery && state.listQuery.search){
+                if(query.length > 2){
                     query += '&';
                 }
-                query += `page=${pagination.page}`
+                query += `search=${state.listQuery.search}`
             }
-
             return query;
         },
-        docsUpdatedLength: state => state.docsUpdated.length
+        docsUpdatedLength: state => state.docsUpdated.length,
+        getSearchString(state){
+            if(state.listQuery){
+                return state.listQuery.search;
+            }
+            return "";
+        }
+
     };
 
     const actions = {
-        list ({commit,getters}) {
+        list ({commit,getters}, searchString ) {
+            if(searchString && searchString.length){
+                commit('SET_SEARCH',searchString);
+                commit('UPDATE_PAGE',1);
+            } else {
+                commit('SET_SEARCH',"");
+            }
             Vue.$log.info(`Calling action ${storeName}/list`);
-            let query = getters.getPaginationQuery;
+
+            let query = getters.getUrlQuery;
+
             api.list(
                 { query },
                 (result) => {
@@ -51,6 +71,7 @@ export default function (api, storeName) {
                 (error) => {
                     // console.log('error', error);
                     Vue.$log.error('Response error', error);
+                    tShow(`Hubo un error al cargar el listado : ${error}`);
                 }
             )
         },
@@ -60,7 +81,7 @@ export default function (api, storeName) {
             commit('UPDATE_PAGE',page);
             // console.log(`Calling action ${storeName}/changePage`);
             Vue.$log.info(`Calling action ${storeName}/changePage`);
-            let query = getters.getPaginationQuery;
+            let query = getters.getUrlQuery;
             api.list(
                 { query },
                 (result) => {
@@ -73,7 +94,7 @@ export default function (api, storeName) {
                 },
                 (error) => {
                     Vue.$log.error('Response error', error);
-                    // console.log('error', error);
+                    tShow(`Hubo un error en el paginado: ${error}`);
                 }
             )
         },
@@ -86,6 +107,7 @@ export default function (api, storeName) {
                 },
                 (error) => {
                     Vue.$log.error('Response error', error);
+                    tShow(`Hubo un error al eliminar el registro: ${error}`);
                 }
             )
         },
@@ -108,8 +130,12 @@ export default function (api, storeName) {
                     bus.$emit(storeName + events.DOC_CREATED);
                 },
                 (error) => {
+                    var errorsStr = "";
+                    error.response.data.errors.some(e=>{
+                        errorsStr += e.msg + "\n";
+                    });
                     Vue.$log.error('Response error', error);
-                    // console.log('error', error);
+                    tShow(`Hubo un error al guardar un registro: ${errorsStr}`);
                 }
             )
         },
@@ -163,6 +189,9 @@ export default function (api, storeName) {
         },
         UPDATE_PAGE(state,page){
             state.pagination.page = page;
+        },
+        SET_SEARCH(state,search){
+            state.listQuery.search = search;
         },
         SET_DOC_ID(state, id){
             state.selectedDocId = id;

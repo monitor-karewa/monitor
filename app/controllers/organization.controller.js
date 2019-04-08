@@ -16,7 +16,7 @@ exports.index = (req, res, next) => {
     let renderParams = {};
     renderParams.model = Organization;
     renderParams.permission = Organization.permission;
-    res.render('user', renderParams);
+    res.render('organization', renderParams);
 };
 
 /**
@@ -29,13 +29,20 @@ exports.list = (req, res, next) => {
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
 
     let query = {};
-    
-    //query["field"] = value;
-    
-    //let qNotDeleted = deletedSchema.qNotDeleted();
-    //query = {...query, ...qNotDeleted};
 
-    console.log("organization.controller#list");
+    //query["field"] = value;
+
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    query = {...query, ...qNotDeleted};
+
+    if(req.query.search){
+        query = {
+            $or : [
+                {name : new RegExp(req.query.search,"i")},
+            ]
+        }
+    }
+
 
     Organization
         .paginate(
@@ -43,7 +50,7 @@ exports.list = (req, res, next) => {
             paginationOptions,
             (err, result) => {
                 if (err) {
-                    logger.error(err, req, 'user.controller#list', 'Error al consultar lista de Organization');
+                    logger.error(err, req, 'organization.controller#list', 'Error al consultar lista de Organization');
                     return res.json({
                         errors: true,
                         message: res.__('general.error.unexpected-error')
@@ -76,18 +83,18 @@ exports.save = (req, res, next) => {
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
     }
-    
+
     let id = req.body._id;
-    
+
     if (id) {
         //Update
         let qById = {_id: id};
 
         Organization
             .findOne(qById)
-            .exec((err, user) => {
-                if (err || !user) {
-                    logger.error(req, err, 'user.controller#save', 'Error al consultar Organization');
+            .exec((err, organization) => {
+                if (err || !organization) {
+                    logger.error(req, err, 'organization.controller#save', 'Error al consultar Organization');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.save')
@@ -95,21 +102,18 @@ exports.save = (req, res, next) => {
                 }
 
                 //Update doc fields
-                user.name = req.body.name;
-                user.lastName = req.body.lastName;
-                user.email = req.body.email;
-                user.password = req.body.password;
+                organization.name = req.body.name;
 
-                
-                user.save((err, savedOrganization) => {
+
+                organization.save((err, savedOrganization) => {
                     if (err) {
-                        logger.error(req, err, 'user.controller#save', 'Error al guardar Organization');
+                        logger.error(req, err, 'organization.controller#save', 'Error al guardar Organization');
                         return res.json({
                             errors: true,
                             message: req.__('general.error.save')
                         });
                     }
-        
+
                     return res.json({
                         errors: false,
                         message: req.__('general.success.updated'),
@@ -117,17 +121,17 @@ exports.save = (req, res, next) => {
                     });
                 });
             });
-        
+
     } else {
         //Create
 
-        let user = new Organization({
+        let organization = new Organization({
             name: req.body.name
         });
 
-        user.save((err, savedOrganization) => {
+        organization.save((err, savedOrganization) => {
             if (err) {
-                logger.error(req, err, 'user.controller#save', 'Error al guardar Organization');
+                logger.error(req, err, 'organization.controller#save', 'Error al guardar Organization');
                 return res.json({
                     "error": true,
                     "message": req.__('general.error.save')
@@ -158,43 +162,42 @@ exports.delete = (req, res, next) => {
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     query = {...query, ...qNotDeleted};
-    
+
     Organization
         .find(query)
         .count()
         .exec((err, count) => {
             if (err) {
-                logger.error(req, err, 'user.controller#delete', 'Error al realizar count de Organization');
+                logger.error(req, err, 'organization.controller#delete', 'Error al realizar count de Organization');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.delete')
                 });
             }
-            
+
             if (count === 0) {
-                logger.error(req, err, 'user.controller#delete', 'Error al intentar borrar Organization; el registro no existe o ya fue borrado anteriormente');
+                logger.error(req, err, 'organization.controller#delete', 'Error al intentar borrar Organization; el registro no existe o ya fue borrado anteriormente');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.not-exists-or-already-deleted')
                 });
             }
 
-
             Organization.update(
                 query,
                 {
                     $set: {
                         deleted: {
-                            user: req.user ? req.user._id : null,
+                            organization: req.organization ? req.organization._id : null,
                             isDeleted: true,
                             date: new Date()
                         }
                     }
                 },
                 {multi: false}
-            ).exec((err) => {
+            ).exec((err, par) => {
                 if (err) {
-                    logger.error(req, err, 'user.controller#delete', 'Error al borrar Organization.');
+                    logger.error(req, err, 'organization.controller#delete', 'Error al borrar Organization.');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.delete')
@@ -205,7 +208,7 @@ exports.delete = (req, res, next) => {
                     message: req.__('general.success.deleted')
                 });
             });
-            
-            
+
+
         });
 };
