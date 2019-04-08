@@ -76,6 +76,51 @@ exports.list = (req, res, next) => {
         );
 };
 
+exports.saveUpdatedDocs = (req, res, next) => {
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //     console.log("errors.array()", errors.array());
+    //     return res.status(422).json({ errors: errors.array() });
+    // }
+
+    let docsUpdated = req.body;
+
+    if(docsUpdated){
+        try{
+            docsUpdated.forEach((doc) => {
+               Supplier
+                  .findOne({_id: doc._id})
+                  .exec((err, supplier) => {
+                      console.log("err", err);
+                      supplier.name = doc.name;
+                      supplier.rfc = doc.rfc;
+                      supplier.notes = doc.notes;
+
+                      supplier.save((err) => {
+                          logger.error(err, req, 'supplier.controller#saveUpdatedDocs', 'Error al actualizar lista de Suppliers');
+                      });
+
+                  });
+            });
+
+            return res.json({
+                error:false,
+                message: req.__('general.success.updated'),
+            });
+
+        } catch(err) {
+            logger.error(err, req, 'supplier.controller#saveUpdatedDocs', 'Error al actualizar lista de Suppliers');
+        }
+
+    } else {
+        return res.json({
+            error:false,
+            message: req.__('general.success.updated')
+        });
+
+    }
+};
+
 /**
  * Guarda un Supplier.
  * @param req
@@ -130,7 +175,6 @@ exports.save = (req, res, next) => {
 
     } else {
         //Create
-
         let supplier = new Supplier({
             //Update doc fields
             name : req.body.name,

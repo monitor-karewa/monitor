@@ -5,8 +5,8 @@
                 <div class="modal-content min-w-600px">
                     <div class="modal-header">
                         <a class="close-modal" data-dismiss="modal"><i class="zmdi zmdi-close"></i></a>
-                        <h1 class="modal-title">Nuevo <strong>Proveedor</strong></h1>
-                        <label class="modal-subtitle">A continuación puedes agregar un nuevo Proveedor</label>
+                        <h1 class="modal-title">Nuevo <strong>{{$tc(docName, 1)}}</strong></h1>
+                        <label class="modal-subtitle">A continuación puedes agregar un nuevo {{$tc(docName, 1)}}</label>
                     </div>
                     <div class="modal-body">
                         <slot></slot>
@@ -34,6 +34,7 @@
     import { mapGetters } from 'vuex';
     import { bus } from '@/main';
     import { DOC_CREATED } from "@/store/events";
+    import { mapState } from 'vuex';
 
     export default {
         data() {
@@ -42,12 +43,19 @@
             }
         },
         components: {},
+        computed: {
+            ...mapState({
+                docName: function (state) {
+                    return state[this.$props.storeModule].docName
+                }
+            })
+        },
         created(){
         },
         methods: {
             save: function () {
-                this.validator.$touch();
-                if(!this.validator.$invalid){
+                // this.validator.$touch();
+                if(true || !this.validator.$invalid){
                     let actionName;
                     if(this.$props.action && this.$props.action.length ){
                         actionName = this.$props.action;

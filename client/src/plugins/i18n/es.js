@@ -11,16 +11,16 @@ Reglas generales:
     - No se permiten mayúsculas.
     - Todos los segmentos de la llave se separan con punto (.)
     - No se permiten mensajes sin clasificación
-    
+
         ej.
             x incorrecto:
                 "name": "Name"
                 "email": "Email"
-                
+
             ✓ correcto:
                 "users.name": "Name"
                 "users.email": "Email"
-                
+
     - Si un segmento tiene más de una palabra, deben separarse con guión (-).
     - No duplicar mensajes para plurales. Se debe usar la pluralización de vue-i18n
         (http://kazupon.github.io/vue-i18n/guide/pluralization.html)
@@ -29,40 +29,40 @@ Reglas generales:
             x incorrecto:
                 "users.user": "User"
                 "users.users": "Users"
-            
+
             ✓ correcto:
                 "users.user": "User | Users"
-        
+
     - No se permiten acentos, así que de preferencia utiliza "hacks" para palabras que no suenen bien:
         ej. año => anio
-        
+
     - Como se usa inglés, por favor verifica que lo que escribas es correcto.
-        
+
         ej.
             x incorrecto:
                 clasification
             ✓ correcto:
                 classification (doble 's')
-            
+
             x incorrecto:
                 wizzard
             ✓ correcto:
                 wizard (una sola 'z')
-            
+
     - Si ya existe una internacionalización que corresponde a lo que deseas usar, verifica que tenga sentido reutilizarla.
-        
+
         ej. Si quieres colocar "Email" para user.email y ya existe la siguiente internacionalización:
-        
+
                 "supplier.email": "Email"
-                
+
             Es tentador usarla, ¿pero que pasa si en un futuro se cambia el valor de la siguiente manera?
-            
+
                 "supplier.email": "Email del Supplier"
-                
+
             Este uso es incorrecto, por reutilizar el i18n de una llave existente, pero que no corresponde a la misma propiedad,
-            
+
             Aunque tenga el mismo valor, conceptualmente la i18n puede ser distinta
-            
+
     - Mantén las clasificaciones juntas y ordenadas. Es tentador agregar tus i18ns al final, pero ayuda a mantener el orden de la aplicación.
 
             x incorrecto:
@@ -76,8 +76,8 @@ Reglas generales:
                 users.foo.3
                 comparations.foo
                 comparations.bar
-            
-            
+
+
             ✓ correcto:
                 users.foo.1
                 users.foo.2
@@ -93,17 +93,17 @@ Reglas generales:
 
 ¿Inglés o español?
     Siempre en inglés, salvo por términos que no tiene sentido traducir, o que pierden completamente el significado al ser traducidos.
-    
+
         Ej.
             x incorrecto:
                 fcr (iniciales de Federal Contributor Registry)
-                
+
             ✓ correcto:
                 rfc (iniciales de Registro Federal de Contribuyentes)
 
  Se prefiere inglés para términos de sistemas.
         Ej. error, info, validations, warning, required
-        
+
     Si tienes dudas, o ambos lenguajes son viables, puedes basarte en un uso similar que ya exista, o confiar en tu corazón.
 
 
@@ -186,6 +186,14 @@ export default {
     "suppliers.new.notes.label": "Notas adicionales",
     "suppliers.new.notes.sub-label": "Aquí puedes agregar notas adicionales al registro del proveedor",
     "suppliers.new.notes.placeholder": "Introduce notas adicionales",
+    "suppliers.name": "Nombre o razón social",
+    "suppliers.rfc": "RFC",
+    "suppliers.notes": "Notas",
+    "suppliers.modal.title":"Guardar Registros",
+    "suppliers.modal.message":"Se modificaran {docsUpdatedLength} registros",
+    "suppliers.modal.confirmation-question":"¿Estás seguro de guardar los registros modificados?",
+    "suppliers.modal.cancel-button":"CANCELAR",
+    "suppliers.modal.ok-button":"GUARDAR",
 
 
     //Organizations
@@ -195,16 +203,20 @@ export default {
     "administrativeUnits.name" : "Nombre",
     "administrativeUnits.notes" : "Notas Adicionales",
 
+    "administrativeUnits.new.name.label": "Nombre",
+    "administrativeUnits.new.name.sub-label": "A continuación escribe el nombre de la Unidad Administrativa",
+    "administrativeUnits.new.name.placeholder": "Introduce el nombre",
+    "administrativeUnits.new.notes.label": "Notas Adicionales",
+    "administrativeUnits.new.notes.sub-label": "Aquí puedes escribir notas sobre el usuario",
+    "administrativeUnits.new.notes.placeholder": "Introduce las notas adicionales",
+
+
     //Users
     "users.name" : "Nombre",
     "users.lastName" : "Apellido",
     "users.email" : "Correo Electrónico",
-    "suppliers.name": "Nombre o razón social",
-    "suppliers.rfc": "RFC",
-    "suppliers.notes": "Notas",
-
     "users.new.name.label": "Nombre",
-    "users.new.name.sub-label": "A contninuación escribe el nombre o la razón social del usuario",
+    "users.new.name.sub-label": "A continuación escribe el nombre o la razón social del usuario",
     "users.new.name.placeholder": "Introduce el nombre",
     "users.new.last-name.label": "Apellido",
     "users.new.last-name.sub-label": "A continuación escribe el apellido del usuario",
@@ -218,6 +230,16 @@ export default {
     "users.new.admin-type.sub-label": "Al seleccionar General se tendrá acceso total a la plataforma",
     "users.new.admin-type.radio-button.general": "General",
     "users.new.admin-type.radio-button.custom": "Personalizado",
+    "users.new.notes.label": "Notas Adicionales",
+    "users.new.notes.sub-label": "Aquí puedes escribir notas sobre el usuario",
+    "users.new.notes.placeholder": "Introduce las notas adicionales",
+
+    "users.new.admin-type.radio-button.custom.users": "Usuarios",
+    "users.new.admin-type.radio-button.custom.suppliers": "Proveedores",
+    "users.new.admin-type.radio-button.custom.administrative-units": "Unidades Administrativas",
+    "users.new.admin-type.radio-button.custom.contracts": "Contratos",
+    "users.new.admin-type.radio-button.custom.calculations": "Cálculos",
+    "users.new.admin-type.radio-button.custom.settings": "Configuración",
 
 
     //Contracts
@@ -230,7 +252,4 @@ export default {
     "resources.title": "Título",
     "resources.classification": "Casificación",
     "resources.url": "URL"
-
-
-
 }

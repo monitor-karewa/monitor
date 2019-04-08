@@ -13,70 +13,123 @@
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc">
+        <NewEntryModal v-bind:validator="$v" v-bind:storeModule="storeModule" v-bind:data="doc">
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre"
+                        <input type="text" class="form-control fg-input" :placeholder="$t('users.new.name.placeholder')"
                                v-model="doc.name">
-                        <label class="fg-label">Nombre del Usuario
+                        <label class="fg-label">{{$t('users.new.name.label')}}
                             <small></small>
                             <br>
-                            <strong>Introduce el nombre del usuario</strong>
+                            <strong>{{$t('users.new.name.sub-label')}}}</strong>
                         </label>
                     </div>
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre"
+                        <input type="text" class="form-control fg-input" :placeholder="$t('users.new.last-name.placeholder')"
                                v-model="doc.lastName">
-                        <label class="fg-label">Apellido del Usuario
+                        <label class="fg-label">{{$t('users.new.last-name.label')}}
                             <small></small>
                             <br>
-                            <strong>Introduce el apellido del usuario/</strong>
+                            <strong>{{$t('users.new.last-name.sub-label')}}</strong>
                         </label>
                     </div>
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre"
+                        <input type="text" class="form-control fg-input" :placeholder="$t('users.new.email.placeholder')"
                                v-model="doc.email">
-                        <label class="fg-label"> Correo eléctrónico
+                        <label class="fg-label"> {{$t('users.new.email.label')}}
                             <small></small>
                             <br>
-                            <strong>/Introduce la dirección de correo electrónico del Usuario/</strong>
+                            <strong>{{$t('users.new.email.sub-label')}}</strong>
                         </label>
                     </div>
                 </div>
 
 
                 <div class="form-group fg-float subtitle">
-                    <div class="checkbox">
-                        <input type="checkbox" value="">
-                        <i class="input-helper"></i>
-                        <span>{{$t('users.new.enabled.checkbox-label')}}</span>
-                    </div>
-                </div>
-
-                <div class="form-group fg-float subtitle">
-                    <div class="input-radio-check col-md-12">
-                        <div class=" check-container col-md-6">
-                            <input type="radio" name="role" id="one">
-                            <span class="role" for="general">{{$t('users.new.admin-type.radio-button.general')}}</span>
-                            <label class="fg-label"> Correo eléctrónico
+                    <div class="fg-line basic-input">
+                        <div class="checkbox">
+                            <input type="checkbox" value="">
+                            <i class="input-helper"></i>
+                            <span>{{$t('users.new.enabled.checkbox-label')}}</span>
+                            <p class="fg-label "> {{$t('users.new.enabled.label')}}
                                 <small></small>
                                 <br>
-                                <strong>/Introduce la dirección de correo electrónico del Usuario/</strong>
-                            </label>
-                        </div>
-                        <div class=" check-container col-md-6">
-                            <input type="radio" name="role" id="two">
-                            <span class="role" for="custom">{{$t('users.new.admin-type.radio-button.custom')}}</span>
+                            </p>
                         </div>
                     </div>
                 </div>
 
 
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <div class="input-radio-check col-md-12 p-0">
+                            <div class=" check-container col-md-6">
+                                <input class="m-t-20" type="radio" value="GENERAL" v-model="doc.administratorType" name="administratorType" id="one">
+                                <span class="role m-t-20"
+                                      for="general">{{$t('users.new.admin-type.radio-button.general')}}</span>
+                                <p class="fg-label"> {{$t('users.new.admin-type.label')}}
+                                    <small></small>
+                                    <br>
+                                    <strong>{{$t('users.new.admin-type.sub-label')}}</strong>
+                                </p>
+                            </div>
+                            <div class=" check-container col-md-6">
+                                <input value="CUSTOM" type="radio" v-model="doc.administratorType" name="role" id="two">
+                                <span for="custom">{{$t('users.new.admin-type.radio-button.custom')}}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div v-if="doc.administratorType == 'CUSTOM'">
+                        <div class="checkbox m-b-20">
+                            <input type="checkbox" value="USERS" v-model="doc.permissions">
+                            <i class="input-helper"></i>
+                            <span>{{$t('users.new.admin-type.radio-button.custom.users')}}</span>
+                        </div>
+                        <div class="checkbox m-b-20">
+                            <input type="checkbox" value="SUPPLIERS" v-model="doc.permissions">
+                            <i class="input-helper"></i>
+                            <span>{{$t('users.new.admin-type.radio-button.custom.suppliers')}}</span>
+                        </div>
+                        <div class="checkbox m-b-20">
+                            <input type="checkbox" value="ADMINISTRATIVE_UNITS" v-model="doc.permissions">
+                            <i class="input-helper"></i>
+                            <span>{{$t('users.new.admin-type.radio-button.custom.administrative-units')}}</span>
+                        </div>
+                        <div class="checkbox m-b-20">
+                            <input type="checkbox" value="CONTRACTS" v-model="doc.permissions">
+                            <i class="input-helper"></i>
+                            <span>{{$t('users.new.admin-type.radio-button.custom.contracts')}}</span>
+                        </div>
+                        <div class="checkbox m-b-20">
+                            <input type="checkbox" value="CALCULATIONS" v-model="doc.permissions">
+                            <i class="input-helper"></i>
+                            <span>{{$t('users.new.admin-type.radio-button.custom.calculations')}}</span>
+                        </div>
+                        <div class="checkbox m-b-20">
+                            <input type="checkbox" value="SETTINGS" v-model="doc.permissions">
+                            <i class="input-helper"></i>
+                            <span>{{$t('users.new.admin-type.radio-button.custom.settings')}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input"
+                               :placeholder="$t('users.new.notes.placeholder')"
+                               v-model="doc.notes">
+                        <label class="fg-label">{{$t('users.new.notes.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('users.new.notes.sub-label')}}}</strong>
+                        </label>
+                    </div>
+                </div>
             </div>
 
 
@@ -84,7 +137,12 @@
 
 
 
-        <ModalDanger v-bind:confirm="confirm"/>
+        <ModalDanger :title="'Eliminar Proveedor'" :confirm="confirmDeletion">
+            <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
+                <br>
+                <strong>¿Estás seguro de eliminarlo?</strong>
+            </p>
+        </ModalDanger>
     </div>
 </template>
 
@@ -118,15 +176,18 @@
                     {label:'users.email', field : 'email', visible : true} ,
                     {label:'general.created-at', field : 'created_at', visible : true, type:'Date'}
                 ],
-                doc : {}
+                doc : {
+                    permissions : [],
+                    administratorType : "CUSTOM"
+                }
             }
         },
         components: {
             ModalDanger
         },
         methods:{
-            confirm(){
-                console.log("confirm function");
+            confirmDeletion(){
+                tShow("El usuario fue eliminado correctamente", 'info');
             }
         },
         created(){
@@ -153,6 +214,8 @@
                     tShow("Se ha completado el proceso correctamente sadasda adadasd sda dasdasdas dasda dasdasd ad adaspidjdj asoijdas", 'success');
                 });
             });
+        },
+        validations:{
         }
     }
 </script>

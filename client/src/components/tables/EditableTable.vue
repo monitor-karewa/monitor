@@ -6,7 +6,7 @@
                     <div class="card-header">
                         <TableHeaderSearch :store-module="storeModule"/>
                         <TableHeaderButtonsWrapper>
-                            <TableHeaderButton/>
+                            <TableHeaderButton :store-module="storeModule"/>
                             <TableHeaderFilters :columns="tableColumns"/>
                         </TableHeaderButtonsWrapper>
                     </div>
@@ -23,9 +23,14 @@
                                     <tbody>
                                     <tr v-for="(doc, index) in docs" :key="`doc-${index}`">
                                         <td v-for="(column) in tableColumns" v-if="column.visible">
-                                            <span v-if="!column.type">
+                                            <span v-if="!column.type && !isEditingTable">
                                                 {{ doc[column.field] }}
                                             </span>
+
+                                            <input v-if="isEditingTable && !column.type" type="text" class="form-control fg-input"
+                                                   :placeholder="doc[column.field]" :value="doc[column.field]"
+                                                   @input="updateDocFromEditableTable($event,doc,column.field)"/>
+
                                             <span v-else-if="column.type === 'Date'">
                                                 {{ doc[column.field] | moment }}
                                             </span>
@@ -109,8 +114,8 @@
 
     import Pagination from '@/components/catalogs/Pagination';
     import moment from 'moment';
-    import {mapState} from 'vuex';
-    import {mapGetters} from 'vuex';
+
+    import { mapState, mapGetters } from 'vuex';
 
     export default {
         data() {
@@ -131,9 +136,11 @@
                 searchExists: function (state) {
                     let module = state[this.$props.storeModule];
                     return !!(module.listQuery.search && module.listQuery.search.length);
+                },
+                isEditingTable: function(state){
+                    return state[this.$props.storeModule].isEditingTable;
                 }
             })
-
         },
         props: {
             'docs': Array,
@@ -148,6 +155,12 @@
         filters: {
             moment: function (date) {
                 return moment(date).format('MM/DD/YYYY');
+            }
+        },
+        methods:{
+            updateDocFromEditableTable(evt,doc, field){
+                let value = evt.target.value;
+                this.$store.dispatch(`${this.$props.storeModule}/updateDocFromEditableTable`, { value, doc, field});
             }
         }
     }
