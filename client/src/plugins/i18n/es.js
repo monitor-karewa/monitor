@@ -169,6 +169,11 @@ export default {
     "suppliers.supplier": "Proveedor | Proveedores",
 
     "users.user": "Usuario | Usuarios",
+    "users.validation.required":"El campo {field} del Usuario es requerido",
+    "users.validation.email":"El correo electronico introducido no tiene un formato válido",
+    "users.validation.min.password":"La contraseña debe tener mínimo {minLength} caracteres",
+
+
     "organizations.organization": "Organización | Organizaciones",
     "contracts.contract": "Contrato | Contatos",
     "resources.resource": "Recurso | Recursos",

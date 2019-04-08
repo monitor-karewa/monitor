@@ -54,6 +54,9 @@
                     } else {
                         actionName = "save";
                     }
+                    console.log("this.$props.storeModule", this.$props.storeModule);
+                    console.log("actionName", actionName);
+                    console.log("this.$props.data", this.$props.data);
                     this.$store.dispatch(`${this.$props.storeModule}/${actionName}`, this.$props.data);
                     $('#newEntry').modal('hide');
                 }
