@@ -2,7 +2,9 @@
     <div>
         <AdminMainSection>
             <BackButton />
-            <CatalogHeader :singular="'Proveedor'" :plural="'Proveedores'" />
+            <CatalogHeader
+                    :singular="'Proveedor'"
+                    :plural="'Proveedores'" />
             <EditableTable
                     :docs="docs"
                     :tableColumns="tableColumns"
@@ -40,9 +42,7 @@
                         </label>
                     </div>
                     <span v-if="$v.rfc.$invalid && $v.rfc.$dirty" class="c-error">{{rfcErrorMessage}}</span>
-                    <!--<span v-if="fieldErrors.fields.rfc" class="c-error">{{ fieldErrors.fields.rfc }}</span>-->
                 </div>
-
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
@@ -59,7 +59,12 @@
             </div>
         </NewEntryModal>
 
-        <ModalDanger v-bind:confirm="confirmDeletion"/>
+        <ModalDanger :title="'Eliminar Proveedor'" :confirm="confirmDeletion">
+            <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
+                <br>
+                <strong>¿Estás seguro de eliminarlo?</strong>
+            </p>
+        </ModalDanger>
     </div>
 </template>
 
@@ -76,7 +81,6 @@
     import  ModalDanger from "@/components/modals/ModalDanger";
     const storeModule = 'suppliers';
     const docName = 'suppliers.supplier';
-    import { mapGetters } from 'vuex';
     import { required, minLength, maxLength } from 'vuelidate/lib/validators';
     const touchMap = new WeakMap();
 
@@ -134,19 +138,12 @@
                if(!this.$v.rfc.validRFC ){
                    return "El RFC introducido no tiene un formato válido"
                }
-
             }
-
-
         },
         components: {
             ModalDanger
         },
         methods:{
-
-            confirm(){
-                console.log("confirm function");
-            },
             confirmDeletion(){
                 this.deleteElementSelected();
             },
@@ -160,7 +157,7 @@
         },
         created(){
             bus.$on(storeModule+DELETE_SUCCESS, ()=>{
-                tShow("Elemento Eliminado!", 'info');
+                tShow("El proveedor fue eliminado correctamente", 'info');
             });
             bus.$on(storeModule+DOC_CREATED, ()=>{
                 this.name = "";

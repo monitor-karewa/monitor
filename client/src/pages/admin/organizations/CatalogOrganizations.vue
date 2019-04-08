@@ -5,14 +5,14 @@
             <CatalogHeader :singular="'Organización'" :plural="'Organizaciones'" />
             <EditableTable
                     :docs="docs"
-                    :tableHeaders="tableHeaders"
                     :tableColumns="tableColumns"
                     :store-module="storeModule"
-                    :singular="'Organización'" :plural="'Organizaciones'"
+                    :singular="'Organización'"
+                    :plural="'Organizaciones'"
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc" >
+        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc" v-bind:validator="$v">
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
@@ -29,7 +29,12 @@
             </div>
         </NewEntryModal>
 
-        <ModalDanger v-bind:confirm="confirm"/>
+        <ModalDanger :title="'Eliminar Organización'" :confirm="confirmDeletion">
+            <p class="text-centered">Esta acción borrará a la organización del catálogo permanentemente
+                <br>
+                <strong>¿Estás seguro de eliminarlo?</strong>
+            </p>
+        </ModalDanger>
     </div>
 </template>
 
@@ -45,6 +50,7 @@
     import  ModalDanger from "@/components/modals/ModalDanger";
     const storeModule = 'organizations';
     const docName = 'organizations.organization';
+    import { required, maxLength } from 'vuelidate/lib/validators';
 
     let baseCatalog = catalog.configure({
         storeModule: storeModule,
@@ -56,7 +62,6 @@
         data () {
             return {
                 storeModule: storeModule,
-                tableHeaders : ['suppliers.name','general.created-at'],
                 tableColumns: [
                     {label:"organizations.name", field:'name', visible : true },
                     {label:"general.created-at", field:'created_at', visible : true , type:'Date'}
@@ -68,14 +73,21 @@
             ModalDanger
         },
         methods:{
-            confirm(){
-                console.log("confirm function");
-            }
+            confirmDeletion(){
+                this.deleteElementSelected();
+            },
         },
         created(){
-            bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
-                tShow("Elemento Eliminado!!", 'info');
+            bus.$on(storeModule+DELETE_SUCCESS, ()=>{
+                tShow("La organización fue eliminada correctamente", 'info');
             })
+        },
+        validations:{
+            name:{
+                maxLength:maxLength(100)
+            },
+            rfc:{
+            }
         },
         mounted(){
             window.$(document).ready(function () {

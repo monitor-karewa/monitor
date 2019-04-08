@@ -127,9 +127,12 @@ export default function (api, storeName) {
                     bus.$emit(storeName + events.DOC_CREATED);
                 },
                 (error) => {
+                    var errorsStr = "";
+                    error.response.data.errors.some(e=>{
+                        errorsStr += e.msg + "\n";
+                    });
                     Vue.$log.error('Response error', error);
-                    // console.log('error', error);
-                    tShow(`Hubo un error al guardar un registro: ${error}`);
+                    tShow(`Hubo un error al guardar un registro: ${errorsStr}`);
                 }
             )
         }

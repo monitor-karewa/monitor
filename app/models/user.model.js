@@ -53,6 +53,7 @@ let userSchema = mongoose.Schema({
         required: true
         // enum: ['GENERAL', 'CONTRATO']
     },
+    deleted: require("./schemas/deleted.schema").Deleted
 });
 
 

@@ -13,7 +13,7 @@
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc">
+        <NewEntryModal v-bind:validator="$v" v-bind:storeModule="storeModule" v-bind:data="doc">
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
@@ -136,7 +136,13 @@
         </NewEntryModal>
 
 
-        <ModalDanger v-bind:confirm="confirm"/>
+
+        <ModalDanger :title="'Eliminar Proveedor'" :confirm="confirmDeletion">
+            <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
+                <br>
+                <strong>¿Estás seguro de eliminarlo?</strong>
+            </p>
+        </ModalDanger>
     </div>
 </template>
 
@@ -180,8 +186,8 @@
             ModalDanger
         },
         methods:{
-            confirm(){
-                console.log("confirm function");
+            confirmDeletion(){
+                tShow("El usuario fue eliminado correctamente", 'info');
             }
         },
         created(){
@@ -208,6 +214,8 @@
                     tShow("Se ha completado el proceso correctamente sadasda adadasd sda dasdasdas dasda dasdasd ad adaspidjdj asoijdas", 'success');
                 });
             });
+        },
+        validations:{
         }
     }
 </script>

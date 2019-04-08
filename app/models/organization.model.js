@@ -14,7 +14,8 @@ organizationSchema = mongoose.Schema({
     name: {
         type: String,
         required: true
-    }
+    },
+    deleted: require("./schemas/deleted.schema").Deleted
 });
 
 
@@ -30,7 +31,6 @@ organizationSchema.plugin(mongoosePagination);
  */
 class OrganizationClass {
     constructor() {
-        
     }
 
     /**
