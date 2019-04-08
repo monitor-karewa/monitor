@@ -31,13 +31,27 @@ let userSchema = mongoose.Schema({
         }
     },
     password: {
+        type: String, 
+        required: false
+    },
+    notes: {
         type: String,
-        required: true
+        required: false
     },
     active: {
         type: Boolean,
         required: true,
         default: true
+    },
+    administratorType: {
+        type: String,
+        required: true,
+        enum: ['GENERAL', 'CUSTOM']
+    },
+    permissions: {
+        type: Array,
+        required: true
+        // enum: ['GENERAL', 'CONTRATO']
     },
     deleted: require("./schemas/deleted.schema").Deleted
 });
@@ -55,7 +69,7 @@ userSchema.plugin(mongoosePagination);
  */
 class UserClass {
     constructor() {
-
+        
     }
 
     /**

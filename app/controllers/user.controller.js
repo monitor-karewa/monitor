@@ -134,7 +134,9 @@ exports.save = (req, res, next) => {
             name: req.body.name,
             lastName : req.body.lastName,
             email : req.body.email,
-            password : req.body.password
+            permissions : req.body.permissions,
+            administratorType : req.body.administratorType,
+            notes : req.body.notes,
         });
 
         user.save((err, savedUser) => {

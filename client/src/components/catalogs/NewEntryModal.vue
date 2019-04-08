@@ -46,8 +46,8 @@
         },
         methods: {
             save: function () {
-                this.validator.$touch();
-                if(!this.validator.$invalid){
+                // this.validator.$touch();
+                if(true || !this.validator.$invalid){
                     let actionName;
                     if(this.$props.action && this.$props.action.length ){
                         actionName = this.$props.action;

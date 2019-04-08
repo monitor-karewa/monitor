@@ -122,13 +122,6 @@
             return {
             }
         },
-        computed:{
-            ...mapState({
-                isEditingTable: function(state){
-                    return state[this.$props.storeModule].isEditingTable;
-                }
-            })
-        },
         components: {
             TableHeaderSearch,
             TableHeaderButtonsWrapper,
@@ -143,9 +136,11 @@
                 searchExists: function (state) {
                     let module = state[this.$props.storeModule];
                     return !!(module.listQuery.search && module.listQuery.search.length);
+                },
+                isEditingTable: function(state){
+                    return state[this.$props.storeModule].isEditingTable;
                 }
             })
-
         },
         props: {
             'docs': Array,
