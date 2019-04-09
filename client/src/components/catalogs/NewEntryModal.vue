@@ -46,19 +46,18 @@
         },
         methods: {
             save: function () {
-                // this.validator.$touch();
-                if(true || !this.validator.$invalid){
+                 this.validator.$touch();
+                if(!this.validator.$invalid){
                     let actionName;
                     if(this.$props.action && this.$props.action.length ){
                         actionName = this.$props.action;
                     } else {
                         actionName = "save";
                     }
-                    console.log("this.$props.storeModule", this.$props.storeModule);
-                    console.log("actionName", actionName);
-                    console.log("this.$props.data", this.$props.data);
                     this.$store.dispatch(`${this.$props.storeModule}/${actionName}`, this.$props.data);
                     $('#newEntry').modal('hide');
+                } else {
+                    tShow('El formulario contiene errores', 'info');
                 }
                 //actions storeModule/<save>
                 //actions storeModule/action
