@@ -54,8 +54,8 @@
         },
         methods: {
             save: function () {
-                // this.validator.$touch();
-                if(true || !this.validator.$invalid){
+                 this.validator.$touch();
+                if(!this.validator.$invalid){
                     let actionName;
                     if(this.$props.action && this.$props.action.length ){
                         actionName = this.$props.action;
@@ -64,6 +64,8 @@
                     }
                     this.$store.dispatch(`${this.$props.storeModule}/${actionName}`, this.$props.data);
                     $('#newEntry').modal('hide');
+                } else {
+                    tShow('El formulario contiene errores', 'info');
                 }
                 //actions storeModule/<save>
                 //actions storeModule/action
