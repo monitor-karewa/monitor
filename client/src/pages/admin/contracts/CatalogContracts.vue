@@ -118,8 +118,7 @@
                 supplier:"",
                 administrativeUnit:"",
                 amount:"",
-                procedureType:"",
-                doc : {}
+                procedureType:""
             }
         },
         validations:{
