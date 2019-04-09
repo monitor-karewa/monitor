@@ -167,7 +167,6 @@ export default {
     "general.back": "Atrás",
     "general.created-at": "Fecha de creación",
 
-    "resources.resource": "Recurso | Recursos",
     "calculations.calculation": "Cálculo| Cálculos",
 
 
@@ -256,7 +255,12 @@ export default {
     "contracts.validation.required": "El campo {field} del Contrato es requerido",
 
     //Resources
+    "resources.resource": "Recurso | Recursos",
     "resources.title": "Título",
     "resources.classification": "Casificación",
-    "resources.url": "URL"
+    "resources.url": "URL",
+    "resources.validation.required":"El campo {field} del Recurso es requerido",
+    "resources.validation.url":"La Url no tiene el formato correcto",
+    "resources.validation.classification":"El valor para la Clasificación del Recurso no es válido"
+
 }
