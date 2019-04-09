@@ -253,6 +253,7 @@ export default {
     "contracts.administrativeUnit" : "Unidad Administrativa",
     "contracts.amount" : "Cantidad",
     "contracts.procedureType" : "Tipo de Proceidimiento",
+    "contracts.validation.required": "El campo {field} del Contrato es requerido",
 
     //Resources
     "resources.title": "Título",
