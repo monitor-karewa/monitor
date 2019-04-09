@@ -12,18 +12,19 @@
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc" v-bind:validator="$v">
+        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="{name:this.name}" v-bind:validator="$v">
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce el nombre"
-                               v-model="doc.name">
+                               v-model="$v.name.$model">
                         <label class="fg-label">Nombre de la organización
                             <small></small>
                             <br>
-                            <strong>/Introduce el nombre de la organización/</strong>
+                            <strong>Introduce el nombre de la organización</strong>
                         </label>
                     </div>
+                    <span v-if="$v.name.$invalid && $v.name.$dirty" class="c-error">{{$t(nameErrorMessage, {field:'Nombre', maxLength:$v.name.$params.maxLength.max})}}</span>
                 </div>
 
             </div>
@@ -46,7 +47,7 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
-    import { DELETE_SUCCESS } from "@/store/events";
+    import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
     const storeModule = 'organizations';
     const docName = 'organizations.organization';
@@ -66,7 +67,18 @@
                     {label:"organizations.name", field:'name', visible : true },
                     {label:"general.created-at", field:'created_at', visible : true , type:'Date'}
                 ],
+                name:"",
                 doc : {}
+            }
+        },
+        computed:{
+            nameErrorMessage(){
+                if(!this.$v.name.required){
+                    return 'organizations.validation.required';
+                }
+                if(!this.$v.name.maxLength){
+                    return 'organizations.validation.max.name';
+                }
             }
         },
         components: {
@@ -80,13 +92,17 @@
         created(){
             bus.$on(storeModule+DELETE_SUCCESS, ()=>{
                 tShow("La organización fue eliminada correctamente", 'info');
-            })
+            });
+            bus.$on(storeModule+DOC_CREATED, ()=>{
+                this.name = "";
+                this.$v.$reset();
+                tShow("Elemento Creado!", 'info');
+            });
         },
         validations:{
             name:{
+                required,
                 maxLength:maxLength(100)
-            },
-            rfc:{
             }
         },
         mounted(){

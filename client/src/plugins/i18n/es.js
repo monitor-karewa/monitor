@@ -166,22 +166,13 @@ export default {
     "general.app.name.html-strong": "Monitor <strong>Karewa</strong>",
     "general.back": "Atrás",
     "general.created-at": "Fecha de creación",
-    "suppliers.supplier": "Proveedor | Proveedores",
 
-    "users.user": "Usuario | Usuarios",
-    "users.validation.required":"El campo {field} del Usuario es requerido",
-    "users.validation.email":"El correo electronico introducido no tiene un formato válido",
-    "users.validation.min.password":"La contraseña debe tener mínimo {minLength} caracteres",
-
-
-    "organizations.organization": "Organización | Organizaciones",
-    "contracts.contract": "Contrato | Contatos",
     "resources.resource": "Recurso | Recursos",
     "calculations.calculation": "Cálculo| Cálculos",
-    "administrativeUnits.administrativeUnit": "Unidad administrativa | Unidades administrativas",
 
 
     //Suppliers
+    "suppliers.supplier": "Proveedor | Proveedores",
     "suppliers.new.name.label": "Nombre o razón social",
     "suppliers.new.name.sub-label": "A contninuación escribe el nombre o la razón social del proveedor",
     "suppliers.new.name.placeholder": "Introduce el nombre o razón social",
@@ -202,9 +193,13 @@ export default {
 
 
     //Organizations
+    "organizations.organization": "Organización | Organizaciones",
     "organizations.name" : "Nombre",
+    "organizations.validation.required":"El campo {field} de la Organización es requerido",
+    "organizations.validation.max.name":"El nombre excede los {maxLength} caracteres permitidos",
 
     //Adminsitrative Units
+    "administrativeUnits.administrativeUnit": "Unidad administrativa | Unidades administrativas",
     "administrativeUnits.name" : "Nombre",
     "administrativeUnits.notes" : "Notas Adicionales",
 
@@ -217,6 +212,10 @@ export default {
 
 
     //Users
+    "users.user": "Usuario | Usuarios",
+    "users.validation.required":"El campo {field} del Usuario es requerido",
+    "users.validation.email":"El correo electronico introducido no tiene un formato válido",
+    "users.validation.min.password":"La contraseña debe tener mínimo {minLength} caracteres",
     "users.name" : "Nombre",
     "users.lastName" : "Apellido",
     "users.email" : "Correo Electrónico",
@@ -248,6 +247,7 @@ export default {
 
 
     //Contracts
+    "contracts.contract": "Contrato | Contatos",
     "contracts.supplier" : "Proveedor",
     "contracts.administrativeUnit" : "Unidad Administrativa",
     "contracts.amount" : "Cantidad",
