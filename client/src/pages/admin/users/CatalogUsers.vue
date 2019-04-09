@@ -165,7 +165,7 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
-    import { DELETE_SUCCESS } from "@/store/events";
+    import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
     import { required, email, minLength, requiredIf } from 'vuelidate/lib/validators';
     const touchMap = new WeakMap();
@@ -248,7 +248,18 @@
         created(){
             bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
                 tShow("Elemento Eliminado!!", 'info');
-            })
+            });
+            bus.$on(storeModule+DOC_CREATED, ()=>{
+                this.name = "";
+                this.lastName = "";
+                this.email = "";
+                this.active = true;
+                this.permissions  =  [];
+                this.administratorType  =  "CUSTOM";
+                this.notes = "";
+                this.$v.$reset();
+                tShow("Elemento Creado!", 'info');
+            });
         },
         mounted(){
             window.$(document).ready(function () {
