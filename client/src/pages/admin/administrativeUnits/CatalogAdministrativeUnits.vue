@@ -12,29 +12,31 @@
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc">
+        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="{name: this.name, notes: this.notes}" :validator="$v">
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" :placeholder="$t('administrativeUnits.new.name.placeholder')"
-                               v-model="doc.name">
+                               v-model="$v.name.$model">
                         <label class="fg-label">{{$t("administrativeUnits.new.name.label")}}
                             <small></small>
                             <br>
                             <strong>{{$t("administrativeUnits.new.name.sub-label")}}</strong>
                         </label>
                     </div>
+                    <span v-if="$v.name.$invalid && $v.name.$dirty" class="c-error">{{$t(requiredErrorMessage,{field:'Nombre'})}}</span>
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" :placeholder="$t('administrativeUnits.new.notes.placeholder')"
-                               v-model="doc.notes">
+                               v-model="$v.notes.$model">
                         <label class="fg-label">{{$t("administrativeUnits.new.notes.label")}}
                             <small></small>
                             <br>
                             <strong>{{$t("administrativeUnits.new.notes.sub-label")}}</strong>
                         </label>
                     </div>
+                    <span v-if="$v.notes.$invalid && $v.notes.$dirty" class="c-error">{{$t(requiredErrorMessage,{field:'Notas'})}}</span>
                 </div>
             </div>
         </NewEntryModal>
@@ -58,8 +60,10 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
-    import { DELETE_SUCCESS } from "@/store/events";
+    import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
+    import { required } from 'vuelidate/lib/validators';
+
     const storeModule = 'administrativeUnits';
     const docName = 'administrativeUnits.administrativeUnit';
 
@@ -80,13 +84,27 @@
                     {label : "administrativeUnits.notes", visible : true , field:'notes'},
                     {label : "general.created-at", visible : true , field:'created_at', type:'Date'}
                 ],
+                name:"",
+                notes:"",
                 doc : {}
+            }
+        },
+        validations:{
+          name:{ required },
+          notes:{ required }
+        },
+        computed:{
+            requiredErrorMessage(){
+                return 'administrativeUnits.validation.required'
             }
         },
         components: {
             ModalDanger
         },
         methods:{
+            confirmDeletion() {
+                tShow("La unidad administrativa fue eliminada correctamente", 'info');
+            },
             confirm(){
                 console.log("confirm function");
             }
@@ -94,7 +112,13 @@
         created(){
             bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
                 tShow("La unidad administrativa fue eliminada correctamente", 'info');
-            })
+            });
+            bus.$on(storeModule+DOC_CREATED, ()=>{
+                this.name = "";
+                this.notes = "";
+                this.$v.$reset();
+                tShow("Elemento Creado!", 'info');
+            });
         },
         mounted(){
             window.$(document).ready(function () {

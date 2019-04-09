@@ -209,6 +209,7 @@ export default {
     "administrativeUnits.new.notes.label": "Notas Adicionales",
     "administrativeUnits.new.notes.sub-label": "Aquí puedes escribir notas sobre el usuario",
     "administrativeUnits.new.notes.placeholder": "Introduce las notas adicionales",
+    "administrativeUnits.validation.required": "El campo {field} de la U. Administrativa es requerido",
 
 
     //Users
