@@ -4,7 +4,7 @@ const logger = require('./../components/logger').instance;
 const User = require('./../models/user.model').User;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
-const { validationResult } = require('express-validator/check');
+const {validationResult} = require('express-validator/check');
 
 /**
  * Renderiza la vista principal de consulta de User.
@@ -30,19 +30,19 @@ exports.list = (req, res, next) => {
 
     let query = {};
 
-    if(req.query.search){
+    if (req.query.search) {
         query = {
-            $or : [
-                {name : new RegExp(req.query.search,"i")},
-                {lastName : new RegExp(req.query.search,"i")},
-                {email : new RegExp(req.query.search,"i")}
+            $or: [
+                {name: new RegExp(req.query.search, "i")},
+                {lastName: new RegExp(req.query.search, "i")},
+                {email: new RegExp(req.query.search, "i")}
 
             ]
         }
     }
-    
+
     //query["field"] = value;
-    
+
     //let qNotDeleted = deletedSchema.qNotDeleted();
     //query = {...query, ...qNotDeleted};
 
@@ -83,11 +83,11 @@ exports.save = (req, res, next) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        return res.status(422).json({ errors: errors.array() });
+        return res.status(422).json({errors: errors.array()});
     }
-    
+
     let id = req.body._id;
-    
+
     if (id) {
         //Update
         let qById = {_id: id};
@@ -109,7 +109,6 @@ exports.save = (req, res, next) => {
                 user.email = req.body.email;
                 user.password = req.body.password;
 
-                
                 user.save((err, savedUser) => {
                     if (err) {
                         logger.error(req, err, 'user.controller#save', 'Error al guardar User 1 ');
@@ -118,7 +117,7 @@ exports.save = (req, res, next) => {
                             message: req.__('general.error.save')
                         });
                     }
-        
+
                     return res.json({
                         errors: false,
                         message: req.__('general.success.updated'),
@@ -126,15 +125,15 @@ exports.save = (req, res, next) => {
                     });
                 });
             });
-        
+
     } else {
         //Create
 
         let user = new User({
             name: req.body.name,
-            lastName : req.body.lastName,
-            email : req.body.email,
-            password : req.body.password
+            lastName: req.body.lastName,
+            email: req.body.email,
+            password: req.body.password
         });
 
         user.save((err, savedUser) => {
@@ -171,7 +170,7 @@ exports.delete = (req, res, next) => {
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     query = {...query, ...qNotDeleted};
-    
+
     User
         .find(query)
         .count()
@@ -183,7 +182,7 @@ exports.delete = (req, res, next) => {
                     message: req.__('general.error.delete')
                 });
             }
-            
+
             if (count === 0) {
                 logger.error(req, err, 'user.controller#delete', 'Error al intentar borrar User; el registro no existe o ya fue borrado anteriormente');
                 return res.json({
@@ -191,7 +190,6 @@ exports.delete = (req, res, next) => {
                     message: req.__('general.error.not-exists-or-already-deleted')
                 });
             }
-
 
             User.update(
                 query,
@@ -218,7 +216,5 @@ exports.delete = (req, res, next) => {
                     message: req.__('general.success.deleted')
                 });
             });
-            
-            
         });
 };

@@ -1,6 +1,7 @@
 import usersApi from '@/api/users.api';
 import catalog from '@/store/modules/base/catalog.store';
 import Vue from "vue";
+import * as events from "../events";
 
 const suppliersCatalog = catalog(usersApi, 'users');
 

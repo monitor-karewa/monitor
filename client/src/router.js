@@ -35,6 +35,7 @@ import AdminSidebar from '@/pages/admin/Sidebar';
 import AdminFooter from '@/pages/admin/Footer';
 import DataLoad from '@/pages/admin/dataLoad/DataLoad';
 import AdminSettings from '@/pages/admin/settings/Settings';
+import SelectOrganization from '@/pages/admin/settings/SelectOrganization';
 
 //Admin-Catalogs
 import AdminHome from '@/pages/admin/home/Home';
@@ -140,6 +141,11 @@ export default new Router({
                 footer: AdminFooter
             },
             children: [
+                {
+                    path: 'select-organization',
+                    name: 'SelectOrganization',
+                    component: SelectOrganization
+                },
                 {
                     path: '',
                     name: 'AdminHome',

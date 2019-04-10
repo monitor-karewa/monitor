@@ -15,7 +15,6 @@
                 <router-link to="/admin/data-load" class="btn-raised xs button-accent hideresp">
                     <i class="zmdi zmdi-plus"></i> Cargar datos
                 </router-link>
-                <!--<a href="/admin/data-load" class="btn-raised xs button-accent hideresp"><i class="zmdi zmdi-plus"></i> Cargar datos</a>-->
                 <a href="" class="btn-circle-icon hideresp m-l-30"><i class="zmdi zmdi-notifications-none"></i></a>
                 <a href="" class="btn-circle-icon hideresp m-r-30"><i class="zmdi zmdi-settings"></i></a>
                 <div class="topMenuDropdown dropdown">
@@ -27,12 +26,9 @@
                         <img class="img-fluid" src="@/assets/images/Demo/user-test.jpg" alt="User" />
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownUserMenu">
-                        <router-link to="/admin/data-load" class="hideresp dropdown-item">
-                            Cargar Datos
-                        </router-link>
-                        <!--<a href="/admin/data-load" class="hideresp dropdown-item"> Cargar Datos </a>-->
-                        <a href="" class="hideresp dropdown-item"> Notificaciones </a>
-                        <a href="" class="hideresp dropdown-item active"> Configuración </a>
+                        <form>
+                            <router-link to="/admin/select-organization" class="dropdown-item">Seleccionar Organización</router-link>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -45,6 +41,8 @@
 </style>
 
 <script>
+    import catalog from '@/mixins/catalog.mixin';
+
     export default {
         data () {
             return {
