@@ -33,9 +33,9 @@
                       </li>
                   </div>
                   <div class="col-6">
-                        <li><router-link href="/comparations">Comparar monitores</router-link></li>
-                        <li><router-link href="/resources">Recursos</router-link></li>
-                        <li><router-link href="/">Administrar</router-link></li>
+                        <li><router-link to="/comparations">Comparar monitores</router-link></li>
+                        <li><router-link to="/resources">Recursos</router-link></li>
+                        <li><router-link to="/">Administrar</router-link></li>
                   </div>
 
                   </div>

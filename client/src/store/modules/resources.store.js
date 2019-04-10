@@ -1,13 +1,14 @@
 import resourcesApi from '@/api/resources.api';
 import catalog from '@/store/modules/base/catalog.store';
-import Vue from "vue";
 
 const resourcesCatalog = catalog(resourcesApi, 'resources');
 
 const state = {
+    classificationTypes:['LEGAL_FRAMEWORK', 'ARTICLE', 'NOTES']
 };
 
 const getters = {
+    classificationTypes: (state) => state.classificationTypes
 };
 
 const actions = {

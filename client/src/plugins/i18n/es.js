@@ -166,17 +166,12 @@ export default {
     "general.app.name.html-strong": "Monitor <strong>Karewa</strong>",
     "general.back": "Atrás",
     "general.created-at": "Fecha de creación",
-    "suppliers.supplier": "Proveedor | Proveedores",
 
-    "users.user": "Usuario | Usuarios",
-    "organizations.organization": "Organización | Organizaciones",
-    "contracts.contract": "Contrato | Contatos",
-    "resources.resource": "Recurso | Recursos",
     "calculations.calculation": "Cálculo| Cálculos",
-    "administrativeUnits.administrativeUnit": "Unidad administrativa | Unidades administrativas",
 
 
     //Suppliers
+    "suppliers.supplier": "Proveedor | Proveedores",
     "suppliers.new.name.label": "Nombre o razón social",
     "suppliers.new.name.sub-label": "A contninuación escribe el nombre o la razón social del proveedor",
     "suppliers.new.name.placeholder": "Introduce el nombre o razón social",
@@ -186,25 +181,46 @@ export default {
     "suppliers.new.notes.label": "Notas adicionales",
     "suppliers.new.notes.sub-label": "Aquí puedes agregar notas adicionales al registro del proveedor",
     "suppliers.new.notes.placeholder": "Introduce notas adicionales",
-
-
-    //Organizations
-    "organizations.name" : "Nombre",
-
-    //Adminsitrative Units
-    "administrativeUnits.name" : "Nombre",
-    "administrativeUnits.notes" : "Notas Adicionales",
-
-    //Users
-    "users.name" : "Nombre",
-    "users.lastName" : "Apellido",
-    "users.email" : "Correo Electrónico",
     "suppliers.name": "Nombre o razón social",
     "suppliers.rfc": "RFC",
     "suppliers.notes": "Notas",
+    "suppliers.modal.title":"Guardar Registros",
+    "suppliers.modal.message":"Se modificaran {docsUpdatedLength} registros",
+    "suppliers.modal.confirmation-question":"¿Estás seguro de guardar los registros modificados?",
+    "suppliers.modal.cancel-button":"CANCELAR",
+    "suppliers.modal.ok-button":"GUARDAR",
 
+
+    //Organizations
+    "organizations.organization": "Organización | Organizaciones",
+    "organizations.name" : "Nombre",
+    "organizations.validation.required":"El campo {field} de la Organización es requerido",
+    "organizations.validation.max.name":"El nombre excede los {maxLength} caracteres permitidos",
+
+    //Adminsitrative Units
+    "administrativeUnits.administrativeUnit": "Unidad administrativa | Unidades administrativas",
+    "administrativeUnits.name" : "Nombre",
+    "administrativeUnits.notes" : "Notas Adicionales",
+
+    "administrativeUnits.new.name.label": "Nombre",
+    "administrativeUnits.new.name.sub-label": "A continuación escribe el nombre de la Unidad Administrativa",
+    "administrativeUnits.new.name.placeholder": "Introduce el nombre",
+    "administrativeUnits.new.notes.label": "Notas Adicionales",
+    "administrativeUnits.new.notes.sub-label": "Aquí puedes escribir notas sobre el usuario",
+    "administrativeUnits.new.notes.placeholder": "Introduce las notas adicionales",
+    "administrativeUnits.validation.required": "El campo {field} de la U. Administrativa es requerido",
+
+
+    //Users
+    "users.user": "Usuario | Usuarios",
+    "users.validation.required":"El campo {field} del Usuario es requerido",
+    "users.validation.email":"El correo electronico introducido no tiene un formato válido",
+    "users.validation.min.password":"La contraseña debe tener mínimo {minLength} caracteres",
+    "users.name" : "Nombre",
+    "users.lastName" : "Apellido",
+    "users.email" : "Correo Electrónico",
     "users.new.name.label": "Nombre",
-    "users.new.name.sub-label": "A contninuación escribe el nombre o la razón social del usuario",
+    "users.new.name.sub-label": "A continuación escribe el nombre o la razón social del usuario",
     "users.new.name.placeholder": "Introduce el nombre",
     "users.new.last-name.label": "Apellido",
     "users.new.last-name.sub-label": "A continuación escribe el apellido del usuario",
@@ -218,16 +234,33 @@ export default {
     "users.new.admin-type.sub-label": "Al seleccionar General se tendrá acceso total a la plataforma",
     "users.new.admin-type.radio-button.general": "General",
     "users.new.admin-type.radio-button.custom": "Personalizado",
+    "users.new.notes.label": "Notas Adicionales",
+    "users.new.notes.sub-label": "Aquí puedes escribir notas sobre el usuario",
+    "users.new.notes.placeholder": "Introduce las notas adicionales",
+
+    "users.new.admin-type.radio-button.custom.users": "Usuarios",
+    "users.new.admin-type.radio-button.custom.suppliers": "Proveedores",
+    "users.new.admin-type.radio-button.custom.administrative-units": "Unidades Administrativas",
+    "users.new.admin-type.radio-button.custom.contracts": "Contratos",
+    "users.new.admin-type.radio-button.custom.calculations": "Cálculos",
+    "users.new.admin-type.radio-button.custom.settings": "Configuración",
 
 
     //Contracts
+    "contracts.contract": "Contrato | Contatos",
     "contracts.supplier" : "Proveedor",
     "contracts.administrativeUnit" : "Unidad Administrativa",
     "contracts.amount" : "Cantidad",
     "contracts.procedureType" : "Tipo de Proceidimiento",
+    "contracts.validation.required": "El campo {field} del Contrato es requerido",
 
     //Resources
+    "resources.resource": "Recurso | Recursos",
     "resources.title": "Título",
     "resources.classification": "Casificación",
-    "resources.url": "URL"
+    "resources.url": "URL",
+    "resources.validation.required":"El campo {field} del Recurso es requerido",
+    "resources.validation.url":"La Url no tiene el formato correcto",
+    "resources.validation.classification":"El valor para la Clasificación del Recurso no es válido"
+
 }

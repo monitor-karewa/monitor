@@ -12,40 +12,45 @@
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc">
+        <NewEntryModal v-bind:storeModule="storeModule"
+                       :data="{ title:this.title, url:this.url, classification:this.classification }" :validator="$v">
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce el título"
-                               v-model="doc.title">
+                               v-model="$v.title.$model">
                         <label class="fg-label">Título del recurso
                             <small></small>
                             <br>
                             <strong>Introduce el título del recurso</strong>
                         </label>
                     </div>
+                    <span v-if="$v.title.$invalid && $v.title.$dirty" class="c-error">{{$t(titleErrorMessage, {field:'Título'})}}</span>
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce la url"
-                               v-model="doc.url">
+                               @input="delayTouch($v.url)"
+                               v-model="$v.url.$model">
                         <label class="fg-label">URL
                             <small></small>
                             <br>
                             <strong>Introduce la url del recurso</strong>
                         </label>
                     </div>
+                    <span v-if="$v.url.$invalid && $v.url.$dirty" class="c-error">{{$t(urlErrorMessage, {field:'Url'})}}</span>
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce la clasificación"
-                               v-model="doc.classification">
+                               v-model="$v.classification.$model">
                         <label class="fg-label">Clasificación del recurso
                             <small></small>
                             <br>
                             <strong>Introduce el la clasificación del recurso/</strong>
                         </label>
                     </div>
+                    <span v-if="$v.classification.$invalid && $v.classification.$dirty" class="c-error">{{$t(classificationErrorMessage, {field:'Clasificación'})}}</span>
                 </div>
 
             </div>
@@ -70,10 +75,13 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
-    import { DELETE_SUCCESS } from "@/store/events";
+    import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
+    import { required, url } from 'vuelidate/lib/validators';
+    import { mapGetters } from 'vuex';
     const storeModule = 'resources';
     const docName = 'resources.resource';
+    const touchMap = new WeakMap();
 
     let baseCatalog = catalog.configure({
         storeModule: storeModule,
@@ -92,7 +100,46 @@
                     {label: 'resources.url', visible : true, 'field':'url'},
                     {label: 'general.created-at', visible : true, 'field':'created_at', 'type':'Date'}
                 ],
-                doc : {}
+                title:"",
+                url:"",
+                classification:""
+            }
+        },
+        validations:{
+            title: { required },
+            classification: {
+                required,
+                validValue: function(value) {
+                    return this.classificationTypes.includes(value);
+                }
+            },
+            url: {
+                required,
+                url
+            }
+        },
+        computed:{
+            ...mapGetters(storeModule,['classificationTypes']),
+            titleErrorMessage(){
+                if(!this.$v.title.required){
+                    return 'resources.validation.required';
+                }
+            },
+            urlErrorMessage(){
+                if(!this.$v.url.url){
+                    return 'resources.validation.url';
+                }
+                if(!this.$v.url.required){
+                    return 'resources.validation.required';
+                }
+            },
+            classificationErrorMessage(){
+                if(!this.$v.classification.required){
+                    return 'resources.validation.required';
+                }
+                if(!this.$v.classification.validValue){
+                    return 'resources.validation.classification';
+                }
             }
         },
         components: {
@@ -101,12 +148,26 @@
         methods:{
             confirmDeletion(){
                 tShow("El recurso fue eliminado correctamente", 'info');
+            },
+            delayTouch($v) {
+                $v.$reset();
+                if (touchMap.has($v)) {
+                    clearTimeout(touchMap.get($v))
+                }
+                touchMap.set($v, setTimeout($v.$touch, 1000))
             }
         },
         created(){
             bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
                 tShow("Elemento Eliminado!!", 'info');
-            })
+            });
+            bus.$on(storeModule+DOC_CREATED, ()=>{
+                this.title = "";
+                this.url = "";
+                this.classification = "";
+                this.$v.$reset();
+                tShow("Elemento Creado!", 'info');
+            });
         },
         mounted(){
             window.$(document).ready(function () {
