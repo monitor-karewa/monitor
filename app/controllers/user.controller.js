@@ -157,6 +157,61 @@ exports.save = (req, res, next) => {
     }
 };
 
+
+/**
+ * Edita un grupo de Users
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.saveUpdatedDocs = (req, res, next) => {
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //     console.log("errors.array()", errors.array());
+    //     return res.status(422).json({ errors: errors.array() });
+    // }
+
+    let docsUpdated = req.body;
+
+    if(docsUpdated){
+        try{
+            docsUpdated.forEach((doc) => {
+                User
+                    .findOne({_id: doc._id})
+                    .exec((err, user) => {
+                        user.name = doc.name;
+                        user.lastName = doc.lastName;
+                        user.email = doc.email;
+                        user.notes = doc.notes;
+                        user.active = doc.active;
+                        user.administratorType = doc.administratorType;
+                        user.permissions = doc.permissions;
+
+                        user.save((err) => {
+                            logger.error(err, req, 'user.controller#saveUpdatedDocs', 'Error al actualizar lista de User');
+                        });
+
+                    });
+            });
+
+            return res.json({
+                error:false,
+                message: req.__('general.success.updated'),
+            });
+
+        } catch(err) {
+            logger.error(err, req, 'user.controller#saveUpdatedDocs', 'Error al actualizar lista de User');
+        }
+
+    } else {
+        return res.json({
+            error:false,
+            message: req.__('general.success.updated')
+        });
+
+    }
+};
+
 /**
  * Borra un User.
  * @param req

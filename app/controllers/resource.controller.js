@@ -142,6 +142,56 @@ exports.save = (req, res, next) => {
 };
 
 /**
+ * Edita un grupo de Resources
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.saveUpdatedDocs = (req, res, next) => {
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //     console.log("errors.array()", errors.array());
+    //     return res.status(422).json({ errors: errors.array() });
+    // }
+
+    let docsUpdated = req.body;
+
+    if(docsUpdated){
+        try{
+            docsUpdated.forEach((doc) => {
+                Resource
+                    .findOne({_id: doc._id})
+                    .exec((err, resource) => {
+                        resource.title = doc.title;
+                        resource.classification = doc.classification;
+                        resource.url = doc.url;
+
+                        resource.save((err) => {
+                            logger.error(err, req, 'resource.controller#saveUpdatedDocs', 'Error al actualizar lista de Resource');
+                        });
+
+                    });
+            });
+
+            return res.json({
+                error:false,
+                message: req.__('general.success.updated'),
+            });
+
+        } catch(err) {
+            logger.error(err, req, 'resource.controller#saveUpdatedDocs', 'Error al actualizar lista de Resource');
+        }
+
+    } else {
+        return res.json({
+            error:false,
+            message: req.__('general.success.updated')
+        });
+
+    }
+};
+
+/**
  * Borra un Resource.
  * @param req
  * @param res

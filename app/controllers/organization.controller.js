@@ -148,6 +148,55 @@ exports.save = (req, res, next) => {
 };
 
 /**
+ * Edita un grupo de Organizations
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.saveUpdatedDocs = (req, res, next) => {
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //     console.log("errors.array()", errors.array());
+    //     return res.status(422).json({ errors: errors.array() });
+    // }
+
+    let docsUpdated = req.body;
+
+    if(docsUpdated){
+        try{
+            docsUpdated.forEach((doc) => {
+                Organization
+                    .findOne({_id: doc._id})
+                    .exec((err, organization) => {
+                        organization.name = doc.name;
+
+                        organization.save((err) => {
+                            logger.error(err, req, 'organization.controller#saveUpdatedDocs', 'Error al actualizar lista de Organization');
+                        });
+
+                    });
+            });
+
+            return res.json({
+                error:false,
+                message: req.__('general.success.updated'),
+            });
+
+        } catch(err) {
+            logger.error(err, req, 'organization.controller#saveUpdatedDocs', 'Error al actualizar lista de Organization');
+        }
+
+    } else {
+        return res.json({
+            error:false,
+            message: req.__('general.success.updated')
+        });
+
+    }
+};
+
+
+/**
  * Borra un Organization.
  * @param req
  * @param res

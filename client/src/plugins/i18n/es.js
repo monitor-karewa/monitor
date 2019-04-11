@@ -166,6 +166,11 @@ export default {
     "general.app.name.html-strong": "Monitor <strong>Karewa</strong>",
     "general.back": "Atrás",
     "general.created-at": "Fecha de creación",
+    "general.modal-editable-table.title":"Guardar Registros",
+    "general.modal-editable-table.message":"Se modificaran {docsUpdatedLength} registros",
+    "general.modal-editable-table.confirmation-question":"¿Estás seguro de guardar los registros modificados?",
+    "general.modal-editable-table.cancel-button":"CANCELAR",
+    "general.modal-editable-table.ok-button":"GUARDAR",
 
     "calculations.calculation": "Cálculo| Cálculos",
 
@@ -184,11 +189,6 @@ export default {
     "suppliers.name": "Nombre o razón social",
     "suppliers.rfc": "RFC",
     "suppliers.notes": "Notas",
-    "suppliers.modal.title":"Guardar Registros",
-    "suppliers.modal.message":"Se modificaran {docsUpdatedLength} registros",
-    "suppliers.modal.confirmation-question":"¿Estás seguro de guardar los registros modificados?",
-    "suppliers.modal.cancel-button":"CANCELAR",
-    "suppliers.modal.ok-button":"GUARDAR",
 
 
     //Organizations

@@ -65,13 +65,12 @@
                 <strong>¿Estás seguro de eliminarlo?</strong>
             </p>
         </ModalDanger>
-        <ModalDefault :title="$t(modalProperties.title)"
-                     :message="$t(modalProperties.message,{ docsUpdatedLength: docsUpdatedLength })"
-                     :confirmation-question="$t(modalProperties.confirmationQuestion)"
-                     :cancel-button-text="$t(modalProperties.cancelButtonText)"
-                     :ok-button-text="$t(modalProperties.okButtonText)"
-                     :store-module="storeModule"
-                     :action="modalProperties.action"/>
+        <ModalDefault :title="$t(modalProperties.title)" :store-module="storeModule" :action="modalProperties.action">
+            <p class="text-centered">{{$t(modalProperties.message,{ docsUpdatedLength: docsUpdatedLength })}}
+            <br/>
+            <strong>{{$t(modalProperties.confirmationQuestion)}}</strong>
+            </p>
+        </ModalDefault>
     </div>
 </template>
 
@@ -113,13 +112,11 @@
                 rfc:"",
                 notes:"",
                 modalProperties:{
-                    title:"suppliers.modal.title",
-                    message:"suppliers.modal.message",
-                    confirmationQuestion:"suppliers.modal.confirmation-question",
-                    cancelButtonText:"suppliers.modal.cancel-button",
-                    okButtonText:"suppliers.modal.ok-button",
+                    title:"general.modal-editable-table.title",
+                    message:"general.modal-editable-table.message",
+                    confirmationQuestion:"general.modal-editable-table.confirmation-question",
                     action:"saveDocsUpdated"
-                },
+                }
 
 
             }

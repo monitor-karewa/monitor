@@ -23,6 +23,13 @@ router.get('/list', securityController.validatePermission(Resource.permission, '
 router.post('/save', securityController.validatePermission(Resource.permission, 'edit'), Resource.expressValidator(), resourceController.save);
 
 /**
+ * POST /save-updated-docs
+ * Actualiza la información de varios registros
+ */
+router.post('/save-updated-docs', securityController.validatePermission(Resource.permission, 'edit'), Resource.expressValidator(), resourceController.saveUpdatedDocs);
+
+
+/**
  * POST /delete
  * Borrar un registro
  */
