@@ -273,7 +273,7 @@
                 this.administratorType  =  "CUSTOM";
                 this.notes = "";
                 this.$v.$reset();
-                tShow("Elemento Creado!", 'info');
+                tShow("El usuario fue creado correctamente", 'info');
             });
         },
         mounted(){

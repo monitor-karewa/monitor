@@ -41,8 +41,6 @@
                 allColumns : false
             }
         },
-        computed:{
-        },
         components: {},
         props:{
             columns : {
@@ -58,10 +56,16 @@
             },
             isLastVisibleColumn : function(visible){
                 return this.$props.columns.filter(p => p.visible).length === 1 && visible === true
-            },
-            chkShowAllColumns : function(){
-                return !this.$props.columns.filter(p => !p.visible).length > 0;
-            },
+            }
+        },
+        computed: {
+            chkShowAllColumns : {
+                get: function () {
+                    return !this.$props.columns.filter(p => !p.visible).length > 0;
+                },
+                set: function (newValue) {
+                }
+            }
         }
     }
 </script>

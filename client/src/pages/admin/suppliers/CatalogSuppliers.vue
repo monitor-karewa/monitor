@@ -183,7 +183,7 @@
                 this.rfc = "";
                 this.notes = "";
                 this.$v.$reset();
-                tShow("Elemento Creado!", 'info');
+                tShow("El proveedor fue creado correctamente", 'info');
             });
         },
         mounted(){
