@@ -149,6 +149,57 @@ exports.save = (req, res, next) => {
 };
 
 /**
+ * Edita un grupo de Contracts
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.saveUpdatedDocs = (req, res, next) => {
+    // const errors = validationResult(req);
+    // if (!errors.isEmpty()) {
+    //     console.log("errors.array()", errors.array());
+    //     return res.status(422).json({ errors: errors.array() });
+    // }
+
+    let docsUpdated = req.body;
+
+    if(docsUpdated){
+        try{
+            docsUpdated.forEach((doc) => {
+                Contract
+                    .findOne({_id: doc._id})
+                    .exec((err, contract) => {
+                        contract.supplier = doc.supplier;
+                        contract.administrativeUnit = doc.administrativeUnit;
+                        contract.amount = doc.amount;
+                        contract.procedureType = doc.procedureType;
+
+                        contract.save((err) => {
+                            logger.error(err, req, 'contract.controller#saveUpdatedDocs', 'Error al actualizar lista de Contract');
+                        });
+
+                    });
+            });
+
+            return res.json({
+                error:false,
+                message: req.__('general.success.updated'),
+            });
+
+        } catch(err) {
+            logger.error(err, req, 'contract.controller#saveUpdatedDocs', 'Error al actualizar lista de Contract');
+        }
+
+    } else {
+        return res.json({
+            error:false,
+            message: req.__('general.success.updated')
+        });
+
+    }
+};
+
+/**
  * Borra un Contract.
  * @param req
  * @param res
