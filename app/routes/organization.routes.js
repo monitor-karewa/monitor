@@ -30,4 +30,10 @@ router.post('/save', organizationController.save);
  */
 router.post('/delete', securityController.validatePermission(Organization.permission, 'delete'), organizationController.delete);
 
+/**
+ * POST /save-updated-docs
+ * Actualiza la información de varios registros
+ */
+router.post('/save-updated-docs', securityController.validatePermission(Organization.permission, 'edit'), organizationController.saveUpdatedDocs);
+
 module.exports = router;

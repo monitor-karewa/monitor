@@ -36,6 +36,12 @@
                 <strong>¿Estás seguro de eliminarlo?</strong>
             </p>
         </ModalDanger>
+        <ModalDefault :title="$t(modalProperties.title)" :store-module="storeModule" :action="modalProperties.action">
+            <p class="text-centered">{{$t(modalProperties.message,{ docsUpdatedLength: docsUpdatedLength })}}
+                <br/>
+                <strong>{{$t(modalProperties.confirmationQuestion)}}</strong>
+            </p>
+        </ModalDefault>
     </div>
 </template>
 
@@ -49,9 +55,11 @@
     import { bus } from '@/main';
     import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
+    import  ModalDefault from "@/components/modals/ModalDefault";
     const storeModule = 'organizations';
     const docName = 'organizations.organization';
     import { required, maxLength } from 'vuelidate/lib/validators';
+    import { mapGetters } from 'vuex';
 
     let baseCatalog = catalog.configure({
         storeModule: storeModule,
@@ -68,7 +76,12 @@
                     {label:"general.created-at", field:'created_at', visible : true , type:'Date'}
                 ],
                 name:"",
-                doc : {}
+                modalProperties:{
+                    title:"general.modal-editable-table.title",
+                    message:"general.modal-editable-table.message",
+                    confirmationQuestion:"general.modal-editable-table.confirmation-question",
+                    action:"saveDocsUpdated"
+                }
             }
         },
         computed:{
@@ -79,10 +92,12 @@
                 if(!this.$v.name.maxLength){
                     return 'organizations.validation.max.name';
                 }
-            }
+            },
+            ...mapGetters(storeModule,['docsUpdatedLength'])
         },
         components: {
-            ModalDanger
+            ModalDanger,
+            ModalDefault
         },
         methods:{
             confirmDeletion(){
