@@ -54,7 +54,7 @@
         },
         methods: {
             save: function () {
-                 this.validator.$touch();
+                this.validator.$touch();
                 if(!this.validator.$invalid){
                     let actionName;
                     if(this.$props.action && this.$props.action.length ){

@@ -137,12 +137,12 @@
         },
         methods:{
             confirmDeletion(){
-                tShow("El contrato fue eliminado correctamente", 'info');
-            }
+                this.deleteElementSelected();
+            },
         },
         created(){
             bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
-                tShow("Elemento Eliminado!!", 'info');
+                tShow("El contrato fue eliminado correctamente", 'info');
             });
             bus.$on(storeModule+DOC_CREATED, ()=>{
                 this.supplier = "";

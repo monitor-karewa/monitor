@@ -105,13 +105,13 @@
             ModalDanger
         },
         methods: {
-            confirm() {
-                console.log("confirm function");
-            }
+            confirmDeletion(){
+                this.deleteElementSelected();
+            },
         },
         created() {
             bus.$on(storeModule + DELETE_SUCCESS, (data) => {
-                tShow("Elemento Eliminado!!", 'info');
+                tShow("El calculo fue eliminado correctamente", 'info');
             })
         },
         mounted() {

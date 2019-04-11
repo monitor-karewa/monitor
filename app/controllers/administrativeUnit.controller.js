@@ -29,11 +29,11 @@ exports.list = (req, res, next) => {
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
 
     let query = {};
-    
+
     //query["field"] = value;
-    
-    //let qNotDeleted = deletedSchema.qNotDeleted();
-    //query = {...query, ...qNotDeleted};
+
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    query = {...query, ...qNotDeleted};
 
     AdministrativeUnit
         .paginate(
@@ -63,7 +63,7 @@ exports.list = (req, res, next) => {
 };
 
 /**
- * Guarda un AdministrativeUnit. 
+ * Guarda un AdministrativeUnit.
  * @param req
  * @param res
  * @param next
@@ -74,9 +74,9 @@ exports.save = (req, res, next) => {
     if (!errors.isEmpty()) {
         return res.status(422).json({ errors: errors.array() });
     }
-    
+
     let id = req.body._id;
-    
+
     if (id) {
         //Update
         let qById = {_id: id};
@@ -95,7 +95,7 @@ exports.save = (req, res, next) => {
                 //Update doc fields
                 administrativeUnit.name = req.body.name;
                 administrativeUnit.notes = req.body.notes;
-                
+
                 administrativeUnit.save((err, savedAdministrativeUnit) => {
                     if (err) {
                         logger.error(req, err, 'administrativeUnit.controller#save', 'Error al guardar AdministrativeUnit');
@@ -104,7 +104,7 @@ exports.save = (req, res, next) => {
                             message: req.__('general.error.save')
                         });
                     }
-        
+
                     return res.json({
                         errors: false,
                         message: req.__('general.success.updated'),
@@ -112,7 +112,7 @@ exports.save = (req, res, next) => {
                     });
                 });
             });
-        
+
     } else {
         //Create
 
@@ -154,7 +154,7 @@ exports.delete = (req, res, next) => {
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     query = {...query, ...qNotDeleted};
-    
+
     AdministrativeUnit
         .find(query)
         .count()
@@ -166,7 +166,7 @@ exports.delete = (req, res, next) => {
                     message: req.__('general.error.delete')
                 });
             }
-            
+
             if (count === 0) {
                 logger.error(req, err, 'administrativeUnit.controller#delete', 'Error al intentar borrar AdministrativeUnit; el registro no existe o ya fue borrado anteriormente');
                 return res.json({
@@ -201,7 +201,5 @@ exports.delete = (req, res, next) => {
                     message: req.__('general.success.deleted')
                 });
             });
-            
-            
         });
 };

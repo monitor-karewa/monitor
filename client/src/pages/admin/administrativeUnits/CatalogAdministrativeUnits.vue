@@ -41,8 +41,6 @@
             </div>
         </NewEntryModal>
 
-
-
         <ModalDanger :title="'Eliminar Unidad Administrativa'" :confirm="confirmDeletion">
             <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
                 <br>
@@ -102,12 +100,9 @@
             ModalDanger
         },
         methods:{
-            confirmDeletion() {
-                tShow("La unidad administrativa fue eliminada correctamente", 'info');
+            confirmDeletion(){
+                this.deleteElementSelected();
             },
-            confirm(){
-                console.log("confirm function");
-            }
         },
         created(){
             bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
@@ -117,27 +112,13 @@
                 this.name = "";
                 this.notes = "";
                 this.$v.$reset();
-                tShow("Elemento Creado!", 'info');
+                tShow("La unidad administrativa fue creada correctamente", 'info');
             });
         },
         mounted(){
             window.$(document).ready(function () {
                 window.$('.selectpicker').selectpicker();
-
                 $('.selectpicker').selectpicker();
-
-                $('#toast-danger').click(function () {
-                    tShow("Hubo un error en el proceso. Intenta de nuevo", 'danger');
-                });
-                $('#toast-info').click(function () {
-                    tShow("Se informa del proceso por eso es un info", 'info');
-                });
-                $('#toast-warning').click(function () {
-                    tShow("Complete todos los campos requeridos", 'alert');
-                });
-                $('#toast-success').click(function () {
-                    tShow("Se ha completado el proceso correctamente sadasda adadasd sda dasdasdas dasda dasdasd ad adaspidjdj asoijdas", 'success');
-                });
             });
         }
     }

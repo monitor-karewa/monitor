@@ -233,8 +233,8 @@
             ModalDanger
         },
         methods:{
-            confirmDeletion() {
-                tShow("El usuario fue eliminado correctamente", 'info');
+            confirmDeletion(){
+                this.deleteElementSelected();
             },
             delayTouch($v) {
                 $v.$reset();
@@ -247,7 +247,7 @@
         },
         created(){
             bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
-                tShow("Elemento Eliminado!!", 'info');
+                tShow("El usuario fue eliminado correctamente", 'info');
             });
             bus.$on(storeModule+DOC_CREATED, ()=>{
                 this.name = "";

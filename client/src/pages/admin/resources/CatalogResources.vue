@@ -147,8 +147,8 @@
         },
         methods:{
             confirmDeletion(){
-                tShow("El recurso fue eliminado correctamente", 'info');
-            },
+                this.deleteElementSelected();
+            },,
             delayTouch($v) {
                 $v.$reset();
                 if (touchMap.has($v)) {
@@ -159,7 +159,7 @@
         },
         created(){
             bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
-                tShow("Elemento Eliminado!!", 'info');
+                tShow("El recurso fue eliminado correctamente", 'info');
             });
             bus.$on(storeModule+DOC_CREATED, ()=>{
                 this.title = "";
