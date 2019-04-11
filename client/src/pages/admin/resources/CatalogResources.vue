@@ -162,7 +162,7 @@
         methods:{
             confirmDeletion(){
                 this.deleteElementSelected();
-            },,
+            },
             delayTouch($v) {
                 $v.$reset();
                 if (touchMap.has($v)) {
