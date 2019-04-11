@@ -5,7 +5,6 @@
             <CatalogHeader :singular="'Usuario'" :plural="'Usuarios'" />
             <EditableTable
                     :docs="docs"
-                    :tableHeaders="tableHeaders"
                     :tableColumns="tableColumns"
                     :store-module="storeModule"
                     :singular="'Usuario'"
@@ -154,6 +153,12 @@
                 <strong>¿Estás seguro de eliminarlo?</strong>
             </p>
         </ModalDanger>
+        <ModalDefault :title="$t(modalProperties.title)" :store-module="storeModule" :action="modalProperties.action">
+            <p class="text-centered">{{$t(modalProperties.message,{ docsUpdatedLength: docsUpdatedLength })}}
+                <br/>
+                <strong>{{$t(modalProperties.confirmationQuestion)}}</strong>
+            </p>
+        </ModalDefault>
     </div>
 </template>
 
@@ -167,8 +172,10 @@
     import { bus } from '@/main';
     import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
+    import  ModalDefault from "@/components/modals/ModalDefault";
     import { required, email, minLength, requiredIf } from 'vuelidate/lib/validators';
     const touchMap = new WeakMap();
+    import { mapGetters } from 'vuex';
 
     const storeModule = 'users';
     const docName = 'users.user';
@@ -191,6 +198,12 @@
                     {label:'users.email', field : 'email', visible : true} ,
                     {label:'general.created-at', field : 'created_at', visible : true, type:'Date'}
                 ],
+                modalProperties:{
+                    title:"general.modal-editable-table.title",
+                    message:"general.modal-editable-table.message",
+                    confirmationQuestion:"general.modal-editable-table.confirmation-question",
+                    action:"saveDocsUpdated"
+                },
                 name:"",
                 lastName:"",
                 email:"",
@@ -227,10 +240,12 @@
                 if(!this.$v.email.email){
                     return 'users.validation.email'
                 }
-            }
+            },
+            ...mapGetters(storeModule,['docsUpdatedLength'])
         },
         components: {
-            ModalDanger
+            ModalDanger,
+            ModalDefault
         },
         methods:{
             confirmDeletion() {

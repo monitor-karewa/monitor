@@ -76,6 +76,12 @@ exports.list = (req, res, next) => {
         );
 };
 
+/**
+ * Edita un grupo de Users
+ * @param req
+ * @param res
+ * @param next
+ */
 exports.saveUpdatedDocs = (req, res, next) => {
     // const errors = validationResult(req);
     // if (!errors.isEmpty()) {
