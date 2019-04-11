@@ -64,6 +64,12 @@
                 <strong>¿Estás seguro de eliminarlo?</strong>
             </p>
         </ModalDanger>
+        <ModalDefault :title="$t(modalProperties.title)" :store-module="storeModule" :action="modalProperties.action">
+            <p class="text-centered">{{$t(modalProperties.message,{ docsUpdatedLength: docsUpdatedLength })}}
+                <br/>
+                <strong>{{$t(modalProperties.confirmationQuestion)}}</strong>
+            </p>
+        </ModalDefault>
     </div>
 </template>
 
@@ -77,6 +83,7 @@
     import { bus } from '@/main';
     import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
+    import  ModalDefault from "@/components/modals/ModalDefault";
     import { required, url } from 'vuelidate/lib/validators';
     import { mapGetters } from 'vuex';
     const storeModule = 'resources';
@@ -102,7 +109,13 @@
                 ],
                 title:"",
                 url:"",
-                classification:""
+                classification:"",
+                modalProperties:{
+                    title:"general.modal-editable-table.title",
+                    message:"general.modal-editable-table.message",
+                    confirmationQuestion:"general.modal-editable-table.confirmation-question",
+                    action:"saveDocsUpdated"
+                }
             }
         },
         validations:{
@@ -119,7 +132,7 @@
             }
         },
         computed:{
-            ...mapGetters(storeModule,['classificationTypes']),
+            ...mapGetters(storeModule,['classificationTypes','docsUpdatedLength']),
             titleErrorMessage(){
                 if(!this.$v.title.required){
                     return 'resources.validation.required';
@@ -143,7 +156,8 @@
             }
         },
         components: {
-            ModalDanger
+            ModalDanger,
+            ModalDefault
         },
         methods:{
             confirmDeletion(){

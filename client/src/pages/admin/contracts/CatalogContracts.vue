@@ -93,8 +93,8 @@
     import { bus } from '@/main';
     import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
-    import { required } from "vuelidate/lib/validators"
     import  ModalDefault from "@/components/modals/ModalDefault";
+    import { required } from "vuelidate/lib/validators"
     import { mapGetters } from 'vuex';
 
     const storeModule = 'contracts';
