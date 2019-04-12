@@ -13,44 +13,44 @@
         </AdminMainSection>
 
         <NewEntryModal v-bind:storeModule="storeModule"
-                       :data="{ title:this.title, url:this.url, classification:this.classification }" :validator="$v">
+                       :data="doc" :validator="$v">
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce el título"
-                               v-model="$v.title.$model">
+                               v-model="$v.doc.title.$model">
                         <label class="fg-label">Título del recurso
                             <small></small>
                             <br>
                             <strong>Introduce el título del recurso</strong>
                         </label>
                     </div>
-                    <span v-if="$v.title.$invalid && $v.title.$dirty" class="c-error">{{$t(titleErrorMessage, {field:'Título'})}}</span>
+                    <span v-if="$v.doc.title.$invalid && $v.doc.title.$dirty" class="c-error">{{$t(titleErrorMessage, {field:'Título'})}}</span>
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce la url"
-                               @input="delayTouch($v.url)"
-                               v-model="$v.url.$model">
+                               @input="delayTouch($v.doc.url)"
+                               v-model="$v.doc.url.$model">
                         <label class="fg-label">URL
                             <small></small>
                             <br>
                             <strong>Introduce la url del recurso</strong>
                         </label>
                     </div>
-                    <span v-if="$v.url.$invalid && $v.url.$dirty" class="c-error">{{$t(urlErrorMessage, {field:'Url'})}}</span>
+                    <span v-if="$v.doc.url.$invalid && $v.doc.url.$dirty" class="c-error">{{$t(urlErrorMessage, {field:'Url'})}}</span>
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce la clasificación"
-                               v-model="$v.classification.$model">
+                               v-model="$v.doc.classification.$model">
                         <label class="fg-label">Clasificación del recurso
                             <small></small>
                             <br>
                             <strong>Introduce el la clasificación del recurso/</strong>
                         </label>
                     </div>
-                    <span v-if="$v.classification.$invalid && $v.classification.$dirty" class="c-error">{{$t(classificationErrorMessage, {field:'Clasificación'})}}</span>
+                    <span v-if="$v.doc.classification.$invalid && $v.doc.classification.$dirty" class="c-error">{{$t(classificationErrorMessage, {field:'Clasificación'})}}</span>
                 </div>
 
             </div>
@@ -107,9 +107,11 @@
                     {label: 'resources.url', visible : true, 'field':'url'},
                     {label: 'general.created-at', visible : true, 'field':'created_at', 'type':'Date'}
                 ],
-                title:"",
-                url:"",
-                classification:"",
+                doc:{
+                    title:"",
+                    url:"",
+                    classification:""
+                },
                 modalProperties:{
                     title:"general.modal-editable-table.title",
                     message:"general.modal-editable-table.message",
@@ -118,39 +120,42 @@
                 }
             }
         },
-        validations:{
-            title: { required },
-            classification: {
-                required,
-                validValue: function(value) {
-                    return this.classificationTypes.includes(value);
+        validations: {
+            doc: {
+
+                title: {required},
+                classification: {
+                    required,
+                    validValue: function (value) {
+                        return this.classificationTypes.includes(value);
+                    }
+                },
+                url: {
+                    required,
+                    url
                 }
-            },
-            url: {
-                required,
-                url
             }
         },
         computed:{
             ...mapGetters(storeModule,['classificationTypes','docsUpdatedLength']),
             titleErrorMessage(){
-                if(!this.$v.title.required){
+                if(!this.$v.doc.title.required){
                     return 'resources.validation.required';
                 }
             },
             urlErrorMessage(){
-                if(!this.$v.url.url){
+                if(!this.$v.doc.url.url){
                     return 'resources.validation.url';
                 }
-                if(!this.$v.url.required){
+                if(!this.$v.doc.url.required){
                     return 'resources.validation.required';
                 }
             },
             classificationErrorMessage(){
-                if(!this.$v.classification.required){
+                if(!this.$v.doc.classification.required){
                     return 'resources.validation.required';
                 }
-                if(!this.$v.classification.validValue){
+                if(!this.$v.doc.classification.validValue){
                     return 'resources.validation.classification';
                 }
             }
@@ -176,9 +181,9 @@
                 tShow("El recurso fue eliminado correctamente", 'info');
             });
             bus.$on(storeModule+DOC_CREATED, ()=>{
-                this.title = "";
-                this.url = "";
-                this.classification = "";
+                this.doc.title = "";
+                this.doc.url = "";
+                this.doc.classification = "";
                 this.$v.$reset();
                 tShow("Elemento Creado!", 'info');
             });
