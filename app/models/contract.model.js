@@ -71,6 +71,7 @@ let ContractSchema = new Schema({
     },
     /* Administracion */
     administration: {
+        type:String,
         required:true,
         match:new RegExp("^[12][0-9]{3}-[12][0-9]{3}$")
     },
