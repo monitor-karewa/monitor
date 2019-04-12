@@ -5,37 +5,242 @@ const { check, validationResult } = require('express-validator/check');
 
 const pluginCreatedUpdated = require('mongoose-createdat-updatedat');
 const mongoosePagination = require('mongoose-paginate');
+const utils = require('../components/utils');
+
 
 const permissions = require('./../components/permissions');
 
+//RECUERDA USAR LA MISMA EXPRESION REGULAR AL BUSCAR POR ALGUNO DE ESTOS ENUMS
+const procedureTypesEnum = [
+    utils.toAccentsRegex('PUBLICA',"i"),
+    utils.toAccentsRegex('ADJ DIRECTA', "i"),
+    utils.toAccentsRegex('POR INVITACION',"i")
+];
+const categoryEnum = [
+    utils.toAccentsRegex('AMPLIACION', "i"),
+    utils.toAccentsRegex('MODIFICACION', "i"),
+    utils.toAccentsRegex('ADENDUM',"i"),
+    utils.toAccentsRegex('ADQUISICIONES',"i"),
+    utils.toAccentsRegex('SERVICIOS',"i"),
+    utils.toAccentsRegex('ARRENDAMIENTOS',"i"),
+    utils.toAccentsRegex('OBRA PUBLICA',"i"),
+];
+const procedureStateEnum = [
+    utils.toAccentsRegex('CONCLUIDO', "i"),
+    utils.toAccentsRegex('CANCELADO', "i"),
+    utils.toAccentsRegex('DESIERTO', "i"),
+    utils.toAccentsRegex('EN_PROCESO', "i")
+];
+const administrativeUnitTypeEnum = [
+    utils.toAccentsRegex('CENTRALIZADA', "i"),
+    utils.toAccentsRegex('DESCENTRALIZADA', "i")
+];
+const limitExceededEnum = [
+    utils.toAccentsRegex('NO EXCEDE EL LIMITE', "i"),
+    utils.toAccentsRegex('EXCEDE EL LIMITE', "i")
+];
+
+const contractType = [
+    utils.toAccentsRegex('ABIERTO', "i"),
+    utils.toAccentsRegex('NORMAL', "i")
+
+];
 /**
  * Schema de Mongoose para el modelo Contract.
  * @type {mongoose.Schema}
  */
+
+
 let ContractSchema = new Schema({
-    supplier: {
-        type: String,
-        required: true,
-        min: 2,
-        max: 100
-    },
-    administrativeUnit: {
-        type: String,
-        required: true,
-        min: 2,
-        max: 100
-    },
-    amount: {
-        type: String,
-        required: true,
-        min: 2,
-        max: 100
-    },
+    /* Tipo de procedimiento */
     procedureType: {
         type: String,
+        enum:procedureTypesEnum,
         required: true,
-        min: 2,
-        max: 100
+        uppercase:true
+    },
+    /* Materia */
+    category: {
+        type: String,
+        enum: categoryEnum,
+        required: function(){
+            let descriptionRegExp = utils.toAccentsRegex(this.servicesDescription.toUpperCase(),'i');
+            return descriptionRegExp.test(this.category);
+        },
+        uppercase:true
+    },
+    /* Administracion */
+    administration: {
+        required:true,
+        match:new RegExp("^[12][0-9]{3}-[12][0-9]{3}$")
+    },
+    /* Ejercicio */
+    fiscalYear: {
+        type:String,
+        required:true,
+        match:new RegExp("^[12][0-9]{3}")
+    },
+    /* Periodo que se reporta */
+    period: {
+        type:String,
+        required:true,
+        match:new RegExp("^[1234]o\\s2[0-9]{3}$")
+    },
+    /* ID / Número de Folio o Nomenclatura / Identificador */
+    contractId:{
+        type:String,
+        required:true,
+        //TODO:Definir otro Id aparte que sea karewaId(Pendiente)
+        //TODO:Definir el formato que debe llevar el ID(Dejarlo Libre)
+    },
+    /* Partida */
+    partida: {
+        type:String
+    },
+    /* Estado del procedimiento */
+    procedureState: {
+        type:String,
+        enum:procedureStateEnum,
+        // required:true,
+        required:function(){
+            let descriptionRegExp = utils.toAccentsRegex(this.notes.toUpperCase(),'i');
+            return descriptionRegExp.test(this.procedureType);
+        },
+        uppercase:true
+    },
+    /*Hipervínculo a la convocatoria o invitaciones*/
+    announcementUrl:{
+        type:String
+    },
+    /* Fecha de la convocatoria o invitación */
+    announcementDate:{
+        type:Date
+    },
+    /* Descripción de las obras, bienes o servicios */
+    servicesDescription:{
+        type:String,
+        required:true
+    },
+    /* Fecha en la que se celebró la junta de aclaraciones */
+    clarificationMeetingDate:{
+        type:Date,
+    },
+    /* Hipervínculo al fallo de Junta de Aclaraciones */
+    clarificationMeetingJudgmentUrl:{
+        type:String,
+    },
+    /* Hipervínculo al documento de la Presentación de Propuestas */
+    presentationProposalsDocUrl:{
+        type:String
+    },
+    /* Proveedor */
+    supplier: {
+        type: Schema.Types.ObjectId,
+        ref: 'Supplier',
+        required: true
+    },
+    /* Unidad administrativa convocante */
+    organizerAdministrativeUnit: {
+        type: Schema.Types.ObjectId,
+        ref: 'AdministrativeUnit',
+        required: true,
+        validator: function(){
+            return this.administrativeUnitType === 'DESCENTRALIZADA' ? this.organizerAdministrativeUnit == this.applicantAdministrativeUnit : true
+        }
+    },
+    /* Unidad administrativa solicitante */
+    applicantAdministrativeUnit: {
+        type: Schema.Types.ObjectId,
+        ref: 'AdministrativeUnit',
+        required: true
+    },
+    /* Centralizada/Descentralizada */
+    administrativeUnitType:{
+        type:String,
+        enum:administrativeUnitTypeEnum,
+        required:true,
+        uppercase:true
+    },
+    /* Número que identifique al contrato */
+    contractNumber:{
+       type:String,
+        unique:true
+    },
+    /* Fecha del contrato */
+    contractDate:{
+        type:Date,
+        required:true,
+        validator: function(){
+            let yearContractDate = new Date(this.contractDate).getFullYear();
+            let fiscalYear = Number(this.fiscalYear);
+            return yearContractDate === fiscalYear;
+        }
+    },
+    /* Tipo de Contrato */
+    contractType:{
+      type:String,
+      enum:contractType,
+      required:true
+    },
+    /* Monto total del contrato con impuestos incluidos */
+    totalAmount:{
+        type:Number
+    },
+    /* Monto mínimo, en su caso */
+    minAmount:{
+        type:Number
+    },
+    /* Monto máximo, en su caso */
+    maxAmount:{
+        type:Number,
+    },
+
+    /* Monto total o Monto máximo, en su caso */
+    totalOrMaxAmount:{
+        type:Number,
+        required:true
+        // Si es NORMAL - es el monto total
+        // Si es ABIERTO - es el monto máximo
+    },
+    /*Hipervínculo al documento del contrato y anexos*/
+    contractUrl:{
+        type:String
+        // required:true
+    },
+    /*Área responsable de la información*/
+    areaInCharge:{
+        type: Schema.Types.ObjectId,
+        ref: 'AdministrativeUnit',
+        required: true
+    },
+    /*Fecha de actualización*/
+    actualizationDate:{
+        type:Date,
+        required:true
+    },
+    /*Notas*/
+    notes:{
+        type:String
+    },
+    /*Notas Karewa*/
+    karewaNotes:{
+        type:String
+    },
+    /*Fecha de obtención de los datos*/
+    informationDate:{
+        type:Date,
+        required:true
+    },
+    /*Adjudicaciones Directas que exceden el límite*/
+    limitExceeded:{
+        type:String,
+        enum:limitExceededEnum,
+        required:true,
+        uppercase:true
+    },
+    /*Monto que excede el límite de la Adjudicación Directa*/
+    amountExceeded:{
+        type:Number
     },
     deleted: require("./schemas/deleted.schema").Deleted
 });
@@ -68,10 +273,10 @@ ContractSchema.statics.expressValidator = function() {
     
     return [
         //TODO change this
-        check('supplier').isLength({
-            min: 2,
-            max: 100
-        })
+        // check('supplier').isLength({
+        //     min: 2,
+        //     max: 100
+        // })
         //Some examples:
         // check('email').isEmail(),
         // check('type').isIn(allowedTypes),
