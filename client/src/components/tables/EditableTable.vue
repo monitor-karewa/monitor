@@ -41,7 +41,7 @@
                                                 </span>
                                             -->
                                         </td>
-                                        <TableTdButtons :id="doc._id" :store-module="storeModule"/>
+                                        <TableTdButtons :store-module="storeModule" :entry="doc" />
                                     </tr>
                                     </tbody>
                                 </table>

@@ -16,11 +16,14 @@ export default function (api, storeName) {
         },
         docName: '',
         selectedDocId: '',
-        isEditingTable : false
+        isEditingTable : false,
+        entrySelected : {}
     };
 
     const getters = {
-
+        getEntrySelected(state) {
+            return state.entrySelected
+        },
         getUrlQuery(state){
 
             let query = '?';
@@ -46,6 +49,9 @@ export default function (api, storeName) {
     };
 
     const actions = {
+        selectEntry ({commit,getters}, entry ) {
+            commit('SELECT_ENTRY', entry);
+        },
         list ({commit,getters}, searchString ) {
             if(searchString && searchString.length){
                 commit('SET_SEARCH',searchString);
@@ -195,6 +201,9 @@ export default function (api, storeName) {
         },
         SET_DOC_ID(state, id){
             state.selectedDocId = id;
+        },
+        SELECT_ENTRY(state, entry){
+            state.entrySelected = entry;
         },
         UPDATE_DOC_FROM_EDITABLE_TABLE(state,{ field, value, docUpdated, updatedDocIndexIfExists}){
             if(updatedDocIndexIfExists !== -1 ){
