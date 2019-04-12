@@ -12,31 +12,31 @@
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="{name: this.name, notes: this.notes}" :validator="$v">
+        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc" :validator="$v">
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" :placeholder="$t('administrativeUnits.new.name.placeholder')"
-                               v-model="$v.name.$model">
+                               v-model="$v.doc.name.$model">
                         <label class="fg-label">{{$t("administrativeUnits.new.name.label")}}
                             <small></small>
                             <br>
                             <strong>{{$t("administrativeUnits.new.name.sub-label")}}</strong>
                         </label>
                     </div>
-                    <span v-if="$v.name.$invalid && $v.name.$dirty" class="c-error">{{$t(requiredErrorMessage,{field:'Nombre'})}}</span>
+                    <span v-if="$v.doc.name.$invalid && $v.doc.name.$dirty" class="c-error">{{$t(requiredErrorMessage,{field:'Nombre'})}}</span>
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" :placeholder="$t('administrativeUnits.new.notes.placeholder')"
-                               v-model="$v.notes.$model">
+                               v-model="$v.doc.notes.$model">
                         <label class="fg-label">{{$t("administrativeUnits.new.notes.label")}}
                             <small></small>
                             <br>
                             <strong>{{$t("administrativeUnits.new.notes.sub-label")}}</strong>
                         </label>
                     </div>
-                    <span v-if="$v.notes.$invalid && $v.notes.$dirty" class="c-error">{{$t(requiredErrorMessage,{field:'Notas'})}}</span>
+                    <span v-if="$v.doc.notes.$invalid && $v.doc.notes.$dirty" class="c-error">{{$t(requiredErrorMessage,{field:'Notas'})}}</span>
                 </div>
             </div>
         </NewEntryModal>
@@ -91,8 +91,10 @@
                     {label : "administrativeUnits.notes", visible : true , field:'notes'},
                     {label : "general.created-at", visible : true , field:'created_at', type:'Date'}
                 ],
-                name:"",
-                notes:"",
+                doc:{
+                    name:"",
+                    notes:"",
+                },
                 modalProperties:{
                     title:"general.modal-editable-table.title",
                     message:"general.modal-editable-table.message",
@@ -101,9 +103,11 @@
                 }
             }
         },
-        validations:{
-          name:{ required },
-          notes:{ required }
+        validations: {
+            doc: {
+                name: {required},
+                notes: {required}
+            }
         },
         computed:{
             requiredErrorMessage(){
@@ -125,8 +129,8 @@
                 tShow("La unidad administrativa fue eliminada correctamente", 'info');
             });
             bus.$on(storeModule+DOC_CREATED, ()=>{
-                this.name = "";
-                this.notes = "";
+                this.doc.name = "";
+                this.doc.notes = "";
                 this.$v.$reset();
                 tShow("La unidad administrativa fue creada correctamente", 'info');
             });
