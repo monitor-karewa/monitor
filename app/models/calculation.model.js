@@ -49,15 +49,15 @@ let CalculationSchema = new Schema({
     type: {
         type: String,
         required: true,
-        enum: ['GENERAL', 'CONTRATO']
+        enum: ['GENERAL', 'CONTRACT']
     },
     enabled: {
         type: Boolean,
-        required: true
+        required: false
     },
     notes: {
         type: String,
-        required: true
+        required: false
     },
     deleted: require("./schemas/deleted.schema").Deleted
 });

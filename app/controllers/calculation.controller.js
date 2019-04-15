@@ -93,9 +93,11 @@ exports.save = (req, res, next) => {
                 }
 
                 //Update doc fields
-                calculation.symbol = req.body.symbol;
-                calculation.title = req.body.title;
+                calculation.name = req.body.name;
                 calculation.description = req.body.description;
+                calculation.type = req.body.type;
+                calculation.enabled = req.body.enabled;
+                calculation.notes = req.body.notes;
 
                 calculation.save((err, savedCalculation) => {
                     if (err) {
@@ -118,12 +120,13 @@ exports.save = (req, res, next) => {
         //Create
 
         let calculation = new Calculation({
+            name : req.body.name,
+            description : req.body.description,
+            type : req.body.type,
+            enabled : req.body.enabled,
+            notes : req.body.notes
         });
 
-        //Update doc fields
-        calculation.symbol = req.body.symbol;
-        calculation.title = req.body.title;
-        calculation.description = req.body.description;
 
         calculation.save((err, savedCalculation) => {
             if (err) {

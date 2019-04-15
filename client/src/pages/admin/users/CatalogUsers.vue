@@ -127,7 +127,7 @@
 
                         <span v-if="$v.permissions.$invalid && $v.permissions.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Perfil'})}}</span>
                     </div>
-                    </div>
+                </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"

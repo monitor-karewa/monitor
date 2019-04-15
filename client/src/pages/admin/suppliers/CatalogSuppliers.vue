@@ -14,12 +14,12 @@
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" v-bind:validator="$v" v-bind:data="{name:this.name,rfc:this.rfc,notes:this.notes}">
+        <NewEntryModal v-bind:storeModule="storeModule" v-bind:validator="$v" v-bind:data="doc">
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
 
-                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.name.placeholder')" v-model="$v.name.$model"/>
+                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.name.placeholder')" v-model="$v.doc.name.$model"/>
                         <label class="fg-label">{{$t('suppliers.new.name.label')}}
 
                             <small></small>
@@ -28,26 +28,26 @@
                         </label>
                     </div>
                     <!--<span style="float: right">{{ doc && doc.name ? doc.name.length : 0}}/100</span>-->
-                    <span v-if="$v.name.$invalid && $v.name.$dirty" class="c-error">{{nameErrorMessage}}</span>
+                    <span v-if="$v.doc.name.$invalid && $v.doc.name.$dirty" class="c-error">{{nameErrorMessage}}</span>
                 </div>
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.rfc.placeholder')" v-model.trim="$v.rfc.$model"
-                        @input="delayTouch($v.rfc)">
+                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.rfc.placeholder')" v-model.trim="$v.doc.rfc.$model"
+                        @input="delayTouch($v.doc.rfc)">
                         <label class="fg-label">{{$t('suppliers.new.rfc.label')}}
                             <small></small>
                             <br/>
                             <strong>{{$t('suppliers.new.rfc.sub-label')}}</strong>
                         </label>
                     </div>
-                    <span v-if="$v.rfc.$invalid && $v.rfc.$dirty" class="c-error">{{rfcErrorMessage}}</span>
+                    <span v-if="$v.doc.rfc.$invalid && $v.doc.rfc.$dirty" class="c-error">{{rfcErrorMessage}}</span>
                 </div>
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
-                               :placeholder="$t('suppliers.new.notes.placeholder')" v-model="notes">
+                               :placeholder="$t('suppliers.new.notes.placeholder')" v-model="doc.notes">
                         <label class="fg-label">{{$t('suppliers.new.notes.label')}}
                             <small></small>
                             <br>
@@ -108,9 +108,12 @@
                     { label: 'suppliers.notes' ,field:'notes', visible : true},
                     { label: 'general.created-at', field:'created_at', type:'Date', visible : true}
                 ],
-                name:"",
-                rfc:"",
-                notes:"",
+                doc : {
+                    name:"",
+                    rfc:"",
+                    notes:"",
+                },
+
                 modalProperties:{
                     title:"general.modal-editable-table.title",
                     message:"general.modal-editable-table.message",
@@ -121,36 +124,38 @@
 
             }
         },
-        validations:{
-            name:{
-                required,
-                minLength:minLength(2),
-                maxLength:maxLength(100)
-            },
-            rfc:{
-                required,
-                validRFC: (value) => {
-                    if(value == null || value == undefined || value == ""){
-                        return true
+        validations: {
+            doc: {
+                name: {
+                    required,
+                    minLength: minLength(2),
+                    maxLength: maxLength(100)
+                },
+                rfc: {
+                    required,
+                    validRFC: (value) => {
+                        if (value == null || value == undefined || value == "") {
+                            return true
+                        }
+                        return (/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/).test(value);
                     }
-                    return (/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/).test(value);
                 }
             }
         },
         computed: {
-            nameErrorMessage(){
-               if(!this.$v.name.required){
-                   return "El nombre del Proveedor es requerido"
+            nameErrorMessage() {
+                if (!this.$v.doc.name.required) {
+                    return "El nombre del Proveedor es requerido"
                }
-               if(!this.$v.name.minLength || !this.$v.name.maxLength){
-                   return `Debe estar entre ${this.$v.name.$params.minLength.min} y ${this.$v.name.$params.maxLength.max}`
+               if(!this.$v.doc.name.minLength || !this.$v.doc.name.maxLength){
+                   return `Debe estar entre ${this.$v.doc.name.$params.minLength.min} y ${this.$v.doc.name.$params.maxLength.max}`
                }
             },
             rfcErrorMessage(){
-               if(!this.$v.rfc.required){
+               if(!this.$v.doc.rfc.required){
                    return "El RFC del Proveedor es requerido"
                }
-               if(!this.$v.rfc.validRFC ){
+               if(!this.$v.doc.rfc.validRFC ){
                    return "El RFC introducido no tiene un formato válido"
                }
 
