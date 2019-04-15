@@ -13,52 +13,51 @@
         </AdminMainSection>
 
         <NewEntryModal v-bind:storeModule="storeModule" :validator="$v"
-                       :data="{name:this.name, lastName:this.lastName, email:this.email, active:this.active,
-                        administratorType:this.administratorType, permissions:this.permissions, notes:this.notes}">
+                       :data="doc">
 
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" :placeholder="$t('users.new.name.placeholder')"
-                               v-model="$v.name.$model">
+                               v-model="$v.doc.name.$model">
                         <label class="fg-label">{{$t('users.new.name.label')}}
                             <small></small>
                             <br>
                             <strong>{{$t('users.new.name.sub-label')}}}</strong>
                         </label>
                     </div>
-                    <span v-if="$v.name.$invalid && $v.name.$dirty" class="c-error">{{$t(requiredErrorMessage,{field:'Nombre'})}}</span>
+                    <span v-if="$v.doc.name.$invalid && $v.doc.name.$dirty" class="c-error">{{$t(requiredErrorMessage,{field:'Nombre'})}}</span>
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" :placeholder="$t('users.new.last-name.placeholder')"
-                               v-model="$v.lastName.$model">
+                               v-model="$v.doc.lastName.$model">
                         <label class="fg-label">{{$t('users.new.last-name.label')}}
                             <small></small>
                             <br>
                             <strong>{{$t('users.new.last-name.sub-label')}}</strong>
                         </label>
                     </div>
-                    <span v-if="$v.lastName.$invalid && $v.lastName.$dirty" class="c-error">{{$t(requiredErrorMessage,{field:'Apellido/s'})}}</span>
+                    <span v-if="$v.doc.lastName.$invalid && $v.doc.lastName.$dirty" class="c-error">{{$t(requiredErrorMessage,{field:'Apellido/s'})}}</span>
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" :placeholder="$t('users.new.email.placeholder')"
-                               v-model="$v.email.$model" @input="delayTouch($v.email)">
+                               v-model="$v.doc.email.$model" @input="delayTouch($v.doc.email)">
                         <label class="fg-label"> {{$t('users.new.email.label')}}
                             <small></small>
                             <br>
                             <strong>{{$t('users.new.email.sub-label')}}</strong>
                         </label>
                     </div>
-                    <span v-if="$v.email.$invalid && $v.email.$dirty" class="c-error">{{$t(emailErrorMessage, {field:'Correo Electronico'})}}</span>
+                    <span v-if="$v.doc.email.$invalid && $v.doc.email.$dirty" class="c-error">{{$t(emailErrorMessage, {field:'Correo Electronico'})}}</span>
                 </div>
 
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <div class="checkbox">
-                            <input type="checkbox" value="" v-model="$v.active.$model">
+                            <input type="checkbox" value="" v-model="$v.doc.active.$model">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.enabled.checkbox-label')}}</span>
                             <p class="fg-label "> {{$t('users.new.enabled.label')}}
@@ -67,7 +66,7 @@
                             </p>
                         </div>
                     </div>
-                    <span v-if="$v.active.$invalid && $v.active.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Habilitado'})}}</span>
+                    <span v-if="$v.doc.active.$invalid && $v.doc.active.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Habilitado'})}}</span>
                 </div>
 
 
@@ -75,7 +74,7 @@
                     <div class="fg-line basic-input">
                         <div class="input-radio-check col-md-12 p-0">
                             <div class=" check-container col-md-6">
-                                <input class="m-t-20" type="radio" value="GENERAL" v-model="$v.administratorType.$model" name="administratorType" id="one">
+                                <input class="m-t-20" type="radio" value="GENERAL" v-model="$v.doc.administratorType.$model" name="administratorType" id="one">
                                 <span class="role m-t-20"
                                       for="general">{{$t('users.new.admin-type.radio-button.general')}}</span>
                                 <p class="fg-label"> {{$t('users.new.admin-type.label')}}
@@ -85,54 +84,54 @@
                                 </p>
                             </div>
                             <div class=" check-container col-md-6">
-                                <input value="CUSTOM" type="radio" v-model="$v.administratorType.$model" name="role" id="two">
+                                <input value="CUSTOM" type="radio" v-model="$v.doc.administratorType.$model" name="role" id="two">
                                 <span for="custom">{{$t('users.new.admin-type.radio-button.custom')}}</span>
                             </div>
 
-                            <span v-if="$v.administratorType.$invalid && $v.administratorType.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Tipo de administrador'})}}</span>
+                            <span v-if="$v.doc.administratorType.$invalid && $v.doc.administratorType.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Tipo de administrador'})}}</span>
                         </div>
                     </div>
 
-                    <div v-if="administratorType == 'CUSTOM'">
+                    <div v-if="doc.administratorType == 'CUSTOM'">
                         <div class="checkbox m-b-20">
-                            <input type="checkbox" value="USERS" v-model="$v.permissions.$model">
+                            <input type="checkbox" value="USERS" v-model="$v.doc.permissions.$model">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.admin-type.radio-button.custom.users')}}</span>
                         </div>
                         <div class="checkbox m-b-20">
-                            <input type="checkbox" value="SUPPLIERS" v-model="$v.permissions.$model">
+                            <input type="checkbox" value="SUPPLIERS" v-model="$v.doc.permissions.$model">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.admin-type.radio-button.custom.suppliers')}}</span>
                         </div>
                         <div class="checkbox m-b-20">
-                            <input type="checkbox" value="ADMINISTRATIVE_UNITS" v-model="$v.permissions.$model">
+                            <input type="checkbox" value="ADMINISTRATIVE_UNITS" v-model="$v.doc.permissions.$model">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.admin-type.radio-button.custom.administrative-units')}}</span>
                         </div>
                         <div class="checkbox m-b-20">
-                            <input type="checkbox" value="CONTRACTS" v-model="$v.permissions.$model">
+                            <input type="checkbox" value="CONTRACTS" v-model="$v.doc.permissions.$model">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.admin-type.radio-button.custom.contracts')}}</span>
                         </div>
                         <div class="checkbox m-b-20">
-                            <input type="checkbox" value="CALCULATIONS" v-model="$v.permissions.$model">
+                            <input type="checkbox" value="CALCULATIONS" v-model="$v.doc.permissions.$model">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.admin-type.radio-button.custom.calculations')}}</span>
                         </div>
                         <div class="checkbox m-b-20">
-                            <input type="checkbox" value="SETTINGS" v-model="$v.permissions.$model">
+                            <input type="checkbox" value="SETTINGS" v-model="$v.doc.permissions.$model">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.admin-type.radio-button.custom.settings')}}</span>
                         </div>
 
-                        <span v-if="$v.permissions.$invalid && $v.permissions.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Perfil'})}}</span>
+                        <span v-if="$v.doc.permissions.$invalid && $v.doc.permissions.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Perfil'})}}</span>
                     </div>
                     </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
                                :placeholder="$t('users.new.notes.placeholder')"
-                               v-model="notes">
+                               v-model="doc.notes">
                         <label class="fg-label">{{$t('users.new.notes.label')}}
                             <small></small>
                             <br>
@@ -204,40 +203,43 @@
                     confirmationQuestion:"general.modal-editable-table.confirmation-question",
                     action:"saveDocsUpdated"
                 },
-                name:"",
-                lastName:"",
-                email:"",
-                active:true,
-                permissions : [],
-                administratorType : "CUSTOM",
-                notes:""
+                doc:{
+                    name:"",
+                    lastName:"",
+                    email:"",
+                    active:true,
+                    permissions : [],
+                    administratorType : "CUSTOM",
+                    notes:""
+                }
             }
         },
-        validations:{
-            name:{ required },
-            lastName:{ required },
-            email:{
-                required,
-                email
-            },
-            active:{ required },
-            administratorType: { required },
-            permissions: {
-                required: requiredIf(function(){
-                  return this.administratorType == 'CUSTOM';
-                })
+        validations: {
+            doc: {
+                name: {required},
+                lastName: {required},
+                email: {
+                    required,
+                    email
+                },
+                active: {required},
+                administratorType: {required},
+                permissions: {
+                    required: requiredIf(function () {
+                        return this.administratorType == 'CUSTOM';
+                    })
+                }
             }
-
         },
         computed:{
             requiredErrorMessage(){
                 return 'users.validation.required'
             },
             emailErrorMessage(){
-                if(!this.$v.email.required){
+                if(!this.$v.doc.email.required){
                     return 'users.validation.required'
                 }
-                if(!this.$v.email.email){
+                if(!this.$v.doc.email.email){
                     return 'users.validation.email'
                 }
             },
@@ -265,13 +267,13 @@
                 tShow("El usuario fue eliminado correctamente", 'info');
             });
             bus.$on(storeModule+DOC_CREATED, ()=>{
-                this.name = "";
-                this.lastName = "";
-                this.email = "";
-                this.active = true;
-                this.permissions  =  [];
-                this.administratorType  =  "CUSTOM";
-                this.notes = "";
+                this.doc.name = "";
+                this.doc.lastName = "";
+                this.doc.email = "";
+                this.doc.active = true;
+                this.doc.permissions  =  [];
+                this.doc.administratorType  =  "CUSTOM";
+                this.doc.notes = "";
                 this.$v.$reset();
                 tShow("El usuario fue creado correctamente", 'info');
             });

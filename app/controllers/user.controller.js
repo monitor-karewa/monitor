@@ -43,8 +43,8 @@ exports.list = (req, res, next) => {
 
     //query["field"] = value;
 
-    //let qNotDeleted = deletedSchema.qNotDeleted();
-    //query = {...query, ...qNotDeleted};
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    query = {...query, ...qNotDeleted};
 
     User
         .paginate(
