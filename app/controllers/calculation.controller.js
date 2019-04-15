@@ -30,10 +30,10 @@ exports.list = (req, res, next) => {
 
     let query = {};
     
-    //query["field"] = value;
+    // query["field"] = value;
     
-    //let qNotDeleted = deletedSchema.qNotDeleted();
-    //query = {...query, ...qNotDeleted};
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    query = {...query, ...qNotDeleted};
 
     Calculation
         .paginate(

@@ -59,12 +59,13 @@
             </div>
         </NewEntryModal>
 
-        <ModalDanger :title="'Eliminar Proveedor'" :confirm="confirmDeletion">
-            <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
+        <ModalDanger :id="'modal-delete-entry'" :title="'Eliminar Proveedor'" :confirm="confirmDeletion">
+            <p class="text-centered">Esta acción borrará el registro del catálogo permanentemente
                 <br>
                 <strong>¿Estás seguro de eliminarlo?</strong>
             </p>
         </ModalDanger>
+
         <ModalDefault :title="$t(modalProperties.title)" :store-module="storeModule" :action="modalProperties.action">
             <p class="text-centered">{{$t(modalProperties.message,{ docsUpdatedLength: docsUpdatedLength })}}
             <br/>

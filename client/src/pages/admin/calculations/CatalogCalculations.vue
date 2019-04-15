@@ -93,8 +93,13 @@
 
         </NewEntryModal>
 
+        <ModalDanger :id="'modal-delete-entry'"  :title="$tc(docName, 1)" :confirm="confirmDeletion">
+            <p class="text-centered">Esta acción borrará el registro del catálogo permanentemente
+                <br>
+                <strong>¿Estás seguro de eliminarlo?</strong>
+            </p>
+        </ModalDanger>
 
-        <ModalDanger v-bind:confirm="confirmDeletion"/>
     </div>
 </template>
 
