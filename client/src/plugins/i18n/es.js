@@ -171,6 +171,8 @@ export default {
     "general.modal-editable-table.confirmation-question":"¿Estás seguro de guardar los registros modificados?",
     "general.modal-editable-table.cancel-button":"CANCELAR",
     "general.modal-editable-table.ok-button":"GUARDAR",
+    "general.card-uploading.loading":"Cargando...",
+    "general.card-uploading.might-take-a-while":"Esto proceso puede demorar unos minutos…",
 
     "calculations.calculation": "Cálculo| Cálculos",
 
@@ -276,5 +278,18 @@ export default {
     "calculation.new.calculation-type.radio-button.general": "General",
     "calculation.new.calculation-type.radio-button.contract": "Contrato",
     "calculation.validation.required":"El campo {field} del Cálculo es requerido",
+    "resources.validation.classification":"El valor para la Clasificación del Recurso no es válido",
+    
+    //DataLoad
+    "data-load.title-strong": "Carga de <strong>Datos</strong>",
+    "data-load.title.description": "Puedes cargar una plantilla de excel o realizar una carga manual para cada dato.",
+    "data-load.data-load": "Carga Rápida",
+    "data-load.data-load.recommended-for": "Recomendada para 20 o más registros",
+    "data-load.manual-capture": "Carga Manual",
+    "data-load.manual-capture.recommended-for": "Recomendada para 1 o 20 registros",
+    "data-load.manual-capture.go-to-catalog": "Ir al catálogo",
+    "data-load.upload-file": "Cargar archivo",
+    "data-load.download-template": "Descargar la plantilla",
+    "data-load.download-template.link": "Descarga la plantilla aquí"
 
 }
