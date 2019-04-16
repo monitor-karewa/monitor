@@ -15,37 +15,37 @@
             />
         </AdminMainSection>
 
-        <ModalEntry :storeModule="storeModule" :validator="$v" :entry="entrySelectedEditable">
+        <ModalEntry :storeModule="storeModule" :validator="$v" :entry="entry">
 
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.name.placeholder')" v-model="entrySelectedEditable.name" />
+                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.name.placeholder')" v-model="entry.name" />
                         <label class="fg-label">{{$t('suppliers.new.name.label')}}
                             <small></small>
                             <br/>
                             <strong>{{$t('suppliers.new.name.sub-label')}}</strong>
                         </label>
                     </div>
-                    <span v-if="$v.entrySelectedEditable.name.$invalid && $v.entrySelectedEditable.name.$dirty" class="c-error">{{nameErrorMessage}}</span>
+                    <span v-if="$v.entry.name.$invalid && $v.entry.name.$dirty" class="c-error">{{nameErrorMessage}}</span>
                 </div>
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.rfc.placeholder')" v-model.trim="entrySelectedEditable.rfc" @input="delayTouch($v.entrySelectedEditable.rfc);">
+                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.rfc.placeholder')" v-model.trim="entry.rfc" @input="delayTouch($v.entry.rfc);">
                         <label class="fg-label">{{$t('suppliers.new.rfc.label')}}
                             <small></small>
                             <br/>
                             <strong>{{$t('suppliers.new.rfc.sub-label')}}</strong>
                         </label>
                     </div>
-                    <span v-if="$v.entrySelectedEditable.rfc.$invalid && $v.entrySelectedEditable.rfc.$dirty" class="c-error">{{rfcErrorMessage}}</span>
+                    <span v-if="$v.entry.rfc.$invalid && $v.entry.rfc.$dirty" class="c-error">{{rfcErrorMessage}}</span>
                 </div>
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
-                               :placeholder="$t('suppliers.new.notes.placeholder')" v-model="entrySelectedEditable.notes">
+                               :placeholder="$t('suppliers.new.notes.placeholder')" v-model="entry.notes">
                         <label class="fg-label">{{$t('suppliers.new.notes.label')}}
                             <small></small>
                             <br>
@@ -114,7 +114,7 @@
                     confirmationQuestion:"general.modal-editable-table.confirmation-question",
                     action:"saveDocsUpdated"
                 },
-                entrySelectedEditable : {
+                entry : {
                     name : "",
                     rfc : "",
                     notes: ""
@@ -122,7 +122,7 @@
             }
         },
         validations:{
-            entrySelectedEditable : {
+            entry : {
                 name: {
                     required,
                     minLength: minLength(2),
@@ -142,18 +142,18 @@
         },
         computed: {
             nameErrorMessage(){
-               if(!this.$v.entrySelectedEditable.name.required){
+               if(!this.$v.entry.name.required){
                    return "El nombre del Proveedor es requerido"
                }
-               if(!this.$v.entrySelectedEditable.name.minLength || !this.$v.entrySelectedEditable.name.maxLength){
-                   return `Debe estar entre ${this.$v.entrySelectedEditable.name.$params.minLength.min} y ${this.$v.entrySelectedEditable.name.$params.maxLength.max}`
+               if(!this.$v.entry.name.minLength || !this.$v.entry.name.maxLength){
+                   return `Debe estar entre ${this.$v.entry.name.$params.minLength.min} y ${this.$v.entry.name.$params.maxLength.max}`
                }
             },
             rfcErrorMessage(){
-               if(!this.$v.entrySelectedEditable.rfc.required){
+               if(!this.$v.entry.rfc.required){
                    return "El RFC del Proveedor es requerido"
                }
-               if(!this.$v.entrySelectedEditable.rfc.validRFC ){
+               if(!this.$v.entry.rfc.validRFC ){
                    return "El RFC introducido no tiene un formato válido"
                }
             },
@@ -189,12 +189,12 @@
                 tShow("El proveedor fue creado correctamente", 'info');
             });
             bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
-                this.entrySelectedEditable.name = entry.name;
-                this.$v.entrySelectedEditable.name.$touch();
-                this.entrySelectedEditable.rfc = entry.rfc;
-                this.$v.entrySelectedEditable.rfc.$touch();
-                this.entrySelectedEditable.notes = entry.notes;
-                this.$v.entrySelectedEditable.notes.$touch();
+                this.entry.name = entry.name;
+                this.$v.entry.name.$touch();
+                this.entry.rfc = entry.rfc;
+                this.$v.entry.rfc.$touch();
+                this.entry.notes = entry.notes;
+                this.$v.entry.notes.$touch();
             });
         },
         mounted(){
