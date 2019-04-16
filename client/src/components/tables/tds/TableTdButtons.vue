@@ -2,8 +2,8 @@
     <td class="row-buttons-hover">
         <div class="table-buttons-hover">
             <button data-tippy="Ver" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-eye"></i></button>
-            <button data-tippy="Editar" data-tippy-arrow="true"  data-tippy-placement="bottom" ><i class="zmdi zmdi-edit"></i></button>
-            <button data-tippy="Eliminar" data-tippy-arrow="true"  data-tippy-placement="bottom" data-toggle="modal" data-target="#modal-delete-entry" @click="deleteElement"><i class="zmdi zmdi-delete"></i></button>
+            <button data-tippy="Editar" data-tippy-arrow="true"  data-tippy-placement="bottom" data-toggle="modal" data-target="#ModalEntry" @click="editEvent"><i class="zmdi zmdi-edit"></i></button>
+            <button data-tippy="Eliminar" data-tippy-arrow="true"  data-tippy-placement="bottom" data-toggle="modal" data-target="#modal-delete-entry" @click="deleteEntry"><i class="zmdi zmdi-delete"></i></button>
         </div>
     </td>
 </template>
@@ -13,6 +13,7 @@
 
 <script>
     import { bus } from '@/main';
+    import { DOC_START_EDIT } from "@/store/events";
     export default {
         data () {
             return {
@@ -20,20 +21,16 @@
         },
         components: {},
         methods:{
-            deleteElement(){
-                this.$store.commit(`${this.$props.storeModule}/SET_DOC_ID`, this.$props.id);
+            deleteEntry(){
+                this.$store.commit(`${this.$props.storeModule}/SET_DOC_ID`, this.$props.entry.id);
+            },
+            editEvent(){
+                bus.$emit(this.$props.storeModule+DOC_START_EDIT, this.$props.entry);
             }
         },
         props:{
-            'id' : String,
-            //     type: String,
-            //     required: true,
-            //     default: "none",
-            //     validator: function(value){
-            //         return true
-            //     }
-            // },
-            'storeModule' : String
+            'storeModule' : String,
+            'entry' : Object
         }
     }
 </script>

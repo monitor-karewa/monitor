@@ -25,7 +25,8 @@ export default {
             computed: {
                 ...mapState({
                     docs: state => state[storeModule].docs,
-                    selectedDocId: state => state[storeModule].selectedDocId
+                    selectedDocId: state => state[storeModule].selectedDocId,
+                    entrySelected : state => Vue.util.extend({}, state[storeModule].entrySelected)
                 })
             },
             methods: {

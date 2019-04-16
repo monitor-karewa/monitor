@@ -9,7 +9,7 @@
                 <label>Administra, elimina o agrega  {{plural}}.</label>
             </div>
             <div class="side-right">
-                <a class="btn-raised xs button-accent" data-toggle="modal" data-target="#newEntry" @click="refreshSelectPicker();"><i class="zmdi zmdi-plus"></i> Nuevo(a) {{singular}}</a>
+                <a class="btn-raised xs button-accent" data-toggle="modal" data-target="#ModalEntry" @click="resetModal();"><i class="zmdi zmdi-plus"></i> Nuevo(a) {{singular}}</a>
             </div>
         </div>
     </div>
@@ -27,18 +27,21 @@
         components: {
         },
         methods : {
-            refreshSelectPicker(){
+            resetModal(){
                 //HACK find a better way to execute this
                 window.$('.selectpicker').selectpicker();
                 window.$('.selectpicker').selectpicker('refresh');
 
                 $('.selectpicker').selectpicker();
                 $('.selectpicker').selectpicker('refresh');
+                this.$store.dispatch(`${this.storeModule}/clearSelectedEntry`);
             }
         },
         props : {
             singular : String,
             plural : String,
+            storeModule: String
         }
+
     }
 </script>

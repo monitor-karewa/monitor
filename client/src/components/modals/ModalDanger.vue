@@ -17,7 +17,6 @@
             </div>
         </div>
     </div>
-    <!-- END MAIN ADMIN SECTION -->
 </template>
 
 <style>
