@@ -27,19 +27,8 @@
             editEvent(){
                 bus.$emit(this.$props.storeModule+DOC_START_EDIT, this.$props.entry);
             }
-            // editEntry(entrySelectedEditable, entry){
-            //     this.$store.commit(`${this.$props.storeModule}/SELECT_ENTRY`, this.$props.entry);
-            //     entrySelectedEditable = Vue.util.extend({}, entry);
-            // }
         },
         props:{
-            //     type: String,
-            //     required: true,
-            //     default: "none",
-            //     validator: function(value){
-            //         return true
-            //     }
-            // },
             'storeModule' : String,
             'entry' : Object
         }

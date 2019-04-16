@@ -15,48 +15,46 @@
             />
         </AdminMainSection>
 
-        <ModalEntry
-                :storeModule="storeModule"
-                :validator="$v"
-                :entry="entrySelected">
-                    <div>
-                        <div class="form-group fg-float subtitle">
-                            <div class="fg-line basic-input">
-                                <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.name.placeholder')" v-model="entrySelectedEditable.name" />
-                                <label class="fg-label">{{$t('suppliers.new.name.label')}}
-                                    <small></small>
-                                    <br/>
-                                    <strong>{{$t('suppliers.new.name.sub-label')}}</strong>
-                                </label>
-                            </div>
-                            <span v-if="$v.entrySelectedEditable.name.$invalid && $v.entrySelectedEditable.name.$dirty" class="c-error">{{nameErrorMessage}}</span>
-                        </div>
+        <ModalEntry :storeModule="storeModule" :validator="$v" :entry="entrySelectedEditable">
 
-                        <div class="form-group fg-float subtitle">
-                            <div class="fg-line basic-input">
-                                <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.rfc.placeholder')" v-model.trim="entrySelectedEditable.rfc" @input="delayTouch($v.entrySelectedEditable.rfc);setRFC($event.target.value)">
-                                <label class="fg-label">{{$t('suppliers.new.rfc.label')}}
-                                    <small></small>
-                                    <br/>
-                                    <strong>{{$t('suppliers.new.rfc.sub-label')}}</strong>
-                                </label>
-                            </div>
-                            <span v-if="$v.entrySelectedEditable.rfc.$invalid && $v.entrySelectedEditable.rfc.$dirty" class="c-error">{{rfcErrorMessage}}</span>
-                        </div>
-
-                        <div class="form-group fg-float subtitle">
-                            <div class="fg-line basic-input">
-                                <input type="text" class="form-control fg-input"
-                                       :placeholder="$t('suppliers.new.notes.placeholder')" v-model="entrySelectedEditable.notes" @input="setNotes($event.target.value)">
-                                <label class="fg-label">{{$t('suppliers.new.notes.label')}}
-                                    <small></small>
-                                    <br>
-                                    <strong>{{$t('suppliers.new.notes.sub-label')}}</strong>
-                                </label>
-                            </div>
-                        </div>
-
+            <div>
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.name.placeholder')" v-model="entrySelectedEditable.name" />
+                        <label class="fg-label">{{$t('suppliers.new.name.label')}}
+                            <small></small>
+                            <br/>
+                            <strong>{{$t('suppliers.new.name.sub-label')}}</strong>
+                        </label>
+                    </div>
+                    <span v-if="$v.entrySelectedEditable.name.$invalid && $v.entrySelectedEditable.name.$dirty" class="c-error">{{nameErrorMessage}}</span>
                 </div>
+
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.rfc.placeholder')" v-model.trim="entrySelectedEditable.rfc" @input="delayTouch($v.entrySelectedEditable.rfc);">
+                        <label class="fg-label">{{$t('suppliers.new.rfc.label')}}
+                            <small></small>
+                            <br/>
+                            <strong>{{$t('suppliers.new.rfc.sub-label')}}</strong>
+                        </label>
+                    </div>
+                    <span v-if="$v.entrySelectedEditable.rfc.$invalid && $v.entrySelectedEditable.rfc.$dirty" class="c-error">{{rfcErrorMessage}}</span>
+                </div>
+
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input"
+                               :placeholder="$t('suppliers.new.notes.placeholder')" v-model="entrySelectedEditable.notes">
+                        <label class="fg-label">{{$t('suppliers.new.notes.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('suppliers.new.notes.sub-label')}}</strong>
+                        </label>
+                    </div>
+                </div>
+
+            </div>
         </ModalEntry>
 
         <ModalDanger :title="'Eliminar Proveedor'" :confirm="confirmDeletion">
@@ -93,7 +91,6 @@
     import { required, minLength, maxLength } from 'vuelidate/lib/validators';
     const touchMap = new WeakMap();
     import { mapGetters } from 'vuex';
-    import Vue from 'vue';
 
     let baseCatalog = catalog.configure({
         storeModule: storeModule,
@@ -139,7 +136,8 @@
                         }
                         return (/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/).test(value);
                     }
-                }
+                },
+                notes:{}
             }
         },
         computed: {
@@ -180,18 +178,6 @@
             clearEntry(){
                 this.$store.dispatch(`${storeModule}/clearSelectedEntry`);
                 this.$v.$reset();
-            },
-            setName(value){
-                this.$v.entrySelectedEditable.name = value;
-                this.$v.entrySelectedEditable.name.$touch();
-            },
-            setRFC(value){
-                this.$v.entrySelectedEditable.rfc = value;
-                this.$v.entrySelectedEditable.rfc.$touch();
-            },
-            setNotes(value){
-                this.$v.entrySelectedEditable.notes = value;
-                this.$v.entrySelectedEditable.notes.$touch();
             }
         },
         created(){
@@ -202,18 +188,19 @@
                 this.clearEntry();
                 tShow("El proveedor fue creado correctamente", 'info');
             });
-
+            bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
+                this.entrySelectedEditable.name = entry.name;
+                this.$v.entrySelectedEditable.name.$touch();
+                this.entrySelectedEditable.rfc = entry.rfc;
+                this.$v.entrySelectedEditable.rfc.$touch();
+                this.entrySelectedEditable.notes = entry.notes;
+                this.$v.entrySelectedEditable.notes.$touch();
+            });
         },
         mounted(){
             window.$(document).ready(function () {
                 window.$('.selectpicker').selectpicker();
                 $('.selectpicker').selectpicker();
-            });
-            bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
-                this.entrySelectedEditable.name = entry.name;
-                this.$v.entrySelectedEditable.name.$touch();
-                // this.entrySelectedEditable. = entry.name;
-                // this.entrySelectedEditable.name = entry.name;
             });
         }
     }
