@@ -97,7 +97,6 @@ exports.saveUpdatedDocs = (req, res, next) => {
                Supplier
                   .findOne({_id: doc._id})
                   .exec((err, supplier) => {
-                      console.log("err", err);
                       supplier.name = doc.name;
                       supplier.rfc = doc.rfc;
                       supplier.notes = doc.notes;

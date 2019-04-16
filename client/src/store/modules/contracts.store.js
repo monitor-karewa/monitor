@@ -5,15 +5,28 @@ import Vue from "vue";
 const contractsCatalog = catalog(contractsApi, 'contracts');
 
 const state = {
+    suppliers : []
 };
 
 const getters = {
 };
 
 const actions = {
+    /**
+     * Retrieves suppliers from DB to make them available at selection
+     */
+    getSuppliers({commit}){
+        contractsApi.retrieveSuppliers({},
+            (result)=>{
+                commit('SET_SUPPLIERS', result.data.data.docs);
+            })
+    }
 };
 
 const mutations = {
+    SET_SUPPLIERS(state, suppliers){
+        state.suppliers = suppliers;
+    },
 };
 
 

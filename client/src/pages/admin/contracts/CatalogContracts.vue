@@ -15,17 +15,15 @@
         <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="{supplier:this.supplier, administrativeUnit:this.administrativeUnit,
         amount:this.amount, procedureType:this.procedureType}" :validator="$v">
             <div>
-                <div class="form-group fg-float subtitle">
-                    <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Selecciona el proveedor"
-                               v-model="$v.supplier.$model">
-                        <label class="fg-label">Proveedor
-                            <small></small>
-                            <br>
-                            <strong>Selecciona el proveedor/</strong>
-                        </label>
+                 <div class="form-group fg-float basic-select">
+                    <div class="fg-line">
+                        <select v-model="doc.supplier" class="form-control select selectpicker" data-live-search="true"
+                                data-live-search-placeholder="Selecciona el proveedor"
+                                title="Select placeholder">
+                                <option v-for="supplier in suppliers" :value="supplier._id"> {{supplier.name}}</option>
+                        </select>
+                        <label class="fg-label">Proveedor</label>
                     </div>
-                    <span v-if="$v.supplier.$invalid && $v.supplier.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Proveedor'})}}</span>
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
@@ -95,7 +93,7 @@
     import  ModalDanger from "@/components/modals/ModalDanger";
     import  ModalDefault from "@/components/modals/ModalDefault";
     import { required } from "vuelidate/lib/validators"
-    import { mapGetters } from 'vuex';
+    import { mapGetters, mapState } from 'vuex';
 
     const storeModule = 'contracts';
     const docName = 'contracts.contract';
@@ -145,7 +143,10 @@
             requiredErrorMessage(){
                 return 'contracts.validation.required'
             },
-            ...mapGetters(storeModule,['docsUpdatedLength'])
+            ...mapGetters(storeModule,['docsUpdatedLength']),
+            ...mapState({
+                suppliers: state => state[storeModule].suppliers,
+            })
         },
         components: {
             ModalDanger,
@@ -172,8 +173,10 @@
         mounted(){
             window.$(document).ready(function () {
                 window.$('.selectpicker').selectpicker();
+                window.$('.selectpicker').selectpicker('refresh');
 
                 $('.selectpicker').selectpicker();
+                $('.selectpicker').selectpicker('refresh');
 
                 $('#toast-danger').click(function () {
                     tShow("Hubo un error en el proceso. Intenta de nuevo", 'danger');
@@ -188,6 +191,10 @@
                     tShow("Se ha completado el proceso correctamente sadasda adadasd sda dasdasdas dasda dasdasd ad adaspidjdj asoijdas", 'success');
                 });
             });
+        }
+        ,
+        beforeMount () {
+            this.$store.dispatch(`${storeModule}/getSuppliers`);
         }
     }
 </script>

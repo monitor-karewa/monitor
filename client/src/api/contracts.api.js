@@ -24,5 +24,10 @@ export default {
         return axios.post(`${base.baseUrl}/api/${namespace}/save-updated-docs`,   params )
             .then(onSuccess)
             .catch(onError);
+    },
+    retrieveSuppliers: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/api/${namespace}/retrieve/suppliers`,   params )
+            .then(onSuccess)
+            .catch(onError);
     }
 }
