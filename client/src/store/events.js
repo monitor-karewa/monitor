@@ -1,0 +1,4 @@
+export const DELETE_SUCCESS = 'DELETE_SUCCESS';
+export const DOC_CREATED = 'DOC_CREATED';
+export const DOC_START_EDIT = 'DOC_START_EDIT';
+

@@ -34,11 +34,18 @@ const cors = require('cors');
 const indexRoutes = require('./app/routes/index.routes');
 const securityRoutes = require('./app/routes/security.routes');
 const adminRoutes = require('./app/routes/admin.routes');
-const proveedorRoutes = require('./app/routes/proveedor.routes');
 const recursoRoutes = require('./app/routes/recurso.routes');
 const unidadesRoutes = require('./app/routes/unidadAdministrativa.routes');
 const calculoRoutes = require('./app/routes/calculo.routes');
 // const usersRoutes = require('./app/routes/users.routes');
+
+const supplierRoutes = require('./app/routes/supplier.routes');
+const resourceRoutes = require('./app/routes/resource.routes');
+const administrativeUnitRoutes = require('./app/routes/administrativeUnit.routes');
+const calculationRoutes = require('./app/routes/calculation.routes');
+const contractRoutes = require('./app/routes/contract.routes');
+const userRoutes = require('./app/routes/users.routes');
+const organizationRoutes = require('./app/routes/organization.routes');
 
 // Controllers
 const securityController = require('./app/controllers/security.controller');
@@ -109,8 +116,27 @@ app.use(compression());
 app.use(helmet());
 
 if (!isProd) {
+    //CORS always on for dev mode
     app.use(cors({
-        origin: 'http://localhost:9000'
+        origin: function (origin, callback) {
+            //Allow cors for localhost
+            // if (origin.indexOf('localhost') !== -1) {
+                callback(null, true)
+            // } else {
+            //     callback(new Error('Not allowed by CORS'))
+            // }
+        }
+    }));
+} else {
+    app.use(cors({
+        origin: function (origin, callback) {
+            //Allow cors for hosts that include 'karewa'
+            if (origin.indexOf('karewa') !== -1) {
+                callback(null, true)
+            } else {
+                callback(new Error('Not allowed by CORS'))
+            }
+        }
     }));
 }
 
@@ -139,11 +165,27 @@ app.use((req, res, next) => {
 // app.use('/api/users', usersRoutes);
 app.use('/security', securityRoutes);
 app.use('/admin', securityController.checkLogin, adminRoutes);
-app.use('/api/proveedores', proveedorRoutes);
 app.use('/api/recursos', recursoRoutes);
 app.use('/api/unidades', unidadesRoutes);
 app.use('/api/calculos', calculoRoutes);
+app.use('/api/suppliers', supplierRoutes);
+app.use('/api/resources', resourceRoutes);
+app.use('/api/users', userRoutes);
+app.use('/api/organizations', organizationRoutes);
 
+//TODO Leave just one
+app.use('/api/administrative-units', administrativeUnitRoutes);
+app.use('/api/administrativeUnits', administrativeUnitRoutes);
+//---
+
+app.use('/api/calculations', calculationRoutes);
+app.use('/api/contracts', contractRoutes);
+
+
+app.get('*', function(req, res){
+    console.log("no se encontro la pagina");
+    res.status(404).send('NOT FOUND!');
+});
 
 // ==============
 // Error handling

@@ -5,11 +5,11 @@
         <!--</p>-->
         <div class="floating-title-form">
             <div class="side-left">
-                <h1>Catálogo de <strong>Proveedores</strong></h1>
-                <label>Administra, elimina o agrega nuevos Proveedores a la Organización.</label>
+                <h1>Catálogo de <strong>{{plural}}</strong></h1>
+                <label>Administra, elimina o agrega  {{plural}}.</label>
             </div>
             <div class="side-right">
-                <a href="" class="btn-raised xs button-accent"><i class="zmdi zmdi-plus"></i> Nuevo Proveedor</a>
+                <a class="btn-raised xs button-accent" data-toggle="modal" data-target="#ModalEntry" @click="clearEntry()"><i class="zmdi zmdi-plus"></i> Nuevo(a) {{singular}}</a>
             </div>
         </div>
     </div>
@@ -25,6 +25,16 @@
             }
         },
         components: {
+        },
+        props : {
+            singular : String,
+            plural : String,
+            storeModule: String
+        },
+        methods: {
+            clearEntry() {
+                this.$store.dispatch(`${this.storeModule}/clearSelectedEntry`);
+            }
         }
     }
 </script>

@@ -1,6 +1,9 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcrypt-nodejs');
 
+const mongoosePagination = require('mongoose-paginate');
+const pluginCreatedUpdated = require('mongoose-createdat-updatedat');
+
 const regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
 /**
@@ -29,14 +32,37 @@ let userSchema = mongoose.Schema({
     },
     password: {
         type: String, 
-        required: true
+        required: false
+    },
+    notes: {
+        type: String,
+        required: false
     },
     active: {
         type: Boolean,
         required: true,
         default: true
-    }
+    },
+    administratorType: {
+        type: String,
+        required: true,
+        enum: ['GENERAL', 'CUSTOM']
+    },
+    permissions: {
+        type: Array,
+        required: true
+        // enum: ['GENERAL', 'CONTRATO']
+    },
+    deleted: require("./schemas/deleted.schema").Deleted
 });
+
+
+//Agregar createdAt, modifiedAt automáticamente
+userSchema.plugin(pluginCreatedUpdated);
+
+//Paginación
+userSchema.plugin(mongoosePagination);
+
 
 /**
  * Class for the User model.
