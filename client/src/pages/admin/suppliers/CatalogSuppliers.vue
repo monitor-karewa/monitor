@@ -57,8 +57,8 @@
             </div>
         </ModalEntry>
 
-        <ModalDanger :title="'Eliminar Proveedor'" :confirm="confirmDeletion">
-            <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
+        <ModalDanger :id="'modal-delete-entry'" :title="'Eliminar Proveedor'" :confirm="confirmDeletion">
+            <p class="text-centered">Esta acción borrará el registro del catálogo permanentemente
                 <br>
                 <strong>¿Estás seguro de eliminarlo?</strong>
             </p>

@@ -261,6 +261,20 @@ export default {
     "resources.url": "URL",
     "resources.validation.required":"El campo {field} del Recurso es requerido",
     "resources.validation.url":"La Url no tiene el formato correcto",
-    "resources.validation.classification":"El valor para la Clasificación del Recurso no es válido"
+    "resources.validation.classification":"El valor para la Clasificación del Recurso no es válido",
+
+
+    //Calculations
+
+    "calculations.name" : "Nombre",
+    "calculations.type" : "Tipo",
+    "calculations.description" : "Descripción",
+    "calculations.enabled" : "Habilitado",
+    "calculations.notes" : "Notas",
+    "calculation.new.calculation-type.label": "Tipo de cálculo",
+    "calculation.new.calculation-type.sub-label": "Selecciona el tipo de Cálculo",
+    "calculation.new.calculation-type.radio-button.general": "General",
+    "calculation.new.calculation-type.radio-button.contract": "Contrato",
+    "calculation.validation.required":"El campo {field} del Cálculo es requerido",
 
 }
