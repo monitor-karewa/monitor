@@ -126,7 +126,7 @@
 
                         <span v-if="$v.doc.permissions.$invalid && $v.doc.permissions.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Perfil'})}}</span>
                     </div>
-                    </div>
+                </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
@@ -146,7 +146,7 @@
 
 
 
-        <ModalDanger :title="'Eliminar Proveedor'" :confirm="confirmDeletion">
+        <ModalDanger :id="'modal-delete-entry'" :title="'Eliminar Proveedor'" :confirm="confirmDeletion">
             <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
                 <br>
                 <strong>¿Estás seguro de eliminarlo?</strong>

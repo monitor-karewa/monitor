@@ -41,7 +41,7 @@
             </div>
         </NewEntryModal>
 
-        <ModalDanger :title="'Eliminar Unidad Administrativa'" :confirm="confirmDeletion">
+        <ModalDanger :id="'modal-delete-entry'"  :title="'Eliminar Unidad Administrativa'" :confirm="confirmDeletion">
             <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
                 <br>
                 <strong>¿Estás seguro de eliminarlo?</strong>

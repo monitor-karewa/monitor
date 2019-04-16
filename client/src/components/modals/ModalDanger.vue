@@ -1,6 +1,6 @@
 <template>
     <!-- MODAL ALERT DANGER -->
-    <div class="modal modal-alert fade" id="modalAlertDanger" tabindex="-1" role="dialog"
+    <div class="modal modal-alert fade" :id="id" tabindex="-1" role="dialog"
          aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
@@ -17,7 +17,6 @@
             </div>
         </div>
     </div>
-    <!-- END MAIN ADMIN SECTION -->
 </template>
 
 <style>
@@ -31,7 +30,8 @@
         components: {},
         props:{
             title: String,
-            confirm: Function
+            confirm: Function,
+            id: String
         }
     }
 </script>

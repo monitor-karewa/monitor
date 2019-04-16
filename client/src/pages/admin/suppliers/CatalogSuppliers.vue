@@ -4,7 +4,8 @@
             <BackButton />
             <CatalogHeader
                     :singular="'Proveedor'"
-                    :plural="'Proveedores'" />
+                    :plural="'Proveedores'"
+                    :store-module="storeModule"/>
             <EditableTable
                     :docs="docs"
                     :tableColumns="tableColumns"
@@ -14,40 +15,37 @@
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" v-bind:validator="$v" v-bind:data="{name:this.name,rfc:this.rfc,notes:this.notes}">
+        <ModalEntry :storeModule="storeModule" :validator="$v" :entry="entry">
+
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-
-                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.name.placeholder')" v-model="$v.name.$model"/>
+                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.name.placeholder')" v-model="entry.name" />
                         <label class="fg-label">{{$t('suppliers.new.name.label')}}
-
                             <small></small>
                             <br/>
                             <strong>{{$t('suppliers.new.name.sub-label')}}</strong>
                         </label>
                     </div>
-                    <!--<span style="float: right">{{ doc && doc.name ? doc.name.length : 0}}/100</span>-->
-                    <span v-if="$v.name.$invalid && $v.name.$dirty" class="c-error">{{nameErrorMessage}}</span>
+                    <span v-if="$v.entry.name.$invalid && $v.entry.name.$dirty" class="c-error">{{nameErrorMessage}}</span>
                 </div>
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.rfc.placeholder')" v-model.trim="$v.rfc.$model"
-                        @input="delayTouch($v.rfc)">
+                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.rfc.placeholder')" v-model.trim="entry.rfc" @input="delayTouch($v.entry.rfc);">
                         <label class="fg-label">{{$t('suppliers.new.rfc.label')}}
                             <small></small>
                             <br/>
                             <strong>{{$t('suppliers.new.rfc.sub-label')}}</strong>
                         </label>
                     </div>
-                    <span v-if="$v.rfc.$invalid && $v.rfc.$dirty" class="c-error">{{rfcErrorMessage}}</span>
+                    <span v-if="$v.entry.rfc.$invalid && $v.entry.rfc.$dirty" class="c-error">{{rfcErrorMessage}}</span>
                 </div>
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
-                               :placeholder="$t('suppliers.new.notes.placeholder')" v-model="notes">
+                               :placeholder="$t('suppliers.new.notes.placeholder')" v-model="entry.notes">
                         <label class="fg-label">{{$t('suppliers.new.notes.label')}}
                             <small></small>
                             <br>
@@ -57,14 +55,15 @@
                 </div>
 
             </div>
-        </NewEntryModal>
+        </ModalEntry>
 
-        <ModalDanger :title="'Eliminar Proveedor'" :confirm="confirmDeletion">
-            <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
+        <ModalDanger :id="'modal-delete-entry'" :title="'Eliminar Proveedor'" :confirm="confirmDeletion">
+            <p class="text-centered">Esta acción borrará el registro del catálogo permanentemente
                 <br>
                 <strong>¿Estás seguro de eliminarlo?</strong>
             </p>
         </ModalDanger>
+
         <ModalDefault :title="$t(modalProperties.title)" :store-module="storeModule" :action="modalProperties.action">
             <p class="text-centered">{{$t(modalProperties.message,{ docsUpdatedLength: docsUpdatedLength })}}
             <br/>
@@ -83,9 +82,10 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
-    import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
+    import { DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
     import  ModalDefault from "@/components/modals/ModalDefault";
+    import  ModalEntry from "@/components/catalogs/ModalEntry";
     const storeModule = 'suppliers';
     const docName = 'suppliers.supplier';
     import { required, minLength, maxLength } from 'vuelidate/lib/validators';
@@ -108,59 +108,61 @@
                     { label: 'suppliers.notes' ,field:'notes', visible : true},
                     { label: 'general.created-at', field:'created_at', type:'Date', visible : true}
                 ],
-                name:"",
-                rfc:"",
-                notes:"",
                 modalProperties:{
                     title:"general.modal-editable-table.title",
                     message:"general.modal-editable-table.message",
                     confirmationQuestion:"general.modal-editable-table.confirmation-question",
                     action:"saveDocsUpdated"
+                },
+                entry : {
+                    name : "",
+                    rfc : "",
+                    notes: ""
                 }
-
-
             }
         },
         validations:{
-            name:{
-                required,
-                minLength:minLength(2),
-                maxLength:maxLength(100)
-            },
-            rfc:{
-                required,
-                validRFC: (value) => {
-                    if(value == null || value == undefined || value == ""){
-                        return true
+            entry : {
+                name: {
+                    required,
+                    minLength: minLength(2),
+                    maxLength: maxLength(100)
+                },
+                rfc: {
+                    required,
+                    validRFC: (value) => {
+                        if (value == null || value == undefined || value == "") {
+                            return true
+                        }
+                        return (/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/).test(value);
                     }
-                    return (/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/).test(value);
-                }
+                },
+                notes:{}
             }
         },
         computed: {
             nameErrorMessage(){
-               if(!this.$v.name.required){
+               if(!this.$v.entry.name.required){
                    return "El nombre del Proveedor es requerido"
                }
-               if(!this.$v.name.minLength || !this.$v.name.maxLength){
-                   return `Debe estar entre ${this.$v.name.$params.minLength.min} y ${this.$v.name.$params.maxLength.max}`
+               if(!this.$v.entry.name.minLength || !this.$v.entry.name.maxLength){
+                   return `Debe estar entre ${this.$v.entry.name.$params.minLength.min} y ${this.$v.entry.name.$params.maxLength.max}`
                }
             },
             rfcErrorMessage(){
-               if(!this.$v.rfc.required){
+               if(!this.$v.entry.rfc.required){
                    return "El RFC del Proveedor es requerido"
                }
-               if(!this.$v.rfc.validRFC ){
+               if(!this.$v.entry.rfc.validRFC ){
                    return "El RFC introducido no tiene un formato válido"
                }
-
-
             },
             ...mapGetters(storeModule,['docsUpdatedLength'])
         },
         components: {
             ModalDanger,
-            ModalDefault
+            ModalDefault,
+            ModalEntry
         },
         methods:{
             confirmDeletion(){
@@ -172,6 +174,10 @@
                     clearTimeout(touchMap.get($v))
                 }
                 touchMap.set($v, setTimeout($v.$touch, 1000))
+            },
+            clearEntry(){
+                this.$store.dispatch(`${storeModule}/clearSelectedEntry`);
+                this.$v.$reset();
             }
         },
         created(){
@@ -179,31 +185,22 @@
                 tShow("El proveedor fue eliminado correctamente", 'info');
             });
             bus.$on(storeModule+DOC_CREATED, ()=>{
-                this.name = "";
-                this.rfc = "";
-                this.notes = "";
-                this.$v.$reset();
+                this.clearEntry();
                 tShow("El proveedor fue creado correctamente", 'info');
+            });
+            bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
+                this.entry.name = entry.name;
+                this.$v.entry.name.$touch();
+                this.entry.rfc = entry.rfc;
+                this.$v.entry.rfc.$touch();
+                this.entry.notes = entry.notes;
+                this.$v.entry.notes.$touch();
             });
         },
         mounted(){
             window.$(document).ready(function () {
                 window.$('.selectpicker').selectpicker();
-
                 $('.selectpicker').selectpicker();
-
-                $('#toast-danger').click(function () {
-                    tShow("Hubo un error en el proceso. Intenta de nuevo", 'danger');
-                });
-                $('#toast-info').click(function () {
-                    tShow("Se informa del proceso por eso es un info", 'info');
-                });
-                $('#toast-warning').click(function () {
-                    tShow("Complete todos los campos requeridos", 'alert');
-                });
-                $('#toast-success').click(function () {
-                    tShow("Se ha completado el proceso correctamente sadasda adadasd sda dasdasdas dasda dasdasd ad adaspidjdj asoijdas", 'success');
-                });
             });
         }
     }

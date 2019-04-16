@@ -16,11 +16,11 @@ export default function (api, storeName) {
         },
         docName: '',
         selectedDocId: '',
-        isEditingTable : false
+        isEditingTable : false,
+        entrySelected : {}
     };
 
     const getters = {
-
         getUrlQuery(state){
 
             let query = '?';
@@ -46,6 +46,9 @@ export default function (api, storeName) {
     };
 
     const actions = {
+        selectEntry ({commit,getters}, entry ) {
+            commit('SELECT_ENTRY', entry);
+        },
         list ({commit,getters}, searchString ) {
             if(searchString && searchString.length){
                 commit('SET_SEARCH',searchString);
@@ -159,7 +162,7 @@ export default function (api, storeName) {
             let field = data.field;
             let value = data.value;
             let docId = data.doc._id;
-            let docUpdated = Vue.util.extend({}, state.docs.find(doc => { return doc._id === docId })) ;
+            let docUpdated = Vue.util.extend({}, state.docs.find(doc => { return doc._id === docId }));
             let updatedDocIndexIfExists = state.docsUpdated.findIndex(doc => { return doc._id === docUpdated._id });
 
             let payload = {
@@ -174,6 +177,9 @@ export default function (api, storeName) {
         setEditTable({commit},payload){
             commit('CLEAR_DOCS_UPDATED');
             commit('SET_EDIT_TABLE',payload);
+        },
+        clearSelectedEntry({commit}){
+            commit('CLEAR_SELECTED_ENTRY');
         }
     };
 
@@ -196,6 +202,9 @@ export default function (api, storeName) {
         SET_DOC_ID(state, id){
             state.selectedDocId = id;
         },
+        SELECT_ENTRY(state, entry){
+            state.entrySelected = entry;
+        },
         UPDATE_DOC_FROM_EDITABLE_TABLE(state,{ field, value, docUpdated, updatedDocIndexIfExists}){
             if(updatedDocIndexIfExists !== -1 ){
                 state.docsUpdated[updatedDocIndexIfExists][field] = value;
@@ -209,6 +218,10 @@ export default function (api, storeName) {
         },
         CLEAR_DOCS_UPDATED(state){
             state.docsUpdated = [];
+        },
+        CLEAR_SELECTED_ENTRY(state){
+            Vue.$log.info(`Calling CLEAR_SELECTED_ENTRY `);
+            state.entrySelected = {};
         }
     };
 
