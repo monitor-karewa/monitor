@@ -5,6 +5,9 @@ import Vue from "vue";
 const suppliersCatalog = catalog(suppliersApi, 'suppliers');
 
 const state = {
+    name : "",
+    rfc : "",
+    notes: ""
 };
 
 const getters = {

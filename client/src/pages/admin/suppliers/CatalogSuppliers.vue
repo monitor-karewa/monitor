@@ -4,7 +4,8 @@
             <BackButton />
             <CatalogHeader
                     :singular="'Proveedor'"
-                    :plural="'Proveedores'" />
+                    :plural="'Proveedores'"
+                    :store-module="storeModule"/>
             <EditableTable
                     :docs="docs"
                     :tableColumns="tableColumns"
@@ -17,36 +18,36 @@
         <ModalEntry
                 :storeModule="storeModule"
                 :validator="$v"
-                :entry="entry">
+                :entry="entrySelected">
                     <div>
                         <div class="form-group fg-float subtitle">
                             <div class="fg-line basic-input">
-                                <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.name.placeholder')" v-model="entrySelected.name"/>
+                                <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.name.placeholder')" v-model="entrySelectedEditable.name" />
                                 <label class="fg-label">{{$t('suppliers.new.name.label')}}
                                     <small></small>
                                     <br/>
                                     <strong>{{$t('suppliers.new.name.sub-label')}}</strong>
                                 </label>
                             </div>
-                            <span v-if="$v.entry.name.$invalid && $v.entry.name.$dirty" class="c-error">{{nameErrorMessage}}</span>
+                            <span v-if="$v.entrySelectedEditable.name.$invalid && $v.entrySelectedEditable.name.$dirty" class="c-error">{{nameErrorMessage}}</span>
                         </div>
 
                         <div class="form-group fg-float subtitle">
                             <div class="fg-line basic-input">
-                                <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.rfc.placeholder')" v-model.trim="entrySelected.rfc" @input="delayTouch($v.entry.rfc)">
+                                <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.rfc.placeholder')" v-model.trim="entrySelectedEditable.rfc" @input="delayTouch($v.entrySelectedEditable.rfc);setRFC($event.target.value)">
                                 <label class="fg-label">{{$t('suppliers.new.rfc.label')}}
                                     <small></small>
                                     <br/>
                                     <strong>{{$t('suppliers.new.rfc.sub-label')}}</strong>
                                 </label>
                             </div>
-                            <!--<span v-if="entrySelected.rfc.$invalid && entrySelected.rfc.$dirty" class="c-error">{{rfcErrorMessage}}</span>-->
+                            <span v-if="$v.entrySelectedEditable.rfc.$invalid && $v.entrySelectedEditable.rfc.$dirty" class="c-error">{{rfcErrorMessage}}</span>
                         </div>
 
                         <div class="form-group fg-float subtitle">
                             <div class="fg-line basic-input">
                                 <input type="text" class="form-control fg-input"
-                                       :placeholder="$t('suppliers.new.notes.placeholder')" v-model="entrySelected.notes">
+                                       :placeholder="$t('suppliers.new.notes.placeholder')" v-model="entrySelectedEditable.notes" @input="setNotes($event.target.value)">
                                 <label class="fg-label">{{$t('suppliers.new.notes.label')}}
                                     <small></small>
                                     <br>
@@ -83,7 +84,7 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
-    import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
+    import { DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
     import  ModalDefault from "@/components/modals/ModalDefault";
     import  ModalEntry from "@/components/catalogs/ModalEntry";
@@ -92,6 +93,7 @@
     import { required, minLength, maxLength } from 'vuelidate/lib/validators';
     const touchMap = new WeakMap();
     import { mapGetters } from 'vuex';
+    import Vue from 'vue';
 
     let baseCatalog = catalog.configure({
         storeModule: storeModule,
@@ -109,21 +111,21 @@
                     { label: 'suppliers.notes' ,field:'notes', visible : true},
                     { label: 'general.created-at', field:'created_at', type:'Date', visible : true}
                 ],
-                entry:{
-                    name:"",
-                    rfc:"",
-                    notes:""
-                },
                 modalProperties:{
                     title:"general.modal-editable-table.title",
                     message:"general.modal-editable-table.message",
                     confirmationQuestion:"general.modal-editable-table.confirmation-question",
                     action:"saveDocsUpdated"
+                },
+                entrySelectedEditable : {
+                    name : "",
+                    rfc : "",
+                    notes: ""
                 }
             }
         },
         validations:{
-            entry: {
+            entrySelectedEditable : {
                 name: {
                     required,
                     minLength: minLength(2),
@@ -142,18 +144,18 @@
         },
         computed: {
             nameErrorMessage(){
-               if(!this.$v.entry.name.required){
+               if(!this.$v.entrySelectedEditable.name.required){
                    return "El nombre del Proveedor es requerido"
                }
-               if(!this.$v.entry.name.minLength || !this.$v.entry.name.maxLength){
-                   return `Debe estar entre ${this.$v.entry.name.$params.minLength.min} y ${this.$v.entry.name.$params.maxLength.max}`
+               if(!this.$v.entrySelectedEditable.name.minLength || !this.$v.entrySelectedEditable.name.maxLength){
+                   return `Debe estar entre ${this.$v.entrySelectedEditable.name.$params.minLength.min} y ${this.$v.entrySelectedEditable.name.$params.maxLength.max}`
                }
             },
             rfcErrorMessage(){
-               if(!this.$v.entry.rfc.required){
+               if(!this.$v.entrySelectedEditable.rfc.required){
                    return "El RFC del Proveedor es requerido"
                }
-               if(!this.$v.entry.rfc.validRFC ){
+               if(!this.$v.entrySelectedEditable.rfc.validRFC ){
                    return "El RFC introducido no tiene un formato válido"
                }
             },
@@ -176,12 +178,20 @@
                 touchMap.set($v, setTimeout($v.$touch, 1000))
             },
             clearEntry(){
-                var entry = {
-                    name:"",
-                    rfc:"",
-                    notes:""
-                };
-                return entry;
+                this.$store.dispatch(`${storeModule}/clearSelectedEntry`);
+                this.$v.$reset();
+            },
+            setName(value){
+                this.$v.entrySelectedEditable.name = value;
+                this.$v.entrySelectedEditable.name.$touch();
+            },
+            setRFC(value){
+                this.$v.entrySelectedEditable.rfc = value;
+                this.$v.entrySelectedEditable.rfc.$touch();
+            },
+            setNotes(value){
+                this.$v.entrySelectedEditable.notes = value;
+                this.$v.entrySelectedEditable.notes.$touch();
             }
         },
         created(){
@@ -189,15 +199,21 @@
                 tShow("El proveedor fue eliminado correctamente", 'info');
             });
             bus.$on(storeModule+DOC_CREATED, ()=>{
-                this.entry = this.clearEntry();
-                this.$v.$reset();
+                this.clearEntry();
                 tShow("El proveedor fue creado correctamente", 'info');
             });
+
         },
         mounted(){
             window.$(document).ready(function () {
                 window.$('.selectpicker').selectpicker();
                 $('.selectpicker').selectpicker();
+            });
+            bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
+                this.entrySelectedEditable.name = entry.name;
+                this.$v.entrySelectedEditable.name.$touch();
+                // this.entrySelectedEditable. = entry.name;
+                // this.entrySelectedEditable.name = entry.name;
             });
         }
     }

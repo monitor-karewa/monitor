@@ -21,9 +21,6 @@ export default function (api, storeName) {
     };
 
     const getters = {
-        getEntrySelected(state) {
-            return state.entrySelected
-        },
         getUrlQuery(state){
 
             let query = '?';
@@ -165,7 +162,7 @@ export default function (api, storeName) {
             let field = data.field;
             let value = data.value;
             let docId = data.doc._id;
-            let docUpdated = Vue.util.extend({}, state.docs.find(doc => { return doc._id === docId })) ;
+            let docUpdated = Vue.util.extend({}, state.docs.find(doc => { return doc._id === docId }));
             let updatedDocIndexIfExists = state.docsUpdated.findIndex(doc => { return doc._id === docUpdated._id });
 
             let payload = {
@@ -180,6 +177,9 @@ export default function (api, storeName) {
         setEditTable({commit},payload){
             commit('CLEAR_DOCS_UPDATED');
             commit('SET_EDIT_TABLE',payload);
+        },
+        clearSelectedEntry({commit}){
+            commit('CLEAR_SELECTED_ENTRY');
         }
     };
 
@@ -218,6 +218,10 @@ export default function (api, storeName) {
         },
         CLEAR_DOCS_UPDATED(state){
             state.docsUpdated = [];
+        },
+        CLEAR_SELECTED_ENTRY(state){
+            Vue.$log.info(`Calling CLEAR_SELECTED_ENTRY `);
+            state.entrySelected = {};
         }
     };
 

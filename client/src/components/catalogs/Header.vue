@@ -9,7 +9,7 @@
                 <label>Administra, elimina o agrega  {{plural}}.</label>
             </div>
             <div class="side-right">
-                <a class="btn-raised xs button-accent" data-toggle="modal" data-target="#ModalEntry"><i class="zmdi zmdi-plus"></i> Nuevo(a) {{singular}}</a>
+                <a class="btn-raised xs button-accent" data-toggle="modal" data-target="#ModalEntry" @click="clearEntry()"><i class="zmdi zmdi-plus"></i> Nuevo(a) {{singular}}</a>
             </div>
         </div>
     </div>
@@ -29,6 +29,12 @@
         props : {
             singular : String,
             plural : String,
+            storeModule: String
+        },
+        methods: {
+            clearEntry() {
+                this.$store.dispatch(`${this.storeModule}/clearSelectedEntry`);
+            }
         }
     }
 </script>
