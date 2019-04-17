@@ -2,7 +2,7 @@
     <div>
         <AdminMainSection>
             <BackButton />
-            <CatalogHeader :singular="'Organización'" :plural="'Organizaciones'" />
+            <CatalogHeader :singular="'Organización'" :plural="'Organizaciones'" :store-module="storeModule"/>
             <EditableTable
                     :docs="docs"
                     :tableColumns="tableColumns"
@@ -12,23 +12,22 @@
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="{name:this.name}" v-bind:validator="$v">
+        <ModalEntry :storeModule="storeModule" :validator="$v" :entry="entry">
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre"
-                               v-model="$v.name.$model">
+                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre" v-model="entry.name">
                         <label class="fg-label">Nombre de la organización
                             <small></small>
                             <br>
                             <strong>Introduce el nombre de la organización</strong>
                         </label>
                     </div>
-                    <span v-if="$v.name.$invalid && $v.name.$dirty" class="c-error">{{$t(nameErrorMessage, {field:'Nombre', maxLength:$v.name.$params.maxLength.max})}}</span>
+                    <span v-if="$v.entry.name.$invalid && $v.entry.name.$dirty" class="c-error">{{$t(nameErrorMessage, {field:'Nombre', maxLength:$v.entry.name.$params.maxLength.max})}}</span>
                 </div>
 
             </div>
-        </NewEntryModal>
+        </ModalEntry>
 
         <ModalDanger :title="'Eliminar Organización'" :confirm="confirmDeletion">
             <p class="text-centered">Esta acción borrará a la organización del catálogo permanentemente
@@ -36,6 +35,7 @@
                 <strong>¿Estás seguro de eliminarlo?</strong>
             </p>
         </ModalDanger>
+
         <ModalDefault :title="$t(modalProperties.title)" :store-module="storeModule" :action="modalProperties.action">
             <p class="text-centered">{{$t(modalProperties.message,{ docsUpdatedLength: docsUpdatedLength })}}
                 <br/>
@@ -53,7 +53,7 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
-    import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
+    import { DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT, DOC_UPDATED } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
     import  ModalDefault from "@/components/modals/ModalDefault";
     const storeModule = 'organizations';
@@ -75,7 +75,9 @@
                     {label:"organizations.name", field:'name', visible : true },
                     {label:"general.created-at", field:'created_at', visible : true , type:'Date'}
                 ],
-                name:"",
+                entry:{
+                    name:""
+                },
                 modalProperties:{
                     title:"general.modal-editable-table.title",
                     message:"general.modal-editable-table.message",
@@ -105,40 +107,29 @@
             },
         },
         created(){
-            bus.$on(storeModule+DELETE_SUCCESS, ()=>{
+            bus.$on(storeModule+DELETE_SUCCESS, () => {
                 tShow("La organización fue eliminada correctamente", 'info');
             });
-            bus.$on(storeModule+DOC_CREATED, ()=>{
+            bus.$on(storeModule+DOC_CREATED, () => {
                 this.name = "";
                 this.$v.$reset();
-                tShow("Elemento Creado!", 'info');
+                tShow("La organización fue creada correctamente", 'info');
+            });
+            bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
+                this.entry.name = entry.name;
+                this.$v.entry.name.$touch();
+            });
+            bus.$on(storeModule+DOC_UPDATED, ()=>{
+                tShow("Los cambios en la organización fueron guardados", 'info');
             });
         },
         validations:{
-            name:{
-                required,
-                maxLength:maxLength(100)
+            entry: {
+                name: {
+                    required,
+                    maxLength: maxLength(100)
+                }
             }
-        },
-        mounted(){
-            window.$(document).ready(function () {
-                window.$('.selectpicker').selectpicker();
-
-                $('.selectpicker').selectpicker();
-
-                $('#toast-danger').click(function () {
-                    tShow("Hubo un error en el proceso. Intenta de nuevo", 'danger');
-                });
-                $('#toast-info').click(function () {
-                    tShow("Se informa del proceso por eso es un info", 'info');
-                });
-                $('#toast-warning').click(function () {
-                    tShow("Complete todos los campos requeridos", 'alert');
-                });
-                $('#toast-success').click(function () {
-                    tShow("Se ha completado el proceso correctamente sadasda adadasd sda dasdasdas dasda dasdasd ad adaspidjdj asoijdas", 'success');
-                });
-            });
         }
     }
 </script>

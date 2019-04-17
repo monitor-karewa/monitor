@@ -82,10 +82,9 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
-    import { DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
     import  ModalDefault from "@/components/modals/ModalDefault";
-    import  ModalEntry from "@/components/catalogs/ModalEntry";
+    import { DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT, DOC_UPDATED, DOC_START_CREATE } from "@/store/events";
     const storeModule = 'suppliers';
     const docName = 'suppliers.supplier';
     import { required, minLength, maxLength } from 'vuelidate/lib/validators';
@@ -115,6 +114,7 @@
                     action:"saveDocsUpdated"
                 },
                 entry : {
+                    _id: "",
                     name : "",
                     rfc : "",
                     notes: ""
@@ -136,8 +136,7 @@
                         }
                         return (/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/).test(value);
                     }
-                },
-                notes:{}
+                }
             }
         },
         computed: {
@@ -161,8 +160,7 @@
         },
         components: {
             ModalDanger,
-            ModalDefault,
-            ModalEntry
+            ModalDefault
         },
         methods:{
             confirmDeletion(){
@@ -176,7 +174,7 @@
                 touchMap.set($v, setTimeout($v.$touch, 1000))
             },
             clearEntry(){
-                this.$store.dispatch(`${storeModule}/clearSelectedEntry`);
+                this.entry = {};
                 this.$v.$reset();
             }
         },
@@ -188,13 +186,20 @@
                 this.clearEntry();
                 tShow("El proveedor fue creado correctamente", 'info');
             });
+            bus.$on(storeModule+DOC_START_CREATE, ()=>{
+                this.clearEntry();
+            });
             bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
+                this.clearEntry();
+                this.entry._id = entry._id;
                 this.entry.name = entry.name;
                 this.$v.entry.name.$touch();
                 this.entry.rfc = entry.rfc;
                 this.$v.entry.rfc.$touch();
                 this.entry.notes = entry.notes;
-                this.$v.entry.notes.$touch();
+            });
+            bus.$on(storeModule+DOC_UPDATED, ()=>{
+                this.clearEntry();
             });
         },
         mounted(){
