@@ -12,7 +12,7 @@
             />
         </AdminMainSection>
 
-        <EntryModal :storeModule="storeModule" :validator="$v" :entry="entry">
+        <ModalEntry :storeModule="storeModule" :validator="$v" :entry="entry">
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
@@ -27,7 +27,7 @@
                 </div>
 
             </div>
-        </EntryModal>
+        </ModalEntry>
 
         <ModalDanger :id="'modal-delete-entry'" :title="'Eliminar Organización'" :confirm="confirmDeletion">
             <p class="text-centered">Esta acción borrará a la organización del catálogo permanentemente
@@ -53,7 +53,7 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
-    import * as event from "@/store/events";
+    import * as events from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
     import  ModalDefault from "@/components/modals/ModalDefault";
     const storeModule = 'organizations';
@@ -111,26 +111,25 @@
             }
         },
         created(){
-            bus.$on(storeModule+event.DELETE_SUCCESS, () => {
+            bus.$on(storeModule+events.DELETE_SUCCESS, () => {
                 tShow("La organización fue eliminada correctamente", 'info');
             });
-            bus.$on(storeModule+event.DOC_CREATED, () => {
-                this.name = "";
-                this.$v.$reset();
+            bus.$on(storeModule+events.DOC_CREATED, () => {
+                this.clearEntry();
                 tShow("La organización fue creada correctamente", 'info');
             });
-            bus.$on(storeModule+event.DOC_START_EDIT, (entry)=>{
+            bus.$on(storeModule+events.DOC_START_EDIT, (entry)=>{
                 this.entry.name = entry.name;
                 this.$v.entry.name.$touch();
             });
-            bus.$on(storeModule+event.DOC_UPDATED, ()=>{
+            bus.$on(storeModule+events.DOC_UPDATED, ()=>{
                 tShow("Los cambios en la organización fueron guardados", 'info');
                 this.clearEntry();
             });
-            bus.$on(storeModule+event.DOC_START_CREATE, ()=>{
+            bus.$on(storeModule+events.DOC_START_CREATE, ()=>{
                 this.clearEntry();
             });
-            bus.$on(storeModule+event.DOC_START_EDIT, (entry)=>{
+            bus.$on(storeModule+events.DOC_START_EDIT, (entry)=>{
                 this.clearEntry();
                 this.entry._id = entry._id;
                 this.entry.name = entry.name;
