@@ -4,6 +4,7 @@ import CatalogHeader from '@/components/catalogs/Header';
 import EditableTable from '@/components/tables/EditableTable';
 import AdminMainSection from '@/components/admin/AdminMainSection';
 import  ModalEntry from "@/components/catalogs/ModalEntry";
+import  NewEntryModal from "@/components/catalogs/NewEntryModal";
 
 
 import { mapState } from 'vuex'
@@ -21,7 +22,8 @@ export default {
                 CatalogHeader,
                 EditableTable,
                 AdminMainSection,
-                ModalEntry
+                ModalEntry,
+                NewEntryModal
             },
             computed: {
                 ...mapState({
