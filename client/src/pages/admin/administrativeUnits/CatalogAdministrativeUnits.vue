@@ -12,34 +12,34 @@
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc" :validator="$v">
+        <ModalEntry :storeModule="storeModule" :validator="$v" :entry="entry">
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" :placeholder="$t('administrativeUnits.new.name.placeholder')"
-                               v-model="$v.doc.name.$model">
+                               v-model="entry.name">
                         <label class="fg-label">{{$t("administrativeUnits.new.name.label")}}
                             <small></small>
                             <br>
                             <strong>{{$t("administrativeUnits.new.name.sub-label")}}</strong>
                         </label>
                     </div>
-                    <span v-if="$v.doc.name.$invalid && $v.doc.name.$dirty" class="c-error">{{$t(requiredErrorMessage,{field:'Nombre'})}}</span>
+                    <span v-if="$v.entry.name.$invalid && $v.entry.name.$dirty" class="c-error">{{$t(requiredErrorMessage,{field:'Nombre'})}}</span>
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" :placeholder="$t('administrativeUnits.new.notes.placeholder')"
-                               v-model="$v.doc.notes.$model">
+                               v-model="entry.notes">
                         <label class="fg-label">{{$t("administrativeUnits.new.notes.label")}}
                             <small></small>
                             <br>
                             <strong>{{$t("administrativeUnits.new.notes.sub-label")}}</strong>
                         </label>
                     </div>
-                    <span v-if="$v.doc.notes.$invalid && $v.doc.notes.$dirty" class="c-error">{{$t(requiredErrorMessage,{field:'Notas'})}}</span>
+                    <span v-if="$v.entry.notes.$invalid && $v.entry.notes.$dirty" class="c-error">{{$t(requiredErrorMessage,{field:'Notas'})}}</span>
                 </div>
             </div>
-        </NewEntryModal>
+        </ModalEntry>
 
         <ModalDanger :id="'modal-delete-entry'"  :title="'Eliminar Unidad Administrativa'" :confirm="confirmDeletion">
             <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
@@ -47,6 +47,7 @@
                 <strong>¿Estás seguro de eliminarlo?</strong>
             </p>
         </ModalDanger>
+
         <ModalDefault :title="$t(modalProperties.title)" :store-module="storeModule" :action="modalProperties.action">
             <p class="text-centered">{{$t(modalProperties.message,{ docsUpdatedLength: docsUpdatedLength })}}
                 <br/>
@@ -65,7 +66,7 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
-    import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
+    import * as events from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
     import  ModalDefault from "@/components/modals/ModalDefault";
     import { required } from 'vuelidate/lib/validators';
@@ -91,7 +92,7 @@
                     {label : "administrativeUnits.notes", visible : true , field:'notes'},
                     {label : "general.created-at", visible : true , field:'created_at', type:'Date'}
                 ],
-                doc:{
+                entry:{
                     name:"",
                     notes:"",
                 },
@@ -104,7 +105,7 @@
             }
         },
         validations: {
-            doc: {
+            entry: {
                 name: {required},
                 notes: {required}
             }
@@ -123,16 +124,39 @@
             confirmDeletion(){
                 this.deleteElementSelected();
             },
+            clearEntry(){
+                this.entry = {};
+                this.$v.$reset();
+            }
         },
         created(){
-            bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
+            bus.$on(storeModule+events.DELETE_SUCCESS, (data)=>{
                 tShow("La unidad administrativa fue eliminada correctamente", 'info');
             });
-            bus.$on(storeModule+DOC_CREATED, ()=>{
-                this.doc.name = "";
-                this.doc.notes = "";
+            bus.$on(storeModule+events.DOC_CREATED, ()=>{
+                this.entry.name = "";
+                this.entry.notes = "";
                 this.$v.$reset();
                 tShow("La unidad administrativa fue creada correctamente", 'info');
+            });
+            bus.$on(storeModule+events.DOC_START_EDIT, (entry)=>{
+                this.entry.name = entry.name;
+                this.$v.entry.name.$touch();
+            });
+            bus.$on(storeModule+events.DOC_UPDATED, ()=>{
+                tShow("Los cambios en la unidad administrativa fueron guardados", 'info');
+                this.clearEntry();
+            });
+            bus.$on(storeModule+events.DOC_START_CREATE, ()=>{
+                this.clearEntry();
+            });
+            bus.$on(storeModule+events.DOC_START_EDIT, (entry)=>{
+                this.clearEntry();
+                this.entry._id = entry._id;
+                this.entry.name = entry.name;
+                this.$v.entry.name.$touch();
+                this.entry.notes = entry.notes;
+                this.$v.entry.notes.$touch();
             });
         },
         mounted(){

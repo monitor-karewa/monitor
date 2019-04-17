@@ -9,7 +9,7 @@
                 <label>Administra, elimina o agrega  {{plural}}.</label>
             </div>
             <div class="side-right">
-                <a class="btn-raised xs button-accent" data-toggle="modal" data-target="#ModalEntry" @click="clearEntry()"><i class="zmdi zmdi-plus"></i> Nuevo(a) {{singular}}</a>
+                <a class="btn-raised xs button-accent" data-toggle="modal" data-target="#ModalEntry" @click="triggerCreate()"><i class="zmdi zmdi-plus"></i> Nuevo(a) {{singular}}</a>
             </div>
         </div>
     </div>
@@ -19,6 +19,8 @@
 </style>
 
 <script>
+    import { DOC_START_CREATE } from "@/store/events";
+    import { bus } from '@/main';
     export default {
         data () {
             return {
@@ -29,11 +31,11 @@
         props : {
             singular : String,
             plural : String,
-            storeModule: String
+            storeModule: String,
         },
-        methods: {
-            clearEntry() {
-                this.$store.dispatch(`${this.storeModule}/clearSelectedEntry`);
+        methods:{
+            triggerCreate(){
+                bus.$emit(this.$props.storeModule+DOC_START_CREATE, ()=>{});
             }
         }
     }
