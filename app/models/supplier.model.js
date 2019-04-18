@@ -20,8 +20,8 @@ let SupplierSchema = new Schema({
         max: 100
     },
     rfc: {
-        type: String,
-        required: true
+        type: String/*,
+        required: true*/
     },
     notes: {
         type: String
