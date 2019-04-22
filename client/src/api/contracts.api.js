@@ -29,5 +29,11 @@ export default {
         return axios.get(`${base.baseUrl}/api/${namespace}/retrieve/suppliers`,   params )
             .then(onSuccess)
             .catch(onError);
+    },
+    retrieveAdministrativeUnits: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/api/${namespace}/retrieve/adminstrative-units`,   params )
+            .then(onSuccess)
+            .catch(onError);
     }
+
 }

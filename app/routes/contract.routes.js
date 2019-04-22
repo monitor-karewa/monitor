@@ -42,4 +42,10 @@ router.post('/delete', securityController.validatePermission(Contract.permission
  */
 router.get('/retrieve/suppliers', securityController.validatePermission(Contract.permission, 'edit'), contractController.retrieveSuppliers);
 
+/**
+ * GET /delete
+ * Obtains the suppliers available for this contract
+ */
+router.get('/retrieve/retrieve-administrativeUnits', securityController.validatePermission(Contract.permission, 'edit'), contractController.retrieveAdministrativeUnits);
+
 module.exports = router;

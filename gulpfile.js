@@ -46,7 +46,8 @@ const cssVendors = [
     './public/stylesheets/vendors/bootstrap.css',
     './public/stylesheets/vendors/bootstrap-select.min.css',
     './public/stylesheets/vendors/animate.css',
-    './node_modules/tippy.js/dist/tippy.css'
+    './node_modules/tippy.js/dist/tippy.css',
+    './public/stylesheets/lib/bootstrap-datepicker.min.css'
 ];
 
 const jsVendors = [
@@ -54,6 +55,7 @@ const jsVendors = [
     './public/javascripts/lib/bootstrap.min.js',
     './public/javascripts/lib/bootstrap-select.min.js',
     './public/javascripts/lib/gauge.min.js',
+    './public/javascripts/lib/bootstrap-datepicker.standalone.min.css',
     './node_modules/tippy.js/dist/tippy.min.js',
     // './node_modules/popper.js/dist/popper.min.js',
     './public/javascripts/main.js'
@@ -63,6 +65,7 @@ const jsVendors = [
 // Task: Concat and minify vendors css files.
 // -----------------------------------------------------------------------------
 gulp.task('css-vendors', function() {
+    console.log("gulpfile#CSS VENDORS");
     return gulp.src(cssVendors)
         .pipe(concat('vendors.min.css'))
         .pipe(cleanCss(cleanCssOptions))
@@ -90,6 +93,7 @@ gulp.task('css-sass', function () {
 // Task: Concat and minify vendors js files.
 // -----------------------------------------------------------------------------
 gulp.task('js-vendors', function() {
+    console.log("gulpfile#JAVASRIPTS");
     return gulp.src(jsVendors)
         .pipe(concat('vendors.min.js'))
         .pipe(gulp.dest('./public/javascripts/dist'))

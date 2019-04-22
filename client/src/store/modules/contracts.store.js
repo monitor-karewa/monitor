@@ -5,7 +5,8 @@ import Vue from "vue";
 const contractsCatalog = catalog(contractsApi, 'contracts');
 
 const state = {
-    suppliers : []
+    suppliers : [],
+    administrativeUnits : []
 };
 
 const getters = {
@@ -20,6 +21,15 @@ const actions = {
             (result)=>{
                 commit('SET_SUPPLIERS', result.data.data.docs);
             })
+    },
+    /**
+     * Retrieves suppliers from DB to make them available at selection
+     */
+    getAdministrativeUnits({commit}){
+        contractsApi.retrieveAdministrativeUnits({},
+            (result)=>{
+                commit('SET_ADMINISTRATIVE_UNITS', result.data.data.docs);
+            })
     }
 };
 
@@ -27,6 +37,9 @@ const mutations = {
     SET_SUPPLIERS(state, suppliers){
         state.suppliers = suppliers;
     },
+    SET_ADMINISTRATIVE_UNITS(state, administrativeUnits){
+        state.administrativeUnits = administrativeUnits;
+    }
 };
 
 
