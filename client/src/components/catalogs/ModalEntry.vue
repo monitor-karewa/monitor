@@ -54,8 +54,7 @@
                 }
             })
         },
-        created(){
-        },
+        created(){},
         methods: {
             save: function () {
                 this.validator.$touch();

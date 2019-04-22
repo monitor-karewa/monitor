@@ -25,6 +25,7 @@
                 this.$store.commit(`${this.$props.storeModule}/SET_DOC_ID`, this.$props.entry.id);
             },
             editEvent(){
+                //fix to pass the entry through the state and manage the state & vuelidate
                 bus.$emit(this.$props.storeModule+DOC_START_EDIT, this.$props.entry);
             }
         },

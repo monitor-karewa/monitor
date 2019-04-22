@@ -73,3 +73,7 @@ mongod
 public/stylesheets/css/
 #public/fonts/
 public/img/
+
+# Test results
+# ============================
+client/tests_output

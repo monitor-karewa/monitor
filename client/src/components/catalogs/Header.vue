@@ -19,6 +19,8 @@
 </style>
 
 <script>
+    import { DOC_START_CREATE } from "@/store/events";
+    import { bus } from '@/main';
     export default {
         data () {
             return {
@@ -34,7 +36,7 @@
 
                 $('.selectpicker').selectpicker();
                 $('.selectpicker').selectpicker('refresh');
-                this.$store.dispatch(`${this.storeModule}/clearSelectedEntry`);
+                bus.$emit(this.$props.storeModule+DOC_START_CREATE, ()=>{});
             }
         },
         props : {

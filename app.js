@@ -47,6 +47,8 @@ const contractRoutes = require('./app/routes/contract.routes');
 const userRoutes = require('./app/routes/users.routes');
 const organizationRoutes = require('./app/routes/organization.routes');
 
+const dataLoadRoutes = require('./app/routes/dataLoad.routes');
+
 // Controllers
 const securityController = require('./app/controllers/security.controller');
 
@@ -176,6 +178,8 @@ app.use('/api/organizations', organizationRoutes);
 //TODO Leave just one
 app.use('/api/administrative-units', administrativeUnitRoutes);
 app.use('/api/administrativeUnits', administrativeUnitRoutes);
+
+app.use('/api/data-load', dataLoadRoutes);
 //---
 
 app.use('/api/calculations', calculationRoutes);

@@ -2,8 +2,10 @@ import Vue from 'vue';
 import BackButton from '@/components/general/BackButton';
 import CatalogHeader from '@/components/catalogs/Header';
 import EditableTable from '@/components/tables/EditableTable';
-import NewEntryModal from '@/components/catalogs/NewEntryModal';
 import AdminMainSection from '@/components/admin/AdminMainSection';
+import  ModalEntry from "@/components/catalogs/ModalEntry";
+import  NewEntryModal from "@/components/catalogs/NewEntryModal";
+
 
 import { mapState } from 'vuex'
 
@@ -19,14 +21,14 @@ export default {
                 BackButton,
                 CatalogHeader,
                 EditableTable,
-                NewEntryModal,
-                AdminMainSection
+                AdminMainSection,
+                ModalEntry,
+                NewEntryModal
             },
             computed: {
                 ...mapState({
                     docs: state => state[storeModule].docs,
-                    selectedDocId: state => state[storeModule].selectedDocId,
-                    entrySelected : state => Vue.util.extend({}, state[storeModule].entrySelected)
+                    selectedDocId: state => state[storeModule].selectedDocId, //used to delete
                 })
             },
             methods: {

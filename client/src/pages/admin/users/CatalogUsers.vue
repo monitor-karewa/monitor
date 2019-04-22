@@ -12,7 +12,7 @@
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" :validator="$v"
+        <ModalEntry v-bind:storeModule="storeModule" :validator="$v"
                        :data="doc">
 
             <div>
@@ -142,11 +142,11 @@
             </div>
 
 
-        </NewEntryModal>
+        </ModalEntry>
 
 
 
-        <ModalDanger :id="'modal-delete-entry'" :title="'Eliminar Proveedor'" :confirm="confirmDeletion">
+        <ModalDanger :id="'modal-delete-entry'" :title="'Eliminar Usuario'" :confirm="confirmDeletion">
             <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
                 <br>
                 <strong>¿Estás seguro de eliminarlo?</strong>
