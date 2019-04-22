@@ -77,8 +77,17 @@
             'storeModule' : String,
             'action' : String,
             'validator' : Object
+        },
+        mounted () {
+
+            window.$(document).ready(function () {
+                window.$('.selectpicker').selectpicker();
+                window.$('.selectpicker').selectpicker('refresh');
+
+                $('.selectpicker').selectpicker();
+                $('.selectpicker').selectpicker('refresh');
+            });
         }
+
     }
 </script>
-
-<!--//componente botón submit -->
