@@ -171,6 +171,7 @@ exports.currentInfo = (req, res, next) => {
         .findOne({
             organization: currentOrganizationId,
             confirmed: false,
+            'deleted.isDeleted': {'$ne': true}
         })
         .populate({
             path: 'uploadedBy',
@@ -181,21 +182,41 @@ exports.currentInfo = (req, res, next) => {
             if (err) {
                 logger.error(err, req, 'dataLoad.controller#currentInfo', 'Error trying to fetch current DataLoad info');
             }
-            
-            if (!dataLoad) {
-                return res.json({
-                    error: false,
-                    data: null
+
+
+            DataLoad
+                .findOne({
+                    organization: currentOrganizationId,
+                    confirmed: true,
+                    'deleted.isDeleted': {'$ne': true}
+                })
+                .populate({
+                    path: 'uploadedBy',
+                    model: 'User',
+                    select: 'name lastName'
+                })
+                .sort({
+                    modifiedAt: -1
+                })
+                .exec((err, recentDataLoad) => {
+                    
+                    let data = {};
+
+                    if (dataLoad) {
+                        data.uploadedBy = `${dataLoad.uploadedBy.name} ${dataLoad.uploadedBy.lastName}`;
+                        data.createdAt = dataLoad.createdAt;
+                    }
+                    
+                    if (recentDataLoad) {
+                        data.recentUploadedBy = `${recentDataLoad.uploadedBy.name} ${recentDataLoad.uploadedBy.lastName}`;
+                        data.recentConfirmedAt = recentDataLoad.confirmedAt;
+                    }
+                    return res.json({
+                        error: false,
+                        data: data
+                    });
                 });
-            }
             
-            return res.json({
-                error: false,
-                data: {
-                    uploadedBy: `${dataLoad.uploadedBy.name} ${dataLoad.uploadedBy.lastName}`,
-                    createdAt: dataLoad.createdAt
-                }
-            });
         });
     
 };

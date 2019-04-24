@@ -11,7 +11,6 @@ const getters = {
 
 const actions = {
     LOAD_CURRENT_DATA_LOAD_INFO: ({commit}) => {
-
         dataLoadApi.getCurrentInfo({}, (response) => {
             console.log('response', response);
             if (!response.data.error && response.data && response.data.data) {
@@ -20,7 +19,6 @@ const actions = {
         }, (err) => {
             //Error trying to load current data load info
         });
-
     },
     LOAD_CURRENT_DATA_LOAD: ({commit}) => {
         dataLoadApi.getCurrent({}, (response) => {

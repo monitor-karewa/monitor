@@ -24,6 +24,9 @@ let DataLoadSchema = new Schema({
         type: Boolean,
         default: false
     },
+    confirmedAt: {
+        type: Date
+    },
     filename: {
         
     },

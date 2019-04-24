@@ -8,12 +8,12 @@
                         <h1>¡Hola, Cesar!</h1>
                         <label>LUNES 03 DE DICIEMBRE DEL 2018</label>
                     </div>
-                    <template v-if="currentDataLoadInfo">
+                    <template v-if="currentDataLoadInfo && currentDataLoadInfo.uploadedBy">
                         <div class="side-right">
                             <p>Tienes una carga de <strong>datos pendiente</strong></p>
                             <small>Comenzada por: <strong>{{currentDataLoadInfo.uploadedBy}}</strong></small>
                         </div>
-                        <router-link to="admin/data-load" class="btn-raised button-accent">Continuar</router-link>
+                        <router-link to="admin/data-load/current" class="btn-raised button-accent">Continuar</router-link>
                     </template>
                 </div>
             </div>
@@ -153,9 +153,9 @@
         },
         methods: {},
         created() {
-            this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO')
         },
         mounted() {
+            this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO');
             $(document).ready(function () {
                 $('.selectpicker').selectpicker();
             });

@@ -37,15 +37,16 @@
                         </div>
                         <img class="img-fluid img-card-corner" src="@/assets/images/Cards/corner-document.svg" alt="" />
                     </div>
-                    <div class="card">
+                    <div class="card" v-show="recentUploadedBy && recentUploadedBy.length">
                         <div class="floating-text">
                             <h1>Estatus</h1>
                             <p class="f-style-italic m-b-5">
                                 Última carga de datos subida el día
                                 <br>
-                                <strong>25 de julio del 2018</strong>
+                                <!--<strong>25 de julio del 2018</strong>-->
+                                <strong>{{recentConfirmedAt | moment}}</strong>
                                 <br>
-                                Subida por: <strong>César González</strong>
+                                Subida por: <strong>{{recentUploadedBy}}</strong>
                             </p>
                         </div>
                         <img class="img-fluid img-card-corner" src="@/assets/images/Cards/corner-information-outline.svg" alt="" />
@@ -67,6 +68,8 @@
     import router from '@/router';
     import { bus } from '@/main';
     import i18n from '@/plugins/i18n';
+    import {mapState} from 'vuex';
+    import moment from 'moment';
     
     import AdminMainSection from '@/components/admin/AdminMainSection';
     import BackButton from '@/components/general/BackButton';
@@ -94,7 +97,22 @@
         computed: {
             fileAccept () {
                 return this.allowedMimeTypes.join(',');
-            }
+            },
+            recentConfirmedAt () {
+                if (!this.dataLoadInfo) {
+                    return new Date();
+                }
+                return this.dataLoadInfo.recentConfirmedAt || new Date();
+            },
+            recentUploadedBy () {
+                if (!this.dataLoadInfo) {
+                    return '';
+                }
+                return this.dataLoadInfo.recentUploadedBy || '';
+            },
+            ...mapState({
+                dataLoadInfo: state => state.dataLoad.dataLoadInfo
+            })
         },
         components: {
             AdminMainSection,
@@ -102,6 +120,11 @@
             FloatingTitle,
             CatalogHeader,
             CardUploading
+        },
+        filters: {
+            moment: function (date) {
+                return moment(date).format('MM/DD/YYYY');
+            }
         },
         methods:{
             handleFileUpload() {
@@ -181,6 +204,7 @@
             });
             
             this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD');
+            this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO');
         }
     }
 </script>
