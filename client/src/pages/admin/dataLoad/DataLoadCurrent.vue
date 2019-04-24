@@ -21,35 +21,35 @@
                             <ul>
                                 <li>
                                                 <span class="c-success"><i
-                                                        class="zmdi zmdi-check-circle"></i> 173</span> Nuevos Contratos
+                                                        class="zmdi zmdi-check-circle"></i> {{current.summary.newContractsCount}}</span> Nuevos Contratos
                                 </li>
                                 <li>
-                                    <span class="c-success"><i class="zmdi zmdi-check-circle"></i> 5</span>
+                                    <span class="c-success"><i class="zmdi zmdi-check-circle"></i> {{current.summary.newSuppliersCount}}</span>
                                     Nuevos Proveedores
                                 </li>
                                 <li>
                                                 <span class="c-success"><i
-                                                        class="zmdi zmdi-check-circle"></i> 173</span> Nuevas Unidades
+                                                        class="zmdi zmdi-check-circle"></i> {{current.summary.newAdministrativeUnitsCount}}</span> Nuevas Unidades
                                     Administrativas
                                 </li>
                             </ul>
                             <ul>
                                 <li>
-                                    <span class="c-info"><i class="zmdi zmdi-info-outline"></i> 17</span>
+                                    <span class="c-info"><i class="zmdi zmdi-info-outline"></i> {{current.summary.skippedContractsCount}}</span>
                                     Contratos omitidos (duplicados)
                                 </li>
                                 <li>
-                                    <span class="c-info"><i class="zmdi zmdi-info-outline"></i> 17</span>
+                                    <span class="c-info"><i class="zmdi zmdi-info-outline"></i> {{current.summary.skippedSuppliersCount}}</span>
                                     Proveedores omitidos (duplicados)
                                 </li>
                                 <li>
-                                    <span class="c-info"><i class="zmdi zmdi-info-outline"></i> 17</span>
+                                    <span class="c-info"><i class="zmdi zmdi-info-outline"></i> {{current.summary.skippedAdministrativeUnitsCount}}</span>
                                     Unidades Administrativas omitidas (duplicados)
                                 </li>
                             </ul>
                             <ul>
                                 <li>
-                                    <span class="c-error"><i class="zmdi zmdi-alert-triangle"></i> 13</span>
+                                    <span class="c-error"><i class="zmdi zmdi-alert-triangle"></i> {{current.summary.errorsCount}}</span>
                                     Registros con errores
                                 </li>
                             </ul>
@@ -111,7 +111,11 @@
             FloatingTitle
         },
         computed: {
+            current () {
+                return this.dataLoadInfo.current;
+            },
             ...mapState({
+                dataLoadInfo: state => state.dataLoad.dataLoadInfo,
                 dataLoad: state => state.dataLoad.dataLoad
             })
         },
@@ -130,14 +134,14 @@
         created() {
         },
         mounted(){
-            bus.$on('dataLoad/CURRENT_DATA_LOAD_LOADED', ({dataLoad, canceled})=>{
-                if (!dataLoad || canceled) {
+            bus.$on('dataLoad/CURRENT_DATA_LOAD_INFO_LOADED', ({dataLoadInfo})=>{
+                //Current was canceled, confirmed, or otherwise not available, so we redirect to the non-current view
+                if (!dataLoadInfo.current) {
                     this.canceled();
                 }
             });
             
-            this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD');
-            
+            this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO');
         }
     }
 </script>

@@ -3,7 +3,8 @@ import dataLoadApi from '@/api/dataLoad.api.js';
 import { bus } from '@/main';
 
 const state = {
-    dataLoadInfo: null
+    dataLoadInfo: {},
+    dataLoad: null
 };
 
 const getters = {
@@ -35,7 +36,7 @@ const actions = {
             if (response.data.error) {
                 tShow(i18n.t(response.data.message), 'danger');
             } else {
-                commit('SET_CURRENT_DATA_LOAD', {dataLoad: null, canceled: true});
+                commit('SET_CURRENT_DATA_LOAD_INFO', {dataLoadInfo: response.data.data});
                 tShow(i18n.t(response.data.message), 'success');
             }
         }, (err) => {
@@ -47,6 +48,7 @@ const actions = {
 const mutations = {
     SET_CURRENT_DATA_LOAD_INFO: (state, {dataLoadInfo}) =>{
         state.dataLoadInfo = dataLoadInfo;
+        bus.$emit('dataLoad/CURRENT_DATA_LOAD_INFO_LOADED', {dataLoadInfo});
     },
     
     SET_CURRENT_DATA_LOAD: (state, {dataLoad, canceled = false}) => {

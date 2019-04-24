@@ -67,18 +67,26 @@ exports.upload = (req, res, next) => {
                         //Assign current user
                         dataLoad.uploadedBy = currentUserId;
                         
+                        dataLoad.summary = DataLoad.getSummary(dataLoad);
+                        
                         dataLoad.save((err) => {
                             if (err) {
                                 //TODO: Handle err
                                 console.log('save err', err);
                                 // return res.json(...);
                             }
-                            return res.json({
-                                error: false,
-                                //TODO: Success message
-                                "message": "Success!",
-                                data: dataLoad.data
+
+
+                            DataLoad.dataLoadInfo(currentOrganizationId, (err, dataLoadInfo) => {
+
+                                return res.json({
+                                    error: false,
+                                    //TODO: Success message
+                                    // "message": "Success!",
+                                    data: dataLoadInfo
+                                });
                             });
+                            
                         });
                         // console.log('reader.readBuffer result', result);
                     })
@@ -167,57 +175,68 @@ exports.currentInfo = (req, res, next) => {
     logger.info(null, req, 'dataLoad.controller#currentInfo', 'TODO: Fetch current organization id');
     let currentOrganizationId = null;
 
-    DataLoad
-        .findOne({
-            organization: currentOrganizationId,
-            confirmed: false,
-            'deleted.isDeleted': {'$ne': true}
-        })
-        .populate({
-            path: 'uploadedBy',
-            model: 'User',
-            select: 'name lastName'
-        })
-        .exec((err, dataLoad) => {
-            if (err) {
-                logger.error(err, req, 'dataLoad.controller#currentInfo', 'Error trying to fetch current DataLoad info');
-            }
-
-
-            DataLoad
-                .findOne({
-                    organization: currentOrganizationId,
-                    confirmed: true,
-                    'deleted.isDeleted': {'$ne': true}
-                })
-                .populate({
-                    path: 'uploadedBy',
-                    model: 'User',
-                    select: 'name lastName'
-                })
-                .sort({
-                    modifiedAt: -1
-                })
-                .exec((err, recentDataLoad) => {
-                    
-                    let data = {};
-
-                    if (dataLoad) {
-                        data.uploadedBy = `${dataLoad.uploadedBy.name} ${dataLoad.uploadedBy.lastName}`;
-                        data.createdAt = dataLoad.createdAt;
-                    }
-                    
-                    if (recentDataLoad) {
-                        data.recentUploadedBy = `${recentDataLoad.uploadedBy.name} ${recentDataLoad.uploadedBy.lastName}`;
-                        data.recentConfirmedAt = recentDataLoad.confirmedAt;
-                    }
-                    return res.json({
-                        error: false,
-                        data: data
-                    });
-                });
-            
+    DataLoad.dataLoadInfo(currentOrganizationId, (err, dataLoadInfo) => {
+        return res.json({
+            error: false,
+            data: dataLoadInfo
         });
+    });
+
+    // DataLoad
+    //     .findOne({
+    //         organization: currentOrganizationId,
+    //         confirmed: false,
+    //         'deleted.isDeleted': {'$ne': true}
+    //     })
+    //     .populate({
+    //         path: 'uploadedBy',
+    //         model: 'User',
+    //         select: 'name lastName'
+    //     })
+    //     .exec((err, dataLoad) => {
+    //         if (err) {
+    //             logger.error(err, req, 'dataLoad.controller#currentInfo', 'Error trying to fetch current DataLoad info');
+    //         }
+    //
+    //
+    //         DataLoad
+    //             .findOne({
+    //                 organization: currentOrganizationId,
+    //                 confirmed: true,
+    //                 'deleted.isDeleted': {'$ne': true}
+    //             })
+    //             .populate({
+    //                 path: 'uploadedBy',
+    //                 model: 'User',
+    //                 select: 'name lastName'
+    //             })
+    //             .sort({
+    //                 modifiedAt: -1
+    //             })
+    //             .exec((err, recentDataLoad) => {
+    //                
+    //                 let data = {};
+    //
+    //                 if (dataLoad) {
+    //                     data.current = {
+    //                         uploadedBy: `${dataLoad.uploadedBy.name} ${dataLoad.uploadedBy.lastName}`,
+    //                         createdAt: dataLoad.createdAt
+    //                     };
+    //                 }
+    //                
+    //                 if (recentDataLoad) {
+    //                     data.recent = {
+    //                         recentUploadedBy: `${recentDataLoad.uploadedBy.name} ${recentDataLoad.uploadedBy.lastName}`,
+    //                         recentConfirmedAt: recentDataLoad.confirmedAt
+    //                     };
+    //                 }
+    //                 return res.json({
+    //                     error: false,
+    //                     data: data
+    //                 });
+    //             });
+    //        
+    //     });
     
 };
 
@@ -265,11 +284,18 @@ exports.cancelCurrent = (req, res, next) => {
                     });
                 }
                 
-                return res.json({
-                    error: false,
-                    message: req.__('data-load.cancel.success'),
-                    data: null
+                DataLoad.dataLoadInfo(currentOrganizationId, (err, dataLoadInfo) => {
+                    //We just canceled/deleted the current DataLoad. To avoid race conditions, we ensure that the dataLoadInfo returned has no "current" value
+                    logger.warn(null, req, 'dataLoad.controller#cancelCurrent', 'We just canceled/deleted the current DataLoad. To avoid race conditions, we ensure that the dataLoadInfo returned has no "current" value');
+                    dataLoadInfo.current = null;
+                    
+                    return res.json({
+                        error: false,
+                        message: req.__('data-load.cancel.success'),
+                        data: dataLoadInfo
+                    });
                 });
+                
             });
 
         });
