@@ -34,6 +34,8 @@ import AdminHeader from '@/pages/admin/Header';
 import AdminSidebar from '@/pages/admin/Sidebar';
 import AdminFooter from '@/pages/admin/Footer';
 import DataLoad from '@/pages/admin/dataLoad/DataLoad';
+import DataLoadCurrent from '@/pages/admin/dataLoad/DataLoadCurrent';
+import DataLoadIndex from '@/pages/admin/dataLoad/DataLoadIndex';
 import AdminSettings from '@/pages/admin/settings/Settings';
 import SelectOrganization from '@/pages/admin/settings/SelectOrganization';
 
@@ -187,10 +189,27 @@ export default new Router({
                     name: 'Organizations',
                     component: AdminOrganizations
                 },
+                // {
+                //     path: 'data-load',
+                //     name: 'DataLoad',
+                //     component: DataLoad
+                // },
                 {
                     path: 'data-load',
-                    name: 'DataLoad',
-                    component: DataLoad
+                    // name: 'DataLoad',
+                    component: DataLoadIndex,
+                    children: [
+                        {
+                            path: '',
+                            name: 'DataLoad',
+                            component: DataLoad
+                        },
+                        {
+                            path: 'current',
+                            name: 'DataLoadCurrent',
+                            component: DataLoadCurrent
+                        }
+                    ]
                 },
                 {
                     path: 'settings',

@@ -37,15 +37,16 @@
                         </div>
                         <img class="img-fluid img-card-corner" src="@/assets/images/Cards/corner-document.svg" alt="" />
                     </div>
-                    <div class="card">
+                    <div class="card" v-show="recentUploadedBy && recentUploadedBy.length">
                         <div class="floating-text">
                             <h1>Estatus</h1>
                             <p class="f-style-italic m-b-5">
                                 Última carga de datos subida el día
                                 <br>
-                                <strong>25 de julio del 2018</strong>
+                                <!--<strong>25 de julio del 2018</strong>-->
+                                <strong>{{recentConfirmedAt | moment}}</strong>
                                 <br>
-                                Subida por: <strong>César González</strong>
+                                Subida por: <strong>{{recentUploadedBy}}</strong>
                             </p>
                         </div>
                         <img class="img-fluid img-card-corner" src="@/assets/images/Cards/corner-information-outline.svg" alt="" />
@@ -64,6 +65,11 @@
 
 <script>
     import Vue from 'vue';
+    import router from '@/router';
+    import { bus } from '@/main';
+    import i18n from '@/plugins/i18n';
+    import {mapState} from 'vuex';
+    import moment from 'moment';
     
     import AdminMainSection from '@/components/admin/AdminMainSection';
     import BackButton from '@/components/general/BackButton';
@@ -85,13 +91,28 @@
                     'application/vnd.ms-excel',
                     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                 ],
-                uploading: false
+                uploading: false,
             }
         },
         computed: {
             fileAccept () {
                 return this.allowedMimeTypes.join(',');
-            }
+            },
+            recentConfirmedAt () {
+                if (!this.dataLoadInfo) {
+                    return new Date();
+                }
+                return this.dataLoadInfo.recentConfirmedAt || new Date();
+            },
+            recentUploadedBy () {
+                if (!this.dataLoadInfo) {
+                    return '';
+                }
+                return this.dataLoadInfo.recentUploadedBy || '';
+            },
+            ...mapState({
+                dataLoadInfo: state => state.dataLoad.dataLoadInfo
+            })
         },
         components: {
             AdminMainSection,
@@ -99,6 +120,11 @@
             FloatingTitle,
             CatalogHeader,
             CardUploading
+        },
+        filters: {
+            moment: function (date) {
+                return moment(date).format('MM/DD/YYYY');
+            }
         },
         methods:{
             handleFileUpload() {
@@ -111,13 +137,13 @@
                 
                 if (!this.dataFile || !this.dataFile.size || !this.dataFile.type) {
                     //TODO: toast i18n
-                    tShow(`Por favor selecciona un archivo para la carga de datos`);
+                    tShow(`Por favor selecciona un archivo para la carga de datos`, 'danger');
                     return;
                 }
                 
                 if (!this.allowedMimeTypes.includes(this.dataFile.type)) {
                     //TODO: toast i18n
-                    tShow(`Por favor selecciona un archivo de hoja de cálculos para la carga de datos (.xls o .xlsx)`);
+                    tShow(`Por favor selecciona un archivo de hoja de cálculos para la carga de datos (.xls o .xlsx)`, 'danger');
                     return;
                 }
                 
@@ -135,8 +161,17 @@
                     Vue.$log.info('Response', result);
                     
                     if (result.data.error) {
-                        tShow(result.data.message, 'danger');
+                        console.log('Vue', Vue);
+                        console.log('i18n', i18n);
+                        tShow(this.$t(result.data.message), 'danger');
+                        
+                        //When a data load is currently in progress, it is returned in the response
+                        if (result.data.data) {
+                            this.$store.commit('dataLoad/SET_CURRENT_DATA_LOAD', {dataLoad: result.data.data});
+                        }
                         return;
+                    } else {
+                        this.$store.commit('dataLoad/SET_CURRENT_DATA_LOAD', {dataLoad: result.data.data});
                     }
                 }, (error) => {
                     this.setUploading(false);
@@ -144,19 +179,32 @@
                     tShow(`Ocurrió un error inesperado al cargar el archivo`);
                 });
             },
+            
             setUploading(value) {
                 this.uploading = value;
             },
+            
             cancelUpload() {
                 //TODO: cancel
                 this.setUploading(false); 
+            },
+            
+            redirectToCurrent() {
+                router.push('/admin/data-load/current');
             }
         },
         created(){
         },
+        
         mounted(){
-            //TODO: Check if a load is already in progress
-            //If a load is in progress, redirect to the appropriate url
+            bus.$on('dataLoad/CURRENT_DATA_LOAD_LOADED', ({dataLoad, canceled})=>{
+                if (dataLoad) {
+                    this.redirectToCurrent();
+                }
+            });
+            
+            this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD');
+            this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO');
         }
     }
 </script>

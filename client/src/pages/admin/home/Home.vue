@@ -1,7 +1,22 @@
 <template>
     <div>
         <AdminMainSection>
-            <BackButton/>
+            <!--<BackButton/>-->
+            <div class="col-12 m-t-40">
+                <div class="floating-title-dash">
+                    <div class="side-left">
+                        <h1>¡Hola, Cesar!</h1>
+                        <label>LUNES 03 DE DICIEMBRE DEL 2018</label>
+                    </div>
+                    <template v-if="currentDataLoadInfo && currentDataLoadInfo.uploadedBy">
+                        <div class="side-right">
+                            <p>Tienes una carga de <strong>datos pendiente</strong></p>
+                            <small>Comenzada por: <strong>{{currentDataLoadInfo.uploadedBy}}</strong></small>
+                        </div>
+                        <router-link to="admin/data-load/current" class="btn-raised button-accent">Continuar</router-link>
+                    </template>
+                </div>
+            </div>
             <div class="container-panel-info m-b-30">
                 <div>
                     <div class="panel-info">
@@ -113,23 +128,34 @@
 
 <script>
     import catalog from '@/mixins/catalog.mixin';
+    import AdminMainSection from '@/components/admin/AdminMainSection';
+    
+    import {mapState} from 'vuex';
 
     //TODO Remove or change initialization because THIS IS NOT A CATALOG ()
-    let baseCatalog = catalog.configure({
-        storeModule: 'DataLoad',
-        docName: 'dataLoad.DataLoad'
-    });
+//    let baseCatalog = catalog.configure({
+//        storeModule: 'DataLoad',
+//        docName: 'dataLoad.DataLoad'
+//    });
 
     export default {
-        mixins: [baseCatalog],
+//        mixins: [baseCatalog],
         data() {
             return {}
         },
-        components: {},
+        computed: {
+            ...mapState({
+                currentDataLoadInfo: state => state.dataLoad.dataLoadInfo
+            })
+        },
+        components: {
+            AdminMainSection
+        },
         methods: {},
         created() {
         },
         mounted() {
+            this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO');
             $(document).ready(function () {
                 $('.selectpicker').selectpicker();
             });

@@ -109,10 +109,12 @@ let ContractSchema = new Schema({
     },
     /*Hipervínculo a la convocatoria o invitaciones*/
     announcementUrl:{
+        //TODO: match regex?
         type:String
     },
     /* Fecha de la convocatoria o invitación */
     announcementDate:{
+        //TODO: required?
         type:Date
     },
     /* Descripción de las obras, bienes o servicios */
@@ -122,14 +124,17 @@ let ContractSchema = new Schema({
     },
     /* Fecha en la que se celebró la junta de aclaraciones */
     clarificationMeetingDate:{
+        //TODO: required?
         type:Date,
     },
     /* Hipervínculo al fallo de Junta de Aclaraciones */
     clarificationMeetingJudgmentUrl:{
+        //TODO: match regex?
         type:String,
     },
     /* Hipervínculo al documento de la Presentación de Propuestas */
     presentationProposalsDocUrl:{
+        //TODO: match regex?
         type:String
     },
     /* Proveedor */
@@ -162,6 +167,7 @@ let ContractSchema = new Schema({
     },
     /* Número que identifique al contrato */
     contractNumber:{
+        //TODO: Required?
        type:String,
         unique:true
     },
@@ -203,6 +209,7 @@ let ContractSchema = new Schema({
     },
     /*Hipervínculo al documento del contrato y anexos*/
     contractUrl:{
+        //TODO: match uri?
         type:String
         // required:true
     },
