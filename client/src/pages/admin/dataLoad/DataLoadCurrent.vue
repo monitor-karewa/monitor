@@ -20,16 +20,16 @@
                         <div class="details-list">
                             <ul>
                                 <li>
-                                                <span class="c-success"><i
-                                                        class="zmdi zmdi-check-circle"></i> {{current.summary.newContractsCount}}</span> Nuevos Contratos
+                                    <span class="c-success"><i class="zmdi zmdi-check-circle"></i> {{current.summary.newContractsCount}}</span>
+                                    Nuevos Contratos
                                 </li>
                                 <li>
                                     <span class="c-success"><i class="zmdi zmdi-check-circle"></i> {{current.summary.newSuppliersCount}}</span>
                                     Nuevos Proveedores
                                 </li>
                                 <li>
-                                                <span class="c-success"><i
-                                                        class="zmdi zmdi-check-circle"></i> {{current.summary.newAdministrativeUnitsCount}}</span> Nuevas Unidades
+                                    <span class="c-success"><i class="zmdi zmdi-check-circle"></i> {{current.summary.newAdministrativeUnitsCount}}</span>
+                                    Nuevas Unidades
                                     Administrativas
                                 </li>
                             </ul>
