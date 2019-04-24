@@ -130,7 +130,12 @@ export default function (api, storeName) {
                     //     docs: result.data.data.docs
                     // });
                     dispatch(`${storeName}/list`,{},{root:true});
-                    bus.$emit(storeName + events.DOC_CREATED);
+                    console.log("data store",data);
+                    if(data._id){
+                        bus.$emit(storeName + events.DOC_UPDATED);
+                    }else{
+                        bus.$emit(storeName + events.DOC_CREATED);
+                    }
                 },
                 (error) => {
                     var errorsStr = "";
@@ -178,9 +183,9 @@ export default function (api, storeName) {
             commit('CLEAR_DOCS_UPDATED');
             commit('SET_EDIT_TABLE',payload);
         },
-        clearSelectedEntry({commit}){
-            commit('CLEAR_SELECTED_ENTRY');
-        }
+        // clearSelectedEntry({commit}){
+        //     commit('CLEAR_SELECTED_ENTRY');
+        // }
     };
 
     const mutations = {
@@ -219,10 +224,9 @@ export default function (api, storeName) {
         CLEAR_DOCS_UPDATED(state){
             state.docsUpdated = [];
         },
-        CLEAR_SELECTED_ENTRY(state){
-            Vue.$log.info(`Calling CLEAR_SELECTED_ENTRY `);
-            state.entrySelected = {};
-        }
+        // CLEAR_SELECTED_ENTRY(state){
+        //     state.entrySelected = {};
+        // }
     };
 
     return {

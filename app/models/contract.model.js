@@ -10,40 +10,38 @@ const utils = require('../components/utils');
 
 const permissions = require('./../components/permissions');
 
-//RECUERDA USAR LA MISMA EXPRESION REGULAR AL BUSCAR POR ALGUNO DE ESTOS ENUMS
 const procedureTypesEnum = [
-    utils.toAccentsRegex('PUBLICA',"i"),
-    utils.toAccentsRegex('ADJ DIRECTA', "i"),
-    utils.toAccentsRegex('POR INVITACION',"i")
+    'PUBLIC',
+    'NO_BID',
+    'INVITATION'
 ];
 const categoryEnum = [
-    utils.toAccentsRegex('AMPLIACION', "i"),
-    utils.toAccentsRegex('MODIFICACION', "i"),
-    utils.toAccentsRegex('ADENDUM',"i"),
-    utils.toAccentsRegex('ADQUISICIONES',"i"),
-    utils.toAccentsRegex('SERVICIOS',"i"),
-    utils.toAccentsRegex('ARRENDAMIENTOS',"i"),
-    utils.toAccentsRegex('OBRA PUBLICA',"i"),
+    'EXTENSION',
+    'MODIFICACION',
+    'ADENDUM',
+    'ACQUISITION',
+    'SERVICES',
+    'LEASE',
+    'PUBLIC_WORKS'
 ];
 const procedureStateEnum = [
-    utils.toAccentsRegex('CONCLUIDO', "i"),
-    utils.toAccentsRegex('CANCELADO', "i"),
-    utils.toAccentsRegex('DESIERTO', "i"),
-    utils.toAccentsRegex('EN_PROCESO', "i")
+    'CONCLUDED',
+    'CANCELED',
+    'DESERTED',
+    'IN_PROGRESS',
 ];
 const administrativeUnitTypeEnum = [
-    utils.toAccentsRegex('CENTRALIZADA', "i"),
-    utils.toAccentsRegex('DESCENTRALIZADA', "i")
+    'CENTRALIZED',
+    'DESCENTRALIZED'
 ];
 const limitExceededEnum = [
-    utils.toAccentsRegex('NO EXCEDE EL LIMITE', "i"),
-    utils.toAccentsRegex('EXCEDE EL LIMITE', "i")
+    'NOT_EXCEEDED',
+    'LIMIT_EXCEEDED'
 ];
 
 const contractType = [
-    utils.toAccentsRegex('ABIERTO', "i"),
-    utils.toAccentsRegex('NORMAL', "i")
-
+    'OPEN',
+    'NORMAL'
 ];
 /**
  * Schema de Mongoose para el modelo Contract.
@@ -70,7 +68,7 @@ let ContractSchema = new Schema({
         uppercase:true
     },
     /* Administracion */
-    administration: {
+    administrationPeriod: {
         type:String,
         required:true,
         match:new RegExp("^[12][0-9]{3}-[12][0-9]{3}$")

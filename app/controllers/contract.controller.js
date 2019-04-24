@@ -2,6 +2,7 @@ const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 
 const Contract = require('./../models/contract.model').Contract;
+const Supplier = require('./../models/supplier.model').Supplier;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const { validationResult } = require('express-validator/check');
@@ -62,6 +63,82 @@ exports.list = (req, res, next) => {
         );
 };
 
+
+/**
+ * Queries the possible suppliers fot this contract
+ */
+exports.retrieveSuppliers = (req, res, next) => {
+    let paginationOptions = pagination.getDefaultPaginationOptions(req);
+
+    //Filter everything by organization
+    let query = {};
+
+    //query["field"] = value;
+
+    //let qNotDeleted = deletedSchema.qNotDeleted();
+    //query = {...query, ...qNotDeleted};
+
+    Supplier
+        .find(
+            query,
+            (err, result) => {
+                if (err) {
+                    logger.error(err, req, 'contract.controller#list', 'Error al consultar lista de Suppliers');
+                    return res.json({
+                        errors: true,
+                        message: res.__('general.error.unexpected-error')
+                    });
+                }
+
+                return res.json({
+                    errors: false,
+                    message: "",
+                    data: {
+                        docs: result,
+                    }
+                });
+            }
+        );
+};
+
+
+/**
+ * Queries the possible suppliers fot this contract
+ */
+exports.retrieveAdministrativeUnits = (req, res, next) => {
+    let paginationOptions = pagination.getDefaultPaginationOptions(req);
+
+    //Filter everything by organization
+    let query = {};
+
+    //query["field"] = value;
+
+    //let qNotDeleted = deletedSchema.qNotDeleted();
+    //query = {...query, ...qNotDeleted};
+
+    AdministrativeUnit
+        .find(
+            query,
+            (err, result) => {
+                if (err) {
+                    logger.error(err, req, 'contract.controller#list', 'There was an error retrieving the Admiinstrative Units');
+                    return res.json({
+                        errors: true,
+                        message: res.__('general.error.unexpected-error')
+                    });
+                }
+
+                return res.json({
+                    errors: false,
+                    message: "",
+                    data: {
+                        docs: result,
+                    }
+                });
+            }
+        );
+};
+
 /**
  * Guarda un Contract. 
  * @param req
@@ -72,7 +149,6 @@ exports.save = (req, res, next) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        console.log("errors.array()", errors.array());
         return res.status(422).json({ errors: errors.array() });
     }
     
