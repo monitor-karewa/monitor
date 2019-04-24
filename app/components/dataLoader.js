@@ -86,7 +86,7 @@ class ContractExcelReader {
     _readIdentifiersRow(sheet, row, callback) {
         let columnCount = sheet.actualColumnCount;
 
-        for (let i = 1; i < columnCount; i++) {
+        for (let i = 1; i < (columnCount + 1); i++) {
             let cell = row.getCell(i);
 
             //Save ordered column identifiers
@@ -154,6 +154,7 @@ class ContractExcelReader {
         async.waterfall([
             //Initialize the fieldInfo
             (callback) => {
+                console.log('BEGIN _readField waterfall');
                 let fieldInfo = {
                     value: null,
                     valueToSaveOverride: null,
@@ -168,9 +169,11 @@ class ContractExcelReader {
             },
             //Parse value
             (fieldInfo, callback) => {
+                console.log('\t [_readField waterfall] - parse value');
                 try {
                     switch (type) {
                         case String:
+                            console.log(`\t\t[String] ${fieldName}`, value);
                             fieldInfo.value = value || '';
 
                             //Try to obtain inner value "hyperlink" or "text", which is available only for URLs
@@ -212,13 +215,14 @@ class ContractExcelReader {
                             break;
                         case Date:
                             value = value || '';
-                            console.log('value', value);
+                            console.log(`\t\t[Date] ${fieldName}`, value);
                             fieldInfo.value = utils.parseDate(value);
                             break;
                         case Number:
                             value = value || '';
 
-                            console.log(fieldName + ' => ', value);
+                            console.log(`\t\t[Number] ${fieldName}`, value);
+                            // console.log(fieldName + ' => ', value);
 
                             if (utils.isNumber(value)) {
                                 fieldInfo.value = value;
@@ -229,12 +233,13 @@ class ContractExcelReader {
                             break;
                     }
                 } catch (err) {
-                    console.log('err', err);
+                    console.log('\t\terr', err);
                 }
                 return callback(null, fieldInfo);
             },
             //Check ref in a collection
             (fieldInfo, callback) => {
+                console.log('\t [_readField waterfall] - check ref');
                 // console.log('options.ref', options.ref);
                 // console.log('utils.isDefined(options.ref)', utils.isDefined(options.ref));
                 if (options.ref) {
@@ -269,10 +274,10 @@ class ContractExcelReader {
                         }
 
                         // console.log('query', query);
-                        console.log('doc', doc);
                         
                         //Match found
                         if (doc) {
+                            console.log('Ref found!');
                             //Set doc._id as valueToSaveOverride
                             fieldInfo.valueToSaveOverride = doc._id;
                             fieldInfo.duplicate = true;
@@ -288,14 +293,17 @@ class ContractExcelReader {
             },
             //Call a validation function if needed
             (fieldInfo, callback) => {
+                console.log('\t [_readField waterfall] - validator');
                 if (utils.isDefined(options.validator) && utils.isFunction(options.validator)) {
                     logger.info(null, null, 'dataLoader#_readField', 'TODO: options.validator')
+                    return callback(null, fieldInfo);
                 } else {
                     return callback(null, fieldInfo);
                 }
             },
             //Check if the field value is required
             (fieldInfo, callback) => {
+                console.log('\t [_readField waterfall] - required');
                 if (utils.isDefined(options.required) && utils.isNotDefined(fieldInfo.value)) {
                     if (utils.isFunction(options.required)) {
                         logger.info(null, null, 'dataLoader#_readField', 'TODO: options.required as a Function');
@@ -316,6 +324,7 @@ class ContractExcelReader {
             },
             //Check if the field value is unique
             (fieldInfo, callback) => {
+                console.log('\t [_readField waterfall] - unique');
                 if (utils.isDefined(options.unique) && utils.isNotDefined(fieldInfo.value)) {
 
                     let query = {
@@ -336,14 +345,17 @@ class ContractExcelReader {
 
                                 fieldInfo.skipRow = true;
                             }
+                            console.log('END _readField waterfall 1');
                             return callback(null, fieldInfo);
                         });
                 } else {
+
+                    console.log('END _readField waterfall 2');
                     return callback(null, fieldInfo);
                 }
             }
         ], (err, fieldInfo) => {
-            console.log('cascade end');
+            console.log('ALL END _readField waterfall');
             if (err) {
                 console.log('err', err);
             }
@@ -351,7 +363,8 @@ class ContractExcelReader {
 
             // console.log('obj', obj);
 
-            return mainCallback(null, obj);
+            // return mainCallback(null, obj);
+            return mainCallback(null, fieldInfo);
         });
     }
 
@@ -383,9 +396,15 @@ class ContractExcelReader {
 
 
             console.log('column', column);
+            
+            if (!column) {
+                console.log('undefined column, skipping');
+                return callback();
+            }
+            
             switch(column) {
                 case C_IDS.PROCEDURE_TYPE:
-                    _this._readField(obj, cell.value, 'procedureType', String, {
+                    return _this._readField(obj, cell.value, 'procedureType', String, {
                         //TODO: Enum values for validation
                         enum: [],
                         required: true,
@@ -393,7 +412,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.CATEGORY:
-                    _this._readField(obj, cell.value, 'category', String, {
+                    return _this._readField(obj, cell.value, 'category', String, {
                         //TODO: Enum values for validation
                         enum: [],
                         required: function () {
@@ -405,37 +424,37 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.ADMINISTRATION:
-                    _this._readField(obj, cell.value, 'administration', String, {
+                    return _this._readField(obj, cell.value, 'administration', String, {
                         required: true,
                         //TODO: Centralize this Regex
                         match: new RegExp("^[12][0-9]{3}-[12][0-9]{3}$")
                     }, callback);
                     break;
                 case C_IDS.FISCAL_YEAR:
-                    _this._readField(obj, cell.value, 'fiscalYear', String, {
+                    return _this._readField(obj, cell.value, 'fiscalYear', String, {
                         required: true,
                         //TODO: Centralize this Regex
                         match: new RegExp("^[12][0-9]{3}")
                     }, callback);
                     break;
                 case C_IDS.PERIOD:
-                    _this._readField(obj, cell.value, 'fiscalYear', String, {
+                    return _this._readField(obj, cell.value, 'fiscalYear', String, {
                         required: true,
                         //TODO: Centralize this Regex
                         match: new RegExp("^[1234]o\\s2[0-9]{3}$")
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_ID:
-                    _this._readField(obj, cell.value, 'contractId', String, {
+                    return _this._readField(obj, cell.value, 'contractId', String, {
                         required: true
                         //TODO: Validations
                     }, callback);
                     break;
                 case C_IDS.PARTIDA:
-                    _this._readField(obj, cell.value, 'partida', String, {}, callback);
+                    return _this._readField(obj, cell.value, 'partida', String, {}, callback);
                     break;
                 case C_IDS.PROCEDURE_STATE:
-                    _this._readField(obj, cell.value, 'procedureState', String, {
+                    return _this._readField(obj, cell.value, 'procedureState', String, {
                         //TODO: Enum values for validation
                         enum: [],
                         required: function () {
@@ -447,33 +466,33 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.ACCOUNCEMENT_URL:
-                    _this._readField(obj, cell.value, 'announcementUrl', String, {
+                    return _this._readField(obj, cell.value, 'announcementUrl', String, {
                         hyperlink: true
                     }, callback);
                     break;
                 case C_IDS.ACCOUNCEMENT_DATE:
-                    _this._readField(obj, cell.value, 'announcementDate', Date, {}, callback);
+                    return _this._readField(obj, cell.value, 'announcementDate', Date, {}, callback);
                     break;
                 case C_IDS.SERVICES_DESCRIPTION:
-                    _this._readField(obj, cell.value, 'servicesDescription', String, {
+                    return _this._readField(obj, cell.value, 'servicesDescription', String, {
                         required: true
                     }, callback);
                     break;
                 case C_IDS.CLARIFICATION_MEETING_DATE:
-                    _this._readField(obj, cell.value, 'clarificationMeetingDate', Date, {}, callback);
+                    return _this._readField(obj, cell.value, 'clarificationMeetingDate', Date, {}, callback);
                     break;
                 case C_IDS.CLARIFICATION_MEETING_JUDGEMENT_URL:
-                    _this._readField(obj, cell.value, 'clarificationMeetingJudgmentUrl', String, {
+                    return _this._readField(obj, cell.value, 'clarificationMeetingJudgmentUrl', String, {
                         hyperlink: true
                     }, callback);
                     break;
                 case C_IDS.PRESENTATION_PROPOSALS_DOC_URL:
-                    _this._readField(obj, cell.value, 'presentationProposalsDocUrl', String, {
+                    return _this._readField(obj, cell.value, 'presentationProposalsDocUrl', String, {
                         hyperlink: true
                     }, callback);
                     break;
                 case C_IDS.SUPPLIER_NAME:
-                    _this._readField(obj, cell.value, 'supplierName', String, {
+                    return _this._readField(obj, cell.value, 'supplierName', String, {
                         required: true,
                         ref: {
                             model: Supplier,
@@ -484,7 +503,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.SUPPLIER_RFC:
-                    _this._readField(obj, cell.value, 'supplierRfc', String, {
+                    return _this._readField(obj, cell.value, 'supplierRfc', String, {
                         // required: true,
                         //TODO: Centralize this Regex
                         match: new RegExp("^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$"),
@@ -498,7 +517,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.ORGANIZER_ADMINISTRATIVE_UNIT:
-                    _this._readField(obj, cell.value, 'organizerAdministrativeUnit', String, {
+                    return _this._readField(obj, cell.value, 'organizerAdministrativeUnit', String, {
                         required: true,
                         ref: {
                             model: AdministrativeUnit,
@@ -513,7 +532,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.APPLICANT_ADMINISTRATIVE_UNIT:
-                    _this._readField(obj, cell.value, 'applicantAdministrativeUnit', String, {
+                    return _this._readField(obj, cell.value, 'applicantAdministrativeUnit', String, {
                         required: true,
                         ref: {
                             col: AdministrativeUnit,
@@ -524,7 +543,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.ADMINISTRATIVE_UNIT_TYPE:
-                    _this._readField(obj, cell.value, 'administrativeUnitType', String, {
+                    return _this._readField(obj, cell.value, 'administrativeUnitType', String, {
                         //TODO: Enum values for validation
                         enum: [],
                         required: true,
@@ -532,7 +551,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_NUMBER:
-                    _this._readField(obj, cell.value, 'contractNumber', String, {
+                    return _this._readField(obj, cell.value, 'contractNumber', String, {
                         //TODO: Enum values for validation
                         enum: [],
                         //TODO: required?
@@ -541,7 +560,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_DATE:
-                    _this._readField(obj, cell.value, 'contractDate', Date, {
+                    return _this._readField(obj, cell.value, 'contractDate', Date, {
                         required: true,
                         //TODO: Centralize this validation
                         validator: () => {
@@ -552,28 +571,28 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 // case C_IDS.CONTRACT_TYPE:
-                //     _this._readField(obj, cell.value, 'contractType', String, {
+                //     return _this._readField(obj, cell.value, 'contractType', String, {
                 //         //TODO: Enum values for validation
                 //         enum: [],
                 //         required: true
                 //     }, callback);
                 //     break;
                 case C_IDS.TOTAL_AMOUT:
-                    _this._readField(obj, cell.value, 'totalAmount', Number, {}, callback);
+                    return _this._readField(obj, cell.value, 'totalAmount', Number, {}, callback);
                     break;
                 case C_IDS.MIN_AMOUNT:
-                    _this._readField(obj, cell.value, 'minAmount', Number, {}, callback);
+                    return _this._readField(obj, cell.value, 'minAmount', Number, {}, callback);
                     break;
                 case C_IDS.MAX_AMOUNT:
-                    _this._readField(obj, cell.value, 'maxAmount', Number, {}, callback);
+                    return _this._readField(obj, cell.value, 'maxAmount', Number, {}, callback);
                     break;
                 case C_IDS.MAX_OR_TOTAL_AMOUNT:
-                    _this._readField(obj, cell.value, 'totalOrMaxAmount', Number, {
+                    return _this._readField(obj, cell.value, 'totalOrMaxAmount', Number, {
                         required: true
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_URL:
-                    _this._readField(obj, cell.value, 'contractUrl', String, {
+                    return _this._readField(obj, cell.value, 'contractUrl', String, {
                         required: true,
                         hyperlink: true
                         //TODO: match uri?
@@ -581,7 +600,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.AREA_IN_CHARGE:
-                    _this._readField(obj, cell.value, 'areaInCharge', String, {
+                    return _this._readField(obj, cell.value, 'areaInCharge', String, {
                         required: true,
                         ref: {
                             col: AdministrativeUnit,
@@ -592,23 +611,23 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.UPDATE_DATE:
-                    _this._readField(obj, cell.value, 'actualizationDate', Date, {
+                    return _this._readField(obj, cell.value, 'actualizationDate', Date, {
                         required: true,
                     }, callback);
                     break;
                 case C_IDS.NOTES:
-                    _this._readField(obj, cell.value, 'notes', String, {}, callback);
+                    return _this._readField(obj, cell.value, 'notes', String, {}, callback);
                     break;
                 case C_IDS.KAREWA_NOTES:
-                    _this._readField(obj, cell.value, 'karewaNotes', String, {}, callback);
+                    return _this._readField(obj, cell.value, 'karewaNotes', String, {}, callback);
                     break;
                 case C_IDS.INFORMATION_DATE:
-                    _this._readField(obj, cell.value, 'informationDate', Date, {
+                    return _this._readField(obj, cell.value, 'informationDate', Date, {
                         required: true,
                     }, callback);
                     break;
                 case C_IDS.LIMIT_EXCEEDED:
-                    _this._readField(obj, cell.value, 'limitExceeded', String, {
+                    return _this._readField(obj, cell.value, 'limitExceeded', String, {
                         //TODO: Enum values for validation
                         enum: [],
                         required: true,
@@ -616,22 +635,27 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.AMOUNT_EXCEEDED:
-                    _this._readField(obj, cell.value, 'amountExceeded', Number, {}, callback);
+                    return _this._readField(obj, cell.value, 'amountExceeded', Number, {}, callback);
                     break;
                 case C_IDS.UNKOWN_COLUMN:
                 default:
+                    console.log('unkown/default column, skipping');
                     return callback();
                     // return callback
                 //Unrecognized column identifier value
             }
 
+            console.log('reached the end without calling callback. Calling callback() now');
+            return callback();
+
         }, (err, results) => {
             //All done
-            console.log('all rows read');
+            console.log('all columns read');
             rowInfo.fields = [];
             results.forEach((fieldInfo) => {
                 
                 if (fieldInfo) {
+                    console.log('fieldInfo', fieldInfo);
                     rowInfo.fields.push(fieldInfo);
     
                     if (fieldInfo.errors.length) {

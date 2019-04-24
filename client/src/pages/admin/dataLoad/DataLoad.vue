@@ -64,6 +64,9 @@
 
 <script>
     import Vue from 'vue';
+    import router from '@/router';
+    import { bus } from '@/main';
+    import i18n from '@/plugins/i18n';
     
     import AdminMainSection from '@/components/admin/AdminMainSection';
     import BackButton from '@/components/general/BackButton';
@@ -85,7 +88,7 @@
                     'application/vnd.ms-excel',
                     'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
                 ],
-                uploading: false
+                uploading: false,
             }
         },
         computed: {
@@ -111,13 +114,13 @@
                 
                 if (!this.dataFile || !this.dataFile.size || !this.dataFile.type) {
                     //TODO: toast i18n
-                    tShow(`Por favor selecciona un archivo para la carga de datos`);
+                    tShow(`Por favor selecciona un archivo para la carga de datos`, 'danger');
                     return;
                 }
                 
                 if (!this.allowedMimeTypes.includes(this.dataFile.type)) {
                     //TODO: toast i18n
-                    tShow(`Por favor selecciona un archivo de hoja de cálculos para la carga de datos (.xls o .xlsx)`);
+                    tShow(`Por favor selecciona un archivo de hoja de cálculos para la carga de datos (.xls o .xlsx)`, 'danger');
                     return;
                 }
                 
@@ -135,8 +138,17 @@
                     Vue.$log.info('Response', result);
                     
                     if (result.data.error) {
-                        tShow(result.data.message, 'danger');
+                        console.log('Vue', Vue);
+                        console.log('i18n', i18n);
+                        tShow(this.$t(result.data.message), 'danger');
+                        
+                        //When a data load is currently in progress, it is returned in the response
+                        if (result.data.data) {
+                            this.$store.commit('dataLoad/SET_CURRENT_DATA_LOAD', {dataLoad: result.data.data});
+                        }
                         return;
+                    } else {
+                        this.$store.commit('dataLoad/SET_CURRENT_DATA_LOAD', {dataLoad: result.data.data});
                     }
                 }, (error) => {
                     this.setUploading(false);
@@ -144,19 +156,31 @@
                     tShow(`Ocurrió un error inesperado al cargar el archivo`);
                 });
             },
+            
             setUploading(value) {
                 this.uploading = value;
             },
+            
             cancelUpload() {
                 //TODO: cancel
                 this.setUploading(false); 
+            },
+            
+            redirectToCurrent() {
+                router.push('/admin/data-load/current');
             }
         },
         created(){
         },
+        
         mounted(){
-            //TODO: Check if a load is already in progress
-            //If a load is in progress, redirect to the appropriate url
+            bus.$on('dataLoad/CURRENT_DATA_LOAD_LOADED', ({dataLoad, canceled})=>{
+                if (dataLoad) {
+                    this.redirectToCurrent();
+                }
+            });
+            
+            this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD');
         }
     }
 </script>

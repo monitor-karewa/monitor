@@ -143,20 +143,28 @@ const utils =  {
     /**
      * Revisa si un objeto corresponde a un Number.
      * @param obj {object} objeto a revisar
+     * @param defaultValue {object} valor por defecto en caso de que el valor a parsear no sea un número válido
      * @returns number - el objeto como número o en caso de error, un valor de 0
      */
-    parseNumber(obj) {
-        if (obj !== undefined && obj !== null)
+    parseNumber(obj, defaultValue = 0) {
+        let parsedNumber = null;
+        if (obj !== undefined && obj !== null) {
             if (typeof(obj) === 'number') {
-                return obj;
+                parsedNumber = obj;
+                // return obj;
             } else if (typeof(obj) === 'string') {
                 try {
-                    return Number(obj);
+                    parsedNumber = Number(obj);
+                    // return Number(obj);
                 } catch (err) {
-                    logger.error(null,null,"Attempting to parse a number \n" + err.toString() );
+                    logger.error(null, null, "Attempting to parse a number \n" + err.toString());
                 }
             }
-        return 0;
+        }
+        if (!parsedNumber) {
+            parsedNumber = defaultValue;
+        }
+        return parsedNumber;
     },
 
 };

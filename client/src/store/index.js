@@ -10,6 +10,7 @@ import resources from '@/store/modules/resources.store';
 import users from '@/store/modules/users.store';
 import calculations from '@/store/modules/calculations.store';
 import organizations from '@/store/modules/organizations.store';
+import dataLoad from '@/store/modules/dataLoad.store';
 
 
 import actions from '@/store/actions';
@@ -31,7 +32,8 @@ export default new Vuex.Store({
         resources : resources,
         users : users,
         calculations : calculations,
-        organizations : organizations
+        organizations : organizations,
+        dataLoad: dataLoad
     },
     store: store,
     actions: actions,
