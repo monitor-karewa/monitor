@@ -213,7 +213,7 @@ let ContractSchema = new Schema({
         required: true
     },
     /*Fecha de actualización*/
-    actualizationDate:{
+    updateDate:{
         type:Date,
         required:true
     },
@@ -232,10 +232,7 @@ let ContractSchema = new Schema({
     },
     /*Adjudicaciones Directas que exceden el límite*/
     limitExceeded:{
-        type:String,
-        enum:limitExceededEnum,
-        required:true,
-        uppercase:true
+        type:Boolean
     },
     /*Monto que excede el límite de la Adjudicación Directa*/
     amountExceeded:{

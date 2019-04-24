@@ -127,21 +127,21 @@
                 </div>
 
 
-                <!--ProcedureState-->
-                <div class="form-group fg-float basic-select">
-                    <div class="fg-line">
-                        <select v-model="entry.procedureState" class="form-control select selectpicker"
-                                data-live-search="true"
-                                :data-live-search-placeholder="$t('contracts.new.procedure-state.placeholder')"
-                                title="Select placeholder">
-                            <option value="CONCLUDED"> {{$t('contracts.procedure-state.extension')}}</option>
-                            <option value="CANCELED"> {{$t('contracts.procedure-state.modification')}}</option>
-                            <option value="DESERTED"> {{$t('contracts.procedure-state.public')}}</option>
-                            <option value="IN_PROGRESS"> {{$t('contracts.procedure-state.public')}}</option>
-                        </select>
-                        <label class="fg-label">{{$t('contracts.new.procedure-state.label')}}</label>
-                    </div>
-                </div>
+                <!--&lt;!&ndash;ProcedureState&ndash;&gt;-->
+                <!--<div class="form-group fg-float basic-select">-->
+                    <!--<div class="fg-line">-->
+                        <!--<select v-model="entry.procedureState" class="form-control select selectpicker"-->
+                                <!--data-live-search="true"-->
+                                <!--:data-live-search-placeholder="$t('contracts.new.procedure-state.placeholder')"-->
+                                <!--title="Select placeholder">-->
+                            <!--<option value="CONCLUDED"> {{$t('contracts.procedure-state.extension')}}</option>-->
+                            <!--<option value="CANCELED"> {{$t('contracts.procedure-state.modification')}}</option>-->
+                            <!--<option value="DESERTED"> {{$t('contracts.procedure-state.public')}}</option>-->
+                            <!--<option value="IN_PROGRESS"> {{$t('contracts.procedure-state.public')}}</option>-->
+                        <!--</select>-->
+                        <!--<label class="fg-label">{{$t('contracts.new.procedure-state.label')}}</label>-->
+                    <!--</div>-->
+                <!--</div>-->
 
 
                 <!--Announcement URL-->
@@ -178,7 +178,7 @@
                 </div>
 
 
-                <!--Announcement URL-->
+                <!--Services Description-->
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
@@ -248,11 +248,11 @@
                     <div class="fg-line">
                         <select v-model="entry.supplier._id" class="form-control select selectpicker"
                                 data-live-search="true"
-                                :data-live-search-placeholder="$t('contracts.new.procedure-state.placeholder')"
+                                :data-live-search-placeholder="$t('contracts.new.supplier.placeholder')"
                                 title="Select placeholder">
                             <option v-for="supplier in suppliers" :value="supplier._id"> {{supplier.name}}</option>
                         </select>
-                        <label class="fg-label">{{$t('contracts.new.procedure-state.label')}}</label>
+                        <label class="fg-label">{{$t('contracts.new.supplier.label')}}</label>
                     </div>
                 </div>
 
@@ -288,7 +288,7 @@
                     <div class="fg-line">
                         <select v-model="entry.administrativeUnitType" class="form-control select selectpicker"
                                 data-live-search="true"
-                                :data-live-search-placeholder="$t('contracts.new.procedure-state.placeholder')"
+                                :data-live-search-placeholder="$t('contracts.new.administrative-unit-type.placeholder')"
                                 title="Select placeholder">
                             <option value="CENTRALIZED"> {{$t('contracts.administrative-unit-type.centralized')}}</option>
                             <option value="DESCENTRALIZED"> {{$t('contracts.administrative-unit-type.descentralized')}}</option>
@@ -318,20 +318,218 @@
 
 
 
-                <!--ProcedureState-->
+
+                <!--contractDate-->
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input datepicker"
+                               :placeholder="$t('contracts.new.contract-date.placeholder')"
+                               v-model="entry.contractDate">
+                        <label class="fg-label">{{$t('contracts.new.contract-date.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('contracts.new.contract-date.sub-label')}}</strong>
+                        </label>
+                    </div>
+                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
+                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.contractDate.label'})}}</span> -->
+                </div>
+
+
+                <!--Contract Date-->
                 <div class="form-group fg-float basic-select">
                     <div class="fg-line">
-                        <select v-model="entry.procedureState" class="form-control select selectpicker"
+                        <select v-model="entry.contractType" class="form-control select selectpicker"
                                 data-live-search="true"
-                                :data-live-search-placeholder="$t('contracts.new.procedure-state.placeholder')"
+                                :data-live-search-placeholder="$t('contracts.new.contract-type.placeholder')"
                                 title="Select placeholder">
-                            <option value="CONCLUDED"> {{$t('contracts.procedure-state.extension')}}</option>
-                            <option value="CANCELED"> {{$t('contracts.procedure-state.modification')}}</option>
-                            <option value="DESERTED"> {{$t('contracts.procedure-state.public')}}</option>
-                            <option value="IN_PROGRESS"> {{$t('contracts.procedure-state.public')}}</option>
+                            <option value="OPEN"> {{$t('contracts.contract-type.open')}}</option>
+                            <option value="NORMAL"> {{$t('contracts.contract-type.normal')}}</option>
                         </select>
-                        <label class="fg-label">{{$t('contracts.new.procedure-state.label')}}</label>
+                        <label class="fg-label">{{$t('contracts.new.contract-type.label')}}</label>
                     </div>
+                </div>
+
+
+
+                <!--minAmount-->
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input"
+                               :placeholder="$t('contracts.new.min-amount.placeholder')"
+                               v-model="entry.minAmount">
+                        <label class="fg-label">{{$t('contracts.new.min-amount.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('contracts.new.min-amount.sub-label')}}</strong>
+                        </label>
+                    </div>
+                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
+                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.min-amount.label'})}}</span> -->
+                </div>
+
+
+                <!--maxAmount-->
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input"
+                               :placeholder="$t('contracts.new.max-amount.placeholder')"
+                               v-model="entry.maxAmount">
+                        <label class="fg-label">{{$t('contracts.new.max-amount.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('contracts.new.max-amount.sub-label')}}</strong>
+                        </label>
+                    </div>
+                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
+                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.max-amount.label'})}}</span> -->
+                </div>
+
+
+                <!--totalOrMaxAmount-->
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input"
+                               :placeholder="$t('contracts.new.total-or-max-amount.placeholder')"
+                               v-model="entry.totalOrMaxAmount">
+                        <label class="fg-label">{{$t('contracts.new.total-or-max-amount.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('contracts.new.total-or-max-amount.sub-label')}}</strong>
+                        </label>
+                    </div>
+                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
+                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.total-or-max-amount.label'})}}</span> -->
+                </div>
+
+
+                <!--Contract Url-->
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input"
+                               :placeholder="$t('contracts.new.contract-url.placeholder')"
+                               v-model="entry.contractUrl">
+                        <label class="fg-label">{{$t('contracts.new.contract-url.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('contracts.new.contract-url.sub-label')}}</strong>
+                        </label>
+                    </div>
+                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
+                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.contract-url.label'})}}</span> -->
+                </div>
+
+
+                <!-- Area in charge -->
+                <div class="form-group fg-float basic-select">
+                    <div class="fg-line">
+                        <select v-model="entry.areaInCharge._id" class="form-control select selectpicker"
+                                data-live-search="true"
+                                :data-live-search-placeholder="$t('contracts.new.organizer-administrative-unit.placeholder')"
+                                title="Select placeholder">
+                            <option v-for="administrativeUnit in administrativeUnits" :value="administrativeUnit._id"> {{administrativeUnit.name}}</option>
+                        </select>
+                        <label class="fg-label">{{$t('contracts.new.organizer-administrative-unit.label')}}</label>
+                    </div>
+                </div>
+
+
+
+                <!--updateDate-->
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input datepicker"
+                               :placeholder="$t('contracts.new.update-date.placeholder')"
+                               v-model="entry.updateDate">
+                        <label class="fg-label">{{$t('contracts.new.update-date.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('contracts.new.update-date.sub-label')}}</strong>
+                        </label>
+                    </div>
+                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
+                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.update-date.label'})}}</span> -->
+                </div>
+
+                <!--Notes -->
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input"
+                               :placeholder="$t('contracts.new.notes.placeholder')"
+                               v-model="entry.notes">
+                        <label class="fg-label">{{$t('contracts.new.notes.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('contracts.new.notes.sub-label')}}</strong>
+                        </label>
+                    </div>
+                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
+                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.notes.label'})}}</span> -->
+                </div>
+
+                <!--Notes Karewa-->
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input"
+                               :placeholder="$t('contracts.new.karewa-notes.placeholder')"
+                               v-model="entry.karewaNotes">
+                        <label class="fg-label">{{$t('contracts.new.karewa-notes.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('contracts.new.karewa-notes.sub-label')}}</strong>
+                        </label>
+                    </div>
+                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
+                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.karewa-notes.label'})}}</span> -->
+                </div>
+
+
+                <!--information Date-->
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input datepicker"
+                               :placeholder="$t('contracts.new.information-date.placeholder')"
+                               v-model="entry.informationDate">
+                        <label class="fg-label">{{$t('contracts.new.information-date.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('contracts.new.information-date.sub-label')}}</strong>
+                        </label>
+                    </div>
+                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
+                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.information-date.label'})}}</span> -->
+                </div>
+
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <div class="checkbox">
+                            <input type="checkbox" value="" v-model="entry.limitExceeded">
+                            <i class="input-helper"></i>
+                            <span>{{$t('users.new.enabled.checkbox-label')}}</span>
+                            <p class="fg-label "> {{$t('users.new.enabled.label')}}
+                                <small></small>
+                                <br>
+                            </p>
+                        </div>
+                    </div>
+                    <span v-if="$v.doc.active.$invalid && $v.doc.active.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Habilitado'})}}</span>
+                </div>
+
+
+                <!--amountExceeded-->
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input"
+                               :placeholder="$t('contracts.new.amount-exceeded.placeholder')"
+                               v-model="entry.amountExceeded">
+                        <label class="fg-label">{{$t('contracts.new.amount-exceeded.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('contracts.new.amount-exceeded.sub-label')}}</strong>
+                        </label>
+                    </div>
+                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
+                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.amount-exceeded.label'})}}</span> -->
                 </div>
 
 
@@ -352,7 +550,7 @@
             </div>
         </modalEntry>
 
-        <ModalDanger :id="'modal-delete-entry'" :title="'Eliminar Contrato'" :confirm="confirmDeletion">
+        <ModalDanger :id="'modal-delete-entry'" :title="'Elimaxar Contrato'" :confirm="confirmDeletion">
             <p class="text-centered">Esta acción borrará el usuario del catálogo permanentemente
                 <br>
                 <strong>¿Estás seguro de eliminarlo?</strong>
