@@ -310,9 +310,9 @@ class ContractExcelReader {
             (fieldInfo, callback) => {
                 console.log('\t [_readField waterfall] - required');
                 if (utils.isDefined(options.required) && utils.isNotDefined(fieldInfo.value)) {
-                    fieldInfo.errors.push({
-                        message: 'Este es un error forzado.'
-                    });
+                    // fieldInfo.errors.push({
+                    //     message: 'Este es un error forzado.'
+                    // });
                     if (utils.isFunction(options.required)) {
                         logger.info(null, null, 'dataLoader#_readField', 'TODO: options.required as a Function');
                     } else if (utils.isBoolean(options.required) && options.required) {
@@ -445,7 +445,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.PERIOD:
-                    return _this._readField(rowInfo, cell.value, 'fiscalYear', String, {
+                    return _this._readField(rowInfo, cell.value, 'period', String, {
                         required: true,
                         //TODO: Centralize this Regex
                         match: new RegExp("^[1234]o\\s2[0-9]{3}$")
@@ -474,7 +474,9 @@ class ContractExcelReader {
                     break;
                 case C_IDS.ACCOUNCEMENT_URL:
                     return _this._readField(rowInfo, cell.value, 'announcementUrl', String, {
-                        hyperlink: true
+                        hyperlink: true,
+                        //TODO: Centralize this Regex
+                        match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
                     }, callback);
                     break;
                 case C_IDS.ACCOUNCEMENT_DATE:
@@ -495,7 +497,8 @@ class ContractExcelReader {
                     break;
                 case C_IDS.PRESENTATION_PROPOSALS_DOC_URL:
                     return _this._readField(rowInfo, cell.value, 'presentationProposalsDocUrl', String, {
-                        hyperlink: true
+                        hyperlink: true,
+                        match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
                     }, callback);
                     break;
                 case C_IDS.SUPPLIER_NAME:
@@ -601,9 +604,9 @@ class ContractExcelReader {
                 case C_IDS.CONTRACT_URL:
                     return _this._readField(rowInfo, cell.value, 'contractUrl', String, {
                         required: true,
-                        hyperlink: true
+                        hyperlink: true,
                         //TODO: match uri?
-                        // match: ''
+                        match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
                     }, callback);
                     break;
                 case C_IDS.AREA_IN_CHARGE:
