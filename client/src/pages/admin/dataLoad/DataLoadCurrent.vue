@@ -67,6 +67,7 @@
                             <TableHeaderSearch :store-module="storeModule" :action-name="filterActionName"/>
                             <TableHeaderButtonsWrapper>
                                 <!--<TableHeaderButton :store-module="storeModule"/>-->
+                                <button class="btn-stroke button-accent" @click.prevent="toggleHideDetails">Ocultar detalles</button>
                                 <TableHeaderFilters :columns="filterRows" :hideTitle="true" :hideShowAllToggle="true"/>
                             </TableHeaderButtonsWrapper>
                             
@@ -591,6 +592,10 @@
             toggleShowDetails () {
                 this.showDetails = true;
                 this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD');
+            },
+            
+            toggleHideDetails () {
+                this.showDetails = false;
             },
 
             cancel () {
