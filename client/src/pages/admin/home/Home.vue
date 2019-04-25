@@ -145,7 +145,7 @@
         },
         computed: {
             ...mapState({
-                currentDataLoadInfo: state => state.dataLoad.dataLoadInfo
+                currentDataLoadInfo: state => state.dataLoad.dataLoadInfo.current
             })
         },
         components: {

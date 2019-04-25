@@ -161,8 +161,9 @@ class ContractExcelReader {
                     errors: [],
                     infos: [],
 
-                    col: null,
+                    model: null,
                     duplicate: false,
+                    shouldCreateDoc: false,
                     skipRow: false
                 };
                 return callback(null, fieldInfo);
@@ -281,7 +282,11 @@ class ContractExcelReader {
                             //Set doc._id as valueToSaveOverride
                             fieldInfo.valueToSaveOverride = doc._id;
                             fieldInfo.duplicate = true;
+                            fieldInfo.shouldCreateDoc = false;
                             //Check if doc.[field] matches fieldInfo.value will be (hopefully) done after this process
+                        } else {
+                            console.log('No Ref found!');
+                            fieldInfo.shouldCreateDoc = true;
                         }
 
                         return callback(null, fieldInfo);
@@ -305,6 +310,9 @@ class ContractExcelReader {
             (fieldInfo, callback) => {
                 console.log('\t [_readField waterfall] - required');
                 if (utils.isDefined(options.required) && utils.isNotDefined(fieldInfo.value)) {
+                    // fieldInfo.errors.push({
+                    //     message: 'Este es un error forzado.'
+                    // });
                     if (utils.isFunction(options.required)) {
                         logger.info(null, null, 'dataLoader#_readField', 'TODO: options.required as a Function');
                     } else if (utils.isBoolean(options.required) && options.required) {
@@ -383,7 +391,6 @@ class ContractExcelReader {
         });
 
         let rowInfo = {};
-        let obj = {};
 
         async.map(cellsInfoArr, (cellInfo, callback) => {
             let cell = cellInfo.cell;
@@ -404,7 +411,7 @@ class ContractExcelReader {
             
             switch(column) {
                 case C_IDS.PROCEDURE_TYPE:
-                    return _this._readField(obj, cell.value, 'procedureType', String, {
+                    return _this._readField(rowInfo, cell.value, 'procedureType', String, {
                         //TODO: Enum values for validation
                         enum: [],
                         required: true,
@@ -412,7 +419,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.CATEGORY:
-                    return _this._readField(obj, cell.value, 'category', String, {
+                    return _this._readField(rowInfo, cell.value, 'category', String, {
                         //TODO: Enum values for validation
                         enum: [],
                         required: function () {
@@ -424,37 +431,37 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.ADMINISTRATION:
-                    return _this._readField(obj, cell.value, 'administration', String, {
+                    return _this._readField(rowInfo, cell.value, 'administration', String, {
                         required: true,
                         //TODO: Centralize this Regex
                         match: new RegExp("^[12][0-9]{3}-[12][0-9]{3}$")
                     }, callback);
                     break;
                 case C_IDS.FISCAL_YEAR:
-                    return _this._readField(obj, cell.value, 'fiscalYear', String, {
+                    return _this._readField(rowInfo, cell.value, 'fiscalYear', String, {
                         required: true,
                         //TODO: Centralize this Regex
                         match: new RegExp("^[12][0-9]{3}")
                     }, callback);
                     break;
                 case C_IDS.PERIOD:
-                    return _this._readField(obj, cell.value, 'fiscalYear', String, {
+                    return _this._readField(rowInfo, cell.value, 'period', String, {
                         required: true,
                         //TODO: Centralize this Regex
                         match: new RegExp("^[1234]o\\s2[0-9]{3}$")
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_ID:
-                    return _this._readField(obj, cell.value, 'contractId', String, {
+                    return _this._readField(rowInfo, cell.value, 'contractId', String, {
                         required: true
                         //TODO: Validations
                     }, callback);
                     break;
                 case C_IDS.PARTIDA:
-                    return _this._readField(obj, cell.value, 'partida', String, {}, callback);
+                    return _this._readField(rowInfo, cell.value, 'partida', String, {}, callback);
                     break;
                 case C_IDS.PROCEDURE_STATE:
-                    return _this._readField(obj, cell.value, 'procedureState', String, {
+                    return _this._readField(rowInfo, cell.value, 'procedureState', String, {
                         //TODO: Enum values for validation
                         enum: [],
                         required: function () {
@@ -466,33 +473,36 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.ACCOUNCEMENT_URL:
-                    return _this._readField(obj, cell.value, 'announcementUrl', String, {
-                        hyperlink: true
+                    return _this._readField(rowInfo, cell.value, 'announcementUrl', String, {
+                        hyperlink: true,
+                        //TODO: Centralize this Regex
+                        match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
                     }, callback);
                     break;
                 case C_IDS.ACCOUNCEMENT_DATE:
-                    return _this._readField(obj, cell.value, 'announcementDate', Date, {}, callback);
+                    return _this._readField(rowInfo, cell.value, 'announcementDate', Date, {}, callback);
                     break;
                 case C_IDS.SERVICES_DESCRIPTION:
-                    return _this._readField(obj, cell.value, 'servicesDescription', String, {
+                    return _this._readField(rowInfo, cell.value, 'servicesDescription', String, {
                         required: true
                     }, callback);
                     break;
                 case C_IDS.CLARIFICATION_MEETING_DATE:
-                    return _this._readField(obj, cell.value, 'clarificationMeetingDate', Date, {}, callback);
+                    return _this._readField(rowInfo, cell.value, 'clarificationMeetingDate', Date, {}, callback);
                     break;
                 case C_IDS.CLARIFICATION_MEETING_JUDGEMENT_URL:
-                    return _this._readField(obj, cell.value, 'clarificationMeetingJudgmentUrl', String, {
+                    return _this._readField(rowInfo, cell.value, 'clarificationMeetingJudgmentUrl', String, {
                         hyperlink: true
                     }, callback);
                     break;
                 case C_IDS.PRESENTATION_PROPOSALS_DOC_URL:
-                    return _this._readField(obj, cell.value, 'presentationProposalsDocUrl', String, {
-                        hyperlink: true
+                    return _this._readField(rowInfo, cell.value, 'presentationProposalsDocUrl', String, {
+                        hyperlink: true,
+                        match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
                     }, callback);
                     break;
                 case C_IDS.SUPPLIER_NAME:
-                    return _this._readField(obj, cell.value, 'supplierName', String, {
+                    return _this._readField(rowInfo, cell.value, 'supplierName', String, {
                         required: true,
                         ref: {
                             model: Supplier,
@@ -503,7 +513,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.SUPPLIER_RFC:
-                    return _this._readField(obj, cell.value, 'supplierRfc', String, {
+                    return _this._readField(rowInfo, cell.value, 'supplierRfc', String, {
                         // required: true,
                         //TODO: Centralize this Regex
                         match: new RegExp("^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$"),
@@ -517,7 +527,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.ORGANIZER_ADMINISTRATIVE_UNIT:
-                    return _this._readField(obj, cell.value, 'organizerAdministrativeUnit', String, {
+                    return _this._readField(rowInfo, cell.value, 'organizerAdministrativeUnit', String, {
                         required: true,
                         ref: {
                             model: AdministrativeUnit,
@@ -532,10 +542,10 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.APPLICANT_ADMINISTRATIVE_UNIT:
-                    return _this._readField(obj, cell.value, 'applicantAdministrativeUnit', String, {
+                    return _this._readField(rowInfo, cell.value, 'applicantAdministrativeUnit', String, {
                         required: true,
                         ref: {
-                            col: AdministrativeUnit,
+                            model: AdministrativeUnit,
                             field: 'name',
                             //TODO: Change to FUZZY
                             strategy: REF_STRATEGIES.EXACT
@@ -543,7 +553,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.ADMINISTRATIVE_UNIT_TYPE:
-                    return _this._readField(obj, cell.value, 'administrativeUnitType', String, {
+                    return _this._readField(rowInfo, cell.value, 'administrativeUnitType', String, {
                         //TODO: Enum values for validation
                         enum: [],
                         required: true,
@@ -551,7 +561,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_NUMBER:
-                    return _this._readField(obj, cell.value, 'contractNumber', String, {
+                    return _this._readField(rowInfo, cell.value, 'contractNumber', String, {
                         //TODO: Enum values for validation
                         enum: [],
                         //TODO: required?
@@ -560,7 +570,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_DATE:
-                    return _this._readField(obj, cell.value, 'contractDate', Date, {
+                    return _this._readField(rowInfo, cell.value, 'contractDate', Date, {
                         required: true,
                         //TODO: Centralize this validation
                         validator: () => {
@@ -578,32 +588,32 @@ class ContractExcelReader {
                 //     }, callback);
                 //     break;
                 case C_IDS.TOTAL_AMOUT:
-                    return _this._readField(obj, cell.value, 'totalAmount', Number, {}, callback);
+                    return _this._readField(rowInfo, cell.value, 'totalAmount', Number, {}, callback);
                     break;
                 case C_IDS.MIN_AMOUNT:
-                    return _this._readField(obj, cell.value, 'minAmount', Number, {}, callback);
+                    return _this._readField(rowInfo, cell.value, 'minAmount', Number, {}, callback);
                     break;
                 case C_IDS.MAX_AMOUNT:
-                    return _this._readField(obj, cell.value, 'maxAmount', Number, {}, callback);
+                    return _this._readField(rowInfo, cell.value, 'maxAmount', Number, {}, callback);
                     break;
                 case C_IDS.MAX_OR_TOTAL_AMOUNT:
-                    return _this._readField(obj, cell.value, 'totalOrMaxAmount', Number, {
+                    return _this._readField(rowInfo, cell.value, 'totalOrMaxAmount', Number, {
                         required: true
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_URL:
-                    return _this._readField(obj, cell.value, 'contractUrl', String, {
+                    return _this._readField(rowInfo, cell.value, 'contractUrl', String, {
                         required: true,
-                        hyperlink: true
+                        hyperlink: true,
                         //TODO: match uri?
-                        // match: ''
+                        match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
                     }, callback);
                     break;
                 case C_IDS.AREA_IN_CHARGE:
-                    return _this._readField(obj, cell.value, 'areaInCharge', String, {
+                    return _this._readField(rowInfo, cell.value, 'areaInCharge', String, {
                         required: true,
                         ref: {
-                            col: AdministrativeUnit,
+                            model: AdministrativeUnit,
                             field: 'name',
                             //TODO: Change to FUZZY
                             strategy: REF_STRATEGIES.EXACT
@@ -611,23 +621,23 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.UPDATE_DATE:
-                    return _this._readField(obj, cell.value, 'actualizationDate', Date, {
+                    return _this._readField(rowInfo, cell.value, 'actualizationDate', Date, {
                         required: true,
                     }, callback);
                     break;
                 case C_IDS.NOTES:
-                    return _this._readField(obj, cell.value, 'notes', String, {}, callback);
+                    return _this._readField(rowInfo, cell.value, 'notes', String, {}, callback);
                     break;
                 case C_IDS.KAREWA_NOTES:
-                    return _this._readField(obj, cell.value, 'karewaNotes', String, {}, callback);
+                    return _this._readField(rowInfo, cell.value, 'karewaNotes', String, {}, callback);
                     break;
                 case C_IDS.INFORMATION_DATE:
-                    return _this._readField(obj, cell.value, 'informationDate', Date, {
+                    return _this._readField(rowInfo, cell.value, 'informationDate', Date, {
                         required: true,
                     }, callback);
                     break;
                 case C_IDS.LIMIT_EXCEEDED:
-                    return _this._readField(obj, cell.value, 'limitExceeded', String, {
+                    return _this._readField(rowInfo, cell.value, 'limitExceeded', String, {
                         //TODO: Enum values for validation
                         enum: [],
                         required: true,
@@ -635,7 +645,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.AMOUNT_EXCEEDED:
-                    return _this._readField(obj, cell.value, 'amountExceeded', Number, {}, callback);
+                    return _this._readField(rowInfo, cell.value, 'amountExceeded', Number, {}, callback);
                     break;
                 case C_IDS.UNKOWN_COLUMN:
                 default:
@@ -649,32 +659,34 @@ class ContractExcelReader {
             return callback();
 
         }, (err, results) => {
-            //All done
-            console.log('all columns read');
-            rowInfo.fields = [];
-            results.forEach((fieldInfo) => {
-                
+            //All columns processed for row
+
+            //Create a summary for the row obj
+            rowInfo.summary = {};
+            let fieldNames = Object.keys(rowInfo);
+            
+            
+            for (let fieldName of fieldNames) {
+                let fieldInfo = rowInfo[fieldName];
                 if (fieldInfo) {
-                    console.log('fieldInfo', fieldInfo);
-                    rowInfo.fields.push(fieldInfo);
-    
-                    if (fieldInfo.errors.length) {
-                        rowInfo.hasErrors = true;
+                    console.log('fieldInfo.errors', fieldInfo.errors);
+                    if (fieldInfo.errors && fieldInfo.errors.length) {
+                        rowInfo.summary.hasErrors = true;
                     }
     
-                    if (fieldInfo.infos.length) {
-                        rowInfo.hasInfo = true;
+                    if (fieldInfo.infos && fieldInfo.infos.length) {
+                        rowInfo.summary.hasInfo = true;
                     }
     
                     if (fieldInfo.skipRow) {
-                        rowInfo.skipRow = true;
+                        rowInfo.summary.skipRow = true;
                     }
                 }
-            });
-            // logger.info(null, null, '', 'rowInfo: %j', rowInfo);
+            }
 
-            // return obj;
-            return readRowCallback(null, obj);
+            console.log('rowInfo.summary.hasErrors', rowInfo.summary.hasErrors);
+
+            return readRowCallback(null, rowInfo);
         });
     }
 

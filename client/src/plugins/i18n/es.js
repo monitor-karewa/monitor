@@ -296,5 +296,8 @@ export default {
     "data-load.cancel.error.no-data-load-in-progress": "La carga de datos no se encuentra disponible. Por favor recarga la página para actualizar la información.",
     "data-load.cancel.error.unexpected": "Ocurrió un error inesperado al intentar cancelar la carga de datos. Por favor intenta de nuevo más tarde.",
     "data-load.cancel.success": "Se ha cancelado la carga de datos correctamente.",
+    "data-load.review.columns.no-issues": "Sin anotaciones",
+    "data-load.review.columns.skipped": "Omitidos",
+    "data-load.review.columns.errors": "Errores",
 
 }

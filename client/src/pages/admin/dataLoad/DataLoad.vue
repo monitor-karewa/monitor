@@ -165,13 +165,12 @@
                         console.log('i18n', i18n);
                         tShow(this.$t(result.data.message), 'danger');
                         
-                        //When a data load is currently in progress, it is returned in the response
+                        //When a data load is currently in progress, the data load info it is returned in the response
                         if (result.data.data) {
-                            this.$store.commit('dataLoad/SET_CURRENT_DATA_LOAD', {dataLoad: result.data.data});
+                            this.$store.commit('dataLoad/SET_CURRENT_DATA_LOAD_INFO', {dataLoadInfo: result.data.data});
                         }
-                        return;
                     } else {
-                        this.$store.commit('dataLoad/SET_CURRENT_DATA_LOAD', {dataLoad: result.data.data});
+                        this.$store.commit('dataLoad/SET_CURRENT_DATA_LOAD_INFO', {dataLoadInfo: result.data.data});
                     }
                 }, (error) => {
                     this.setUploading(false);
@@ -197,13 +196,12 @@
         },
         
         mounted(){
-            bus.$on('dataLoad/CURRENT_DATA_LOAD_LOADED', ({dataLoad, canceled})=>{
-                if (dataLoad) {
+            bus.$on('dataLoad/CURRENT_DATA_LOAD_INFO_LOADED', ({dataLoadInfo})=>{
+                if (dataLoadInfo.current) {
                     this.redirectToCurrent();
                 }
             });
             
-            this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD');
             this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO');
         }
     }
