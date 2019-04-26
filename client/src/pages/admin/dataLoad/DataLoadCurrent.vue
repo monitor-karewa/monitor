@@ -159,7 +159,7 @@
                                     <tbody>
                                     <tr class="height-60" v-for="(rowInfo, rowInfoIndex) in filteredDataLoad" v-if="isRowInfoVisible(rowInfo)">
                                         <td>
-                                            <i class="zmdi zmdi-alert-triangle c-info f-14" v-if="rowInfo.summary.skipRow"></i>
+                                            <i class="zmdi zmdi-alert-triangle c-info f-14" v-if="rowInfo.summary.skipRow || rowInfo.summary.hasInfos"></i>
                                             <i class="zmdi zmdi-alert-triangle c-error f-14" v-if="rowInfo.summary.hasErrors"></i>
                                         </td>
                                         <td class="text-upper" 

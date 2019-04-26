@@ -1,6 +1,7 @@
 const Excel = require('exceljs');
 const async = require('async');
 const mongoose = require('mongoose');
+const Jaccard = require('jaccard-index');
 
 const logger = require('./logger').instance;
 const utils = require('./utils');
@@ -123,10 +124,10 @@ class ContractExcelReader {
                 let regexStr = "";
 
                 //If the value is "ONE TWO THREE"
-                //This will generate a regex ".*(ONE|TWO|THREE) (ONE|TWO|THREE) (ONE|TWO|THREE).*"
+                //This will generate a regex ".*(ONE|TWO|THREE)? (ONE|TWO|THREE)? (ONE|TWO|THREE)?.*"
                 keywords.forEach((keyword) => {
                     //Note: The space at the end is intended
-                    regexStr += `(${keywords.join('|')}) `;
+                    regexStr += `(${keywords.join('|')})? `;
                 });
 
                 //Remove the last extra space
@@ -145,7 +146,7 @@ class ContractExcelReader {
         //Fields to retrieve: _id + the field used for the query
         let select = `_id ${field}`;
 
-        return model.findOne(query)
+        return model.find(query)
             .select(select);
     }
 
@@ -274,27 +275,116 @@ class ContractExcelReader {
                     let query = _this._buildRefCheckQuery(model, field, fieldInfo.value, strategy);
                     // console.log('query', query);
 
-                    query.exec((err, doc) => {
+                    query.exec((err, docs) => {
                         if (err) {
                             logger.error(err, null, 'dataLoader#_readField', 'Error trying to query model [%s] with query: %j', fieldInfo.col, query);
                         }
-
-                        // console.log('query', query);
                         
-                        //Match found
-                        if (doc) {
-                            console.log('Ref found!');
-                            //Set doc._id as valueToSaveOverride
-                            fieldInfo.valueToSaveOverride = doc._id;
-                            fieldInfo.duplicate = true;
-                            fieldInfo.shouldCreateDoc = false;
-                            //Check if doc.[field] matches fieldInfo.value will be (hopefully) done after this process
-                        } else {
-                            console.log('No Ref found!');
-                            fieldInfo.shouldCreateDoc = true;
+                        //No matches found
+                        if (!docs || !docs.length) {
+                            return callback(null, fieldInfo);
+                        }
+                        
+                        //Default "best" match is the first result
+                        let doc = docs[0];
+
+                        //Check all matches and pick the best match
+                        
+                        //Error if there's more than one match
+                        if (docs.length > 1) {
+                            let valueMatchesString = docs.map(_doc => _doc[field] || "").join(", ");
+                            let firstValue = docs[0][field] || "";
+                            fieldInfo.errors.push({
+                                message: `El registro coincide con varios registros cargados previamente [${valueMatchesString}] y se utilizará la mejor coincidencia encontrada`
+                            });
+                            
                         }
 
-                        return callback(null, fieldInfo);
+                        let wordsInValue = fieldInfo.value.split(" ");
+                        let logs = {
+                            "value": wordsInValue
+                        };
+                        
+                        docs.forEach((doc, index) => {
+
+                            let matchFieldValue = doc[field] || "";
+                            let wordsInMatch = matchFieldValue.split(" ");
+
+                            logs[index.toString()] = wordsInMatch;
+                        });
+                        
+                        let items = Object.keys(logs);
+
+                        Jaccard({
+                            getLog: function (item) {
+                                return logs[item];
+                            }
+                        }).getLinks(items)
+                            .then((links) => {
+                                let highestJaccardValue = 0;
+                                let bestJaccardMatch = null;
+
+
+                                links.forEach((link) => {
+                                    if (link.target = "value") {
+                                        if (link.value > highestJaccardValue) {
+                                            highestJaccardValue = link.value;
+                                            bestJaccardMatch = link;
+                                        }
+                                    }
+                                });
+
+                                if (bestJaccardMatch) {
+                                    let index = Number(bestJaccardMatch.source);
+                                    doc = docs[index];
+                                } else {
+                                    doc = docs[0];
+                                }
+                                
+                                //Match found
+                                if (doc) {
+                                    console.log('Ref found!');
+                                    
+                                    //Set doc._id as valueToSaveOverride
+                                    fieldInfo.valueToSaveOverride = doc._id;
+                                    fieldInfo.duplicate = true;
+                                    fieldInfo.shouldCreateDoc = false;
+        
+                                    fieldInfo.infos.push({
+                                        message: `El registro se omitirá ya que coincide con uno cargado previamente [${doc[field]}]`
+                                    });
+                                    
+                                    //Check if doc.[field] matches fieldInfo.value will be (hopefully) done after this process
+                                } else {
+                                    console.log('No Ref found!');
+                                    fieldInfo.shouldCreateDoc = true;
+                                }
+        
+                                return callback(null, fieldInfo);
+                                
+                            }).catch((err) => {
+                                logger.error(err, null, 'dataLoader#_readField', 'Error trying to find the best suited match using Jaccard Index');
+                                
+                                //Match found
+                                if (doc) {
+                                    console.log('Ref found!');
+                                    //Set doc._id as valueToSaveOverride
+                                    fieldInfo.valueToSaveOverride = doc._id;
+                                    fieldInfo.duplicate = true;
+                                    fieldInfo.shouldCreateDoc = false;
+        
+                                    fieldInfo.infos.push({
+                                        message: `El registro se omitirá ya que coincide con uno cargado previamente [${doc[field]}]`
+                                    });
+                                    //Check if doc.[field] matches fieldInfo.value will be (hopefully) done after this process
+                                } else {
+                                    console.log('No Ref found!');
+                                    fieldInfo.shouldCreateDoc = true;
+                                }
+        
+                                return callback(null, fieldInfo);
+                            });
+                        
                     });
 
                 } else {
@@ -635,7 +725,7 @@ class ContractExcelReader {
                             model: Supplier.modelName,
                             field: 'name',
                             //TODO: Change to FUZZY
-                            strategy: REF_STRATEGIES.EXACT
+                            strategy: REF_STRATEGIES.SUBSET
                         }
                     }, callback);
                     break;
@@ -661,7 +751,7 @@ class ContractExcelReader {
                             model: AdministrativeUnit.modelName,
                             field: 'name',
                             //TODO: Change to FUZZY
-                            strategy: REF_STRATEGIES.EXACT
+                            strategy: REF_STRATEGIES.SUBSET
                         },
                         //TODO: Centralize this validation
                         validator: function(){
@@ -676,7 +766,7 @@ class ContractExcelReader {
                             model: AdministrativeUnit.modelName,
                             field: 'name',
                             //TODO: Change to FUZZY
-                            strategy: REF_STRATEGIES.EXACT
+                            strategy: REF_STRATEGIES.SUBSET
                         },
                     }, callback);
                     break;
@@ -748,7 +838,7 @@ class ContractExcelReader {
                             model: AdministrativeUnit.modelName,
                             field: 'name',
                             //TODO: Change to FUZZY
-                            strategy: REF_STRATEGIES.EXACT
+                            strategy: REF_STRATEGIES.SUBSET
                         },
                     }, callback);
                     break;
@@ -807,7 +897,7 @@ class ContractExcelReader {
                     }
     
                     if (fieldInfo.infos && fieldInfo.infos.length) {
-                        rowInfo.summary.hasInfo = true;
+                        rowInfo.summary.hasInfos = true;
                     }
     
                     if (fieldInfo.skipRow) {
@@ -815,8 +905,6 @@ class ContractExcelReader {
                     }
                 }
             }
-
-            console.log('rowInfo.summary.hasErrors', rowInfo.summary.hasErrors);
 
             return readRowCallback(null, rowInfo);
         });
