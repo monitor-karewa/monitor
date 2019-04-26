@@ -1,5 +1,6 @@
 const Excel = require('exceljs');
 const async = require('async');
+const mongoose = require('mongoose');
 
 const logger = require('./logger').instance;
 const utils = require('./utils');
@@ -156,15 +157,18 @@ class ContractExcelReader {
             (callback) => {
                 console.log('BEGIN _readField waterfall');
                 let fieldInfo = {
+                    fieldName: fieldName,
                     value: null,
                     valueToSaveOverride: null,
                     errors: [],
                     infos: [],
-
                     model: null,
                     duplicate: false,
                     shouldCreateDoc: false,
-                    skipRow: false
+                    skipRow: false,
+                    refLinkedBy: [],
+                    refLink: null,
+                    options: options
                 };
                 return callback(null, fieldInfo);
             },
@@ -203,8 +207,9 @@ class ContractExcelReader {
                                 }
                             }
 
-                            if (options.match) {
-                                if (!options.match.test(fieldInfo.value)) {
+                            if (options.match && options.match.regex) {
+                                let regex = new RegExp(options.match.regex, options.match.flags);
+                                if (!regex.test(fieldInfo.value)) {
                                     //Invalid value for match / regex!
                                     // fieldInfo.value = '';
                                     fieldInfo.errors.push({
@@ -248,8 +253,8 @@ class ContractExcelReader {
                 }
                 if (utils.isDefined(options.ref) && utils.isDefined(options.ref.model)) {
 
-                    let model = options.ref.model;
-
+                    let model = mongoose.model(options.ref.model);
+                    
                     fieldInfo.col = model.collection.collectionName;
 
                     let defaultField = 'name';
@@ -296,11 +301,115 @@ class ContractExcelReader {
                     return callback(null, fieldInfo);
                 }
             },
+            (fieldInfo, callback) => {
+                console.log('\t [_readField waterfall] - check refLink');
+
+                let refLinkInfo = null;
+                let model = null;
+                let _id = null;
+                let sourceFieldInfo = null;
+                let targetFieldInfo = null;
+                
+                //Check if current field is a refLink
+                if (utils.isDefined(options.refLink)
+                    && utils.isDefined(options.refLink.linkToField) 
+                    && utils.isDefined(options.refLink.shouldMatchField)) {
+
+                    let linkFromField = fieldName;
+                    let linkToField = options.refLink.linkToField;
+                    let shouldMatchField = options.refLink.shouldMatchField;
+
+                    if (obj[linkToField]) {
+                        //Field has been already proccessed, so we can proceed to validate the link
+                        
+                        //Check if its a valid linked field; should have a model defined
+                        if (!obj[linkToField].options || !obj[linkToField].options.ref || !obj[linkToField].options.ref.model) {
+                            logger.error(null, null, 'dataLoader#_readField', 'Using refLink, but linked field [%s] has no valid ref in its options', linkToField);
+                            return callback(null, fieldInfo);
+                        }
+                        
+                        //Check if linked field found a match; if no match was found, the refLink validation is not possible
+                        if (!obj[linkToField].valueToSaveOverride) {
+                            return callback(null, fieldInfo);
+                        }
+                        
+                        model = mongoose.model(obj[linkToField].options.ref.model);
+                        _id = obj[linkToField].valueToSaveOverride;
+
+                        refLinkInfo = {
+                            linkFromField: linkFromField,
+                            linkToField: linkToField,
+                            shouldMatchField: shouldMatchField,
+                            shouldMatchValue: fieldInfo.value
+                        };
+                        
+                        obj[linkToField].refLinkedBy.push(refLinkInfo);
+                        sourceFieldInfo = obj[linkToField];
+                        targetFieldInfo = fieldInfo;
+                    } else {
+                        //Wait for field to be processed
+                        obj.pendingRefLinks = obj.pendingRefLinks || {};
+                        let pendingRefLinkInfo = {
+                            linkFromField: linkFromField,
+                            linkToField: linkToField,
+                            shouldMatchField: shouldMatchField,
+                            shouldMatchValue: fieldInfo.value
+                        };
+                        obj.pendingRefLinks[linkToField] = pendingRefLinkInfo
+                    }
+                }
+
+                //Check if current field has a refLink pending
+                if (obj.pendingRefLinks && obj.pendingRefLinks[fieldName]) {
+                    refLinkInfo = obj.pendingRefLinks[fieldName];
+                    fieldInfo.refLinkedBy.push(refLinkInfo);
+
+                    model = mongoose.model(fieldInfo.options.ref.model);
+                    _id = fieldInfo.valueToSaveOverride;
+                    sourceFieldInfo = obj[refLinkInfo.linkFromField];
+                    targetFieldInfo = fieldInfo;
+                }
+                
+                //Do refLink check if needed
+                if (refLinkInfo && model && _id && sourceFieldInfo && targetFieldInfo) {
+
+                    
+                    model
+                        .findOne({
+                            _id: _id
+                        })
+                        .select(`_id ${refLinkInfo.shouldMatchField}`)
+                        .exec((err, linkedDoc) => {
+                            if (err) {
+                                logger.error(err, null, 'dataLoader#_readField', 'Error trying to validate refLink [%s] -> [%s]; could not query model [%s] with _id [%s]', sourceFieldInfo.fieldName, targetFieldInfo.fieldName, model.collection.collectionName, _id);
+                                return callback(null, fieldInfo);
+                            }
+
+                            if (!linkedDoc) {
+                                logger.error(err, null, 'dataLoader#_readField', 'Error trying to validate refLink [%s] -> [%s]; doc not found for model [%s] with _id [%s]', sourceFieldInfo.fieldName, sourceFieldInfo.fieldName, model.collection.collectionName, _id);
+                                return callback(null, fieldInfo);
+                            }
+
+                            //Check match
+                            if (linkedDoc[refLinkInfo.shouldMatchField] !== targetFieldInfo.value) {
+                                //Current value does not match the linked ref's doc field
+                                sourceFieldInfo.errors.push({
+                                    message: `El valor ingresado no coincide con el actualmente registrado [${linkedDoc[refLinkInfo.shouldMatchField]}].`
+                                });
+                            }
+                            return callback(null, fieldInfo);
+                        });
+                } else {
+                    return callback(null, fieldInfo);
+                }
+
+                
+            },
             //Call a validation function if needed
             (fieldInfo, callback) => {
                 console.log('\t [_readField waterfall] - validator');
                 if (utils.isDefined(options.validator) && utils.isFunction(options.validator)) {
-                    logger.info(null, null, 'dataLoader#_readField', 'TODO: options.validator')
+                    logger.info(null, null, 'dataLoader#_readField', 'TODO: options.validator');
                     return callback(null, fieldInfo);
                 } else {
                     return callback(null, fieldInfo);
@@ -434,21 +543,30 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell.value, 'administration', String, {
                         required: true,
                         //TODO: Centralize this Regex
-                        match: new RegExp("^[12][0-9]{3}-[12][0-9]{3}$")
+                        // match: new RegExp("^[12][0-9]{3}-[12][0-9]{3}$")
+                        match: {
+                            regex: "^[12][0-9]{3}-[12][0-9]{3}$"
+                        }
                     }, callback);
                     break;
                 case C_IDS.FISCAL_YEAR:
                     return _this._readField(rowInfo, cell.value, 'fiscalYear', String, {
                         required: true,
                         //TODO: Centralize this Regex
-                        match: new RegExp("^[12][0-9]{3}")
+                        // match: new RegExp("^[12][0-9]{3}")
+                        match: {
+                            regex: "^[12][0-9]{3}" 
+                        }
                     }, callback);
                     break;
                 case C_IDS.PERIOD:
                     return _this._readField(rowInfo, cell.value, 'period', String, {
                         required: true,
                         //TODO: Centralize this Regex
-                        match: new RegExp("^[1234]o\\s2[0-9]{3}$")
+                        // match: new RegExp("^[1234]o\\s2[0-9]{3}$")
+                        match: {
+                            regex: "^[1234]o\\s2[0-9]{3}$"
+                        }
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_ID:
@@ -476,7 +594,12 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell.value, 'announcementUrl', String, {
                         hyperlink: true,
                         //TODO: Centralize this Regex
-                        match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
+                        // match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
+                        // match: /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi,
+                        match: {
+                            regex: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
+                            flags: "gi"
+                        }
                     }, callback);
                     break;
                 case C_IDS.ACCOUNCEMENT_DATE:
@@ -498,14 +621,18 @@ class ContractExcelReader {
                 case C_IDS.PRESENTATION_PROPOSALS_DOC_URL:
                     return _this._readField(rowInfo, cell.value, 'presentationProposalsDocUrl', String, {
                         hyperlink: true,
-                        match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
+                        // match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
+                        match: {
+                            regex: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
+                            flags: "gi"
+                        }
                     }, callback);
                     break;
                 case C_IDS.SUPPLIER_NAME:
                     return _this._readField(rowInfo, cell.value, 'supplierName', String, {
                         required: true,
                         ref: {
-                            model: Supplier,
+                            model: Supplier.modelName,
                             field: 'name',
                             //TODO: Change to FUZZY
                             strategy: REF_STRATEGIES.EXACT
@@ -516,21 +643,22 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell.value, 'supplierRfc', String, {
                         // required: true,
                         //TODO: Centralize this Regex
-                        match: new RegExp("^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$"),
+                        // match: new RegExp("^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$"),
+                        match: {
+                            regex: "^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$"
+                        },
                         
-                        // ref: {
-                        //     model: Supplier,
-                        //     field: 'rfc',
-                        //     //TODO: Change to FUZZY
-                        //     strategy: REF_STRATEGIES.EXACT
-                        // }
+                        refLink: {
+                            linkToField: 'supplierName',
+                            shouldMatchField: 'rfc'
+                        }
                     }, callback);
                     break;
                 case C_IDS.ORGANIZER_ADMINISTRATIVE_UNIT:
                     return _this._readField(rowInfo, cell.value, 'organizerAdministrativeUnit', String, {
                         required: true,
                         ref: {
-                            model: AdministrativeUnit,
+                            model: AdministrativeUnit.modelName,
                             field: 'name',
                             //TODO: Change to FUZZY
                             strategy: REF_STRATEGIES.EXACT
@@ -545,7 +673,7 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell.value, 'applicantAdministrativeUnit', String, {
                         required: true,
                         ref: {
-                            model: AdministrativeUnit,
+                            model: AdministrativeUnit.modelName,
                             field: 'name',
                             //TODO: Change to FUZZY
                             strategy: REF_STRATEGIES.EXACT
@@ -606,14 +734,18 @@ class ContractExcelReader {
                         required: true,
                         hyperlink: true,
                         //TODO: match uri?
-                        match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
+                        // match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
+                        match: {
+                            regex: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
+                            flags: "gi"
+                        }
                     }, callback);
                     break;
                 case C_IDS.AREA_IN_CHARGE:
                     return _this._readField(rowInfo, cell.value, 'areaInCharge', String, {
                         required: true,
                         ref: {
-                            model: AdministrativeUnit,
+                            model: AdministrativeUnit.modelName,
                             field: 'name',
                             //TODO: Change to FUZZY
                             strategy: REF_STRATEGIES.EXACT

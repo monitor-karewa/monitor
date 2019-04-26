@@ -262,7 +262,7 @@
                                                 'c-info': rowInfo.presentationProposalsDocUrl.infos.length
                                             }">
                                             <!--{{rowInfo.presentationProposalsDocUrl.value}}-->
-                                            <a v-if="!rowInfo.clarificationMeetingJudgmentUrl.errors.length" :href="rowInfo.presentationProposalsDocUrl.value" target="_blank">{{rowInfo.presentationProposalsDocUrl.value}}</a>
+                                            <a v-if="!rowInfo.presentationProposalsDocUrl.errors.length" :href="rowInfo.presentationProposalsDocUrl.value" target="_blank">{{rowInfo.presentationProposalsDocUrl.value}}</a>
                                             <span v-if="rowInfo.presentationProposalsDocUrl.errors.length">{{rowInfo.presentationProposalsDocUrl.value}}</span>
                                         </td>
                                         <td class="text-upper"
