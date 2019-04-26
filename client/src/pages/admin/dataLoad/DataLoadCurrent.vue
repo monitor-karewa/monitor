@@ -162,243 +162,276 @@
                                             <i class="zmdi zmdi-alert-triangle c-info f-14" v-if="rowInfo.summary.skipRow || rowInfo.summary.hasInfos"></i>
                                             <i class="zmdi zmdi-alert-triangle c-error f-14" v-if="rowInfo.summary.hasErrors"></i>
                                         </td>
-                                        <td class="text-upper" 
-                                            :class="{
-                                                'c-error': rowInfo.procedureType.errors.length,
-                                                'c-info': rowInfo.procedureType.infos.length
-                                            }">
-                                            {{rowInfo.procedureType.value}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.category.errors.length,
-                                                'c-info': rowInfo.category.infos.length
-                                            }">
-                                            {{rowInfo.category.value}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.administration.errors.length,
-                                                'c-info': rowInfo.administration.infos.length
-                                            }">
-                                            {{rowInfo.administration.value}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.fiscalYear.errors.length,
-                                                'c-info': rowInfo.fiscalYear.infos.length
-                                            }">
-                                            {{rowInfo.fiscalYear.value}}
-                                        </td>
-                                        <td class=""
-                                            :class="{
-                                                'c-error': rowInfo.period.errors.length,
-                                                'c-info': rowInfo.period.infos.length
-                                            }">
-                                            {{rowInfo.period.value}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.contractId.errors.length,
-                                                'c-info': rowInfo.contractId.infos.length
-                                            }">
-                                            {{rowInfo.contractId.value}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.partida.errors.length,
-                                                'c-info': rowInfo.partida.infos.length
-                                            }">
-                                            {{rowInfo.partida.value}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.procedureState.errors.length,
-                                                'c-info': rowInfo.procedureState.infos.length
-                                            }">
-                                            {{rowInfo.procedureState.value}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.announcementUrl.errors.length,
-                                                'c-info': rowInfo.announcementUrl.infos.length
-                                            }">
-                                            <a v-if="!rowInfo.announcementUrl.errors.length" :href="rowInfo.announcementUrl.value" target="_blank">{{rowInfo.announcementUrl.value}}</a>
-                                            <span v-if="rowInfo.announcementUrl.errors.length">{{rowInfo.announcementUrl.value}}</span>
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.announcementDate.errors.length,
-                                                'c-info': rowInfo.announcementDate.infos.length
-                                            }">
-                                            {{rowInfo.announcementDate.value | moment}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.servicesDescription.errors.length,
-                                                'c-info': rowInfo.servicesDescription.infos.length
-                                            }">
-                                            {{rowInfo.servicesDescription.value}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.clarificationMeetingDate.errors.length,
-                                                'c-info': rowInfo.clarificationMeetingDate.infos.length
-                                            }">
-                                            {{rowInfo.clarificationMeetingDate.value | moment}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.clarificationMeetingJudgmentUrl.errors.length,
-                                                'c-info': rowInfo.clarificationMeetingJudgmentUrl.infos.length
-                                            }">
-                                            <!--{{rowInfo.clarificationMeetingJudgmentUrl.value}}-->
-                                            <a v-if="!rowInfo.clarificationMeetingJudgmentUrl.errors.length" :href="rowInfo.clarificationMeetingJudgmentUrl.value" target="_blank">{{rowInfo.clarificationMeetingJudgmentUrl.value}}</a>
-                                            <span v-if="rowInfo.clarificationMeetingJudgmentUrl.errors.length">{{rowInfo.clarificationMeetingJudgmentUrl.value}}</span>
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.presentationProposalsDocUrl.errors.length,
-                                                'c-info': rowInfo.presentationProposalsDocUrl.infos.length
-                                            }">
-                                            <!--{{rowInfo.presentationProposalsDocUrl.value}}-->
-                                            <a v-if="!rowInfo.presentationProposalsDocUrl.errors.length" :href="rowInfo.presentationProposalsDocUrl.value" target="_blank">{{rowInfo.presentationProposalsDocUrl.value}}</a>
-                                            <span v-if="rowInfo.presentationProposalsDocUrl.errors.length">{{rowInfo.presentationProposalsDocUrl.value}}</span>
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.supplierName.errors.length,
-                                                'c-info': rowInfo.supplierName.infos.length
-                                            }">
-                                            {{rowInfo.supplierName.value}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.supplierRfc.errors.length,
-                                                'c-info': rowInfo.supplierRfc.infos.length
-                                            }">
-                                            {{rowInfo.supplierRfc.value}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.organizerAdministrativeUnit.errors.length,
-                                                'c-info': rowInfo.organizerAdministrativeUnit.infos.length
-                                            }">
-                                            {{rowInfo.organizerAdministrativeUnit.value}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.applicantAdministrativeUnit.errors.length,
-                                                'c-info': rowInfo.applicantAdministrativeUnit.infos.length
-                                            }">
-                                            {{rowInfo.applicantAdministrativeUnit.value}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.administrativeUnitType.errors.length,
-                                                'c-info': rowInfo.administrativeUnitType.infos.length
-                                            }">
-                                            {{rowInfo.administrativeUnitType.value}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.contractNumber.errors.length,
-                                                'c-info': rowInfo.contractNumber.infos.length
-                                            }">
-                                            {{rowInfo.contractNumber.value}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.contractDate.errors.length,
-                                                'c-info': rowInfo.contractDate.infos.length
-                                            }">
-                                            {{rowInfo.contractDate.value | moment}}
-                                        </td>
-                                        <td class="c-accent text-align-r f-14"
-                                            :class="{
-                                                'c-error': rowInfo.totalAmount.errors.length,
-                                                'c-info': rowInfo.totalAmount.infos.length
-                                            }">
-                                            {{rowInfo.totalAmount.value | currency}}
-                                        </td>
-                                        <td class="c-accent text-align-r f-14"
-                                            :class="{
-                                                'c-error': rowInfo.minAmount.errors.length,
-                                                'c-info': rowInfo.minAmount.infos.length
-                                            }">
-                                            {{rowInfo.minAmount.value | currency}}
-                                        </td>
-                                        <td class="c-accent text-align-r f-14"
-                                            :class="{
-                                                'c-error': rowInfo.maxAmount.errors.length,
-                                                'c-info': rowInfo.maxAmount.infos.length
-                                            }">
-                                            {{rowInfo.maxAmount.value | currency}}
-                                        </td>
-                                        <td class="c-accent text-align-r f-14"
-                                            :class="{
-                                                'c-error': rowInfo.totalOrMaxAmount.errors.length,
-                                                'c-info': rowInfo.totalOrMaxAmount.infos.length
-                                            }">
-                                            {{rowInfo.totalOrMaxAmount.value | currency}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.contractUrl.errors.length,
-                                                'c-info': rowInfo.contractUrl.infos.length
-                                            }">
-                                            <!--{{rowInfo.contractUrl.value}}-->
-                                            <a v-if="!rowInfo.contractUrl.errors.length" :href="rowInfo.contractUrl.value" target="_blank">{{rowInfo.contractUrl.value}}</a>
-                                            <span v-if="rowInfo.contractUrl.errors.length">{{rowInfo.contractUrl.value}}</span>
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.areaInCharge.errors.length,
-                                                'c-info': rowInfo.areaInCharge.infos.length
-                                            }">
-                                            {{rowInfo.areaInCharge.value}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.actualizationDate.errors.length,
-                                                'c-info': rowInfo.actualizationDate.infos.length
-                                            }">
-                                            {{rowInfo.actualizationDate.value | moment}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.notes.errors.length,
-                                                'c-info': rowInfo.notes.infos.length
-                                            }">
-                                            {{rowInfo.notes.value}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.karewaNotes.errors.length,
-                                                'c-info': rowInfo.karewaNotes.infos.length
-                                            }">
-                                            {{rowInfo.karewaNotes.value}}
-                                        </td>
-                                        <td class="text-upper"
-                                            :class="{
-                                                'c-error': rowInfo.informationDate.errors.length,
-                                                'c-info': rowInfo.informationDate.infos.length
-                                            }">
-                                            {{rowInfo.informationDate.value | moment}}
-                                        </td>
-                                        <td class="text-upper":class="{
-                                                'c-error': rowInfo.limitExceeded.errors.length,
-                                                'c-info': rowInfo.limitExceeded.infos.length
-                                            }">
-                                            {{rowInfo.limitExceeded.value}}
-                                        </td>
-                                        <td class="c-accent text-align-r f-14"
-                                            :class="{
-                                                'c-error': rowInfo.amountExceeded.errors.length,
-                                                'c-info': rowInfo.amountExceeded.infos.length
-                                            }">
-                                            {{rowInfo.amountExceeded.value | currency}}
-                                        </td>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="procedureType"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="category"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="administration"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="fiscalYear"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="period"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="contractId"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="partida"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="procedureState"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="announcementUrl" format="url"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="announcementDate" format="date"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="servicesDescription"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="clarificationMeetingDate" format="date"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="clarificationMeetingJudgmentUrl" format="url"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="presentationProposalsDocUrl" format="url"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="supplierName"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="supplierRfc"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="organizerAdministrativeUnit"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="applicantAdministrativeUnit"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="administrativeUnitType"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="contractNumber"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="contractDate" format="date"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="totalAmount" format="currency"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="minAmount" format="currency"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="maxAmount" format="currency"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="totalOrMaxAmount" format="currency"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="contractUrl" format="url"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="areaInCharge"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="actualizationDate" format="date"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="notes"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="karewaNotes"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="informationDate" format="date"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="limitExceeded"/>
+                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="amountExceeded" format="currency"/>
+                                        <!--<td class="text-upper" -->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.procedureType.errors.length,-->
+                                                <!--'c-info': rowInfo.procedureType.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.procedureType.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.category.errors.length,-->
+                                                <!--'c-info': rowInfo.category.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.category.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.administration.errors.length,-->
+                                                <!--'c-info': rowInfo.administration.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.administration.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.fiscalYear.errors.length,-->
+                                                <!--'c-info': rowInfo.fiscalYear.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.fiscalYear.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class=""-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.period.errors.length,-->
+                                                <!--'c-info': rowInfo.period.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.period.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.contractId.errors.length,-->
+                                                <!--'c-info': rowInfo.contractId.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.contractId.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.partida.errors.length,-->
+                                                <!--'c-info': rowInfo.partida.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.partida.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.procedureState.errors.length,-->
+                                                <!--'c-info': rowInfo.procedureState.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.procedureState.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.announcementUrl.errors.length,-->
+                                                <!--'c-info': rowInfo.announcementUrl.infos.length-->
+                                            <!--}">-->
+                                            <!--<a v-if="!rowInfo.announcementUrl.errors.length" :href="rowInfo.announcementUrl.value" target="_blank">{{rowInfo.announcementUrl.value}}</a>-->
+                                            <!--<span v-if="rowInfo.announcementUrl.errors.length">{{rowInfo.announcementUrl.value}}</span>-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.announcementDate.errors.length,-->
+                                                <!--'c-info': rowInfo.announcementDate.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.announcementDate.value | moment}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.servicesDescription.errors.length,-->
+                                                <!--'c-info': rowInfo.servicesDescription.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.servicesDescription.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.clarificationMeetingDate.errors.length,-->
+                                                <!--'c-info': rowInfo.clarificationMeetingDate.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.clarificationMeetingDate.value | moment}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.clarificationMeetingJudgmentUrl.errors.length,-->
+                                                <!--'c-info': rowInfo.clarificationMeetingJudgmentUrl.infos.length-->
+                                            <!--}">-->
+                                            <!--&lt;!&ndash;{{rowInfo.clarificationMeetingJudgmentUrl.value}}&ndash;&gt;-->
+                                            <!--<a v-if="!rowInfo.clarificationMeetingJudgmentUrl.errors.length" :href="rowInfo.clarificationMeetingJudgmentUrl.value" target="_blank">{{rowInfo.clarificationMeetingJudgmentUrl.value}}</a>-->
+                                            <!--<span v-if="rowInfo.clarificationMeetingJudgmentUrl.errors.length">{{rowInfo.clarificationMeetingJudgmentUrl.value}}</span>-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.presentationProposalsDocUrl.errors.length,-->
+                                                <!--'c-info': rowInfo.presentationProposalsDocUrl.infos.length-->
+                                            <!--}">-->
+                                            <!--&lt;!&ndash;{{rowInfo.presentationProposalsDocUrl.value}}&ndash;&gt;-->
+                                            <!--<a v-if="!rowInfo.presentationProposalsDocUrl.errors.length" :href="rowInfo.presentationProposalsDocUrl.value" target="_blank">{{rowInfo.presentationProposalsDocUrl.value}}</a>-->
+                                            <!--<span v-if="rowInfo.presentationProposalsDocUrl.errors.length">{{rowInfo.presentationProposalsDocUrl.value}}</span>-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.supplierName.errors.length,-->
+                                                <!--'c-info': rowInfo.supplierName.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.supplierName.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.supplierRfc.errors.length,-->
+                                                <!--'c-info': rowInfo.supplierRfc.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.supplierRfc.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.organizerAdministrativeUnit.errors.length,-->
+                                                <!--'c-info': rowInfo.organizerAdministrativeUnit.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.organizerAdministrativeUnit.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.applicantAdministrativeUnit.errors.length,-->
+                                                <!--'c-info': rowInfo.applicantAdministrativeUnit.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.applicantAdministrativeUnit.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.administrativeUnitType.errors.length,-->
+                                                <!--'c-info': rowInfo.administrativeUnitType.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.administrativeUnitType.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.contractNumber.errors.length,-->
+                                                <!--'c-info': rowInfo.contractNumber.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.contractNumber.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.contractDate.errors.length,-->
+                                                <!--'c-info': rowInfo.contractDate.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.contractDate.value | moment}}-->
+                                        <!--</td>-->
+                                        <!--<td class="c-accent text-align-r f-14"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.totalAmount.errors.length,-->
+                                                <!--'c-info': rowInfo.totalAmount.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.totalAmount.value | currency}}-->
+                                        <!--</td>-->
+                                        <!--<td class="c-accent text-align-r f-14"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.minAmount.errors.length,-->
+                                                <!--'c-info': rowInfo.minAmount.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.minAmount.value | currency}}-->
+                                        <!--</td>-->
+                                        <!--<td class="c-accent text-align-r f-14"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.maxAmount.errors.length,-->
+                                                <!--'c-info': rowInfo.maxAmount.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.maxAmount.value | currency}}-->
+                                        <!--</td>-->
+                                        <!--<td class="c-accent text-align-r f-14"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.totalOrMaxAmount.errors.length,-->
+                                                <!--'c-info': rowInfo.totalOrMaxAmount.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.totalOrMaxAmount.value | currency}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.contractUrl.errors.length,-->
+                                                <!--'c-info': rowInfo.contractUrl.infos.length-->
+                                            <!--}">-->
+                                            <!--&lt;!&ndash;{{rowInfo.contractUrl.value}}&ndash;&gt;-->
+                                            <!--<a v-if="!rowInfo.contractUrl.errors.length" :href="rowInfo.contractUrl.value" target="_blank">{{rowInfo.contractUrl.value}}</a>-->
+                                            <!--<span v-if="rowInfo.contractUrl.errors.length">{{rowInfo.contractUrl.value}}</span>-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.areaInCharge.errors.length,-->
+                                                <!--'c-info': rowInfo.areaInCharge.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.areaInCharge.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.actualizationDate.errors.length,-->
+                                                <!--'c-info': rowInfo.actualizationDate.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.actualizationDate.value | moment}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.notes.errors.length,-->
+                                                <!--'c-info': rowInfo.notes.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.notes.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.karewaNotes.errors.length,-->
+                                                <!--'c-info': rowInfo.karewaNotes.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.karewaNotes.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.informationDate.errors.length,-->
+                                                <!--'c-info': rowInfo.informationDate.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.informationDate.value | moment}}-->
+                                        <!--</td>-->
+                                        <!--<td class="text-upper":class="{-->
+                                                <!--'c-error': rowInfo.limitExceeded.errors.length,-->
+                                                <!--'c-info': rowInfo.limitExceeded.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.limitExceeded.value}}-->
+                                        <!--</td>-->
+                                        <!--<td class="c-accent text-align-r f-14"-->
+                                            <!--:class="{-->
+                                                <!--'c-error': rowInfo.amountExceeded.errors.length,-->
+                                                <!--'c-info': rowInfo.amountExceeded.infos.length-->
+                                            <!--}">-->
+                                            <!--{{rowInfo.amountExceeded.value | currency}}-->
+                                        <!--</td>-->
                                         
                                         
                                         
@@ -518,7 +551,8 @@
     import TableHeaderButtonsWrapper from '@/components/tables/headers/TableHeaderButtonsWrapper';
 //    import TableHeaderButton from '@/components/tables/headers/TableHeaderButton';
     import TableHeaderFilters from '@/components/tables/headers/TableHeaderFilters';
-    
+    import TableTdDataLoadResult from '@/components/tables/tds/TableTdDataLoadResult';
+
     import {mapState} from 'vuex';
     import { bus } from '@/main';
     import moment from 'moment';
@@ -554,7 +588,8 @@
             TableHeaderSearch,
             TableHeaderButtonsWrapper,
 //            TableHeaderButton,
-            TableHeaderFilters
+            TableHeaderFilters,
+            TableTdDataLoadResult
         },
         computed: {
             current () {

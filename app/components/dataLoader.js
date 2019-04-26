@@ -282,6 +282,7 @@ class ContractExcelReader {
                         
                         //No matches found
                         if (!docs || !docs.length) {
+                            fieldInfo.shouldCreateDoc = true;
                             return callback(null, fieldInfo);
                         }
                         
@@ -705,7 +706,11 @@ class ContractExcelReader {
                     break;
                 case C_IDS.CLARIFICATION_MEETING_JUDGEMENT_URL:
                     return _this._readField(rowInfo, cell.value, 'clarificationMeetingJudgmentUrl', String, {
-                        hyperlink: true
+                        hyperlink: true,
+                        match: {
+                            regex: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
+                            flags: "gi"
+                        }
                     }, callback);
                     break;
                 case C_IDS.PRESENTATION_PROPOSALS_DOC_URL:
