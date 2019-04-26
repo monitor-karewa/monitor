@@ -159,7 +159,7 @@
                                     <tbody>
                                     <tr class="height-60" v-for="(rowInfo, rowInfoIndex) in filteredDataLoad" v-if="isRowInfoVisible(rowInfo)">
                                         <td>
-                                            <i class="zmdi zmdi-alert-triangle c-info f-14" v-if="rowInfo.summary.skipRow"></i>
+                                            <i class="zmdi zmdi-alert-triangle c-info f-14" v-if="rowInfo.summary.skipRow || rowInfo.summary.hasInfos"></i>
                                             <i class="zmdi zmdi-alert-triangle c-error f-14" v-if="rowInfo.summary.hasErrors"></i>
                                         </td>
                                         <td class="text-upper" 
@@ -262,7 +262,7 @@
                                                 'c-info': rowInfo.presentationProposalsDocUrl.infos.length
                                             }">
                                             <!--{{rowInfo.presentationProposalsDocUrl.value}}-->
-                                            <a v-if="!rowInfo.clarificationMeetingJudgmentUrl.errors.length" :href="rowInfo.presentationProposalsDocUrl.value" target="_blank">{{rowInfo.presentationProposalsDocUrl.value}}</a>
+                                            <a v-if="!rowInfo.presentationProposalsDocUrl.errors.length" :href="rowInfo.presentationProposalsDocUrl.value" target="_blank">{{rowInfo.presentationProposalsDocUrl.value}}</a>
                                             <span v-if="rowInfo.presentationProposalsDocUrl.errors.length">{{rowInfo.presentationProposalsDocUrl.value}}</span>
                                         </td>
                                         <td class="text-upper"
