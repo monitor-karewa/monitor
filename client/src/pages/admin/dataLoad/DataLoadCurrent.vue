@@ -124,7 +124,7 @@
                                         <th>Tipo de procedimiento</th>
                                         <th>Categoría</th>
                                         <th>Administración</th>
-                                        <th>Año fiscal</th>
+                                        <th>Ejercicio</th>
                                         <th>Periodo</th>
                                         <th>Id del Contrato</th>
                                         <th>Partida</th>

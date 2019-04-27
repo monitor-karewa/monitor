@@ -25,9 +25,10 @@ const utils =  {
      *
      * @param str {string} a transformar
      * @param flags {String|null} flags opcionales a agregar al regex generado
+     * @param returnAsStr {boolean} si es truthy, se devolverá el regex generado como string
      * @returns {*} RegExp creada
      */
-    toAccentsRegex : function (str, flags) {
+    toAccentsRegex : function (str, flags, returnAsStr) {
         if (utils.isNotDefined(str)) {
             str = '';
         }
@@ -41,6 +42,11 @@ const utils =  {
         regexStr = regexStr.replace(new RegExp(_Z_ACCENT, 'g'), _Z_ACCENT);
         regexStr = regexStr.replace(new RegExp(_D_ACCENT, 'g'), _D_ACCENT);
         regexStr = regexStr.replace(new RegExp(_C_ACCENT, 'g'), _C_ACCENT);
+        
+        if (returnAsStr) {
+            return regexStr;
+        }
+        
         return new RegExp(regexStr, flags);
     },
 

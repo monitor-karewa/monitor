@@ -7,6 +7,26 @@ const logger = require('./logger').instance;
 const utils = require('./utils');
 
 const Contract = require('./../models/contract.model').Contract;
+const {
+    
+    procedureTypesEnumDict,
+    procedureTypesEnum,
+    
+    categoryEnumDict,
+    categoryEnum,
+
+    procedureStateEnumDict,
+    procedureStateEnum,
+
+    administrativeUnitTypeEnumDict,
+    administrativeUnitTypeEnum,
+
+    limitExceededEnumDict,
+    limitExceededEnum,
+
+    // contractTypeEnumDict,
+    // contractTypeEnum
+} = require('./../models/contract.model');
 const AdministrativeUnit = require('./../models/administrativeUnit.model').AdministrativeUnit;
 const Supplier = require('./../models/supplier.model').Supplier;
 const DataLoad = require('./../models/dataLoad.model').DataLoad;
@@ -156,7 +176,6 @@ class ContractExcelReader {
         async.waterfall([
             //Initialize the fieldInfo
             (callback) => {
-                console.log('BEGIN _readField waterfall');
                 let fieldInfo = {
                     fieldName: fieldName,
                     value: null,
@@ -175,12 +194,21 @@ class ContractExcelReader {
             },
             //Parse value
             (fieldInfo, callback) => {
-                console.log('\t [_readField waterfall] - parse value');
                 try {
                     switch (type) {
                         case String:
-                            console.log(`\t\t[String] ${fieldName}`, value);
                             fieldInfo.value = value || '';
+                            
+                            if (typeof(fieldInfo.value) !== 'string') {
+                                logger.error(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.');
+
+                                fieldInfo.errors.push({
+                                    //TODO: i18n
+                                    message: 'El valor indicado no cumple con el formato permitido para este campo.'
+                                });
+                                
+                                return callback(null, fieldInfo);
+                            }
 
                             //Try to obtain inner value "hyperlink" or "text", which is available only for URLs
                             if (options.hyperlink) {
@@ -193,23 +221,60 @@ class ContractExcelReader {
 
                             //Force uppercase
                             if (options.uppercase) {
-                                fieldInfo.value = fieldInfo.value.toUpperCase();
-                            }
-
-                            //Validate vs enum
-                            if (options.enum && options.enum.length) {
-                                if (!options.enum.includes(fieldInfo.value)) {
-                                    //Invalid value for enum!
-                                    // fieldInfo.value = '';
-                                    fieldInfo.errors.push({
-                                        //TODO: i18n
-                                        message: 'El valor indicado no está permitido para este campo.'
-                                    });
+                                if (fieldInfo.value.toUpperCase) {
+                                    fieldInfo.value = fieldInfo.value.toUpperCase();
                                 }
                             }
 
-                            if (options.match && options.match.regex) {
-                                let regex = new RegExp(options.match.regex, options.match.flags);
+                            //Validate vs enum
+                            if (options.enum) {
+                                let enumKeys = Object.keys(options.enum);
+                                
+                                let matchFound = false;
+
+                                for (let key of enumKeys) {
+                                    let regexOptions = options.enum[key];
+                                    for (let regexOption of regexOptions) {
+                                        let regex = new RegExp(regexOption.regexStr, regexOption.flags);
+                                        let isMatch = regex.test(fieldInfo.value);
+                                        if (isMatch) {
+                                            
+                                            //The value to save is the actual enum dict key (the allowed enum value)
+                                            fieldInfo.valueToSaveOverride = key;
+
+                                            matchFound = true;
+                                            break;
+                                        }
+                                    }
+                                    
+                                    if (matchFound) {
+                                        break;
+                                    }
+                                }
+                                
+                                
+                                if (!matchFound) {
+                                    fieldInfo.errors.push({
+                                        //TODO: i18n
+                                        // message: 'El valor indicado no está permitido para este campo.'
+                                        message: 'El valor indicado no se encuentra en las opciones permitidas para este campo.'
+                                    });
+                                }
+                                
+                                
+                                // if (!options.enum.includes(fieldInfo.value)) {
+                                //     //Invalid value for enum!
+                                //     // fieldInfo.value = '';
+                                //     fieldInfo.errors.push({
+                                //         //TODO: i18n
+                                //         // message: 'El valor indicado no está permitido para este campo.'
+                                //         message: 'El valor indicado no se encuentra en las opciones permitidas para este campo.'
+                                //     });
+                                // }
+                            }
+
+                            if (options.match && options.match.regexStr) {
+                                let regex = new RegExp(options.match.regexStr, options.match.flags);
                                 if (!regex.test(fieldInfo.value)) {
                                     //Invalid value for match / regex!
                                     // fieldInfo.value = '';
@@ -222,14 +287,36 @@ class ContractExcelReader {
                             break;
                         case Date:
                             value = value || '';
-                            console.log(`\t\t[Date] ${fieldName}`, value);
+
+                            if (!utils.isDate(value) && typeof(value) !== 'string') {
+                                logger.error(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.');
+
+                                fieldInfo.errors.push({
+                                    //TODO: i18n
+                                    message: 'El valor indicado no cumple con el formato permitido para este campo.'
+                                });
+
+                                return callback(null, fieldInfo);
+                            }
+                            
                             fieldInfo.value = utils.parseDate(value);
                             break;
                         case Number:
                             value = value || '';
 
-                            console.log(`\t\t[Number] ${fieldName}`, value);
                             // console.log(fieldName + ' => ', value);
+
+                            if (!utils.isNumber(value) && typeof(value) !== 'string') {
+                                logger.error(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.');
+
+                                fieldInfo.errors.push({
+                                    //TODO: i18n
+                                    message: 'El valor indicado no cumple con el formato permitido para este campo.'
+                                });
+
+                                return callback(null, fieldInfo);
+                            }
+                            
 
                             if (utils.isNumber(value)) {
                                 fieldInfo.value = value;
@@ -246,12 +333,23 @@ class ContractExcelReader {
             },
             //Check ref in a collection
             (fieldInfo, callback) => {
-                console.log('\t [_readField waterfall] - check ref');
                 // console.log('options.ref', options.ref);
                 // console.log('utils.isDefined(options.ref)', utils.isDefined(options.ref));
                 if (options.ref) {
                     // console.log('utils.isDefined(options.ref.model)', utils.isDefined(options.ref.model));
                 }
+
+                if (typeof(value) !== 'string') {
+                    logger.error(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.');
+
+                    // fieldInfo.errors.push({
+                    //     //TODO: i18n
+                    //     message: 'El valor indicado no cumple con el formato permitido para este campo.'
+                    // });
+
+                    return callback(null, fieldInfo);
+                }
+                
                 if (utils.isDefined(options.ref) && utils.isDefined(options.ref.model)) {
 
                     let model = mongoose.model(options.ref.model);
@@ -344,8 +442,6 @@ class ContractExcelReader {
                                 
                                 //Match found
                                 if (doc) {
-                                    console.log('Ref found!');
-                                    
                                     //Set doc._id as valueToSaveOverride
                                     fieldInfo.valueToSaveOverride = doc._id;
                                     fieldInfo.duplicate = true;
@@ -357,7 +453,6 @@ class ContractExcelReader {
                                     
                                     //Check if doc.[field] matches fieldInfo.value will be (hopefully) done after this process
                                 } else {
-                                    console.log('No Ref found!');
                                     fieldInfo.shouldCreateDoc = true;
                                 }
         
@@ -368,7 +463,6 @@ class ContractExcelReader {
                                 
                                 //Match found
                                 if (doc) {
-                                    console.log('Ref found!');
                                     //Set doc._id as valueToSaveOverride
                                     fieldInfo.valueToSaveOverride = doc._id;
                                     fieldInfo.duplicate = true;
@@ -379,7 +473,6 @@ class ContractExcelReader {
                                     });
                                     //Check if doc.[field] matches fieldInfo.value will be (hopefully) done after this process
                                 } else {
-                                    console.log('No Ref found!');
                                     fieldInfo.shouldCreateDoc = true;
                                 }
         
@@ -393,8 +486,6 @@ class ContractExcelReader {
                 }
             },
             (fieldInfo, callback) => {
-                console.log('\t [_readField waterfall] - check refLink');
-
                 let refLinkInfo = null;
                 let model = null;
                 let _id = null;
@@ -498,7 +589,6 @@ class ContractExcelReader {
             },
             //Call a validation function if needed
             (fieldInfo, callback) => {
-                console.log('\t [_readField waterfall] - validator');
                 if (utils.isDefined(options.validator) && utils.isFunction(options.validator)) {
                     logger.info(null, null, 'dataLoader#_readField', 'TODO: options.validator');
                     return callback(null, fieldInfo);
@@ -508,7 +598,6 @@ class ContractExcelReader {
             },
             //Check if the field value is required
             (fieldInfo, callback) => {
-                console.log('\t [_readField waterfall] - required');
                 if (utils.isDefined(options.required) && utils.isNotDefined(fieldInfo.value)) {
                     // fieldInfo.errors.push({
                     //     message: 'Este es un error forzado.'
@@ -532,7 +621,6 @@ class ContractExcelReader {
             },
             //Check if the field value is unique
             (fieldInfo, callback) => {
-                console.log('\t [_readField waterfall] - unique');
                 if (utils.isDefined(options.unique) && utils.isNotDefined(fieldInfo.value)) {
 
                     let query = {
@@ -553,17 +641,14 @@ class ContractExcelReader {
 
                                 fieldInfo.skipRow = true;
                             }
-                            console.log('END _readField waterfall 1');
                             return callback(null, fieldInfo);
                         });
                 } else {
 
-                    console.log('END _readField waterfall 2');
                     return callback(null, fieldInfo);
                 }
             }
         ], (err, fieldInfo) => {
-            console.log('ALL END _readField waterfall');
             if (err) {
                 console.log('err', err);
             }
@@ -602,8 +687,6 @@ class ContractExcelReader {
             let column = this.columns[columnsArrayIndex];
 
 
-            console.log('column', column);
-            
             if (!column) {
                 console.log('undefined column, skipping');
                 return callback();
@@ -612,16 +695,14 @@ class ContractExcelReader {
             switch(column) {
                 case C_IDS.PROCEDURE_TYPE:
                     return _this._readField(rowInfo, cell.value, 'procedureType', String, {
-                        //TODO: Enum values for validation
-                        enum: [],
+                        enum: procedureTypesEnumDict,
                         required: true,
                         uppercase: true
                     }, callback);
                     break;
                 case C_IDS.CATEGORY:
                     return _this._readField(rowInfo, cell.value, 'category', String, {
-                        //TODO: Enum values for validation
-                        enum: [],
+                        enum: categoryEnumDict,
                         required: function () {
                             //TODO: Centralize this validation
                             // let descriptionRegExp = utils.toAccentsRegex(this.servicesDescription.toUpperCase(),'i');
@@ -636,7 +717,7 @@ class ContractExcelReader {
                         //TODO: Centralize this Regex
                         // match: new RegExp("^[12][0-9]{3}-[12][0-9]{3}$")
                         match: {
-                            regex: "^[12][0-9]{3}-[12][0-9]{3}$"
+                            regexStr: "^[12][0-9]{3}-[12][0-9]{3}$"
                         }
                     }, callback);
                     break;
@@ -646,7 +727,7 @@ class ContractExcelReader {
                         //TODO: Centralize this Regex
                         // match: new RegExp("^[12][0-9]{3}")
                         match: {
-                            regex: "^[12][0-9]{3}" 
+                            regexStr: "^[12][0-9]{3}" 
                         }
                     }, callback);
                     break;
@@ -656,7 +737,7 @@ class ContractExcelReader {
                         //TODO: Centralize this Regex
                         // match: new RegExp("^[1234]o\\s2[0-9]{3}$")
                         match: {
-                            regex: "^[1234]o\\s2[0-9]{3}$"
+                            regexStr: "^[1234]o\\s2[0-9]{3}$"
                         }
                     }, callback);
                     break;
@@ -671,8 +752,7 @@ class ContractExcelReader {
                     break;
                 case C_IDS.PROCEDURE_STATE:
                     return _this._readField(rowInfo, cell.value, 'procedureState', String, {
-                        //TODO: Enum values for validation
-                        enum: [],
+                        enum: procedureStateEnumDict,
                         required: function () {
                             //TODO: Centralize this validation
                             // let descriptionRegExp = utils.toAccentsRegex(this.notes.toUpperCase(),'i');
@@ -688,7 +768,7 @@ class ContractExcelReader {
                         // match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
                         // match: /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi,
                         match: {
-                            regex: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
+                            regexStr: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
                             flags: "gi"
                         }
                     }, callback);
@@ -708,7 +788,7 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell.value, 'clarificationMeetingJudgmentUrl', String, {
                         hyperlink: true,
                         match: {
-                            regex: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
+                            regexStr: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
                             flags: "gi"
                         }
                     }, callback);
@@ -718,7 +798,7 @@ class ContractExcelReader {
                         hyperlink: true,
                         // match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
                         match: {
-                            regex: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
+                            regexStr: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
                             flags: "gi"
                         }
                     }, callback);
@@ -740,7 +820,7 @@ class ContractExcelReader {
                         //TODO: Centralize this Regex
                         // match: new RegExp("^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$"),
                         match: {
-                            regex: "^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$"
+                            regexStr: "^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$"
                         },
                         
                         refLink: {
@@ -777,16 +857,13 @@ class ContractExcelReader {
                     break;
                 case C_IDS.ADMINISTRATIVE_UNIT_TYPE:
                     return _this._readField(rowInfo, cell.value, 'administrativeUnitType', String, {
-                        //TODO: Enum values for validation
-                        enum: [],
+                        enum: administrativeUnitTypeEnumDict,
                         required: true,
                         uppercase: true
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_NUMBER:
                     return _this._readField(rowInfo, cell.value, 'contractNumber', String, {
-                        //TODO: Enum values for validation
-                        enum: [],
                         //TODO: required?
                         // required: true,
                         unique: true
@@ -831,7 +908,7 @@ class ContractExcelReader {
                         //TODO: match uri?
                         // match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
                         match: {
-                            regex: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
+                            regexStr: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
                             flags: "gi"
                         }
                     }, callback);
@@ -865,8 +942,7 @@ class ContractExcelReader {
                     break;
                 case C_IDS.LIMIT_EXCEEDED:
                     return _this._readField(rowInfo, cell.value, 'limitExceeded', String, {
-                        //TODO: Enum values for validation
-                        enum: [],
+                        enum: limitExceededEnumDict,
                         required: true,
                         uppercase: true
                     }, callback);
@@ -881,10 +957,6 @@ class ContractExcelReader {
                     // return callback
                 //Unrecognized column identifier value
             }
-
-            console.log('reached the end without calling callback. Calling callback() now');
-            return callback();
-
         }, (err, results) => {
             //All columns processed for row
 
@@ -896,7 +968,6 @@ class ContractExcelReader {
             for (let fieldName of fieldNames) {
                 let fieldInfo = rowInfo[fieldName];
                 if (fieldInfo) {
-                    console.log('fieldInfo.errors', fieldInfo.errors);
                     if (fieldInfo.errors && fieldInfo.errors.length) {
                         rowInfo.summary.hasErrors = true;
                     }
@@ -908,6 +979,8 @@ class ContractExcelReader {
                     if (fieldInfo.skipRow) {
                         rowInfo.summary.skipRow = true;
                     }
+                } else {
+                    console.log(`null fieldInfo found for fieldName ${fieldName}!`);
                 }
             }
 
@@ -950,17 +1023,10 @@ class ContractExcelReader {
                         }
                     }, (err, objs) => {
                         //Delete first two rows
-                        console.log('objs.length', objs.length);
                         objs.splice(0, 2);
-                        console.log('objs.length', objs.length);
-
-
                         let dataLoad = new DataLoad({
                             data: objs
                         });
-
-                        console.log('dataLoad', dataLoad);
-
                         return resolve(dataLoad);
                     });
 
