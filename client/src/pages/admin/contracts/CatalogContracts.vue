@@ -617,7 +617,7 @@
                     {label: "contracts.areaInCharge", visible: true, field: 'areaInCharge.name'},
                     {label: "contracts.updateDate", visible: true, field: 'updateDate', type: 'date'},
 
-                    {label: "general.created-at", visible: true, field: 'created_at', type: 'date'}
+                    {label: "general.created-at", visible: true, field: 'createdAt', type: 'date'}
                 ],
                 entry: {
                     supplier: {},

@@ -176,7 +176,7 @@
                         "Ene", "Feb", "Mar",
                         "Abr", "May", "Jun", "Jul",
                         "Aug", "Sep", "Oct",
-                        "Nov", "Dece"
+                        "Nov", "Dec"
                     ];
                     if(typeof date === "string"){
                         date = new Date(date);
