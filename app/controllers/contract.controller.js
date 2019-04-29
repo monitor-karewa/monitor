@@ -30,6 +30,7 @@ exports.index = (req, res, next) => {
  */
 exports.list = (req, res, next) => {
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
+    paginationOptions.lean = false;
 
     let query = {};
     

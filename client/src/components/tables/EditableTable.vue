@@ -178,11 +178,9 @@
                         "Aug", "Sep", "Oct",
                         "Nov", "Dece"
                     ];
-
                     if(typeof date === "string"){
                         date = new Date(date);
                     }
-
 
                     var day = date.getDate();
                     var monthIndex = date.getMonth();
