@@ -37,7 +37,7 @@
                                 :title="$t('contracts.new.procedure-type.placeholder')"
                                 data-live-search-placeholder="Realiza una búsqueda..">
                             <option value="EXTENSION"> {{$t('contracts.procedure-type.extension')}}</option>
-                            <option value="MODIFICACION"> {{$t('contracts.procedure-type.modification')}}</option>
+                            <option value="MODIFICATION"> {{$t('contracts.procedure-type.modification')}}</option>
                             <option value="ADENDUM"> {{$t('contracts.procedure-type.adendum')}}</option>
                             <option value="ACQUISITION"> {{$t('contracts.procedure-type.adquisition')}}</option>
                             <option value="SERVICES"> {{$t('contracts.procedure-type.services')}}</option>
@@ -591,6 +591,7 @@
                 tableColumns: [
                     {label: "contracts.supplier", visible: true, field: 'supplier.name'},
                     {label: "contracts.category", visible: true, field: 'categoryEnumObject.description'},
+                    {label: "contracts.procedureType", visible: true, field: 'procedureTypeEnumObject.description'},
                     {label: "contracts.administrationPeriod", visible: true, field: 'administrationPeriod'},
                     {label: "contracts.fiscalYear", visible: true, field: 'fiscalYear'},
                     {label: "contracts.period", visible: true, field: 'period'},
@@ -641,7 +642,7 @@
                     organizerAdministrativeUnit: {},
                     applicantAdministrativeUnit: {},
                     administrativeUnitType: {},
-                    contractNumber: "Number123123",
+                    contractNumber: "Number12312322222222",
                     contractDate: "04/04/2020",
                     contractType: "",
                     totalAmount: 4000,
@@ -831,9 +832,6 @@
             clearEntry() {
                 this.$store.dispatch (`${storeModule}/clearSelectedEntry`);
                 this.$v.$reset();
-            }, changeDate (date) {
-                console.log("date", date);
-                console.log('this.entry --> ' + this.entry);
             }
         },
         created() {
@@ -921,7 +919,6 @@
             });
 
             $('.datepicker').on('changeDate',  (event) => {
-                console.log('event.target.id --> ' + event.target.id);
                 this.entry[event.target.id] = event.date;
             });
 

@@ -164,7 +164,9 @@
                 let fieldPath = column.field.split(".");
                 let tempObject = row;
                 for (let i = 0; i < fieldPath.length; i++) {
-                    tempObject = tempObject[fieldPath[i]]
+                    if(tempObject) {
+                        tempObject = tempObject[fieldPath[i]]
+                    }
                 }
                 if(tempObject && dateFieldNameRegex.test(column.type)){
                     return this.formatDate(tempObject);

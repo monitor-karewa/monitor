@@ -285,7 +285,7 @@ export default {
 
 
 
-    "contracts.procedureType" : "Tipo de Proceidimiento",
+    "contracts.procedureType" : "Tipo de Procedimiento",
     "contracts.validation.required": "El campo {field} del Contrato es requerido",
 
 
