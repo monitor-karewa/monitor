@@ -12,15 +12,15 @@
             />
         </AdminMainSection>
 
-        <modalEntry v-bind:storeModule="storeModule" :validator="$v">
+        <modalEntry v-bind:storeModule="storeModule" :validator="$v" :entry="entry">
             <div>
                 <!--Procedure Type-->
                 <div class="form-group fg-float basic-select">
                     <div class="fg-line">
-                        <select v-model="entry.supplier._id" class="form-control select selectpicker"
+                        <select v-model="entry.procedureType" class="form-control select selectpicker"
                                 data-live-search="true"
-                                :data-live-search-placeholder="$t('contracts.new.procedure-type.placeholder')"
-                                title="Select placeholder">
+                                :title="$t('contracts.new.procedure-type.placeholder')"
+                                data-live-search-placeholder="Realiza una búsqueda..">
                             <option value="PUBLIC"> {{$t('contracts.procedure-type.public')}}</option>
                             <option value="NO_BID">{{$t('contracts.procedure-type.no-bid')}}</option>
                             <option value="INVITATION"> {{$t('contracts.procedure-type.invitation')}}</option>
@@ -34,15 +34,15 @@
                     <div class="fg-line">
                         <select v-model="entry.category" class="form-control select selectpicker"
                                 data-live-search="true"
-                                :data-live-search-placeholder="$t('contracts.new.procedure-type.placeholder')"
-                                title="Select placeholder">
+                                :title="$t('contracts.new.procedure-type.placeholder')"
+                                data-live-search-placeholder="Realiza una búsqueda..">
                             <option value="EXTENSION"> {{$t('contracts.procedure-type.extension')}}</option>
                             <option value="MODIFICACION"> {{$t('contracts.procedure-type.modification')}}</option>
-                            <option value="ADENDUM"> {{$t('contracts.procedure-type.public')}}</option>
-                            <option value="ACQUISITION"> {{$t('contracts.procedure-type.public')}}</option>
-                            <option value="SERVICES"> {{$t('contracts.procedure-type.public')}}</option>
-                            <option value="LEASE"> {{$t('contracts.procedure-type.public')}}</option>
-                            <option value="PUBLIC_WORKS"> {{$t('contracts.procedure-type.public')}}</option>
+                            <option value="ADENDUM"> {{$t('contracts.procedure-type.adendum')}}</option>
+                            <option value="ACQUISITION"> {{$t('contracts.procedure-type.adquisition')}}</option>
+                            <option value="SERVICES"> {{$t('contracts.procedure-type.services')}}</option>
+                            <option value="LEASE"> {{$t('contracts.procedure-type.lease')}}</option>
+                            <option value="PUBLIC_WORKS"> {{$t('contracts.procedure-type.public-works')}}</option>
                         </select>
                         <label class="fg-label">{{$t('contracts.new.procedure-type.label')}}</label>
                     </div>
@@ -60,22 +60,24 @@
                             <strong>{{$t('contracts.new.administration-period.sub-label')}}</strong>
                         </label>
                     </div>
-                    <!--<span v-if="$v.entry.administrationPeriod.$invalid && $v.entry.administrationPeriod.$dirty"
-                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.administration-period.label'})}}</span>-->
+                    <!--<span v-if="$v.entry.administrationPeriod.$invalid  && $v.entry.administrationPeriod.$dirty"-->
+                          <!--class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.administration-period.label')})}}</span>-->
                 </div>
 
                 <!--fiscal year-->
-                <div class="fg-line basic-input">
-                    <input type="text" class="form-control fg-input"
-                           :placeholder="$t('contracts.new.fiscal-year.placeholder')"
-                           v-model="entry.fiscalYear">
-                    <label class="fg-label">{{$t('contracts.new.fiscal-year.label')}}
-                        <small></small>
-                        <br>
-                        <strong>{{$t('contracts.new.fiscal-year.sub-label')}}</strong>
-                    </label>
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input"
+                               :placeholder="$t('contracts.new.fiscal-year.placeholder')"
+                               v-model="entry.fiscalYear">
+                        <label class="fg-label">{{$t('contracts.new.fiscal-year.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('contracts.new.fiscal-year.sub-label')}}</strong>
+                        </label>
+                    </div>
+                    <!--<span v-if="$v.entry.fiscalYear.$invalid && $v.entry.fiscalYear.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.administration-period.label')})}}</span>-->
                 </div>
-                <!--<span v-if="$v.entry.fiscalYear.$invalid && $v.entry.fiscalYear.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.administration-period.label')})}}</span>-->
 
                 <!--period-->
                 <div class="form-group fg-float subtitle">
@@ -123,25 +125,25 @@
                         </label>
                     </div>
                     <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
-                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.partida.label'})}}</span> -->
+                          class="c-error">{{$t(requiredErrorMessage, {field:'ccontracts.new.organizer-administrative-unit.placeholderontracts.new.partida.label'})}}</span> -->
                 </div>
 
 
-                <!--&lt;!&ndash;ProcedureState&ndash;&gt;-->
-                <!--<div class="form-group fg-float basic-select">-->
-                    <!--<div class="fg-line">-->
-                        <!--<select v-model="entry.procedureState" class="form-control select selectpicker"-->
-                                <!--data-live-search="true"-->
-                                <!--:data-live-search-placeholder="$t('contracts.new.procedure-state.placeholder')"-->
-                                <!--title="Select placeholder">-->
-                            <!--<option value="CONCLUDED"> {{$t('contracts.procedure-state.extension')}}</option>-->
-                            <!--<option value="CANCELED"> {{$t('contracts.procedure-state.modification')}}</option>-->
-                            <!--<option value="DESERTED"> {{$t('contracts.procedure-state.public')}}</option>-->
-                            <!--<option value="IN_PROGRESS"> {{$t('contracts.procedure-state.public')}}</option>-->
-                        <!--</select>-->
-                        <!--<label class="fg-label">{{$t('contracts.new.procedure-state.label')}}</label>-->
-                    <!--</div>-->
-                <!--</div>-->
+                <!--ProcedureState-->
+                <div class="form-group fg-float basic-select">
+                    <div class="fg-line">
+                        <select v-model="entry.procedureState" class="form-control select selectpicker"
+                                data-live-search="true"
+                                :title="$t('contracts.new.procedure-state.placeholder')"
+                                data-live-search-placeholder="Select Realiza una búsqueda..">
+                            <option value="CONCLUDED"> {{$t('contracts.procedure-state.concluded')}}</option>
+                            <option value="CANCELED"> {{$t('contracts.procedure-state.canceled')}}</option>
+                            <option value="DESERTED"> {{$t('contracts.procedure-state.deserted')}}</option>
+                            <option value="IN_PROGRESS"> {{$t('contracts.procedure-state.in-progress')}}</option>
+                        </select>
+                        <label class="fg-label">{{$t('contracts.new.procedure-state.label')}}</label>
+                    </div>
+                </div>
 
 
                 <!--Announcement URL-->
@@ -150,7 +152,7 @@
                         <input type="text" class="form-control fg-input"
                                :placeholder="$t('contracts.new.announcementUrl.placeholder')"
                                v-model="entry.announcementUrl">
-                        <label clas ="fg-label">{{$t('contracts.new.announcementUrl.label')}}
+                        <label class="fg-label">{{$t('contracts.new.announcementUrl.label')}}
                             <small></small>
                             <br>
                             <strong>{{$t('contracts.new.announcementUrl.sub-label')}}</strong>
@@ -164,7 +166,7 @@
                 <!--announcementDate-->
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input datepicker"
+                        <input type="text" class="form-control fg-input datepicker" id="announcementDate"
                                :placeholder="$t('contracts.new.announcementDate.placeholder')"
                                v-model="entry.announcementDate">
                         <label class="fg-label">{{$t('contracts.new.announcementDate.label')}}
@@ -198,7 +200,7 @@
                 <!--clarificationMeetingDate-->
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input datepicker"
+                        <input type="text" class="form-control fg-input datepicker" id="clarificationMeetingDate"
                                :placeholder="$t('contracts.new.clarificationMeetingDate.placeholder')"
                                v-model="entry.clarificationMeetingDate">
                         <label class="fg-label">{{$t('contracts.new.clarificationMeetingDate.label')}}
@@ -248,8 +250,8 @@
                     <div class="fg-line">
                         <select v-model="entry.supplier._id" class="form-control select selectpicker"
                                 data-live-search="true"
-                                :data-live-search-placeholder="$t('contracts.new.supplier.placeholder')"
-                                title="Select placeholder">
+                                :title="$t('contracts.new.supplier.placeholder')"
+                                data-live-search-placeholder="Realiza una búsqueda..">
                             <option v-for="supplier in suppliers" :value="supplier._id"> {{supplier.name}}</option>
                         </select>
                         <label class="fg-label">{{$t('contracts.new.supplier.label')}}</label>
@@ -259,10 +261,10 @@
                 <!-- Organizer AdministrativeUnit-->
                 <div class="form-group fg-float basic-select">
                     <div class="fg-line">
-                        <select v-model="entry.administrativeUnit._id" class="form-control select selectpicker"
+                        <select v-model="entry.organizerAdministrativeUnit._id" class="form-control select selectpicker"
                                 data-live-search="true"
-                                :data-live-search-placeholder="$t('contracts.new.organizer-administrative-unit.placeholder')"
-                                title="Select placeholder">
+                                :title="$t('contracts.new.organizer-administrative-unit.placeholder')"
+                                data-live-search-placeholder="Realiza una búsqueda..">
                             <option v-for="administrativeUnit in administrativeUnits" :value="administrativeUnit._id"> {{administrativeUnit.name}}</option>
                         </select>
                         <label class="fg-label">{{$t('contracts.new.organizer-administrative-unit.label')}}</label>
@@ -272,10 +274,10 @@
                 <!-- Applicant AdministrativeUnit-->
                 <div class="form-group fg-float basic-select">
                     <div class="fg-line">
-                        <select v-model="entry.administrativeUnit._id" class="form-control select selectpicker"
+                        <select v-model="entry.applicantAdministrativeUnit._id" class="form-control select selectpicker"
                                 data-live-search="true"
-                                :data-live-search-placeholder="$t('contracts.new.applicant-administrative-unit.placeholder')"
-                                title="Select placeholder">
+                                :title="$t('contracts.new.applicant-administrative-unit.placeholder')"
+                                data-live-search-placeholder="Realiza una búsqueda..">
                             <option v-for="administrativeUnit in administrativeUnits" :value="administrativeUnit._id"> {{administrativeUnit.name}}</option>
                         </select>
                         <label class="fg-label">{{$t('contracts.new.applicant-administrative-unit.label')}}</label>
@@ -288,8 +290,8 @@
                     <div class="fg-line">
                         <select v-model="entry.administrativeUnitType" class="form-control select selectpicker"
                                 data-live-search="true"
-                                :data-live-search-placeholder="$t('contracts.new.administrative-unit-type.placeholder')"
-                                title="Select placeholder">
+                                :title="$t('contracts.new.administrative-unit-type.placeholder')"
+                                data-live-search-placeholder="Realiza una búsqueda..">
                             <option value="CENTRALIZED"> {{$t('contracts.administrative-unit-type.centralized')}}</option>
                             <option value="DESCENTRALIZED"> {{$t('contracts.administrative-unit-type.descentralized')}}</option>
                         </select>
@@ -322,7 +324,7 @@
                 <!--contractDate-->
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input datepicker"
+                        <input type="text" class="form-control fg-input datepicker" date="contractDate"
                                :placeholder="$t('contracts.new.contract-date.placeholder')"
                                v-model="entry.contractDate">
                         <label class="fg-label">{{$t('contracts.new.contract-date.label')}}
@@ -339,10 +341,10 @@
                 <!--Contract Date-->
                 <div class="form-group fg-float basic-select">
                     <div class="fg-line">
-                        <select v-model="entry.contractType" class="form-control select selectpicker"
+                        <select v-model="entry.contractType" class="form-control select selectpicker" id="contractType"
                                 data-live-search="true"
-                                :data-live-search-placeholder="$t('contracts.new.contract-type.placeholder')"
-                                title="Select placeholder">
+                                :title="$t('contracts.new.contract-type.placeholder')"
+                                data-live-search-placeholder="Realiza una búsqueda..">
                             <option value="OPEN"> {{$t('contracts.contract-type.open')}}</option>
                             <option value="NORMAL"> {{$t('contracts.contract-type.normal')}}</option>
                         </select>
@@ -425,11 +427,11 @@
                     <div class="fg-line">
                         <select v-model="entry.areaInCharge._id" class="form-control select selectpicker"
                                 data-live-search="true"
-                                :data-live-search-placeholder="$t('contracts.new.organizer-administrative-unit.placeholder')"
-                                title="Select placeholder">
+                                :title="$t('contracts.new.responsible-administrative-unit.placeholder')"
+                                data-live-search-placeholder="Realiza una búsqueda..">
                             <option v-for="administrativeUnit in administrativeUnits" :value="administrativeUnit._id"> {{administrativeUnit.name}}</option>
                         </select>
-                        <label class="fg-label">{{$t('contracts.new.organizer-administrative-unit.label')}}</label>
+                        <label class="fg-label">{{$t('contracts.new.responsible-administrative-unit.label')}}</label>
                     </div>
                 </div>
 
@@ -438,7 +440,7 @@
                 <!--updateDate-->
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input datepicker"
+                        <input type="text" class="form-control fg-input datepicker" id="updateDate"
                                :placeholder="$t('contracts.new.update-date.placeholder')"
                                v-model="entry.updateDate">
                         <label class="fg-label">{{$t('contracts.new.update-date.label')}}
@@ -487,7 +489,7 @@
                 <!--information Date-->
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input datepicker"
+                        <input type="text" class="form-control fg-input datepicker" id="informationDate"
                                :placeholder="$t('contracts.new.information-date.placeholder')"
                                v-model="entry.informationDate">
                         <label class="fg-label">{{$t('contracts.new.information-date.label')}}
@@ -503,16 +505,16 @@
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <div class="checkbox">
-                            <input type="checkbox" value="" v-model="entry.limitExceeded">
+                            <input type="checkbox" v-model="entry.limitExceeded">
                             <i class="input-helper"></i>
-                            <span>{{$t('users.new.enabled.checkbox-label')}}</span>
-                            <p class="fg-label "> {{$t('users.new.enabled.label')}}
+                            <span>{{$t('users.new.limit-exceeded.checkbox-label')}}</span>
+                            <p class="fg-label "> {{$t('users.new.limit-exceeded.label')}}
                                 <small></small>
                                 <br>
                             </p>
                         </div>
                     </div>
-                    <span v-if="$v.doc.active.$invalid && $v.doc.active.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Habilitado'})}}</span>
+                    <span v-if="entry.limitExceeded.$invalid && entry.limitExceeded.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Límite excedido'})}}</span>
                 </div>
 
 
@@ -535,18 +537,6 @@
 
                 <!--=======================================-->
 
-                <div class="form-group fg-float subtitle">
-                    <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Introduce el cantidad"
-                               v-model="$v.entry.amount.$model">
-                        <label class="fg-label">Cantidad
-                            <small></small>
-                            <br>
-                            <strong>Introduce la cantidad</strong>
-                        </label>
-                    </div>
-                    <!--<span v-if="$v.entry.amount.$invalid && $v.entry.amount.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Cantidad'})}}</span>-->
-                </div>
             </div>
         </modalEntry>
 
@@ -575,7 +565,7 @@
     import {DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT} from "@/store/events";
     import ModalDanger from "@/components/modals/ModalDanger";
     import ModalDefault from "@/components/modals/ModalDefault";
-    import {required} from "vuelidate/lib/validators"
+    import { required, minLength, maxLength } from 'vuelidate/lib/validators';
     import {mapGetters, mapState} from 'vuex';
     import ModalEntry from "@/components/catalogs/ModalEntry";
 
@@ -599,17 +589,73 @@
                     'Tipo de procedimiento',
                     'general.created-at'],
                 tableColumns: [
-                    {label: "contracts.supplier", visible: true, field: 'supplier'},
-                    {label: "contracts.administrativeUnit", visible: true, field: 'administrativeUnit'},
-                    {label: "contracts.amount", visible: true, field: 'amount'},
-                    {label: "contracts.procedureType", visible: true, field: 'procedureType'},
-                    {label: "general.created-at", visible: true, field: 'created_at', type: 'Date'}
+                    {label: "contracts.supplier", visible: true, field: 'supplier.name'},
+                    {label: "contracts.category", visible: true, field: 'category'},
+                    {label: "contracts.administrationPeriod", visible: true, field: 'administrationPeriod'},
+                    {label: "contracts.fiscalYear", visible: true, field: 'fiscalYear'},
+                    {label: "contracts.period", visible: true, field: 'period'},
+                    {label: "contracts.contractId ", visible: true, field: 'contractId'},
+                    {label: "contracts.partida", visible: true, field: 'partida'},
+                    {label: "contracts.procedureState", visible: true, field: 'procedureState'},
+                    {label: "contracts.announcementUrl", visible: true, field: 'announcementUrl'},
+                    {label: "contracts.announcementDate", visible: true, field: 'announcementDate', type: 'date'},
+                    {label: "contracts.servicesDescription", visible: true, field: 'servicesDescription'},
+                    {label: "contracts.clarificationMeetingDate", visible: true, field: 'clarificationMeetingDate', type: 'date'},
+                    {label: "contracts.clarificationMeetingJudgmentUrl", visible: true, field: 'clarificationMeetingJudgmentUrl'},
+                    {label: "contracts.presentationProposalsDocUrl", visible: true, field: 'presentationProposalsDocUrl'},
+                    {label: "contracts.organizerAdministrativeUnit", visible: true, field: 'organizerAdministrativeUnit.name'},
+                    {label: "contracts.applicantAdministrativeUnit", visible: true, field: 'applicantAdministrativeUnit.name'},
+                    {label: "contracts.administrativeUnitType", visible: true, field: 'administrativeUnitType'},
+                    {label: "contracts.contractNumber", visible: true, field: 'contractNumber'},
+                    {label: "contracts.contractDate", visible: true, field: 'contractDate', type: 'date'},
+                    {label: "contracts.contractType", visible: true, field: 'contractType'},
+                    {label: "contracts.totalAmount", visible: true, field: 'totalAmount'},
+                    {label: "contracts.minAmount", visible: true, field: 'minAmount'},
+                    {label: "contracts.maxAmount", visible: true, field: 'maxAmount'},
+                    {label: "contracts.totalOrMaxAmount", visible: true, field: 'totalOrMaxAmount'},
+                    {label: "contracts.contractUrl", visible: true, field: 'contractUrl'},
+                    {label: "contracts.areaInCharge", visible: true, field: 'areaInCharge.name'},
+                    {label: "contracts.updateDate", visible: true, field: 'updateDate', type: 'date'},
+
+                    {label: "general.created-at", visible: true, field: 'created_at', type: 'date'}
                 ],
                 entry: {
                     supplier: {},
-                    administrativeUnit: undefined,
-                    amount: 0.00,
-                    procedureType: undefined,
+                    administrativeUnit: {},
+                    procedureType: "",
+                                        /* Materia */
+                    category: "",
+                    /* Administracion */
+                    administrationPeriod: "2019-2020",
+                    fiscalYear: "2019",
+                    period: "1o 2019",
+                    contractId : "BESTID123",
+                    partida: "UNICA",
+                    procedureState: undefined,
+                    announcementUrl: "www.anouncementURL.com",
+                    announcementDate:  "02/02/2020",
+                    servicesDescription: "This is a good contract service",
+                    clarificationMeetingDate: "03/03/2020",
+                    clarificationMeetingJudgmentUrl: "www.meetup.com",
+                    presentationProposalsDocUrl: "docs.google.com/veryimportantdoc",
+                    organizerAdministrativeUnit: {},
+                    applicantAdministrativeUnit: {},
+                    administrativeUnitType: {},
+                    contractNumber: "Number123123",
+                    contractDate: "04/04/2020",
+                    contractType: "",
+                    totalAmount: 4000,
+                    minAmount: 3000,
+                    maxAmount: 150200,
+                    totalOrMaxAmount: "250100",
+                    contractUrl: "web.whatsapp.com",
+                    areaInCharge: {},
+                    updateDate: "03/03/2020",
+                    notes : "Note-ice me senpai",
+                    karewaNotes: "Notas karewaii",
+                    informationDate: "03/03/2020",
+                    limitExceeded: false,
+                    amountExceeded: 0
                 },
                 modalProperties: {
                     title: "general.modal-editable-table.title",
@@ -622,10 +668,138 @@
         },
         validations: {
             entry: {
-                supplier: {required},
-                administrativeUnit: {required},
-                amount: {required},
-                procedureType: {required}
+                // procedureType: {
+                //     required
+                // },
+                /* Materia */
+                // category: {
+                //     required
+                // },
+                /* Administracion */
+                // administrationPeriod: {
+                //     required,
+                //     minLength: minLength(2),
+                //     maxLength: maxLength(100)
+                // },
+                /* Ejercicio */
+                // fiscalYear: {
+                //     required
+                // },
+                /* Periodo que se reporta */
+                // period: {
+                //     required
+                //     //TODO Regex validation
+                //     // match:new RegExp("^[1234]o\\s2[0-9]{3}$")
+                // },
+                /* ID / Número de Folio o Nomenclatura / Identificador */
+                // contractId:{
+                //     required
+                // },
+                /* Partida */
+                // partida: {
+                // },
+                /* Estado del procedimiento */
+                // procedureState: {
+                //     required
+                // },
+                /*Hipervínculo a la convocatoria o invitaciones*/
+                // announcementUrl:{
+                // },
+                /* Fecha de la convocatoria o invitación */
+                // announcementDate:{
+                // },
+                /* Descripción de las obras, bienes o servicios */
+                // servicesDescription:{
+                //     required
+                // },
+                /* Fecha en la que se celebró la junta de aclaraciones */
+                // clarificationMeetingDate:{
+                // },
+                /* Hipervínculo al fallo de Junta de Aclaraciones */
+                // clarificationMeetingJudgmentUrl:{
+                // },
+                /* Hipervínculo al documento de la Presentación de Propuestas */
+                // presentationProposalsDocUrl:{
+                // },
+                /* Proveedor */
+                // supplier: {
+                //     required
+                // },
+                /* Unidad administrativa convocante */
+                // organizerAdministrativeUnit: {
+                //     //TODO Learn how to do dynamic validations
+                //     // validator: function(){
+                //     //     return this.administrativeUnitType === 'DESCENTRALIZADA' ? this.organizerAdministrativeUnit == this.applicantAdministrativeUnit : true
+                //     // }
+                // },
+                // /* Unidad administrativa solicitante */
+                // applicantAdministrativeUnit: {
+                //     required
+                // },
+                // /* Centralizada/Descentralizada */
+                // administrativeUnitType:{
+                //     required
+                // },
+                // /* Número que identifique al contrato */
+                // contractNumber:{
+                // },
+                /* Fecha del contrato */
+                // contractDate:{
+                //     required
+                    //TODO Learn how to do dynamic validations
+                    // validator: function(){
+                    //     let yearContractDate = new Date(this.contractDate).getFullYear();
+                    //     let fiscalYear = Number(this.fiscalYear);
+                    //     return yearContractDate === fiscalYear;
+                    // }
+                // },
+                /* Tipo de Contrato */
+                // contractType:{
+                //     required
+                // },
+                /* Monto total del contrato con impuestos incluidos */
+                // totalAmount:{
+                // },
+                /* Monto mínimo, en su caso */
+                // minAmount:{
+                // },
+                /* Monto máximo, en su caso */
+                // maxAmount:{
+                // },
+
+                /* Monto total o Monto máximo, en su caso */
+                // totalOrMaxAmount:{
+                //     required
+                    // Si es NORMAL - es el monto total
+                    // Si es ABIERTO - es el monto máximo
+                // },
+                /*Hipervínculo al documento del contrato y anexos*/
+                // contractUrl:{
+                // },
+                /*Área responsable de la información*/
+                // areaInCharge:{
+                //     required
+                // },
+                /*Fecha de actualización*/
+                // updateDate:{
+                //     required
+                // },
+                /*Notas*/
+                // notes:{
+                // },
+                /*Notas Karewa*/
+                // karewaNotes:{
+                // },
+                /*Fecha de obtención de los datos*/
+                // informationDate:{
+                //     required
+                // },
+                /*Adjudicaciones Directas que exceden el límite*/
+                // limitExceeded:{
+                // },
+                /*Monto que excede el límite de la Adjudicación Directa*/
+                // amountExceeded:{
+                // }
             }
         },
         computed: {
@@ -655,8 +829,11 @@
                 touchMap.set($v, setTimeout($v.$touch, 1000))
             },
             clearEntry() {
-                this.$store.dispatch(`${storeModule}/clearSelectedEntry`);
+                this.$store.dispatch (`${storeModule}/clearSelectedEntry`);
                 this.$v.$reset();
+            }, changeDate (date) {
+                console.log("date", date);
+                console.log('this.entry --> ' + this.entry);
             }
         },
         created() {
@@ -664,26 +841,59 @@
                 tShow("El contrato fue eliminado correctamente", 'info');
             });
             bus.$on(storeModule + DOC_CREATED, () => {
-                this.supplier = "";
-                this.administrativeUnit = "";
-                this.amount = "";
-                this.procedureType = "";
+                // this.administrationPeriod = "";
                 this.$v.$reset();
                 tShow("Elemento Creado!", 'info');
             });
             bus.$on(storeModule + DOC_START_EDIT, (entry) => {
-                this.entry.supplier = entry.name;
-                this.$v.entry.supplier.$touch();
-                this.entry.administrativeUnit = entry.rfc;
-                this.$v.entry.administrativeUnit.$touch();
-                this.entry.amount = entry.notes;
-                this.$v.entry.amount.$touch();
-                this.entry.procedureType = entry.notes;
-                this.$v.entry.procedureType.$touch();
+                    this.clearEntry();
+                    this.entry._id = entry._id;
+                    this.entry.supplier._id = entry.supplier._id;
+                    this.entry.supplier.name = entry.supplier.name;
+                    this.entry.administrativeUnit = entry.administrativeUnit;
+                    this.entry.procedureType = entry.procedureType;
+                    this.entry.category = entry.category;
+                    this.entry.administrationPeriod = entry.administrationPeriod;
+                    this.entry.fiscalYear = entry.fiscalYear;
+                    this.entry.period = entry.period;
+                    this.entry.contractId  = entry.contractId;
+                    this.entry.partida = entry.partida;
+                    this.entry.procedureState = entry.procedureState;
+                    this.entry.announcementUrl = entry.announcementUrl;
+                    this.entry.announcementDate = entry.announcementDate;
+                    this.entry.servicesDescription = entry.servicesDescription;
+                    this.entry.clarificationMeetingDate = entry.clarificationMeetingDate;
+                    this.entry.clarificationMeetingJudgmentUrl = entry.clarificationMeetingJudgmentUrl;
+                    this.entry.presentationProposalsDocUrl = entry.presentationProposalsDocUrl;
+                    this.entry.organizerAdministrativeUnit = entry.organizerAdministrativeUnit;
+                    this.entry.applicantAdministrativeUnit = entry.applicantAdministrativeUnit;
+                    this.entry.administrativeUnitType = entry.administrativeUnitType;
+                    this.entry.contractNumber = entry.contractNumber;
+                    this.entry.contractDate = entry.contractDate;
+                    this.entry.contractType = entry.contractType;
+                    this.entry.totalAmount = entry.totalAmount;
+                    this.entry.minAmount = entry.minAmount;
+                    this.entry.maxAmount = entry.maxAmount;
+                    this.entry.totalOrMaxAmount = entry.totalOrMaxAmount;
+                    this.entry.contractUrl = entry.contractUrl;
+                    this.entry.areaInCharge = entry.areaInCharge;
+                    this.entry.updateDate = entry.updateDate;
+                    this.entry.notes  = entry.notes;
+                    this.entry.karewaNotes = entry.karewaNotes;
+                    this.entry.informationDate = entry.informationDate;
+                    this.entry.limitExceeded = entry.limitExceeded;
+                    this.entry.amountExceeded = entry.amountExceeded;
+                    this.$nextTick(function () {
+                        $('.selectpicker').selectpicker('refresh');
+                    })
+
             });
         },
         mounted() {
             window.$(document).ready(function () {
+                console.log("quack");
+                console.log("CatalogContracts#");
+
                 window.$('.selectpicker').selectpicker();
                 window.$('.selectpicker').selectpicker('refresh');
 
@@ -704,15 +914,22 @@
                 });
 
                 $('.datepicker').datepicker({
-                    format: 'mm/dd/yyyy',
+                    format: 'dd/mm/yyyy',
                     startDate: '-3d'
                 });
 
             });
+
+            $('.datepicker').on('changeDate',  (event) => {
+                console.log('event.target.id --> ' + event.target.id);
+                this.entry[event.target.id] = event.date;
+            });
+
         }
         ,
         beforeMount() {
             this.$store.dispatch(`${storeModule}/getSuppliers`);
+            this.$store.dispatch(`${storeModule}/getAdministrativeUnits`);
         }
     }
 </script>

@@ -17,7 +17,7 @@ const procedureTypesEnum = [
 ];
 const categoryEnum = [
     'EXTENSION',
-    'MODIFICACION',
+    'MODIFICATION',
     'ADENDUM',
     'ACQUISITION',
     'SERVICES',
@@ -162,8 +162,7 @@ let ContractSchema = new Schema({
     },
     /* Número que identifique al contrato */
     contractNumber:{
-       type:String,
-        unique:true
+       type:String
     },
     /* Fecha del contrato */
     contractDate:{
@@ -280,7 +279,11 @@ ContractSchema.statics.expressValidator = function() {
     ]
 };
 
+ContractSchema.index({contractNumber: 1, deleted: 1}, {unique: true});
+
+
 const Contract = mongoose.model('Contract', ContractSchema);
+
 
 module.exports = {
     Contract

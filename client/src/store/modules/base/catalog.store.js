@@ -118,6 +118,7 @@ export default function (api, storeName) {
         save ({commit, dispatch}, data) {
             if(!data){
                 //scold user #(>__<!!)
+                Vue.$log.info("=================\n=====NO DATA===========\n===============");
             }
 
             //TODO: Add other pagination options and centralize all options
@@ -130,7 +131,6 @@ export default function (api, storeName) {
                     //     docs: result.data.data.docs
                     // });
                     dispatch(`${storeName}/list`,{},{root:true});
-                    console.log("data store",data);
                     if(data._id){
                         bus.$emit(storeName + events.DOC_UPDATED);
                     }else{

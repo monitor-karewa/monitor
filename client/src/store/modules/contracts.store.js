@@ -26,8 +26,10 @@ const actions = {
      * Retrieves suppliers from DB to make them available at selection
      */
     getAdministrativeUnits({commit}){
+        Vue.$log.info("contracts.store#getAdministrativeUnits");
         contractsApi.retrieveAdministrativeUnits({},
             (result)=>{
+                Vue.$log.info("go go set administrative units");
                 commit('SET_ADMINISTRATIVE_UNITS', result.data.data.docs);
             })
     }
@@ -38,6 +40,7 @@ const mutations = {
         state.suppliers = suppliers;
     },
     SET_ADMINISTRATIVE_UNITS(state, administrativeUnits){
+        Vue.$log.info("administrativeUnits", administrativeUnits);
         state.administrativeUnits = administrativeUnits;
     }
 };
