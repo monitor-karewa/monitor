@@ -118,7 +118,6 @@ export default function (api, storeName) {
         save ({commit, dispatch}, data) {
             if(!data){
                 //scold user #(>__<!!)
-                Vue.$log.info("=================\n=====NO DATA===========\n===============");
             }
 
             //TODO: Add other pagination options and centralize all options
