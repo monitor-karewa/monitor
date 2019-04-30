@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const {check, validationResult} = require('express-validator/check');
+const { check, validationResult } = require('express-validator/check');
 
 const pluginCreatedUpdated = require('mongoose-createdat-updatedat');
 const mongoosePagination = require('mongoose-paginate');
@@ -175,12 +175,14 @@ let ContractSchema = new Schema({
         uppercase: true
     },
     /*Hipervínculo a la convocatoria o invitaciones*/
-    announcementUrl: {
-        type: String
+    announcementUrl:{
+        //TODO: match regex?
+        type:String
     },
     /* Fecha de la convocatoria o invitación */
-    announcementDate: {
-        type: Date
+    announcementDate:{
+        //TODO: required?
+        type:Date
     },
     /* Descripción de las obras, bienes o servicios */
     servicesDescription: {
@@ -188,16 +190,19 @@ let ContractSchema = new Schema({
         required: true
     },
     /* Fecha en la que se celebró la junta de aclaraciones */
-    clarificationMeetingDate: {
-        type: Date,
+    clarificationMeetingDate:{
+        //TODO: required?
+        type:Date,
     },
     /* Hipervínculo al fallo de Junta de Aclaraciones */
-    clarificationMeetingJudgmentUrl: {
-        type: String,
+    clarificationMeetingJudgmentUrl:{
+        //TODO: match regex?
+        type:String,
     },
     /* Hipervínculo al documento de la Presentación de Propuestas */
-    presentationProposalsDocUrl: {
-        type: String
+    presentationProposalsDocUrl:{
+        //TODO: match regex?
+        type:String
     },
     /* Proveedor */
     supplier: {
@@ -228,8 +233,10 @@ let ContractSchema = new Schema({
         uppercase: true
     },
     /* Número que identifique al contrato */
-    contractNumber: {
-        type: String
+    contractNumber:{
+        //TODO: Required?
+       type:String,
+        unique:true
     },
     /* Fecha del contrato */
     contractDate: {
@@ -268,8 +275,9 @@ let ContractSchema = new Schema({
         // Si es ABIERTO - es el monto máximo
     },
     /*Hipervínculo al documento del contrato y anexos*/
-    contractUrl: {
-        type: String
+    contractUrl:{
+        //TODO: match uri?
+        type : String
         // required:true
     },
     /*Área responsable de la información*/

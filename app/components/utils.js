@@ -63,13 +63,111 @@ const utils =  {
      */
     isNotDefined(obj) {
         return !utils.isDefined(obj);
-    }
+    },
+
+    /**
+     * Indica si el objeto recibido corresponde a una function de Javascript.
+     * @param {*} fn objeto a revisar
+     * @returns {boolean} true si corresponde a una función o false en caso contrario
+     */
+    isFunction(fn) {
+        return utils.isDefined(fn) && {}.toString.call(fn) === '[object Function]'
+    },
+
+    /**
+     * Revisa si un objeto corresponde a un Boolean.
+     * @param obj {object} objeto a revisar
+     * @returns {boolean} indicando si corresponde o no a un Boolean
+     */
+    isBoolean(obj) {
+        return obj !== undefined && obj !== null && typeof(obj) === 'boolean';
+    },
+
+    /**
+     * Revisa si un objeto corresponde a una Date.
+     * @param obj {object} objeto a revisar
+     * @returns {boolean} indicando si corresponde o no a una Date
+     */
+    isDate(obj) {
+        return obj !== undefined && obj !== null && Object.prototype.toString.call(obj) === '[object Date]';
+    },
+
+    /**
+     * Revisa si un objeto corresponde a un Number.
+     * @param obj {object} objeto a revisar
+     * @returns {boolean} indicando si corresponde o no a un Number
+     */
+    isNumber(obj) {
+        return obj !== undefined && obj !== null && typeof(obj) === 'number';
+    },
+
+    /**
+     * Intenta realizar un parsing de un string como fecha. Si no se reconoce la estructura de la fecha, se devolverá
+     * null. Esta función intenta parsear las siguientes estructuras de fecha:
+     * DD/MM/YY
+     * DD/MM/YYYY
+     * DD-MM-YY
+     * DD-MM-YYYY
+     * @param {string} str string a intentar parsear
+     * @returns {Date|null} fecha parseada o null si no se reconoce el formato
+     */
+    parseDate(str) {
+        let momentDate = null;
+        if (utils.isDate(str)) {
+            //No need to parse
+            return str;
+        }
+        if (utils.isDefined(str)) {
+            if (str.match(/^[0123]?[0-9]\/[01]?[0-9]\/[0-9]{2}$/)) {
+                //Try DD/MM/YY
+                momentDate = moment(str, "DD/MM/YY");
+            } else if (str.match(/^[0123]?[0-9]\/[01]?[0-9]\/[0-9]{4}$/)) {
+                //Try DD/MM/YYYY
+                momentDate = moment(str, "DD/MM/YYYY");
+            } else if (str.match(/^[0123]?[0-9]-[01]?[0-9]-[0-9]{2}$/)) {
+                //Try DD-MM-YY
+                momentDate = moment(str, "DD-MM-YY");
+            } else if (str.match(/^[0123]?[0-9]-[01]?[0-9]-[0-9]{4}$/)) {
+                //Try DD-MM-YYYY
+                momentDate = moment(str, "DD-MM-YYYY");
+            }
+        }
+        if (utils.isDefined(momentDate) && momentDate.isValid()) {
+            return momentDate.toDate();
+        } else {
+            return null;
+        }
+    },
 
 
+    /**
+     * Revisa si un objeto corresponde a un Number.
+     * @param obj {object} objeto a revisar
+     * @param defaultValue {object} valor por defecto en caso de que el valor a parsear no sea un número válido
+     * @returns number - el objeto como número o en caso de error, un valor de 0
+     */
+    parseNumber(obj, defaultValue = 0) {
+        let parsedNumber = null;
+        if (obj !== undefined && obj !== null) {
+            if (typeof(obj) === 'number') {
+                parsedNumber = obj;
+                // return obj;
+            } else if (typeof(obj) === 'string') {
+                try {
+                    parsedNumber = Number(obj);
+                    // return Number(obj);
+                } catch (err) {
+                    logger.error(null, null, "Attempting to parse a number \n" + err.toString());
+                }
+            }
+        }
+        if (!parsedNumber) {
+            parsedNumber = defaultValue;
+        }
+        return parsedNumber;
+    },
 
-
-
-}
+};
 
 
 module.exports = utils;

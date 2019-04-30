@@ -3,19 +3,19 @@
         <button class="btn-stroke button-accent m-l-15" type="button" id="dropdownFilters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filtrar <i class="zmdi zmdi-caret-down m-r-0 m-l-5 f-18"></i></button>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownFilters">
             <ul>
-                <li>
+                <li v-if="!hideTitle">
                     <div class="floating-text m-l-10 m-r-10">
                         <h1>Selecciona las columnas que deseas mostrar en la tabla.</h1>
                     </div>
                 </li>
-                <li>
+                <li v-if="!hideShowAllToggle">
                     <div class="checkbox">
                         <input type="checkbox" v-model="chkShowAllColumns" @click="showAllColumns()" :disabled="chkShowAllColumns" >
                         <i class="input-helper"></i>
                         <span>Todas las columnas</span>
                     </div>
                 </li>
-                <li class="divider p-0 m-0"></li>
+                <li class="divider p-0 m-0" v-if="!hideTitle && !hideShowAllToggle"></li>
             </ul>
             <ul>
                 <li v-for="column in columns">
@@ -46,6 +46,14 @@
             columns : {
                 type: Array,
                 required: true
+            },
+            hideTitle: {
+                type: Boolean,
+                default: false
+            },
+            hideShowAllToggle: {
+                type: Boolean,
+                default: false
             }
         },
         methods:{

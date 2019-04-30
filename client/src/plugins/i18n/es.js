@@ -426,6 +426,14 @@ export default {
     "data-load.manual-capture.go-to-catalog": "Ir al catálogo",
     "data-load.upload-file": "Cargar archivo",
     "data-load.download-template": "Descargar la plantilla",
-    "data-load.download-template.link": "Descarga la plantilla aquí"
+    "data-load.download-template.link": "Descarga la plantilla aquí",
+    "data-load.error.upload.check-in-progress": "Ocurrió un error inesperado al verificar que no exista una carga de datos. Por favor intenta de nuevo más tarde.",
+    "data-load.error.upload.data-load-in-progress": "Ya existe una carga de datos en progreso. Por favor continúa o cancela esa carga antes de cargar otro archivo.",
+    "data-load.cancel.error.no-data-load-in-progress": "La carga de datos no se encuentra disponible. Por favor recarga la página para actualizar la información.",
+    "data-load.cancel.error.unexpected": "Ocurrió un error inesperado al intentar cancelar la carga de datos. Por favor intenta de nuevo más tarde.",
+    "data-load.cancel.success": "Se ha cancelado la carga de datos correctamente.",
+    "data-load.review.columns.no-issues": "Sin anotaciones",
+    "data-load.review.columns.skipped": "Omitidos",
+    "data-load.review.columns.errors": "Errores",
 
 }

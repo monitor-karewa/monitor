@@ -3,7 +3,7 @@
         <div class="form-search">
             <input class="input-search" type="text" v-model="searchString"  @input="doSearch" :placeholder="`Buscar ${$tc(docName, 0)}`" />
             <i class="icon zmdi zmdi-search"></i>
-            <i class="icon zmdi zmdi-close"></i>
+            <i class="icon zmdi zmdi-close" @click="clearSearch()"></i>
         </div>
     </div>
 </template>
@@ -40,23 +40,32 @@
         components: {
         },
         props: {
-            'storeModule': String
+            'storeModule': String,
+            'actionName': {
+                type: String,
+                default: 'list'
+            },
+            'docNamePropName': {
+                type: String,
+                default: 'docName'
+            }
         },
         computed : {
             ...mapState({
-                pagination: function (state) {
-                    return state[this.$props.storeModule].pagination;
-                },
                 docName: function (state) {
-                    return state[this.$props.storeModule].docName;
+                    return state[this.$props.storeModule][this.docNamePropName];
                 }
             }),
         },
         methods: {
             doSearch: debounce(function () {
-                        let actionName = "list";
-                        this.$store.dispatch(`${this.$props.storeModule}/${actionName}`, this.searchString);
-                    },1000, false)
+                let actionName = this.actionName;
+                this.$store.dispatch(`${this.$props.storeModule}/${actionName}`, this.searchString);
+            }, 1000, false),
+            
+            clearSearch () {
+                this.searchString = "";
+            }
 
         },
     };
