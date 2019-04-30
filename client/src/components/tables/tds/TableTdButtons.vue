@@ -26,6 +26,8 @@
             },
             editEvent(){
                 //fix to pass the entry through the state and manage the state & vuelidate
+                $('.selectpicker').selectpicker();
+                $('.selectpicker').selectpicker('refresh');
                 bus.$emit(this.$props.storeModule+DOC_START_EDIT, this.$props.entry);
             }
         },

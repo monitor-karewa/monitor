@@ -23,17 +23,13 @@
                                     <tbody>
                                     <tr v-for="(doc, index) in docs" :key="`doc-${index}`">
                                         <td v-for="(column) in tableColumns" v-if="column.visible">
-                                            <span v-if="!column.type && !isEditingTable">
-                                                {{ doc[column.field] }}
+                                            <span v-if="!isEditingTable">
+                                                {{ getValueForField(doc, column)}}
                                             </span>
 
-                                            <input v-if="isEditingTable && !column.type" type="text" class="form-control fg-input"
+                                            <input v-if="isEditingTable" type="text" class="form-control fg-input"
                                                    :placeholder="doc[column.field]" :value="doc[column.field]"
                                                    @input="updateDocFromEditableTable($event,doc,column.field)"/>
-
-                                            <span v-else-if="column.type === 'Date'">
-                                                {{ doc[column.field] | moment }}
-                                            </span>
                                             <!--
                                                 OTHER TYPE OF FIELDS
                                                 <span v-else-if="">
@@ -161,6 +157,38 @@
             updateDocFromEditableTable(evt,doc, field){
                 let value = evt.target.value;
                 this.$store.dispatch(`${this.$props.storeModule}/updateDocFromEditableTable`, { value, doc, field});
+            },
+            getValueForField(row, column){
+                const dateFieldNameRegex = new RegExp(/^date$/i);
+
+                let fieldPath = column.field.split(".");
+                let tempObject = row;
+                for (let i = 0; i < fieldPath.length; i++) {
+                    if(tempObject) {
+                        tempObject = tempObject[fieldPath[i]]
+                    }
+                }
+                if(tempObject && dateFieldNameRegex.test(column.type)){
+                    return this.formatDate(tempObject);
+                }
+                return tempObject;
+            },
+            formatDate(date){
+                    const monthNames = [
+                        "Ene", "Feb", "Mar",
+                        "Abr", "May", "Jun", "Jul",
+                        "Aug", "Sep", "Oct",
+                        "Nov", "Dec"
+                    ];
+                    if(typeof date === "string"){
+                        date = new Date(date);
+                    }
+
+                    var day = date.getDate();
+                    var monthIndex = date.getMonth();
+                    var year = date.getFullYear();
+
+                    return day + '/' + monthNames[monthIndex] + '/' + year;
             }
         }
     }
