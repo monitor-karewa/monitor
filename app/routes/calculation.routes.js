@@ -11,6 +11,12 @@ var securityController = require('./../controllers/security.controller');
 router.get('/', securityController.validatePermission(Calculation.permission, 'read'), calculationController.index);
 
 /**
+ * GET /
+ * Obtener variables de calculos
+ */
+router.get('/variables', securityController.validatePermission(Calculation.permission, 'read'), calculationController.getVariables);
+
+/**
  * GET /list
  * Consulta de registros
  */

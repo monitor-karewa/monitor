@@ -19,5 +19,10 @@ export default {
         return axios.post(`${base.baseUrl}/api/${namespace}/delete`, { "_id" : params.id })
             .then(onSuccess)
             .catch(onError);
+    },
+    getVariables: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/api/${namespace}/variables`,)
+            .then(onSuccess)
+            .catch(onError);
     }
 }

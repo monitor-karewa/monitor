@@ -3,6 +3,7 @@ const logger = require('./../components/logger').instance;
 
 const Calculation = require('./../models/calculation.model').Calculation;
 const deletedSchema = require('./../models/schemas/deleted.schema');
+const variables = require('./../components/variablesSeed').variables;
 
 const { validationResult } = require('express-validator/check');
 
@@ -17,6 +18,14 @@ exports.index = (req, res, next) => {
     renderParams.model = Calculation;
     renderParams.permission = Calculation.permission;
     res.render('calculation', renderParams);
+};
+/**
+ * Devuelve las variables simples a utilizar en los calculos
+ * @param req
+ * @param res
+ */
+exports.getVariables = (req, res) => {
+  return res.json(variables);
 };
 
 /**
