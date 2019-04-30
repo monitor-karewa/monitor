@@ -12,37 +12,37 @@
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc" v-bind:validator="$v">
+        <ModalEntry :storeModule="storeModule" :validator="$v" :entry="entry">
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce el nombre del cálculo"
-                               v-model="$v.doc.name.$model">
+                               v-model="$v.entry.name.$model">
                         <label class="fg-label">Nombre del Cálculo
                             <small></small>
                             <br>
                             <strong>Introduce el nombre del Cálculo</strong>
                         </label>
-                        <span v-if="$v.doc.name.$invalid && $v.doc.name.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'nombre'})}}</span>
+                        <span v-if="$v.entry.name.$invalid && $v.entry.name.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'nombre'})}}</span>
                     </div>
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce la descripción"
-                               v-model="$v.doc.description.$model">
+                               v-model="$v.entry.description.$model">
                         <label class="fg-label">Descripción del cálculo
                             <small></small>
                             <br>
                             <strong>Introduce las descripción del cálculo</strong>
                         </label>
                     </div>
-                    <span v-if="$v.doc.description.$invalid && $v.doc.description.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'descripción'})}}</span>
+                    <span v-if="$v.entry.description.$invalid && $v.entry.description.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'descripción'})}}</span>
                 </div>
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <div class="checkbox">
-                            <input type="checkbox" value="" v-model="doc.enabled">
+                            <input type="checkbox" value="" v-model="entry.enabled">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.enabled.checkbox-label')}} </span>
                             <p class="fg-label "> {{$t('users.new.enabled.label')}}
@@ -57,7 +57,7 @@
                     <div class="fg-line basic-input">
                         <div class="input-radio-check col-md-12 p-0">
                             <div class=" check-container col-md-6">
-                                <input class="m-t-20" type="radio" value="GENERAL" v-model="$v.doc.type.$model"
+                                <input class="m-t-20" type="radio" value="GENERAL" v-model="$v.entry.type.$model"
                                        name="type" id="one">
                                 <span class="role m-t-20"
                                       for="general">{{$t('calculation.new.calculation-type.radio-button.general')}}</span>
@@ -68,10 +68,10 @@
                                 </p>
                             </div>
                             <div class=" check-container col-md-6">
-                                <input value="CONTRACT" type="radio" v-model="$v.doc.type.$model" name="role" id="two">
+                                <input value="CONTRACT" type="radio" v-model="$v.entry.type.$model" name="role" id="two">
                                 <span for="custom">{{$t('calculation.new.calculation-type.radio-button.contract')}}</span>
                             </div>
-                            <span v-if="$v.doc.type.$invalid && $v.doc.type.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Tipo de Cálculo'})}}</span>
+                            <span v-if="$v.entry.type.$invalid && $v.entry.type.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Tipo de Cálculo'})}}</span>
                         </div>
                     </div>
                 </div>
@@ -83,7 +83,7 @@
 
                 <div class="form-group fg-float dropdown-inside p-t-0">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Introduce la fórmula">
+                        <input type="text" class="form-control fg-input" v-model="entry.formula" placeholder="Introduce la fórmula">
                         <div class="dropdown">
                             <button class="btn-stroke xs button-accent" type="button" id="dropdownInput"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -102,16 +102,16 @@
                 <div class="vertical-center">
                     <div class="form-group fg-float basic-select w-70 m-r-30 p-t-0 m-b-0">
                         <div class="fg-line">
-                            <select class="form-control select selectpicker" data-live-search="true"
+                            <select @change="addToFormula($event)" class="form-control select selectpicker" data-live-search="true"
                                     data-live-search-placeholder="Search placeholder"
                                     title="Agregar variable">
                                 <optgroup label="GENERAL">
-                                    <option v-for="item in variables">{{item.name}}</option>
+                                    <option :value="item.abbreviation" v-for="item in variables">{{item.name}}</option>
                                 </optgroup>
-                                <optgroup label="CONTRATOS">
-                                    <option>Número de contratos</option>
-                                    <option>Número de contratos entregados a tiempo</option>
-                                </optgroup>
+                                <!--<optgroup label="Otros Cálculos ">-->
+                                    <!--<option>Número de contratos</option>-->
+                                    <!--<option>Número de contratos entregados a tiempo</option>-->
+                                <!--</optgroup>-->
                             </select>
                         </div>
                     </div>
@@ -149,7 +149,7 @@
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce las notas adicionales"
-                               v-model="doc.notes">
+                               v-model="entry.notes">
                         <label class="fg-label">Notas del cálculo
                             <small></small>
                             <br>
@@ -161,7 +161,7 @@
 
             </div>
 
-        </NewEntryModal>
+        </modalEntry>
 
         <ModalDanger :id="'modal-delete-entry'"  :title="$tc(docName, 1)" :confirm="confirmDeletion">
             <p class="text-centered">Esta acción borrará el registro del catálogo permanentemente
@@ -206,19 +206,20 @@
                     {label: 'calculations.type', field: 'type', visible:true},
                     {label: 'calculations.enabled', field: 'enabled', visible:true},
                     {label: 'calculations.notes', field: 'notes', visible:true},
-                    {label: 'general.created-at', field: 'created_at', type: 'Date', visible:true}
+                    {label: 'general.created-at', field: 'createdAt', type: 'Date', visible:true}
                 ],
-                doc: {
+                entry : {
                     name: "",
                     description: "",
                     type: undefined,
                     enabled: false,
-                    notes: ""
+                    notes: "",
+                    formula : ""
                 }
             }
         },
         validations:{
-            doc : {
+            entry : {
                 name: {
                     required,
                 },
@@ -243,6 +244,10 @@
                     clearTimeout(touchMap.get($v))
                 }
                 touchMap.set($v, setTimeout($v.$touch, 1000))
+            },
+            addToFormula(event) {
+                console.log("event.target.value", event.target.value);
+                this.entry.formula += event.target.value;
             }
         },
         created() {
@@ -250,12 +255,12 @@
                 tShow("El calculo fue eliminado correctamente", 'info');
             }),
             bus.$on(storeModule+DOC_CREATED, ()=>{
-                this.doc.name= "";
-                this.doc.description= "";
-                this.doc.type= "";
-                this.doc.enabled= "";
-                this.doc.notes= "";
-                this.$v.$reset();
+                this.entry.name= "";
+                this.entry.description= "";
+                this.entry.type= "";
+                this.entry.enabled= "";
+                this.entry.notes= "";
+                this.$v.$reset();e
                 tShow("El proveedor fue creado correctamente", 'info');
             });
         },
