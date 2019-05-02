@@ -816,6 +816,43 @@ class ContractExcelReader {
                             
                             return callback(null, false);
                         },
+                        validator: function (rowInfo, callback) {
+                            let regexOptionMatch = null;
+                            let matchingCategory = null;
+
+                            if (rowInfo.procedureState.value) {
+
+                                for (let category of categoryEnum) {
+
+                                    let regexOptions = categoryEnumDict[category];
+
+                                    if (regexOptions && regexOptions.length > 0) {
+
+                                        for (let regexOption of regexOptions) {
+                                            let regex = new RegExp(regexOption.regexStr, regexOption.flags);
+                                            if (regex.test(rowInfo.servicesDescription.value)) {
+                                                regexOptionMatch = regexOption;
+                                                matchingCategory = category;
+                                                break;
+                                            }
+                                        }
+                                        if (regexOptionMatch) {
+                                            break;
+                                        }
+
+                                    }
+                                }
+
+                                if (regexOptionMatch && matchingCategory) {
+                                    let errorMessage = "El valor de este campo no coincide con la categoría indicada en la descripción del contrato.";
+
+                                    return callback(null, errorMessage);
+                                }
+
+                                return callback();
+                            }
+
+                        },
                         uppercase: true
                     }, callback);
                     break;
@@ -858,11 +895,82 @@ class ContractExcelReader {
                 case C_IDS.PROCEDURE_STATE:
                     return _this._readField(rowInfo, cell.value, 'procedureState', String, {
                         enum: procedureStateEnumDict,
-                        // required: function (rowInfo, callback) {
-                        //     //TODO: Centralize this validation
-                        //     let descriptionRegExp = utils.toAccentsRegex((rowInfo.notes.value || '').toUpperCase(),'i');
-                        //     return descriptionRegExp.test(rowInfo.procedureType.value);
-                        // },
+                        required: function (rowInfo, callback) {
+                            //TODO: Centralize this validation
+                            // let descriptionRegExp = utils.toAccentsRegex((rowInfo.notes.value || '').toUpperCase(),'i');
+                            // return descriptionRegExp.test(rowInfo.procedureType.value);
+
+                            //TODO: Centralize this validation
+
+                            let regexOptionMatch = null;
+
+
+                            for (let procedureState of procedureStateEnum) {
+
+                                let regexOptions = procedureStateEnumDict[procedureState];
+
+                                if (regexOptions && regexOptions.length > 0) {
+
+                                    for (let regexOption of regexOptions) {
+                                        let regex = new RegExp(regexOption.regexStr, regexOption.flags);
+                                        if (regex.test(rowInfo.notes.value)) {
+                                            regexOptionMatch = regexOption;
+                                            break;
+                                        }
+                                    }
+                                    if (regexOptionMatch) {
+                                        break;
+                                    }
+
+                                }
+                            }
+
+                            if (regexOptionMatch) {
+                                let isRequired = true;
+                                let errorMessage = "Este campo es requerido debido a que se indicó un estado de procedimiento en las notas del contrato.";
+
+                                return callback(null, isRequired, errorMessage);
+                            }
+
+                            return callback(null, false);
+                        },
+                        validator: function (rowInfo, callback) {
+                            let regexOptionMatch = null;
+                            let matchingProcedureState = null;
+                            
+                            if (rowInfo.procedureState.value) {
+
+                                for (let procedureState of procedureStateEnum) {
+
+                                    let regexOptions = procedureStateEnumDict[procedureState];
+    
+                                    if (regexOptions && regexOptions.length > 0) {
+    
+                                        for (let regexOption of regexOptions) {
+                                            let regex = new RegExp(regexOption.regexStr, regexOption.flags);
+                                            if (regex.test(rowInfo.notes.value)) {
+                                                regexOptionMatch = regexOption;
+                                                matchingProcedureState = procedureState;
+                                                break;
+                                            }
+                                        }
+                                        if (regexOptionMatch) {
+                                            break;
+                                        }
+    
+                                    }
+                                }
+    
+                                if (regexOptionMatch && matchingProcedureState) {
+                                    let errorMessage = "El valor de este campo no coincide con el estado de procedimiento indicado en las notas del contrato.";
+    
+                                    return callback(null, errorMessage);
+                                }
+    
+                                return callback();
+                            }
+
+                        },
                         uppercase: true
                     }, callback);
                     break;
