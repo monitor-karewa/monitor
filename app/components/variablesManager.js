@@ -1,6 +1,7 @@
 class Variable {
     constructor(variableObj){
         this.name = variableObj.name;
+        this.description = variableObj.description;
         this.abbreviation = variableObj.abbreviation;
         this.query = variableObj.query || {};
         this.filter = variableObj.filter || {};

@@ -9,6 +9,9 @@ const state = {
 };
 
 const getters = {
+    getVariables : function (state) {
+        return state.variables;
+    }
 };
 
 const actions = {
@@ -27,6 +30,7 @@ const actions = {
 
 const mutations = {
     SET_VARIABLES(state,vars){
+        Vue.$log.info('vars' , vars);
         state.variables = vars;
     }
 };

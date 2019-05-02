@@ -17,7 +17,7 @@
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce el nombre del cálculo"
-                               v-model="$v.entry.name.$model">
+                               v-model="entry.name">
                         <label class="fg-label">Nombre del Cálculo
                             <small></small>
                             <br>
@@ -29,7 +29,7 @@
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce la descripción"
-                               v-model="$v.entry.description.$model">
+                               v-model="entry.description">
                         <label class="fg-label">Descripción del cálculo
                             <small></small>
                             <br>
@@ -57,7 +57,7 @@
                     <div class="fg-line basic-input">
                         <div class="input-radio-check col-md-12 p-0">
                             <div class=" check-container col-md-6">
-                                <input class="m-t-20" type="radio" value="GENERAL" v-model="$v.entry.type.$model"
+                                <input class="m-t-20" type="radio" value="GENERAL" v-model="entry.type"
                                        name="type" id="one">
                                 <span class="role m-t-20"
                                       for="general">{{$t('calculation.new.calculation-type.radio-button.general')}}</span>
@@ -68,7 +68,7 @@
                                 </p>
                             </div>
                             <div class=" check-container col-md-6">
-                                <input value="CONTRACT" type="radio" v-model="$v.entry.type.$model" name="role" id="two">
+                                <input value="CONTRACT" type="radio" v-model="entry.type" name="role" id="two">
                                 <span for="custom">{{$t('calculation.new.calculation-type.radio-button.contract')}}</span>
                             </div>
                             <span v-if="$v.entry.type.$invalid && $v.entry.type.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Tipo de Cálculo'})}}</span>
@@ -83,16 +83,17 @@
 
                 <div class="form-group fg-float dropdown-inside p-t-0">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" v-model="entry.formula" placeholder="Introduce la fórmula">
+                        <input type="text" class="form-control fg-input" @change="addVariablesFromFormulaString()" v-model="entry.formula.expression" placeholder="Introduce la fórmula">
                         <div class="dropdown">
                             <button class="btn-stroke xs button-accent" type="button" id="dropdownInput"
                                     data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                Porcentaje <i class="zmdi zmdi-caret-down m-r-0 m-l-5 f-18"></i></button>
+                                {{displayFormLabel}} <i class="zmdi zmdi-caret-down m-r-0 m-l-5 f-18"></i></button>
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownInput"
                                  x-placement="bottom-end">
                                 <ul>
-                                    <li>Porcentaje</li>
-                                    <li>Porcentaje</li>
+                                    <li @click="setDisplayForm('NORMAL')">Normal</li>
+                                    <li @click="setDisplayForm('AMOUNT')">Cantidad</li>
+                                    <li @click="setDisplayForm('PERCENTAGE')">Porcentaje</li>
                                 </ul>
                             </div>
                         </div>
@@ -102,7 +103,7 @@
                 <div class="vertical-center">
                     <div class="form-group fg-float basic-select w-70 m-r-30 p-t-0 m-b-0">
                         <div class="fg-line">
-                            <select @change="addToFormula($event)" class="form-control select selectpicker" data-live-search="true"
+                            <select @change="addToFormula($event)" v-model="variableSelected" class="form-control select selectpicker" data-live-search="true"
                                     data-live-search-placeholder="Search placeholder"
                                     title="Agregar variable">
                                 <optgroup label="GENERAL">
@@ -116,10 +117,10 @@
                         </div>
                     </div>
                     <div class="mini-buttons">
-                        <button class="mini-btn m-l-0">+</button>
-                        <button class="mini-btn">-</button>
-                        <button class="mini-btn">*</button>
-                        <button class="mini-btn m-r-0">/</button>
+                        <button type="button" class="mini-btn m-l-0" @click="addToFormula('+')">+</button>
+                        <button type="button" class="mini-btn" @click="addToFormula('*')">*</button>
+                        <button type="button" class="mini-btn" @click="addToFormula('-')">-</button>
+                        <button type="button" class="mini-btn m-r-0" @click="addToFormula('/')">/</button>
                     </div>
                 </div>
 
@@ -128,20 +129,11 @@
                         <h1>Variables usadas</h1>
                         <p>Cálculo para mostrar el indice de perdidas al año</p>
                     </div>
-                    <div class="vertical-center m-b-20">
-                        <span class="w-15 m-r-10"><strong class="c-accent f-12">$NP&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</strong></span>
+                    <div class="vertical-center m-b-20" v-for="variable in entry.formula.variables">
+                        <span class="w-15 m-r-10"><strong class="c-accent f-12">{{variable.abbreviation}}　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</strong></span>
                         <div class="floating-text-form">
-                            <h1>Número de proveedores</h1>
-                            <p class="m-b-0">Número total de proveedores disponibles en el catálogo de
-                                proveedores</p>
-                        </div>
-                    </div>
-                    <div class="vertical-center">
-                        <span class="w-15 m-r-10"><strong class="c-accent f-12">$IRC&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</strong></span>
-                        <div class="floating-text-form">
-                            <h1>Índice de riesgo de corrupción</h1>
-                            <p class="m-b-0">Índice de riesgo de que la organización presente casos de
-                                corrupción</p>
+                            <h1>{{variable.name}}</h1>
+                            <p class="m-b-0"> {{variable.description}}</p>
                         </div>
                     </div>
                 </div>
@@ -184,7 +176,7 @@
     import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
     import { required, minLength, maxLength } from 'vuelidate/lib/validators';
     const touchMap = new WeakMap();
-    import { mapState } from 'vuex';
+    import { mapState, mapGetters } from 'vuex';
 
     const storeModule = 'calculations';
     const docName = 'calculations.calculation';
@@ -208,13 +200,24 @@
                     {label: 'calculations.notes', field: 'notes', visible:true},
                     {label: 'general.created-at', field: 'createdAt', type: 'Date', visible:true}
                 ],
+                variableSelected : undefined,
+                displayFormLabel : "Porcentaje",
                 entry : {
                     name: "",
                     description: "",
                     type: undefined,
                     enabled: false,
+                    formula : {
+                        expression : "",
+                        variables : [],
+                        calculations : []
+                    },
+                    displayForm : "NORMAL",
                     notes: "",
-                    formula : ""
+                },
+                errors : {
+                    flag : false,
+                    invalidVariables : []
                 }
             }
         },
@@ -235,7 +238,7 @@
             ModalDanger
         },
         methods: {
-            confirmDeletion(){
+            confirmDeletion() {
                 this.deleteElementSelected();
             },
             delayTouch($v) {
@@ -245,22 +248,81 @@
                 }
                 touchMap.set($v, setTimeout($v.$touch, 1000))
             },
-            addToFormula(event) {
-                console.log("event.target.value", event.target.value);
-                this.entry.formula += event.target.value;
+            addToFormula(element) {
+                if (element) {
+                    if (this.entry.formula.expression.length > 0) {
+                        this.entry.formula.expression += " ";
+                    }
+                    if (typeof  element == "string") {
+                        this.entry.formula.expression += element;
+                    } else { //then it's a variable
+                        this.entry.formula.expression += element.target.value;
+                        this.addVariablesFromFormulaString();
+                    }
+                }
+            },
+            findVariableByAbbreviation(abbr) {
+                    if (this.getVariables[abbr]) {
+                        return this.getVariables[abbr];
+                    }
+                return undefined;
+            },
+            parseVariablesFromFormulaString() {
+                // this.debounce(function () {
+                    this.errors.flag = false;
+                    const regex = /\$[A-Z]+/g;
+                    let tempVariable;
+                    let tempVariables = [];
+                    let variablesFound = this.entry.formula.expression.match(regex);
+                    for (let i = 0; i < variablesFound.length ; i++) {
+                        tempVariable = this.findVariableByAbbreviation(variablesFound[i]);
+                        if (tempVariable) {
+                            tempVariables.push(tempVariable);
+                        } else {
+                            this.errors.flag = true;
+                            this.errors.invalidVariables.push(variablesFound[i]);
+                        }
+                    }
+                    return tempVariables;
+                // }, 1000, false)
+            },
+            addVariablesFromFormulaString(){
+                this.entry.formula.variables = this.parseVariablesFromFormulaString();
+            },
+            setDisplayForm(value) {
+                this.entry.displayForm = value;
+                switch (value) {
+                    case 'AMOUNT': this.displayFormLabel = "Cantidad"; break;
+                    case 'PERCENTAGE': this.displayFormLabel = "Porcentaje"; break;
+                    case 'NORMAL': this.displayFormLabel = "Normal"; break;
+                }
+            },
+            debounce: function debounce(func, wait, immediate) {
+                var timeout;
+                return function () {
+                    var context = this, args = arguments;
+                    var later = function () {
+                        timeout = null;
+                        if (!immediate) func.apply(context, args);
+                    };
+                    var callNow = immediate && !timeout;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                    if (callNow) func.apply(context, args);
+                }
             }
         },
         created() {
             bus.$on(storeModule + DELETE_SUCCESS, (data) => {
                 tShow("El calculo fue eliminado correctamente", 'info');
             }),
-            bus.$on(storeModule+DOC_CREATED, ()=>{
-                this.entry.name= "";
+                bus.$on(storeModule + DOC_CREATED, () => {
+                    this.entry.name = "";
                 this.entry.description= "";
                 this.entry.type= "";
                 this.entry.enabled= "";
                 this.entry.notes= "";
-                this.$v.$reset();e
+                this.$v.$reset();
                 tShow("El proveedor fue creado correctamente", 'info');
             });
         },
@@ -290,7 +352,10 @@
             },
             ...mapState({
                 variables: state => state[storeModule].variables
-            })
+            }),
+            ...mapGetters(
+                    storeModule, ['getVariables']
+            )
         },
         beforeMount(){
             this.$store.dispatch(`${storeModule}/fetchVariables`)

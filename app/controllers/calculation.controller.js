@@ -101,12 +101,19 @@ exports.save = (req, res, next) => {
                     });
                 }
 
+
                 //Update doc fields
                 calculation.name = req.body.name;
                 calculation.description = req.body.description;
                 calculation.type = req.body.type;
                 calculation.enabled = req.body.enabled;
                 calculation.notes = req.body.notes;
+                //  Formula stuff
+                calculation.formula = req.body.formula;
+                calculationObjectIds = [];
+                for (let i = 0; i < calculation.formula.calculations.length; i++) {
+                    calculationObjectIds.push(mongoose.types.ObjectId(calculation.formula.calculations[i]._id));
+                }
 
                 calculation.save((err, savedCalculation) => {
                     if (err) {
@@ -128,13 +135,23 @@ exports.save = (req, res, next) => {
     } else {
         //Create
 
+
         let calculation = new Calculation({
             name : req.body.name,
             description : req.body.description,
             type : req.body.type,
             enabled : req.body.enabled,
+            displayForm : req.body.displayForm,
             notes : req.body.notes
         });
+
+
+        //Formula stuff
+        calculation.formula = req.body.formula;
+        calculationObjectIds = [];
+        for (let i = 0; i < calculation.formula.calculations.length; i++) {
+            calculationObjectIds.push(mongoose.types.ObjectId(calculation.formula.calculations[i]._id));
+        }
 
 
         calculation.save((err, savedCalculation) => {

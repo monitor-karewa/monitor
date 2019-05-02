@@ -9,58 +9,80 @@ const mongoosePagination = require('mongoose-paginate');
 const permissions = require('./../components/permissions');
 
 const variableSchema = new Schema({
-    symbol: {
+    abbreviation: {
         type: String,
         required: true,
         index: {unique: true}
     },
-    title: {
-        type: String,
-        required: true
-    },
-    description: {
-        type: String,
-        required: true
-    }
-    //TODO: definir campos faltantes
-});
-
-const formulaSchema = new Schema({
-    expression: {
-        type: String,
-        required: true
-    },
-    variables: [variableSchema]
-});
-
-/**
- * Schema de Mongoose para el modelo Calculation.
- * @type {mongoose.Schema}
- */
-let CalculationSchema = new Schema({
     name: {
         type: String,
         required: true
     },
     description: {
+        type: String
+        // required: true
+    }
+    //TODO: definir campos faltantes
+});
+
+
+/**
+ * Schema de Mongoose para el modelo Calculation.
+ * @type {mongoose.Schema}
+ */
+let CalculationSchema = new Schema({});
+
+const FormulaSchema = new Schema({
+    expression: {
         type: String,
         required: true
     },
-    type: {
-        type: String,
-        required: true,
-        enum: ['GENERAL', 'CONTRACT']
-    },
-    enabled: {
-        type: Boolean,
-        required: false
-    },
-    notes: {
-        type: String,
-        required: false
-    },
-    deleted: require("./schemas/deleted.schema").Deleted
+    variables: [variableSchema],
+    calculations :  {
+        type: [Schema.Types.ObjectId],
+        ref : 'Calculation'
+    }
 });
+
+CalculationSchema.add({
+        name: {
+
+            type: String,
+            required: true
+        },
+        description : {
+
+            type: String,
+            required: true
+        },
+        type : {
+
+            type: String,
+            required: true,
+            enum: ['GENERAL', 'CONTRACT']
+        },
+        enabled :  {
+
+            type: Boolean,
+            required: false
+        },
+        displayForm :  {
+            type: String,
+            required: true,
+            enum: ['NORMAL', 'PERCENTAGE', 'AMOUNT']
+        },
+        notes : {
+
+            type: String,
+            required: false
+        },
+        formula: {
+            type: FormulaSchema,
+            required: false
+        }
+    }
+)
+    CalculationSchema.delete = require("./schemas/deleted.schema").Deleted;
 
 //Agregar createdAt, modifiedAt automáticamente
 CalculationSchema.plugin(pluginCreatedUpdated);
