@@ -39,10 +39,16 @@
         },
         filters: {
             moment: function (date) {
-                if (!utils.isDate(date)) {
+                let m = moment(date);
+                if (!m.isValid()) {
                     return '';
                 }
-                return moment(date).format('MM/DD/YYYY');
+                let formattedDate = m.utc().format('MM/DD/YYYY');
+                if (!formattedDate) {
+                    return '';
+                }
+                
+                return formattedDate;
             }
         },
         computed: {

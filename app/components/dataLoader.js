@@ -199,17 +199,6 @@ class ContractExcelReader {
                         case String:
                             fieldInfo.value = value || '';
                             
-                            if (typeof(fieldInfo.value) !== 'string') {
-                                logger.error(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.');
-
-                                fieldInfo.errors.push({
-                                    //TODO: i18n
-                                    message: 'El valor indicado no cumple con el formato permitido para este campo.'
-                                });
-                                
-                                return callback(null, fieldInfo);
-                            }
-
                             //Try to obtain inner value "hyperlink" or "text", which is available only for URLs
                             if (options.hyperlink) {
                                 if (fieldInfo.value.hyperlink) {
@@ -218,6 +207,21 @@ class ContractExcelReader {
                                     fieldInfo.value = fieldInfo.value.text;
                                 }
                             }
+                            
+                            
+                            if (typeof(fieldInfo.value) !== 'string') {
+                                logger.error(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to read as String.', fieldName);
+
+                                // fieldInfo.errors.push({
+                                //     //TODO: i18n
+                                //     message: 'El valor indicado no cumple con el formato permitido para este campo.'
+                                // });
+                                //
+                                // return callback(null, fieldInfo);
+                                fieldInfo.value = fieldInfo.value.toString();
+                                logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] forced to String.', fieldName);
+                            }
+
 
                             //Force uppercase
                             if (options.uppercase) {
@@ -289,7 +293,7 @@ class ContractExcelReader {
                             value = value || '';
 
                             if (!utils.isDate(value) && typeof(value) !== 'string') {
-                                logger.error(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.');
+                                logger.error(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
 
                                 fieldInfo.errors.push({
                                     //TODO: i18n
@@ -297,9 +301,17 @@ class ContractExcelReader {
                                 });
 
                                 return callback(null, fieldInfo);
+                            } else if (utils.isDate(value)) {
+                                fieldInfo.value = value;
+                            } else {
+                                fieldInfo.value = utils.parseDate(value, true);
                             }
-                            
-                            fieldInfo.value = utils.parseDate(value);
+                            // console.log('Date value', value);
+
+                            console.log('fieldInfo.value', fieldInfo.value);
+                            console.log('typeof(fieldInfo.value)', typeof(fieldInfo.value));
+                            console.log('Object.prototype.toString.call(fieldInfo.value)', Object.prototype.toString.call(fieldInfo.value));;
+
                             break;
                         case Number:
                             value = value || '';
@@ -307,7 +319,7 @@ class ContractExcelReader {
                             // console.log(fieldName + ' => ', value);
 
                             if (!utils.isNumber(value) && typeof(value) !== 'string') {
-                                logger.error(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.');
+                                logger.error(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
 
                                 fieldInfo.errors.push({
                                     //TODO: i18n
@@ -340,7 +352,7 @@ class ContractExcelReader {
                 }
 
                 if (typeof(value) !== 'string') {
-                    logger.error(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.');
+                    logger.error(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
 
                     // fieldInfo.errors.push({
                     //     //TODO: i18n
@@ -394,7 +406,7 @@ class ContractExcelReader {
                             let valueMatchesString = docs.map(_doc => _doc[field] || "").join(", ");
                             let firstValue = docs[0][field] || "";
                             fieldInfo.errors.push({
-                                message: `El registro coincide con varios registros cargados previamente [${valueMatchesString}] y se utilizará la mejor coincidencia encontrada`
+                                message: `El registro coincide con varios registros cargados previamente [${valueMatchesString}] y se utilizará la mejor coincidencia encontrada.`
                             });
                             
                         }
@@ -587,38 +599,39 @@ class ContractExcelReader {
 
                 
             },
-            //Call a validation function if needed
-            (fieldInfo, callback) => {
-                if (utils.isDefined(options.validator) && utils.isFunction(options.validator)) {
-                    logger.info(null, null, 'dataLoader#_readField', 'TODO: options.validator');
-                    return callback(null, fieldInfo);
-                } else {
-                    return callback(null, fieldInfo);
-                }
-            },
-            //Check if the field value is required
-            (fieldInfo, callback) => {
-                if (utils.isDefined(options.required) && utils.isNotDefined(fieldInfo.value)) {
-                    // fieldInfo.errors.push({
-                    //     message: 'Este es un error forzado.'
-                    // });
-                    if (utils.isFunction(options.required)) {
-                        logger.info(null, null, 'dataLoader#_readField', 'TODO: options.required as a Function');
-                    } else if (utils.isBoolean(options.required) && options.required) {
-                        fieldInfo.errors.push({
-                            message: 'Este campo es requerido.'
-                        });
-                    } else if (options.required) {
-                        fieldInfo.errors.push({
-                            message: 'Este campo es requerido.'
-                        });
-                    }
-                    //TODO: check required
-                    return callback(null, fieldInfo);
-                } else {
-                    return callback(null, fieldInfo);
-                }
-            },
+            //Validation fn moved to the end of validations due to requiring access to other fields' values
+            // //Call a validation function if needed
+            // (fieldInfo, callback) => {
+            //     if (utils.isDefined(options.validator) && utils.isFunction(options.validator)) {
+            //         logger.info(null, null, 'dataLoader#_readField', 'TODO: options.validator');
+            //        
+            //         return callback(null, fieldInfo);
+            //     } else {
+            //         return callback(null, fieldInfo);
+            //     }
+            // },
+
+            //Required value or fn moved to the end due to requiring access to other fields' values when it's a fn
+            // //Check if the field value is required
+            // (fieldInfo, callback) => {
+            //     if (utils.isDefined(options.required) && utils.isNotDefined(fieldInfo.value)) {
+            //         if (utils.isFunction(options.required)) {
+            //             logger.info(null, null, 'dataLoader#_readField', 'TODO: options.required as a Function');
+            //         } else if (utils.isBoolean(options.required) && options.required) {
+            //             fieldInfo.errors.push({
+            //                 message: 'Este campo es requerido.'
+            //             });
+            //         } else if (options.required) {
+            //             fieldInfo.errors.push({
+            //                 message: 'Este campo es requerido.'
+            //             });
+            //         }
+            //         //TODO: check required
+            //         return callback(null, fieldInfo);
+            //     } else {
+            //         return callback(null, fieldInfo);
+            //     }
+            // },
             //Check if the field value is unique
             (fieldInfo, callback) => {
                 if (utils.isDefined(options.unique) && utils.isNotDefined(fieldInfo.value)) {
@@ -650,15 +663,80 @@ class ContractExcelReader {
             }
         ], (err, fieldInfo) => {
             if (err) {
-                console.log('err', err);
+                logger.error(err, null, 'dataLoader#_readField', 'Error processing row');
             }
             obj[fieldName] = fieldInfo;
-
-            // console.log('obj', obj);
 
             // return mainCallback(null, obj);
             return mainCallback(null, fieldInfo);
         });
+    }
+
+
+    _checkValidationsForFieldInfo(rowInfo, fieldInfo, callback) {
+        let options = fieldInfo.options || {};
+        if (options && utils.isDefined(options.validator) && utils.isFunction(options.validator)) {
+            // logger.info(null, null, 'dataLoader#_readField', 'TODO: options.validator');
+            options.validator(rowInfo, (err, errorMessage) => {
+                if (errorMessage) {
+                    fieldInfo.errors.push({
+                        message: errorMessage
+                    });
+                }
+                return callback();
+            });
+        } else {
+            return callback(null);
+        }
+    }
+
+    _checkRequiredForFieldInfo(rowInfo, fieldInfo, callback) {
+        let options = fieldInfo.options || {};
+
+        //We can check if the fieldInfo.value is already defined to skip this check, but we have to take into account 
+        // that an empty string is not fulfilling a required validation
+        if (options && utils.isDefined(options.required) && (fieldInfo.value === '' || utils.isNotDefined(fieldInfo.value))) {
+            if (utils.isFunction(options.required)) {
+                //Required check is a fn
+
+                options.required(rowInfo, (err, isRequired, errorMessage) => {
+                    
+                    if (isRequired/* && utils.isNotDefined(fieldInfo.value)*/) {
+                        //Field is required, but no valid value was found.
+
+                        //TODO: i18n
+                        errorMessage = errorMessage || 'Este campo es requerido.';
+                        
+                        if (errorMessage) {
+                            fieldInfo.errors.push({
+                                message: errorMessage
+                            });
+                        }
+                    }
+
+                    return callback();
+                });
+            } else {
+                //Required check is not a fn
+                if (utils.isBoolean(options.required) && options.required) {
+                    fieldInfo.errors.push({
+                        //TODO: i18n
+                        message: 'Este campo es requerido.'
+                    });
+                } else if (options.required) {
+                    //"truthy" value, e.g. 1
+                    logger.warn(null, null, 'dataLoader#_readField', 'options.required was truthy, read as [true] for fieldName [%s]', fieldInfo.fieldName);
+                    fieldInfo.errors.push({
+                        //TODO: i18n
+                        message: 'Este campo es requerido.'
+                    });
+                }
+
+                return callback();
+            }
+        } else {
+            return callback(null, fieldInfo);
+        }
     }
 
     _readContractRow(sheet, row, readRowCallback) {
@@ -703,10 +781,40 @@ class ContractExcelReader {
                 case C_IDS.CATEGORY:
                     return _this._readField(rowInfo, cell.value, 'category', String, {
                         enum: categoryEnumDict,
-                        required: function () {
+                        required: function (rowInfo, callback) {
                             //TODO: Centralize this validation
-                            // let descriptionRegExp = utils.toAccentsRegex(this.servicesDescription.toUpperCase(),'i');
-                            // return descriptionRegExp.test(this.category);
+                            
+                            let regexOptionMatch = null;
+                            
+                            
+                            for (let category of categoryEnum) {
+                                
+                                let regexOptions = categoryEnumDict[category];
+                                
+                                if (regexOptions && regexOptions.length > 0) {
+                                    
+                                    for (let regexOption of regexOptions) {
+                                        let regex = new RegExp(regexOption.regexStr, regexOption.flags);
+                                        if (regex.test(rowInfo.servicesDescription.value)) {
+                                            regexOptionMatch = regexOption; 
+                                            break;
+                                        }
+                                    }
+                                    if (regexOptionMatch) {
+                                        break;
+                                    }
+                                    
+                                }
+                            }
+
+                            if (regexOptionMatch) {
+                                let isRequired = true;
+                                let errorMessage = "Este campo es requerido debido a que se indicó una categoría en la descripción del contrato.";
+                                
+                                return callback(null, isRequired, errorMessage);
+                            }
+                            
+                            return callback(null, false);
                         },
                         uppercase: true
                     }, callback);
@@ -715,7 +823,6 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell.value, 'administration', String, {
                         required: true,
                         //TODO: Centralize this Regex
-                        // match: new RegExp("^[12][0-9]{3}-[12][0-9]{3}$")
                         match: {
                             regexStr: "^[12][0-9]{3}-[12][0-9]{3}$"
                         }
@@ -725,7 +832,6 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell.value, 'fiscalYear', String, {
                         required: true,
                         //TODO: Centralize this Regex
-                        // match: new RegExp("^[12][0-9]{3}")
                         match: {
                             regexStr: "^[12][0-9]{3}" 
                         }
@@ -735,7 +841,6 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell.value, 'period', String, {
                         required: true,
                         //TODO: Centralize this Regex
-                        // match: new RegExp("^[1234]o\\s2[0-9]{3}$")
                         match: {
                             regexStr: "^[1234]o\\s2[0-9]{3}$"
                         }
@@ -753,11 +858,11 @@ class ContractExcelReader {
                 case C_IDS.PROCEDURE_STATE:
                     return _this._readField(rowInfo, cell.value, 'procedureState', String, {
                         enum: procedureStateEnumDict,
-                        required: function () {
-                            //TODO: Centralize this validation
-                            // let descriptionRegExp = utils.toAccentsRegex(this.notes.toUpperCase(),'i');
-                            // return descriptionRegExp.test(this.procedureType);
-                        },
+                        // required: function (rowInfo, callback) {
+                        //     //TODO: Centralize this validation
+                        //     let descriptionRegExp = utils.toAccentsRegex((rowInfo.notes.value || '').toUpperCase(),'i');
+                        //     return descriptionRegExp.test(rowInfo.procedureType.value);
+                        // },
                         uppercase: true
                     }, callback);
                     break;
@@ -839,8 +944,16 @@ class ContractExcelReader {
                             strategy: REF_STRATEGIES.SUBSET
                         },
                         //TODO: Centralize this validation
-                        validator: function(){
-                            return this.administrativeUnitType === 'DESCENTRALIZADA' ? this.organizerAdministrativeUnit == this.applicantAdministrativeUnit : true
+                        validator: function(rowInfo, callback){
+                            let isValid = rowInfo.administrativeUnitType.value === 'DESCENTRALIZADA' ? rowInfo.organizerAdministrativeUnit.value === rowInfo.applicantAdministrativeUnit.value : true;
+                            
+                            let errorMessage = null;
+                            if (!isValid) {
+                                //TODO: i18n
+                                errorMessage = 'Debido a que la organización es descentralizada, la Unidad Administrativa convocante debe ser igual a la solicitante.'
+                            }
+                            
+                            return callback(null, errorMessage);
                         }
                     }, callback);
                     break;
@@ -873,10 +986,21 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell.value, 'contractDate', Date, {
                         required: true,
                         //TODO: Centralize this validation
-                        validator: () => {
-                            let yearContractDate = new Date(this.contractDate).getFullYear();
-                            let fiscalYear = Number(this.fiscalYear);
-                            return yearContractDate === fiscalYear;
+                        validator: function(rowInfo, callback){
+                            let yearContractDate = new Date(rowInfo.contractDate.value).getFullYear();
+                            let fiscalYear = Number(rowInfo.fiscalYear.value);
+                            let isValid = yearContractDate === fiscalYear;
+
+                            console.log('yearContractDate', yearContractDate);
+                            console.log('fiscalYear', fiscalYear);
+
+                            let errorMessage = null;
+                            if (!isValid) {
+                                //TODO: i18n
+                                errorMessage = 'La fecha del contrato no coincide con el ejercicio fiscal.';
+                            }
+
+                            return callback(null, errorMessage);
                         }
                     }, callback);
                     break;
@@ -905,7 +1029,7 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell.value, 'contractUrl', String, {
                         required: true,
                         hyperlink: true,
-                        //TODO: match uri?
+                        //TODO: Centralize this regex
                         // match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
                         match: {
                             regexStr: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
@@ -952,22 +1076,31 @@ class ContractExcelReader {
                     break;
                 case C_IDS.UNKOWN_COLUMN:
                 default:
-                    console.log('unkown/default column, skipping');
+                    //Unrecognized column identifier value
+                    logger.warn(null, null, 'dataLoader#_readContractRow', 'Unknown column value [%s], skipping', column);
                     return callback();
-                    // return callback
-                //Unrecognized column identifier value
             }
         }, (err, results) => {
             //All columns processed for row
 
             //Create a summary for the row obj
             rowInfo.summary = {};
+            
             let fieldNames = Object.keys(rowInfo);
             
+            //Move to an array for easier parallel processing
+            let fieldInfoArray = [];
             
             for (let fieldName of fieldNames) {
                 let fieldInfo = rowInfo[fieldName];
+                fieldInfoArray.push(fieldInfo);
+            }
+
+            //Check additional validations: 
+            //validator fn, hasErrors, hasInfos, and skipRow
+            async.each(fieldInfoArray, (fieldInfo, callback) => {
                 if (fieldInfo) {
+                    
                     if (fieldInfo.errors && fieldInfo.errors.length) {
                         rowInfo.summary.hasErrors = true;
                     }
@@ -979,12 +1112,25 @@ class ContractExcelReader {
                     if (fieldInfo.skipRow) {
                         rowInfo.summary.skipRow = true;
                     }
+                    
+                    
+                    // this._checkValidationsForFieldInfo(rowInfo, fieldInfo, callback);
+                    
+                    //Apply multiple fns with the same params, then call callback when all fns are done
+                    async.applyEach([
+                        this._checkValidationsForFieldInfo, 
+                        this._checkRequiredForFieldInfo
+                    ], rowInfo, fieldInfo, callback);
+                    
                 } else {
-                    console.log(`null fieldInfo found for fieldName ${fieldName}!`);
+                    logger.error(null, null, 'dataLoader#_readContractRow', '[null] or [undefined] fieldInfo found');
+                    return callback(null, fieldInfo);
                 }
-            }
+            }, (err, results) => {
+                //All additional validations done
+                return readRowCallback(null, rowInfo);
+            });
 
-            return readRowCallback(null, rowInfo);
         });
     }
 
