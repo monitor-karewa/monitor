@@ -47,6 +47,7 @@ let variables = {
   }),
   $MTAD: Variable.makeVariable({
       name:"Monto total de adjudicaciones directas",
+      description:"Monto total de los contratos hechos bajo adjudicaciones directas",
       abbreviation:"$MTAD",
       query:{}
   }),
@@ -54,16 +55,19 @@ let variables = {
   // Competencia Económica
   $NTP: Variable.makeVariable({
       name:"Número total de proveedores",
+      description:"Número total de proveedores registrados por la organización",
       abbreviation:"$NTP",
       query:{}
   }),
   $NPEPE: Variable.makeVariable({
       name:"Número de proveedores por encima del promedio ejercido",
+      description:"Número de proveedores que se encuentran por encima del promedio ejercido",
       abbreviation:"$NPEPE",
       query:{}
   }),
   $NP80E: Variable.makeVariable({
       name:"Número de proveedores que concentran el 80% del gasto ejercido",
+      description:"Número de proveedores que concentran el 80% del gasto ejercido",
       abbreviation:"$NP80E",
       query:{}
   }),

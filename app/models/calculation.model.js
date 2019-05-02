@@ -46,14 +46,18 @@ const FormulaSchema = new Schema({
 
 CalculationSchema.add({
         name: {
-
             type: String,
             required: true
         },
         description : {
-
             type: String,
             required: true
+        },
+        abbreviation: {
+            type: String,
+            required: true,
+            min: 2,
+            max: 8
         },
         type : {
 

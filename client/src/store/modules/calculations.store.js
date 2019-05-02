@@ -9,7 +9,7 @@ const state = {
 };
 
 const getters = {
-    getVariables : function (state) {
+    variablesObj : function (state) {
         return state.variables;
     }
 };

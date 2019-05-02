@@ -94,7 +94,7 @@ exports.save = (req, res, next) => {
             .findOne(qById)
             .exec((err, calculation) => {
                 if (err || !calculation) {
-                    logger.error(req, err, 'calculation.controller#save', 'Error al consultar Calculation');
+                    logger.error(err, req, 'calculation.controller#save', 'Error al consultar Calculation');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.save')
@@ -105,19 +105,20 @@ exports.save = (req, res, next) => {
                 //Update doc fields
                 calculation.name = req.body.name;
                 calculation.description = req.body.description;
+                calculation.abbreviation = req.body.abbreviation;
                 calculation.type = req.body.type;
                 calculation.enabled = req.body.enabled;
                 calculation.notes = req.body.notes;
                 //  Formula stuff
                 calculation.formula = req.body.formula;
-                calculationObjectIds = [];
+                let calculationObjectIds = [];
                 for (let i = 0; i < calculation.formula.calculations.length; i++) {
                     calculationObjectIds.push(mongoose.types.ObjectId(calculation.formula.calculations[i]._id));
                 }
 
                 calculation.save((err, savedCalculation) => {
                     if (err) {
-                        logger.error(req, err, 'calculation.controller#save', 'Error al guardar Calculation');
+                        logger.error(err, req, 'calculation.controller#save', 'Error al guardar Calculation');
                         return res.json({
                             errors: true,
                             message: req.__('general.error.save')
@@ -142,13 +143,14 @@ exports.save = (req, res, next) => {
             type : req.body.type,
             enabled : req.body.enabled,
             displayForm : req.body.displayForm,
+            abbreviation : req.body.abbreviation,
             notes : req.body.notes
         });
 
 
         //Formula stuff
         calculation.formula = req.body.formula;
-        calculationObjectIds = [];
+        let calculationObjectIds = [];
         for (let i = 0; i < calculation.formula.calculations.length; i++) {
             calculationObjectIds.push(mongoose.types.ObjectId(calculation.formula.calculations[i]._id));
         }
@@ -156,7 +158,7 @@ exports.save = (req, res, next) => {
 
         calculation.save((err, savedCalculation) => {
             if (err) {
-                logger.error(req, err, 'calculation.controller#save', 'Error al guardar Calculation');
+                logger.error(err, req, 'calculation.controller#save', 'Error al guardar Calculation');
                 return res.json({
                     "error": true,
                     "message": req.__('general.error.save')

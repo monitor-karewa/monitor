@@ -33,10 +33,22 @@
                         <label class="fg-label">Descripción del cálculo
                             <small></small>
                             <br>
-                            <strong>Introduce las descripción del cálculo</strong>
+                            <strong>Introduce la descripción del cálculo</strong>
                         </label>
                     </div>
                     <span v-if="$v.entry.description.$invalid && $v.entry.description.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'descripción'})}}</span>
+                </div>
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input" placeholder="Introduce la abreviación del cálcuo"
+                               v-model="$v.entry.abbreviation.$model" @input="delayTouch($v.entry.abbreviation)">
+                        <label class="fg-label">Abreviación del cálculo
+                            <small></small>
+                            <br>
+                            <strong>Introduce la abreviación del cálculo</strong>
+                        </label>
+                    </div>
+                    <span v-if="$v.entry.abbreviation.$invalid && $v.entry.abbreviation.$dirty" class="c-error">{{$t(abbreviationErrorMessage, {field:'abreviación'})}}</span>
                 </div>
 
                 <div class="form-group fg-float subtitle">
@@ -107,12 +119,11 @@
                                     data-live-search-placeholder="Search placeholder"
                                     title="Agregar variable">
                                 <optgroup label="GENERAL">
-                                    <option :value="item.abbreviation" v-for="item in variables">{{item.name}}</option>
+                                    <option :value="item.abbreviation" v-for="item in variablesObj">{{item.name}}</option>
                                 </optgroup>
-                                <!--<optgroup label="Otros Cálculos ">-->
-                                    <!--<option>Número de contratos</option>-->
-                                    <!--<option>Número de contratos entregados a tiempo</option>-->
-                                <!--</optgroup>-->
+                                <optgroup label="Otros Cálculos">
+                                    <option :value="calculo.abbreviation" v-for="calculo in docs">{{'('+calculo.abbreviation+') '+calculo.name}}</option>
+                                </optgroup>
                             </select>
                         </div>
                     </div>
@@ -121,6 +132,7 @@
                         <button type="button" class="mini-btn p-0" @click="addToFormula('*')"><span class="f-30 align-middle">*</span></button>
                         <button type="button" class="mini-btn p-0" @click="addToFormula('-')"><span class="f-25 m-t--5 align-middle">-</span></button>
                         <button type="button" class="mini-btn m-r-0" @click="addToFormula('/')">/</button>
+
                     </div>
                 </div>
 
@@ -205,6 +217,7 @@
                 entry : {
                     name: "",
                     description: "",
+                    abbreviation: "",
                     type: undefined,
                     enabled: false,
                     formula : {
@@ -219,6 +232,7 @@
                     flag : false,
                     invalidVariables : []
                 }
+
             }
         },
         validations:{
@@ -228,6 +242,15 @@
                 },
                 description: {
                     required,
+                },
+                abbreviation: {
+                    required,
+                    validAbbreviation: (value) => {
+                        if (value == null || value == undefined || value == "") {
+                            return true
+                        }
+                        return (/^\${2}[a-zA-Z0-9]{1,7}$/).test(value);
+                    }
                 },
                 type: {
                     required,
@@ -262,8 +285,8 @@
                 }
             },
             findVariableByAbbreviation(abbr) {
-                    if (this.getVariables[abbr]) {
-                        return this.getVariables[abbr];
+                    if (this.variablesObj[abbr]) {
+                        return this.variablesObj[abbr];
                     }
                 return undefined;
             },
@@ -315,6 +338,13 @@
                     if (callNow) func.apply(context, args);
                 }
             },
+            delayTouch($v) {
+                $v.$reset();
+                if (touchMap.has($v)) {
+                    clearTimeout(touchMap.get($v))
+                }
+                touchMap.set($v, setTimeout($v.$touch, 1000))
+            },
             clearEntry(){
                 this.entry = {
                     formula:{}
@@ -333,6 +363,7 @@
                 this.entry.type= "";
                 this.entry.enabled= "";
                 this.entry.notes= "";
+                this.entry.abbreviation= "";
                 this.$v.$reset();
                 tShow("El proveedor fue creado correctamente", 'info');
             });
@@ -386,11 +417,19 @@
             requiredErrorMessage(){
                 return 'calculation.validation.required'
             },
+            abbreviationErrorMessage(){
+                if(!this.$v.entry.abbreviation.required){
+                    return "calculation.validation.required";
+                }
+                if(!this.$v.entry.abbreviation.validAbbreviation){
+                    return "calculations.validation.abbreviation"
+                }
+            },
             ...mapState({
                 variables: state => state[storeModule].variables
             }),
             ...mapGetters(
-                    storeModule, ['getVariables']
+                    storeModule, ['variablesObj']
             )
         },
         beforeMount(){
