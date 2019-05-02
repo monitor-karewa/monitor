@@ -117,9 +117,9 @@
                         </div>
                     </div>
                     <div class="mini-buttons">
-                        <button type="button" class="mini-btn m-l-0" @click="addToFormula('+')">+</button>
+                        <button type="button" class="mini-btn p-0" @click="addToFormula('+')"><span class="f-25 m-t--5 align-middle">+</span></button>
                         <button type="button" class="mini-btn p-0" @click="addToFormula('*')"><span class="f-30 align-middle">*</span></button>
-                        <button type="button" class="mini-btn" @click="addToFormula('-')">-</button>
+                        <button type="button" class="mini-btn p-0" @click="addToFormula('-')"><span class="f-25 m-t--5 align-middle">-</span></button>
                         <button type="button" class="mini-btn m-r-0" @click="addToFormula('/')">/</button>
                     </div>
                 </div>
