@@ -42,38 +42,22 @@ const FormulaSchema = new Schema({
         type: [Schema.Types.ObjectId],
         ref : 'Calculation'
     }
-// =======
-//     abbreviation: {
-//         type: String,
-//         required: true
-//     },
-//     type: {
-//         type: String,
-//         required: true,
-//         enum: ['GENERAL', 'CONTRACT']
-//     },
-//     enabled: {
-//         type: Boolean,
-//         required: false
-//     },
-//     notes: {
-//         type: String,
-//         required: false
-//     },
-//     deleted: require("./schemas/deleted.schema").Deleted
-// >>>>>>> Stashed changes
 });
 
 CalculationSchema.add({
         name: {
-
             type: String,
             required: true
         },
         description : {
-
             type: String,
             required: true
+        },
+        abbreviation: {
+            type: String,
+            required: true,
+            min: 2,
+            max: 8
         },
         type : {
 

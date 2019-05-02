@@ -41,14 +41,14 @@
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce la abreviación del cálcuo"
-                               v-model="$v.entry.abbreviation.$model">
+                               v-model="$v.entry.abbreviation.$model" @input="delayTouch($v.entry.abbreviation)">
                         <label class="fg-label">Abreviación del cálculo
                             <small></small>
                             <br>
                             <strong>Introduce la abreviación del cálculo</strong>
                         </label>
                     </div>
-                    <span v-if="$v.entry.abbreviation.$invalid && $v.entry.abbreviation.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'abreviación'})}}</span>
+                    <span v-if="$v.entry.abbreviation.$invalid && $v.entry.abbreviation.$dirty" class="c-error">{{$t(abbreviationErrorMessage, {field:'abreviación'})}}</span>
                 </div>
 
                 <div class="form-group fg-float subtitle">
@@ -244,6 +244,12 @@
                 },
                 abbreviation: {
                     required,
+                    validAbbreviation: (value) => {
+                        if (value == null || value == undefined || value == "") {
+                            return true
+                        }
+                        return (/^\${2}[a-zA-Z0-9]{1,7}$/).test(value);
+                    }
                 },
                 type: {
                     required,
@@ -278,8 +284,8 @@
                 }
             },
             findVariableByAbbreviation(abbr) {
-                    if (this.getVariables[abbr]) {
-                        return this.getVariables[abbr];
+                    if (this.variablesObj[abbr]) {
+                        return this.variablesObj[abbr];
                     }
                 return undefined;
             },
@@ -326,6 +332,13 @@
                     timeout = setTimeout(later, wait);
                     if (callNow) func.apply(context, args);
                 }
+            },
+            delayTouch($v) {
+                $v.$reset();
+                if (touchMap.has($v)) {
+                    clearTimeout(touchMap.get($v))
+                }
+                touchMap.set($v, setTimeout($v.$touch, 1000))
             }
         },
         created() {
@@ -333,11 +346,12 @@
                 tShow("El calculo fue eliminado correctamente", 'info');
             }),
                 bus.$on(storeModule + DOC_CREATED, () => {
-                    this.entry.name = "";
+                this.entry.name = "";
                 this.entry.description= "";
                 this.entry.type= "";
                 this.entry.enabled= "";
                 this.entry.notes= "";
+                this.entry.abbreviation= "";
                 this.$v.$reset();
                 tShow("El proveedor fue creado correctamente", 'info');
             });
@@ -366,11 +380,19 @@
             requiredErrorMessage(){
                 return 'calculation.validation.required'
             },
+            abbreviationErrorMessage(){
+                if(!this.$v.entry.abbreviation.required){
+                    return "calculation.validation.required";
+                }
+                if(!this.$v.entry.abbreviation.validAbbreviation){
+                    return "calculations.validation.abbreviation"
+                }
+            },
             ...mapState({
                 variables: state => state[storeModule].variables
             }),
             ...mapGetters(
-                    storeModule, ['getVariables']
+                    storeModule, ['variablesObj']
             )
         },
         beforeMount(){

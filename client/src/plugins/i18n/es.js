@@ -415,6 +415,8 @@ export default {
     "calculation.new.calculation-type.radio-button.contract": "Contrato",
     "calculation.validation.required":"El campo {field} del Cálculo es requerido",
     "calculations.validation.classification":"El valor para la Clasificación del Recurso no es válido",
+    "calculations.validation.abbreviation":"Debe comenzar con $$, ser valores alfanúmericos y tener mínimo 3 y máximo 8 caractéres",
+
 
     //DataLoad
     "data-load.title-strong": "Carga de <strong>Datos</strong>",
