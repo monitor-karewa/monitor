@@ -128,10 +128,11 @@
                         </div>
                     </div>
                     <div class="mini-buttons">
-                        <button class="mini-btn m-l-0" @click.prevent="addToFormula('+')">+</button>
-                        <button class="mini-btn" @click.prevent="addToFormula('-')">-</button>
-                        <button class="mini-btn" @click.prevent="addToFormula('*')">*</button>
-                        <button class="mini-btn m-r-0" @click.prevent="addToFormula('/')">/</button>
+                        <button type="button" class="mini-btn m-l-0" @click="addToFormula('+')">+</button>
+                        <button type="button" class="mini-btn p-0" @click="addToFormula('*')"><span class="f-30 align-middle">*</span></button>
+                        <button type="button" class="mini-btn" @click="addToFormula('-')">-</button>
+                        <button type="button" class="mini-btn m-r-0" @click="addToFormula('/')">/</button>
+
                     </div>
                 </div>
 
@@ -184,7 +185,7 @@
     import catalog from '@/mixins/catalog.mixin';
     import {bus} from '@/main';
     import ModalDanger from "@/components/modals/ModalDanger";
-    import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
+    import { DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT, DOC_UPDATED, DOC_START_CREATE } from "@/store/events";
     import { required, minLength, maxLength } from 'vuelidate/lib/validators';
     const touchMap = new WeakMap();
     import { mapState, mapGetters } from 'vuex';
@@ -296,20 +297,24 @@
                     let tempVariable;
                     let tempVariables = [];
                     let variablesFound = this.entry.formula.expression.match(regex);
-                    for (let i = 0; i < variablesFound.length ; i++) {
-                        tempVariable = this.findVariableByAbbreviation(variablesFound[i]);
-                        if (tempVariable) {
-                            tempVariables.push(tempVariable);
-                        } else {
-                            this.errors.flag = true;
-                            this.errors.invalidVariables.push(variablesFound[i]);
+                    if(variablesFound && variablesFound.length > 0) {
+                        for (let i = 0; i < variablesFound.length; i++) {
+                            tempVariable = this.findVariableByAbbreviation(variablesFound[i]);
+                            if (tempVariable) {
+                                tempVariables.push(tempVariable);
+                            } else {
+                                this.errors.flag = true;
+                                this.errors.invalidVariables.push(variablesFound[i]);
+                            }
                         }
                     }
                     return tempVariables;
                 // }, 1000, false)
             },
             addVariablesFromFormulaString(){
-                this.entry.formula.variables = this.parseVariablesFromFormulaString();
+                if(this.entry.formula && this.entry.formula.expression){
+                    this.entry.formula.variables = this.parseVariablesFromFormulaString();
+                }
             },
             setDisplayForm(value) {
                 this.entry.displayForm = value;
@@ -339,7 +344,14 @@
                     clearTimeout(touchMap.get($v))
                 }
                 touchMap.set($v, setTimeout($v.$touch, 1000))
-            }
+            },
+            clearEntry(){
+                this.entry = {
+                    formula:{}
+                };
+                this.$v.$reset();
+            },
+
         },
         created() {
             bus.$on(storeModule + DELETE_SUCCESS, (data) => {
@@ -354,6 +366,31 @@
                 this.entry.abbreviation= "";
                 this.$v.$reset();
                 tShow("El proveedor fue creado correctamente", 'info');
+            });
+            bus.$on(storeModule+DOC_START_CREATE, ()=>{
+                this.clearEntry();
+            });
+            bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
+                this.clearEntry();
+                let tempEntry = {};
+                tempEntry._id = entry._id;
+                tempEntry.formula = {};
+                tempEntry.notes = entry.notes;
+                tempEntry.name = entry.name;
+                tempEntry.description = entry.description;
+                tempEntry.type = entry.type;
+                tempEntry.enabled  = entry.enabled;
+
+                tempEntry.formula.expression  = entry.formula.expression;
+                tempEntry.formula.variables  = entry.formula.variables;
+                tempEntry.formula.calculations  = entry.formula.calculations;
+                tempEntry.displayForm = entry.displayForm;
+                tempEntry.notes = entry.notes;
+
+                this.entry = {...tempEntry};
+            });
+            bus.$on(storeModule+DOC_UPDATED, ()=>{
+                this.clearEntry();
             });
         },
         mounted() {
