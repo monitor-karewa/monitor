@@ -33,10 +33,22 @@
                         <label class="fg-label">Descripción del cálculo
                             <small></small>
                             <br>
-                            <strong>Introduce las descripción del cálculo</strong>
+                            <strong>Introduce la descripción del cálculo</strong>
                         </label>
                     </div>
                     <span v-if="$v.entry.description.$invalid && $v.entry.description.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'descripción'})}}</span>
+                </div>
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input" placeholder="Introduce la abreviación del cálcuo"
+                               v-model="$v.entry.abbreviation.$model">
+                        <label class="fg-label">Abreviación del cálculo
+                            <small></small>
+                            <br>
+                            <strong>Introduce la abreviación del cálculo</strong>
+                        </label>
+                    </div>
+                    <span v-if="$v.entry.abbreviation.$invalid && $v.entry.abbreviation.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'abreviación'})}}</span>
                 </div>
 
                 <div class="form-group fg-float subtitle">
@@ -107,20 +119,19 @@
                                     data-live-search-placeholder="Search placeholder"
                                     title="Agregar variable">
                                 <optgroup label="GENERAL">
-                                    <option :value="item.abbreviation" v-for="item in variables">{{item.name}}</option>
+                                    <option :value="item.abbreviation" v-for="item in variablesObj">{{item.name}}</option>
                                 </optgroup>
-                                <!--<optgroup label="Otros Cálculos ">-->
-                                    <!--<option>Número de contratos</option>-->
-                                    <!--<option>Número de contratos entregados a tiempo</option>-->
-                                <!--</optgroup>-->
+                                <optgroup label="Otros Cálculos">
+                                    <option :value="calculo.abbreviation" v-for="calculo in docs">{{'('+calculo.abbreviation+') '+calculo.name}}</option>
+                                </optgroup>
                             </select>
                         </div>
                     </div>
                     <div class="mini-buttons">
-                        <button type="button" class="mini-btn m-l-0" @click="addToFormula('+')">+</button>
-                        <button type="button" class="mini-btn" @click="addToFormula('*')">*</button>
-                        <button type="button" class="mini-btn" @click="addToFormula('-')">-</button>
-                        <button type="button" class="mini-btn m-r-0" @click="addToFormula('/')">/</button>
+                        <button class="mini-btn m-l-0" @click.prevent="addToFormula('+')">+</button>
+                        <button class="mini-btn" @click.prevent="addToFormula('-')">-</button>
+                        <button class="mini-btn" @click.prevent="addToFormula('*')">*</button>
+                        <button class="mini-btn m-r-0" @click.prevent="addToFormula('/')">/</button>
                     </div>
                 </div>
 
@@ -205,6 +216,7 @@
                 entry : {
                     name: "",
                     description: "",
+                    abbreviation: "",
                     type: undefined,
                     enabled: false,
                     formula : {
@@ -219,6 +231,7 @@
                     flag : false,
                     invalidVariables : []
                 }
+
             }
         },
         validations:{
@@ -227,6 +240,9 @@
                     required,
                 },
                 description: {
+                    required,
+                },
+                abbreviation: {
                     required,
                 },
                 type: {

@@ -105,6 +105,7 @@ exports.save = (req, res, next) => {
                 //Update doc fields
                 calculation.name = req.body.name;
                 calculation.description = req.body.description;
+                calculation.abbreviation = req.body.abbreviation;
                 calculation.type = req.body.type;
                 calculation.enabled = req.body.enabled;
                 calculation.notes = req.body.notes;
