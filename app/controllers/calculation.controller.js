@@ -1,8 +1,10 @@
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
+const mongoose = require('mongoose');
 
 const Calculation = require('./../models/calculation.model').Calculation;
 const deletedSchema = require('./../models/schemas/deleted.schema');
+const variables = require('./../components/variablesSeed').variables;
 
 const { validationResult } = require('express-validator/check');
 
@@ -17,6 +19,14 @@ exports.index = (req, res, next) => {
     renderParams.model = Calculation;
     renderParams.permission = Calculation.permission;
     res.render('calculation', renderParams);
+};
+/**
+ * Devuelve las variables simples a utilizar en los calculos
+ * @param req
+ * @param res
+ */
+exports.getVariables = (req, res) => {
+  return res.json(variables);
 };
 
 /**
@@ -35,10 +45,16 @@ exports.list = (req, res, next) => {
     let qNotDeleted = deletedSchema.qNotDeleted();
     query = {...query, ...qNotDeleted};
 
+
     Calculation
         .paginate(
             query,
-            paginationOptions,
+            {
+                ...paginationOptions,
+                populate: [
+                    'formula.calculations'
+                ]
+            },
             (err, result) => {
                 if (err) {
                     logger.error(err, req, 'calculation.controller#list', 'Error al consultar lista de Calculation');
@@ -63,6 +79,51 @@ exports.list = (req, res, next) => {
 };
 
 /**
+ * Consulta los registros de Calculation disponibles para usarse en la formula
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.getCalculationsForFormula = (req, res, next) => {
+
+    //TODO Add this validation later to avoid a infinity recursion
+    // let idCalculationOrigin;
+
+    let paginationOptions = pagination.getDefaultPaginationOptions(req);
+
+    let query = {};
+
+    // query["field"] = value;
+
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    query = {...query, ...qNotDeleted};
+
+    Calculation
+        .find(
+            query,
+            (err, result) => {
+                if (err) {
+                    logger.error(err, req, 'calculation.controller#list', 'Error al consultar lista de Calculation');
+                    return res.json({
+                        errors: true,
+                        message: res.__('general.error.unexpected-error')
+                    });
+                }
+
+                console.log("result", result);
+
+                return res.json({
+                    errors: false,
+                    message: "",
+                    data: {
+                        docs: result,
+                    }
+                });
+            }
+        );
+};
+
+/**
  * Guarda un Calculation. 
  * @param req
  * @param res
@@ -76,7 +137,7 @@ exports.save = (req, res, next) => {
     }
     
     let id = req.body._id;
-    
+
     if (id) {
         //Update
         let qById = {_id: id};
@@ -85,23 +146,31 @@ exports.save = (req, res, next) => {
             .findOne(qById)
             .exec((err, calculation) => {
                 if (err || !calculation) {
-                    logger.error(req, err, 'calculation.controller#save', 'Error al consultar Calculation');
+                    logger.error(err, req, 'calculation.controller#save', 'Error al consultar Calculation');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.save')
                     });
                 }
 
+
                 //Update doc fields
                 calculation.name = req.body.name;
                 calculation.description = req.body.description;
+                calculation.abbreviation = req.body.abbreviation;
                 calculation.type = req.body.type;
                 calculation.enabled = req.body.enabled;
                 calculation.notes = req.body.notes;
+                //  Formula stuff
+                calculation.formula = req.body.formula;
+                let calculationObjectIds = [];
+                for (let i = 0; i < calculation.formula.calculations.length; i++) {
+                    calculationObjectIds.push(mongoose.Types.ObjectId(calculation.formula.calculations[i]._id));
+                }
 
                 calculation.save((err, savedCalculation) => {
                     if (err) {
-                        logger.error(req, err, 'calculation.controller#save', 'Error al guardar Calculation');
+                        logger.error(err, req, 'calculation.controller#save', 'Error al guardar Calculation');
                         return res.json({
                             errors: true,
                             message: req.__('general.error.save')
@@ -119,18 +188,29 @@ exports.save = (req, res, next) => {
     } else {
         //Create
 
+
         let calculation = new Calculation({
             name : req.body.name,
             description : req.body.description,
             type : req.body.type,
             enabled : req.body.enabled,
+            displayForm : req.body.displayForm,
+            abbreviation : req.body.abbreviation,
             notes : req.body.notes
         });
 
 
+        //Formula stuff
+        calculation.formula = req.body.formula;
+        let calculationObjectIds = [];
+        for (let i = 0; i < calculation.formula.calculations.length; i++) {
+            calculationObjectIds.push(mongoose.Types.ObjectId(calculation.formula.calculations[i]._id));
+        }
+
+
         calculation.save((err, savedCalculation) => {
             if (err) {
-                logger.error(req, err, 'calculation.controller#save', 'Error al guardar Calculation');
+                logger.error(err, req, 'calculation.controller#save', 'Error al guardar Calculation');
                 return res.json({
                     "error": true,
                     "message": req.__('general.error.save')
