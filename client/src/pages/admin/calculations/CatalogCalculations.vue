@@ -255,7 +255,7 @@
                         if (value == null || value == undefined || value == "") {
                             return true
                         }
-                        return (/^\${2}[a-zA-Z0-9]{1,7}$/).test(value);
+                        return (/^\${2}[A-Z0-9]{1,7}$/).test(value);
                     }
                 },
                 type: {

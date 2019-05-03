@@ -167,22 +167,27 @@ exports.save = (req, res, next) => {
                 for (let i = 0; i < calculation.formula.calculations.length; i++) {
                     calculationObjectIds.push(mongoose.Types.ObjectId(calculation.formula.calculations[i]._id));
                 }
+                let formulaValidation = calculation.validateFormula(calculation.formula);
 
-                calculation.save((err, savedCalculation) => {
-                    if (err) {
-                        logger.error(err, req, 'calculation.controller#save', 'Error al guardar Calculation');
-                        return res.json({
-                            errors: true,
-                            message: req.__('general.error.save')
-                        });
+                    if(formulaValidation.error){
+                        return res.json({error: true, message: "La formula no es válida", err:formulaValidation.err})
                     }
-        
-                    return res.json({
-                        errors: false,
-                        message: req.__('general.success.updated'),
-                        data: savedCalculation
+                    calculation.save((err, savedCalculation) => {
+                        if (err) {
+                            logger.error(err, req, 'calculation.controller#save', 'Error al guardar Calculation');
+                            return res.json({
+                                errors: true,
+                                message: req.__('general.error.save')
+                            });
+                        }
+
+                        return res.json({
+                            errors: false,
+                            message: req.__('general.success.updated'),
+                            data: savedCalculation
+                        });
                     });
-                });
+
             });
         
     } else {
@@ -207,20 +212,31 @@ exports.save = (req, res, next) => {
             calculationObjectIds.push(mongoose.Types.ObjectId(calculation.formula.calculations[i]._id));
         }
 
-
-        calculation.save((err, savedCalculation) => {
-            if (err) {
-                logger.error(err, req, 'calculation.controller#save', 'Error al guardar Calculation');
-                return res.json({
-                    "error": true,
-                    "message": req.__('general.error.save')
-                });
+        Calculation.validateFormula(calculation.formula, (err, isValid)=>{
+            console.log("err", err);
+            console.log("isValid", isValid);
+            if(err){
+                return res.json({error: true, message: "La formula no es válida", err:err})
             }
 
-            return res.json({
-                "error": false,
-                "message": req.__('general.success.created'),
-                "data": savedCalculation
+            Calculation.calculateAndValidateFormula(calculation.formula, (err, value) => {
+                console.log("err", err);
+                console.log("+++ Resultado Final +++", value);
+                calculation.save((err, savedCalculation) => {
+                    if (err) {
+                        logger.error(err, req, 'calculation.controller#save', 'Error al guardar Calculation');
+                        return res.json({
+                            "error": true,
+                            "message": req.__('general.error.save')
+                        });
+                    }
+
+                    return res.json({
+                        "error": false,
+                        "message": req.__('general.success.created'),
+                        "data": savedCalculation
+                    });
+                });
             });
         });
     }

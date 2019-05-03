@@ -2,9 +2,12 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const { check, validationResult } = require('express-validator/check');
+const Contracts = require("./contract.model").Contract;
 
 const pluginCreatedUpdated = require('mongoose-createdat-updatedat');
 const mongoosePagination = require('mongoose-paginate');
+const math = require('mathjs');
+const variables = require("./../components/variablesSeed").variables;
 
 const permissions = require('./../components/permissions');
 
@@ -99,6 +102,67 @@ class CalculationClass {
     constructor() {
 
     }
+
+    static validateFormula(formula){
+        // $NPEPE +
+        try {
+            if(formula && formula.expression){
+                let regex = "\\${1,2}[A-Z0-9]+";
+                let newExpression = this.constructor.replaceVariableForValue(regex, formula.expression, "1");
+                let value = math.eval(newExpression);
+                return {error:false, isValid:true };
+            }
+        } catch(err) {
+            return { error:true, isValid:false, err:err };
+        }
+    }
+
+    static calculateAndValidateFormula(formula,callback){
+        console.log("Entro aqui @calculateAndValidateFormula");
+        try {
+            console.log("Entro aca @calculateAndValidateFormula");
+            let formulaValidation = this.constructor.validateFormula(formula);
+            if (formulaValidation.error) {
+                return callback(formulaValidation.err);
+            }
+
+            let aggregatePromises = [];
+            formula.variables.forEach((item) => {
+                aggregatePromises.push(Contracts.aggregate(variables[item.abbreviation].query))
+            });
+            let finalValue = 0;
+            Promise.all(aggregatePromises).then((results) => {
+                // { abbreviation : "$NAD", results : 45.44} Estructura Que debe devolver el aggregate
+                console.log("results");
+                results.forEach((result) => {
+                    console.log("result", result[0]);
+                    let abbreviation = result[0].abbreviation;
+                    let regex = abbreviation.replace(/\$/, "");
+                    regex = "\\$" + regex;
+                    console.log("regex", regex);
+                    formula.expression = this.constructor.replaceVariableForValue(regex, formula.expression, result[0].result);
+                });
+
+                finalValue = math.eval(formula.expression);
+                return callback(null, finalValue);
+
+
+            }).catch((errors) => {
+                return callback(errors);
+            });
+
+        } catch(err) {
+            console.log("err", err);
+            return callback(err);
+
+        }
+    }
+
+    static replaceVariableForValue(regex, expression, value){
+        let newExpression = expression.replace(new RegExp(regex,"g"), value);
+        return newExpression;
+    }
+
 }
 
 //Cargar class en Schema

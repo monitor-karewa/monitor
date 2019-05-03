@@ -7,19 +7,28 @@ let variables = {
       name:"Monto total gastado",
       description :"Monto total gastado acorde a los contratos públicos de la organización",
       abbreviation:"$MTG",
-      query:{}
+      query:[{
+          $group:{_id: null, myCount: {$sum: 1 } }},
+          {$project:{ result : "$myCount", abbreviation : { $literal : "$MTG"}}
+      }]
   }),
   $MGLP: Variable.makeVariable({
       name:"Monto gastado bajo Licitaciones Públicas",
       description:"Monto gastado en contratos hechos bajo Licitaciones Públicas",
       abbreviation:"$MGLP",
-      query:{}
+      query:[{
+          $group:{_id: null, myCount: {$sum: 1 } }},
+          {$project:{ result : "$myCount", abbreviation : { $literal : "$MGLP"}}
+          }]
   }),
   $MGAD: Variable.makeVariable({
       name:"Monto gastado bajo Adjudicación Directa",
       description:"Monto gastado en contratos hechos bajo Adjudicación Directa",
       abbreviation:"$MGAD",
-      query:{}
+      query:[{
+          $group:{_id: null, myCount: {$sum: 1 } }},
+          {$project:{ result : "$myCount", abbreviation : { $literal : "$MGAD"}}
+          }]
   }),
   $MGIR: Variable.makeVariable({
       name:"Monto gastado bajo Invitaciones Restringidas",

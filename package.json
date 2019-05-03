@@ -23,6 +23,7 @@
     "helmet": "^3.15.0",
     "i18n": "^0.8.3",
     "jaccard-index": "^0.2.0",
+    "mathjs": "^5.9.0",
     "mongoose": "^5.3.13",
     "mongoose-createdat-updatedat": "^1.1.0",
     "mongoose-paginate": "^5.0.3",
