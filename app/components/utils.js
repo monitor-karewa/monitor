@@ -25,9 +25,10 @@ const utils =  {
      *
      * @param str {string} a transformar
      * @param flags {String|null} flags opcionales a agregar al regex generado
+     * @param returnAsStr {boolean} si es truthy, se devolverá el regex generado como string
      * @returns {*} RegExp creada
      */
-    toAccentsRegex : function (str, flags) {
+    toAccentsRegex : function (str, flags, returnAsStr) {
         if (utils.isNotDefined(str)) {
             str = '';
         }
@@ -41,6 +42,11 @@ const utils =  {
         regexStr = regexStr.replace(new RegExp(_Z_ACCENT, 'g'), _Z_ACCENT);
         regexStr = regexStr.replace(new RegExp(_D_ACCENT, 'g'), _D_ACCENT);
         regexStr = regexStr.replace(new RegExp(_C_ACCENT, 'g'), _C_ACCENT);
+        
+        if (returnAsStr) {
+            return regexStr;
+        }
+        
         return new RegExp(regexStr, flags);
     },
 
@@ -109,28 +115,47 @@ const utils =  {
      * DD-MM-YY
      * DD-MM-YYYY
      * @param {string} str string a intentar parsear
+     * @param {boolean} enFormat si es truthy, se intentará parsear esperando valores con formato MM/DD en vez de DD/MM
      * @returns {Date|null} fecha parseada o null si no se reconoce el formato
      */
-    parseDate(str) {
+    parseDate(str, enFormat) {
         let momentDate = null;
         if (utils.isDate(str)) {
             //No need to parse
             return str;
         }
         if (utils.isDefined(str)) {
-            if (str.match(/^[0123]?[0-9]\/[01]?[0-9]\/[0-9]{2}$/)) {
-                //Try DD/MM/YY
-                momentDate = moment(str, "DD/MM/YY");
-            } else if (str.match(/^[0123]?[0-9]\/[01]?[0-9]\/[0-9]{4}$/)) {
-                //Try DD/MM/YYYY
-                momentDate = moment(str, "DD/MM/YYYY");
-            } else if (str.match(/^[0123]?[0-9]-[01]?[0-9]-[0-9]{2}$/)) {
-                //Try DD-MM-YY
-                momentDate = moment(str, "DD-MM-YY");
-            } else if (str.match(/^[0123]?[0-9]-[01]?[0-9]-[0-9]{4}$/)) {
-                //Try DD-MM-YYYY
-                momentDate = moment(str, "DD-MM-YYYY");
+            
+            if (enFormat) {
+                if (str.match(/^[01]?[0-9]\/[0123]?[0-9]\/[0-9]{2}$/)) {
+                    //Try MM/DD/YY
+                    momentDate = moment(str, "MM/DD/YY");
+                } else if (str.match(/^[01]?[0-9]\/[0123]?[0-9]\/[0-9]{4}$/)) {
+                    //Try MM/DD/YYYY
+                    momentDate = moment(str, "MM/DD/YYYY");
+                } else if (str.match(/^[01]?[0-9]-[0123]?[0-9]-[0-9]{2}$/)) {
+                    //Try MM-DD-YY
+                    momentDate = moment(str, "MM-DD-YY");
+                } else if (str.match(/^[01]?[0-9]-[0123]?[0-9]-[0-9]{4}$/)) {
+                    //Try MM-DD-YYYY
+                    momentDate = moment(str, "MM-DD-YYYY");
+                }
+            } else {
+                if (str.match(/^[0123]?[0-9]\/[01]?[0-9]\/[0-9]{2}$/)) {
+                    //Try DD/MM/YY
+                    momentDate = moment(str, "DD/MM/YY");
+                } else if (str.match(/^[0123]?[0-9]\/[01]?[0-9]\/[0-9]{4}$/)) {
+                    //Try DD/MM/YYYY
+                    momentDate = moment(str, "DD/MM/YYYY");
+                } else if (str.match(/^[0123]?[0-9]-[01]?[0-9]-[0-9]{2}$/)) {
+                    //Try DD-MM-YY
+                    momentDate = moment(str, "DD-MM-YY");
+                } else if (str.match(/^[0123]?[0-9]-[01]?[0-9]-[0-9]{4}$/)) {
+                    //Try DD-MM-YYYY
+                    momentDate = moment(str, "DD-MM-YYYY");
+                }
             }
+            
         }
         if (utils.isDefined(momentDate) && momentDate.isValid()) {
             return momentDate.toDate();

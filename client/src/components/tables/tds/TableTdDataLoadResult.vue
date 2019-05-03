@@ -39,10 +39,16 @@
         },
         filters: {
             moment: function (date) {
-                if (!utils.isDate(date)) {
+                let m = moment(date);
+                if (!m.isValid()) {
                     return '';
                 }
-                return moment(date).format('MM/DD/YYYY');
+                let formattedDate = m.utc().format('MM/DD/YYYY');
+                if (!formattedDate) {
+                    return '';
+                }
+                
+                return formattedDate;
             }
         },
         computed: {
@@ -59,10 +65,10 @@
             },
             
             tippyErrorsClassName() {
-                return `tippy-errors-${this.fieldName}`;
+                return `tippy-errors-${this.fieldName}-${this._uid}`;
             },
             tippyInfosClassName() {
-                return `tippy-infos-${this.fieldName}`;
+                return `tippy-infos-${this.fieldName}-${this._uid}`;
             },
             
             tippyErrorsContent() {

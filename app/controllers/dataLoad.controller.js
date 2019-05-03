@@ -60,7 +60,7 @@ exports.upload = (req, res, next) => {
             try {
                 reader.readBuffer(req.file.buffer)
                     .then((dataLoad) => {
-                        console.log('dataLoad', dataLoad);
+                        // console.log('dataLoad', dataLoad);
                         
                         //Assign filename
                         dataLoad.filename = req.file.originalname;
