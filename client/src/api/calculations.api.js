@@ -24,5 +24,10 @@ export default {
         return axios.get(`${base.baseUrl}/api/${namespace}/variables`,)
             .then(onSuccess)
             .catch(onError);
+    },
+    getCalculationsForFormula: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/api/${namespace}/retrieve/calculations`,)
+            .then(onSuccess)
+            .catch(onError);
     }
 }
