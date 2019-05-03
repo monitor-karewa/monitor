@@ -22,10 +22,7 @@
 
 
                     <!-- FOOTER -->
-                    <div class="modal-footer aditional-text">
-                        <button type="button" class="btn-stroke button-info_text" data-dismiss="modal"> Cancelar </button>
-                        <button type="submit"  class="btn-raised button-accent m-l-15"> Guardar </button>
-                    </div>
+                    <slot name="footer"></slot>
 
                 </div>
             </div>
