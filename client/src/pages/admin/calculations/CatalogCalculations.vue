@@ -182,9 +182,19 @@
                         </label>
                     </div>
                 </div>
-
-
             </div>
+
+            <div class="modal-footer aditional-text" slot="footer">
+                <div class="total-footer">
+                    <span v-if="formulaValidated && formulaValidation.result" > RESULTADO: <strong>{{displayResult(formulaValidation.result)}}</strong></span>
+                    <p>La vista previa del resultado del cálculo solo está disponible en cálculos
+                        generales</p>
+                </div>
+                <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar
+                </button>
+                <button type="button" class="btn-raised button-accent m-l-15">Agregar</button>
+            </div>
+
 
         </modalEntry>
 
@@ -234,7 +244,7 @@
                     {label: 'general.created-at', field: 'createdAt', type: 'Date', visible:true}
                 ],
                 variableSelected : undefined,
-                displayFormLabel : "Porcentaje",
+                displayFormLabel : "Normal",
                 entry : {
                     name: "",
                     description: "",
@@ -375,6 +385,13 @@
                     case 'NORMAL': this.displayFormLabel = "Normal"; break;
                 }
             },
+            displayResult(value) {
+                switch (this.entry.displayForm) {
+                    case 'AMOUNT': return "$" + value;
+                    case 'PERCENTAGE': return value +"%";
+                    case 'NORMAL': return value;
+                }
+            },
             debounce: function debounce(func, wait, immediate) {
                 var timeout;
                 return function () {
@@ -496,6 +513,6 @@
         beforeMount(){
             this.$store.dispatch(`${storeModule}/fetchVariables`);
             this.$store.dispatch(`${storeModule}/fetchCalculations`);
-        }
+        },
     }
 </script>
