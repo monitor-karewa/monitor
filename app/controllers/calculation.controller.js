@@ -1,5 +1,6 @@
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
+const mongoose = require('mongoose');
 
 const Calculation = require('./../models/calculation.model').Calculation;
 const deletedSchema = require('./../models/schemas/deleted.schema');
@@ -44,10 +45,16 @@ exports.list = (req, res, next) => {
     let qNotDeleted = deletedSchema.qNotDeleted();
     query = {...query, ...qNotDeleted};
 
+
     Calculation
         .paginate(
             query,
-            paginationOptions,
+            {
+                ...paginationOptions,
+                populate: [
+                    'formula.calculations'
+                ]
+            },
             (err, result) => {
                 if (err) {
                     logger.error(err, req, 'calculation.controller#list', 'Error al consultar lista de Calculation');
@@ -65,6 +72,51 @@ exports.list = (req, res, next) => {
                         page: result.page,
                         pages: result.pages,
                         total: result.total
+                    }
+                });
+            }
+        );
+};
+
+/**
+ * Consulta los registros de Calculation disponibles para usarse en la formula
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.getCalculationsForFormula = (req, res, next) => {
+
+    //TODO Add this validation later to avoid a infinity recursion
+    // let idCalculationOrigin;
+
+    let paginationOptions = pagination.getDefaultPaginationOptions(req);
+
+    let query = {};
+
+    // query["field"] = value;
+
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    query = {...query, ...qNotDeleted};
+
+    Calculation
+        .find(
+            query,
+            (err, result) => {
+                if (err) {
+                    logger.error(err, req, 'calculation.controller#list', 'Error al consultar lista de Calculation');
+                    return res.json({
+                        errors: true,
+                        message: res.__('general.error.unexpected-error')
+                    });
+                }
+
+                console.log("result", result);
+
+                return res.json({
+                    errors: false,
+                    message: "",
+                    data: {
+                        docs: result,
                     }
                 });
             }
@@ -113,7 +165,7 @@ exports.save = (req, res, next) => {
                 calculation.formula = req.body.formula;
                 let calculationObjectIds = [];
                 for (let i = 0; i < calculation.formula.calculations.length; i++) {
-                    calculationObjectIds.push(mongoose.types.ObjectId(calculation.formula.calculations[i]._id));
+                    calculationObjectIds.push(mongoose.Types.ObjectId(calculation.formula.calculations[i]._id));
                 }
 
                 calculation.save((err, savedCalculation) => {
@@ -152,7 +204,7 @@ exports.save = (req, res, next) => {
         calculation.formula = req.body.formula;
         let calculationObjectIds = [];
         for (let i = 0; i < calculation.formula.calculations.length; i++) {
-            calculationObjectIds.push(mongoose.types.ObjectId(calculation.formula.calculations[i]._id));
+            calculationObjectIds.push(mongoose.Types.ObjectId(calculation.formula.calculations[i]._id));
         }
 
 

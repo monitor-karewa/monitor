@@ -23,6 +23,12 @@ router.get('/variables', securityController.validatePermission(Calculation.permi
 router.get('/list', securityController.validatePermission(Calculation.permission, 'read'), calculationController.list);
 
 /**
+ * GET /retrieve/calculations
+ * Consulta de registros de cálculos para el uso de la fórmula
+ */
+router.get('/retrieve/calculations', securityController.validatePermission(Calculation.permission, 'read'), calculationController.getCalculationsForFormula);
+
+/**
  * POST /save
  * Guardar un registro
  */

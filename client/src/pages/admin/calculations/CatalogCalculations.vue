@@ -122,15 +122,15 @@
                                     <option :value="item.abbreviation" v-for="item in variablesObj">{{item.name}}</option>
                                 </optgroup>
                                 <optgroup label="Otros Cálculos">
-                                    <option :value="calculo.abbreviation" v-for="calculo in docs">{{'('+calculo.abbreviation+') '+calculo.name}}</option>
+                                    <option :value="calculation.abbreviation" v-for="calculation in calculations">{{'('+calculation.abbreviation+') '+calculation.name}}</option>
                                 </optgroup>
                             </select>
                         </div>
                     </div>
                     <div class="mini-buttons">
-                        <button type="button" class="mini-btn m-l-0" @click="addToFormula('+')">+</button>
+                        <button type="button" class="mini-btn p-0" @click="addToFormula('+')"><span class="f-25 m-t--5 align-middle">+</span></button>
                         <button type="button" class="mini-btn p-0" @click="addToFormula('*')"><span class="f-30 align-middle">*</span></button>
-                        <button type="button" class="mini-btn" @click="addToFormula('-')">-</button>
+                        <button type="button" class="mini-btn p-0" @click="addToFormula('-')"><span class="f-25 m-t--5 align-middle">-</span></button>
                         <button type="button" class="mini-btn m-r-0" @click="addToFormula('/')">/</button>
                     </div>
                 </div>
@@ -145,6 +145,13 @@
                         <div class="floating-text-form">
                             <h1>{{variable.name}}</h1>
                             <p class="m-b-0"> {{variable.description}}</p>
+                        </div>
+                    </div>
+                    <div class="vertical-center m-b-20" v-for="calculation in entry.formula.calculations">
+                        <span class="w-15 m-r-10"><strong class="c-accent f-12">{{calculation.abbreviation}}　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</strong></span>
+                        <div class="floating-text-form">
+                            <h1>{{calculation.name}}</h1>
+                            <p class="m-b-0"> {{calculation.description}}</p>
                         </div>
                     </div>
                 </div>
@@ -275,7 +282,7 @@
                     if (this.entry.formula.expression.length > 0) {
                         this.entry.formula.expression += " ";
                     }
-                    if (typeof  element == "string") {
+                    if (typeof element == "string") {
                         this.entry.formula.expression += element;
                     } else { //then it's a variable
                         this.entry.formula.expression += element.target.value;
@@ -287,6 +294,14 @@
                     if (this.variablesObj[abbr]) {
                         return this.variablesObj[abbr];
                     }
+                return undefined;
+            },
+            findCalculationsByAbbreviation(abbr) {
+                for (let i = 0; i < this.calculationsForFormula.length; i++) {
+                    if(this.calculationsForFormula[i].abbreviation == abbr){
+                        return this.calculationsForFormula[i];
+                    }
+                }
                 return undefined;
             },
             parseVariablesFromFormulaString() {
@@ -310,9 +325,31 @@
                     return tempVariables;
                 // }, 1000, false)
             },
+            parseCalculationsFromFormulaString() {
+                // this.debounce(function () {
+                this.errors.flag = false;
+                const regex = /\$\$[A-Z]+/g;
+                let tempCalculation;
+                let tempCalculations = [];
+                let calculationsFound = this.entry.formula.expression.match(regex);
+                if(calculationsFound && calculationsFound.length > 0) {
+                    for (let i = 0; i < calculationsFound.length; i++) {
+                        tempCalculation = this.findCalculationsByAbbreviation(calculationsFound[i]);
+                        if (tempCalculation) {
+                            tempCalculations.push(tempCalculation);
+                        } else {
+                            this.errors.flag = true;
+                            this.errors.invalidVariables.push(calculationsFound[i]);
+                        }
+                    }
+                }
+                return tempCalculations;
+                // }, 1000, false)
+            },
             addVariablesFromFormulaString(){
                 if(this.entry.formula && this.entry.formula.expression){
                     this.entry.formula.variables = this.parseVariablesFromFormulaString();
+                    this.entry.formula.calculations = this.parseCalculationsFromFormulaString();
                 }
             },
             setDisplayForm(value) {
@@ -385,6 +422,7 @@
                 tempEntry.formula.calculations  = entry.formula.calculations;
                 tempEntry.displayForm = entry.displayForm;
                 tempEntry.notes = entry.notes;
+                tempEntry.abbreviation = entry.abbreviation;
 
                 this.entry = {...tempEntry};
             });
@@ -425,14 +463,19 @@
                 }
             },
             ...mapState({
-                variables: state => state[storeModule].variables
+                variables: state => state[storeModule].variables,
+                calculations: state => state[storeModule].calculations
             }),
             ...mapGetters(
-                    storeModule, ['variablesObj']
+                    storeModule , ['variablesObj']
+            ),
+            ...mapGetters(
+                    storeModule , ['calculationsForFormula']
             )
         },
         beforeMount(){
-            this.$store.dispatch(`${storeModule}/fetchVariables`)
+            this.$store.dispatch(`${storeModule}/fetchVariables`);
+            this.$store.dispatch(`${storeModule}/fetchCalculations`);
         }
     }
 </script>
