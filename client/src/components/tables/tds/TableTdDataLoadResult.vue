@@ -65,10 +65,10 @@
             },
             
             tippyErrorsClassName() {
-                return `tippy-errors-${this.fieldName}`;
+                return `tippy-errors-${this.fieldName}-${this._uid}`;
             },
             tippyInfosClassName() {
-                return `tippy-infos-${this.fieldName}`;
+                return `tippy-infos-${this.fieldName}-${this._uid}`;
             },
             
             tippyErrorsContent() {
