@@ -31,7 +31,7 @@ export default {
             .catch(onError);
     },
     retrieveAdministrativeUnits: (params = {}, onSuccess, onError) => {
-        return axios.get(`${base.baseUrl}/api/${namespace}/retrieve/adminstrative-units`,   params )
+        return axios.get(`${base.baseUrl}/api/${namespace}/retrieve/administrative-units`,   params )
             .then(onSuccess)
             .catch(onError);
     }

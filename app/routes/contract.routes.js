@@ -46,6 +46,6 @@ router.get('/retrieve/suppliers', securityController.validatePermission(Contract
  * GET /delete
  * Obtains the suppliers available for this contract
  */
-router.get('/retrieve/retrieve-administrativeUnits', securityController.validatePermission(Contract.permission, 'edit'), contractController.retrieveAdministrativeUnits);
+router.get('/retrieve/administrative-units', securityController.validatePermission(Contract.permission, 'edit'), contractController.retrieveAdministrativeUnits);
 
 module.exports = router;
