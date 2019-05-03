@@ -32,7 +32,7 @@ router.get('/retrieve/calculations', securityController.validatePermission(Calcu
  * GET /retrieve/calculations
  * Consulta de registros de cálculos para el uso de la fórmula
  */
-router.get('/formula/validate', securityController.validatePermission(Calculation.permission, 'read'), calculationController.validateFormula);
+router.post('/formula/validate', securityController.validatePermission(Calculation.permission, 'read'), calculationController.validateFormula);
 
 /**
  * GET /retrieve/calculations

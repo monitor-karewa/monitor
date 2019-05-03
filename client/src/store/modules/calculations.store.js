@@ -40,8 +40,9 @@ const actions = {
                 tShow(`Hubo un error al cargar las variables: ${error}`);
             });
     },
-    validateFormula({commit}){
-        calculationsApi.validateFormula({}, (results) => {
+    validateFormula({commit}, formula){
+        Vue.$log.info('formula' , formula);
+        calculationsApi.validateFormula(formula, (results) => {
                 commit("SET_FORMULA_VALIDATION",results.data);
             },
             (error) => {

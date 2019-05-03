@@ -31,7 +31,7 @@ export default {
             .catch(onError);
     },
     validateFormula: (params = {}, onSuccess, onError) => {
-        return axios.get(`${base.baseUrl}/api/${namespace}/formula/validate`,)
+        return axios.post(`${base.baseUrl}/api/${namespace}/formula/validate`,params)
             .then(onSuccess)
             .catch(onError);
     },
