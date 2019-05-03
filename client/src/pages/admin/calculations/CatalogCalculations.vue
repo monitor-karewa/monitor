@@ -40,7 +40,7 @@
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Introduce la abreviación del cálcuo"
+                        <input type="text" class="form-control fg-input" placeholder="Introduce la abreviación del cálculo"
                                v-model="$v.entry.abbreviation.$model" @input="delayTouch($v.entry.abbreviation)">
                         <label class="fg-label">Abreviación del cálculo
                             <small></small>
@@ -136,9 +136,24 @@
                 </div>
 
                 <div class="m-t-40 m-b-50">
-                    <div class="floating-text-form">
-                        <h1>Variables usadas</h1>
-                        <p>Cálculo para mostrar el indice de perdidas al año</p>
+                    <div class="col-md-6">
+                        <div class="floating-text-form">
+                            <h1>Variables usadas</h1>
+                            <p>Cálculo para mostrar el indice de perdidas al año</p>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="col-12 col-md-6 m-b-30">
+                            <a @click="validateFormula()" class="btn-stroke button-accent"><i class="zmdi zmdi-plus"></i> Verificar fórmula</a>
+                        </div>
+                    </div>
+                    <div>
+                        <p>
+                            {{formulaValidated}}
+                        </p>
+                        <p>
+                            {{formulaValidation}}
+                        </p>
                     </div>
                     <div class="vertical-center m-b-20" v-for="variable in entry.formula.variables">
                         <span class="w-15 m-r-10"><strong class="c-accent f-12">{{variable.abbreviation}}　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</strong></span>
@@ -387,6 +402,9 @@
                 };
                 this.$v.$reset();
             },
+            validateFormula(){
+                this.$store.dispatch(`${storeModule}/validateFormula`);
+            }
 
         },
         created() {
@@ -464,7 +482,9 @@
             },
             ...mapState({
                 variables: state => state[storeModule].variables,
-                calculations: state => state[storeModule].calculations
+                calculations: state => state[storeModule].calculations,
+                formulaValidation: state => state[storeModule].formulaValidation,
+                formulaValidated: state => state[storeModule].formulaValidated
             }),
             ...mapGetters(
                     storeModule , ['variablesObj']

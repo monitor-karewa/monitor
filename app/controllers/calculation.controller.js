@@ -123,6 +123,39 @@ exports.getCalculationsForFormula = (req, res, next) => {
         );
 };
 
+
+
+
+
+exports.validateFormula = (req, res, next) => {
+
+    //placeholder yes or no answer
+    let date = new Date();
+    let minutes = date.getMinutes();
+    let data = {};
+
+
+    if(minutes % 2 === 0){
+        data.valid = true;
+        data.result = date.getTime();
+    } else {
+        data.valid = false;
+    }
+
+    return res.json(data);
+}
+
+
+
+exports.evaluateFormula = (req, res, next) => {
+    console.log("UNSPORTED OPERATION : calculation.controller#evaluateFormula");
+    res.json({
+        error : true,
+        message : "UNSPORTED OPERATION : calculation.controller#evaluateFormula"
+    })
+};
+
+
 /**
  * Guarda un Calculation. 
  * @param req

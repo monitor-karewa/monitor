@@ -29,5 +29,15 @@ export default {
         return axios.get(`${base.baseUrl}/api/${namespace}/retrieve/calculations`,)
             .then(onSuccess)
             .catch(onError);
+    },
+    validateFormula: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/api/${namespace}/formula/validate`,)
+            .then(onSuccess)
+            .catch(onError);
+    },
+    evaluateFormula: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/api/${namespace}/formula/evaluate`,)
+            .then(onSuccess)
+            .catch(onError);
     }
 }

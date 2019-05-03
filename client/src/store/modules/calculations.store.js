@@ -6,7 +6,9 @@ const calculationsCatalog = catalog(calculationsApi, 'calculations');
 
 const state = {
     variables:{},
-    calculations:[]
+    calculations:[],
+    formulaValidation : {},
+    formulaValidated : false
 };
 
 const getters = {
@@ -37,7 +39,16 @@ const actions = {
                 Vue.$log.info("Response error", error);
                 tShow(`Hubo un error al cargar las variables: ${error}`);
             });
-    }
+    },
+    validateFormula({commit}){
+        calculationsApi.validateFormula({}, (results) => {
+                commit("SET_FORMULA_VALIDATION",results.data);
+            },
+            (error) => {
+                Vue.$log.info("Response error", error);
+                tShow(`An error ocurred while trying to validate the formula: ${error}`);
+            });
+    },
 
 };
 
@@ -48,7 +59,15 @@ const mutations = {
     },
     SET_FORMULA_CALCULATIONS(state,calculations){
         state.calculations = calculations;
-    }
+    },
+    SET_FORMULA_VALIDATION(state,result){
+        state.formulaValidation = result;
+        state.formulaValidated = true;
+    },
+    clearFormulaValidation(state){
+        state.formulaValidated = false;
+        state.formulaValidation = {};
+    },
 };
 
 
