@@ -3,8 +3,12 @@ const logger = require('./../components/logger').instance;
 const mongoose = require('mongoose');
 
 const Calculation = require('./../models/calculation.model').Calculation;
+const Contracts = require('./../models/contract.model').Contract;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 const variables = require('./../components/variablesSeed').variables;
+const async = require('async');
+const math = require('mathjs');
+const { each } = require('async/each');
 
 const { validationResult } = require('express-validator/check');
 
@@ -131,20 +135,32 @@ exports.validateFormula = (req, res, next) => {
     let variables = req.body.variables;
     let calculations= req.body.calculations
 
+    let calculation = {
+        formula:{
+            expression,
+            variables,
+            calculations
+        }
+    };
+
+    calculateAndValidateFormula(calculation,(err, results)=>{
+
+        return res.json({err:err, results:results});
+    });
+
     //placeholder yes or no answer
-    let date = new Date();
-    let minutes = date.getMinutes();
-    let data = {};
+    // let date = new Date();
+    // let minutes = date.getMinutes();
+    // let data = {};
+    //
+    //
+    // if(minutes % 2 === 0){
+    //     data.valid = true;
+    //     data.result = date.getTime();
+    // } else {
+    //     data.valid = false;
+    // }
 
-
-    if(minutes % 2 === 0){
-        data.valid = true;
-        data.result = date.getTime();
-    } else {
-        data.valid = false;
-    }
-
-    return res.json(data);
 }
 
 
@@ -202,7 +218,7 @@ exports.save = (req, res, next) => {
                 for (let i = 0; i < calculation.formula.calculations.length; i++) {
                     calculationObjectIds.push(mongoose.Types.ObjectId(calculation.formula.calculations[i]._id));
                 }
-                let formulaValidation = calculation.validateFormula(calculation.formula);
+                let formulaValidation = validateFormula(calculation.formula);
 
                     if(formulaValidation.error){
                         return res.json({error: true, message: "La formula no es válida", err:formulaValidation.err})
@@ -246,15 +262,14 @@ exports.save = (req, res, next) => {
         for (let i = 0; i < calculation.formula.calculations.length; i++) {
             calculationObjectIds.push(mongoose.Types.ObjectId(calculation.formula.calculations[i]._id));
         }
-
-        Calculation.validateFormula(calculation.formula, (err, isValid)=>{
-            console.log("err", err);
+        console.log("@LLLLLELELELELELELGGGGGAA AAAAQUIII");
+        let isValid = validateFormula();
             console.log("isValid", isValid);
-            if(err){
+            if(isValid.error){
                 return res.json({error: true, message: "La formula no es válida", err:err})
             }
 
-            Calculation.calculateAndValidateFormula(calculation.formula, (err, value) => {
+            calculateAndValidateFormula(calculation, (err, value) => {
                 console.log("err", err);
                 console.log("+++ Resultado Final +++", value);
                 calculation.save((err, savedCalculation) => {
@@ -273,9 +288,140 @@ exports.save = (req, res, next) => {
                     });
                 });
             });
-        });
+
     }
 };
+
+let validateFormula = function(formula) {
+    console.log("formula", formula);
+    // $NPEPE +
+    try {
+        if (formula && formula.expression) {
+            let regex = "\\${1,2}[A-Z0-9]+";
+            let newExpression = replaceVariableForValue(regex, formula.expression, "1");
+            let value = math.eval(newExpression);
+            return  {error: false, isValid: true};
+        } else {
+            console.log("skhjdfbgkhsh guabeh bguha");
+        }
+
+    } catch (err) {
+        return {error: true, isValid: false, err: err};
+    }
+};
+
+
+let replaceVariableForValue = function(regex, expression, value){
+    let newExpression = expression.replace(new RegExp(regex,"g"), value);
+    return newExpression;
+};
+
+let  calculateAndValidateFormula = function(calculation, mainCallback){
+    console.log("Entro aqui @calculateAndValidateFormula");
+    console.log("this.formula", calculation.formula);
+    //populate calculations
+    try {
+        console.log("Entro aca @calculateAndValidateFormula");
+        let formulaValidation = validateFormula(calculation.formula);
+        if (formulaValidation.error) {
+            return mainCallback(formulaValidation.err);
+        }
+
+        let aggregatePromises = [];
+        calculation.formula.variables.forEach((item) => {
+            aggregatePromises.push(Contracts.aggregate(variables[item.abbreviation].query))
+        });
+        let finalValue = 0;
+        Promise.all(aggregatePromises).then((results) => {
+            // { abbreviation : "$NAD", results : 45.44} Estructura Que debe devolver el aggregate
+            console.log("results");
+            results.forEach((result) => {
+                console.log("result", result[0]);
+                let abbreviation = result[0].abbreviation;
+                let regex = abbreviation.replace(/\$/, "");
+                regex = "\\$" + regex;
+                console.log("regex", regex);
+                calculation.formula.expression = replaceVariableForValue(regex, calculation.formula.expression, result[0].result);
+            });
+
+            if(calculation.formula.calculations && calculation.formula.calculations.length){
+                let innerCalculations = [];
+                for (let k = 0; k <  calculation.formula.calculations.length; k++) {
+                    innerCalculations.push(calculation.formula.calculations[k])
+                    ///async parallel
+                    /////
+                }
+                console.log("1111 before 1111 ");
+                async.each(innerCalculations,
+                    function (calculation, AsyncEachCallback) {
+                        console.log("calculation.name", calculation.name);
+                        console.log("callback", AsyncEachCallback);
+
+                        calculateAndValidateFormula(calculation, function (err, res) {
+                            if (err) {
+                                AsyncEachCallback(err);
+                            } else {
+                                calculation.result = res;
+                                console.log('calculation.result --> %j %j ' , calculation.name , calculation.result);
+                                AsyncEachCallback(null, res);
+                            }
+                        })
+                    }
+                    , function(err){
+                        console.log("333 TERMINO 222");
+                        if(err){
+                            return mainCallback(err);
+                        } else {
+                            try {
+                                innerCalculations.forEach((item) => {
+
+                                    console.log("calculation", item.result);
+                                    let regex = item.result.abbreviation.replace(/\$\$/, "");
+                                    console.log("regex", regex);
+                                    regex = "\\$\\$" + regex;
+                                    console.log("regex", regex);
+                                    calculation.formula.expression = replaceVariableForValue(regex, calculation.formula.expression, item.result.value);
+                                });
+                                console.log("calculation.formula.expression", calculation.formula.expression);
+                                finalValue = math.eval(calculation.formula.expression);
+                                let result = {
+                                    abbreviation: calculation.abbreviation,
+                                    results : finalValue
+                                };
+                                return mainCallback(null, result);
+                            } catch(err) {
+                                console.log("err", err);
+                                return mainCallback("Error attempting to calculate the result");
+                            }
+                        }
+                    });
+            } else {
+                //////////////
+                console.log("222 After async 333");
+                try {
+                    finalValue = math.eval(calculation.formula.expression);
+                    let result = {
+                        abbreviation: calculation.abbreviation,
+                        value : finalValue
+                    };
+                    return mainCallback(null, result);
+                } catch(err) {
+                    console.log("err", err);
+                    return mainCallback("Error attempting to calculate the result");
+                }
+            }
+
+        }).catch((errors) => {
+            return mainCallback(errors);
+        });
+
+    } catch(err) {
+        console.log("err", err);
+        return mainCallback(err);
+
+    }
+}
+
 
 /**
  * Borra un Calculation.

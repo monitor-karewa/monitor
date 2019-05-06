@@ -192,7 +192,7 @@
                 </div>
                 <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar
                 </button>
-                <button type="button" class="btn-raised button-accent m-l-15">Agregar</button>
+                <button type="submit" class="btn-raised button-accent m-l-15">Agregar</button>
             </div>
 
 
