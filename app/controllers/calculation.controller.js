@@ -195,7 +195,6 @@ var exploreCalculationTree = function (calculation, mainCallback) {
                         done.push(calc.abbreviation);
                         return calcCallback(null, true);
                     } else {
-                        console.log("false1");
                         return calcCallback(new Error('Invalid calculation'));
                         // return mainCallback(false);
                     }
@@ -210,7 +209,6 @@ var exploreCalculationTree = function (calculation, mainCallback) {
                 // results.find(result => result)
             });
         } else {
-            console.log("false4");
             return mainCallback(false); //it means it's not a valid formula
         }
     }
@@ -417,11 +415,8 @@ let replaceVariableForValue = function(regex, expression, value){
 
 var resultsMaps = {};
 let  calculateAndValidateFormula = function(calculation, mainCallback){
-    console.log("Entro aqui @calculateAndValidateFormula");
-    console.log("this.formula", calculation.formula);
     //populate calculations
     try {
-        console.log("Entro aca @calculateAndValidateFormula");
         let formulaValidation = validateFormula(calculation.formula);
         if (formulaValidation.error) {
             return mainCallback(formulaValidation.err);
@@ -434,9 +429,7 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
         let finalValue = 0;
         Promise.all(aggregatePromises).then((results) => {
             // { abbreviation : "$NAD", results : 45.44} Estructura Que debe devolver el aggregate
-            console.log("results");
             results.forEach((result) => {
-                console.log("result", result[0]);
                 let abbreviation = result[0].abbreviation;
                 let regex = abbreviation.replace(/\$/, "");
                 regex = "\\$" + regex;
@@ -451,7 +444,6 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
                     ///async parallel
                     /////
                 }
-                console.log("1111 before 1111 ");
                 async.each(innerCalculations,
                     function (calculation, AsyncEachCallback) {
                         console.log("calculation.name", calculation.name);
@@ -462,7 +454,6 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
                                 AsyncEachCallback(err);
                             } else {
                                 calculation.result = res;
-                                console.log('calculation.result --> %j %j ' , calculation.name , calculation.result);
                                 AsyncEachCallback(null, res);
                             }
                         })
