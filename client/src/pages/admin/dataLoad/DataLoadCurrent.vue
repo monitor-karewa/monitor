@@ -157,44 +157,45 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr class="height-60" v-for="(rowInfo, rowInfoIndex) in filteredDataLoad" v-if="isRowInfoVisible(rowInfo)">
+                                    <!--<tr class="height-60" v-for="(rowInfo, rowInfoIndex) in filteredDataLoad" v-if="isRowInfoVisible(rowInfo)">-->
+                                    <tr class="height-60" v-for="(dataLoadDetail, dataLoadDetailIndex) in filteredDataLoad" v-if="isRowInfoVisible(dataLoadDetail.data)">
                                         <td>
-                                            <i class="zmdi zmdi-alert-triangle c-info f-14" v-if="rowInfo.summary.skipRow || rowInfo.summary.hasInfos"></i>
-                                            <i class="zmdi zmdi-alert-triangle c-error f-14" v-if="rowInfo.summary.hasErrors"></i>
+                                            <i class="zmdi zmdi-alert-triangle c-info f-14" v-if="dataLoadDetail.data.summary.skipRow || dataLoadDetail.data.summary.hasInfos"></i>
+                                            <i class="zmdi zmdi-alert-triangle c-error f-14" v-if="dataLoadDetail.data.summary.hasErrors"></i>
                                         </td>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="procedureType"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="category"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="administration"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="fiscalYear"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="period"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="contractId"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="partida"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="procedureState"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="announcementUrl" format="url"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="announcementDate" format="date"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="servicesDescription"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="clarificationMeetingDate" format="date"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="clarificationMeetingJudgmentUrl" format="url"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="presentationProposalsDocUrl" format="url"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="supplierName"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="supplierRfc"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="organizerAdministrativeUnit"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="applicantAdministrativeUnit"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="administrativeUnitType"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="contractNumber"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="contractDate" format="date"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="totalAmount" format="currency"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="minAmount" format="currency"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="maxAmount" format="currency"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="totalOrMaxAmount" format="currency"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="contractUrl" format="url"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="areaInCharge"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="actualizationDate" format="date"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="notes"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="karewaNotes"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="informationDate" format="date"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="limitExceeded"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="amountExceeded" format="currency"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="procedureType"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="category"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="administration"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="fiscalYear"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="period"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="contractId"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="partida"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="procedureState"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="announcementUrl" format="url"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="announcementDate" format="date"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="servicesDescription"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="clarificationMeetingDate" format="date"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="clarificationMeetingJudgmentUrl" format="url"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="presentationProposalsDocUrl" format="url"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="supplierName"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="supplierRfc"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="organizerAdministrativeUnit"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="applicantAdministrativeUnit"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="administrativeUnitType"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="contractNumber"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="contractDate" format="date"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="totalAmount" format="currency"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="minAmount" format="currency"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="maxAmount" format="currency"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="totalOrMaxAmount" format="currency"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="contractUrl" format="url"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="areaInCharge"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="actualizationDate" format="date"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="notes"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="karewaNotes"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="informationDate" format="date"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="limitExceeded"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="amountExceeded" format="currency"/>
                                         <!--<td class="text-upper" -->
                                             <!--:class="{-->
                                                 <!--'c-error': rowInfo.procedureType.errors.length,-->

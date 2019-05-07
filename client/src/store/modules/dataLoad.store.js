@@ -47,7 +47,7 @@ const actions = {
             console.log('response', response);
             if (!response.data.error && response.data) {
                 commit('SET_CURRENT_DATA_LOAD', {dataLoad: response.data.data});
-                commit('SET_FILTERED_CURRENT_DATA_LOAD', {filteredDataLoad: response.data.data.data});
+                commit('SET_FILTERED_CURRENT_DATA_LOAD', {filteredDataLoad: response.data.data.details});
             }
         }, (err) => {
             //Error trying to load current data load info

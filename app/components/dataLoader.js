@@ -36,6 +36,7 @@ const {
 const AdministrativeUnit = require('./../models/administrativeUnit.model').AdministrativeUnit;
 const Supplier = require('./../models/supplier.model').Supplier;
 const DataLoad = require('./../models/dataLoad.model').DataLoad;
+const DataLoadDetail = require('./../models/dataLoadDetail.model').DataLoadDetail;
 
 //Always the first sheet
 const WORKSHEET_ID = 1;
@@ -152,6 +153,7 @@ class ContractExcelReader {
         this.organizationId = organizationId;
         this.columns = [];
         this.elements = [];
+        this._fieldInfoRefCache = {};
     }
 
     _readIdentifiersRow(sheet, row, callback) {
@@ -192,12 +194,15 @@ class ContractExcelReader {
 
                 let regexStr = "";
 
-                //If the value is "ONE TWO THREE"
-                //This will generate a regex ".*(ONE|TWO|THREE)? (ONE|TWO|THREE)? (ONE|TWO|THREE)?.*"
-                keywords.forEach((keyword) => {
-                    //Note: The space at the end is intended
-                    regexStr += `(${keywords.join('|')})? `;
-                });
+                
+                if (keywords && keywords.length) {
+                    //If the value is "ONE TWO THREE"
+                    //This will generate a regex ".*(ONE|TWO|THREE)? (ONE|TWO|THREE)? (ONE|TWO|THREE)?.*"
+                    keywords.forEach((keyword) => {
+                        //Note: The space at the end is intended
+                        regexStr += `(${keywords.join('|')})? `;
+                    });
+                }
 
                 //Remove the last extra space
                 regexStr = regexStr.substr(0, regexStr.length - 1);
@@ -219,12 +224,15 @@ class ContractExcelReader {
             .select(select);
     }
 
-    _readField(obj, value, fieldName, type, options = {}, mainCallback) {
+    _readField(obj, cell, fieldName, type, options = {}, mainCallback) {
+        
+        let value = cell.value;
         let _this = this;
 
         async.waterfall([
             //Initialize the fieldInfo
             (callback) => {
+                console.log(`\tReading ${fieldName}`);
                 let fieldInfo = {
                     fieldName: fieldName,
                     value: null,
@@ -256,10 +264,15 @@ class ContractExcelReader {
                                     fieldInfo.value = fieldInfo.value.text;
                                 }
                             }
+
+                            //Try to obtain result if it's a formula
+                            if (cell.formula) {
+                                fieldInfo.value = cell.result || '';
+                            }
                             
                             
                             if (typeof(fieldInfo.value) !== 'string') {
-                                logger.error(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to read as String.', fieldName);
+                                logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to read as String.', fieldName);
 
                                 // fieldInfo.errors.push({
                                 //     //TODO: i18n
@@ -342,7 +355,7 @@ class ContractExcelReader {
                             value = value || '';
 
                             if (!utils.isDate(value) && typeof(value) !== 'string') {
-                                logger.error(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
+                                logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
 
                                 fieldInfo.errors.push({
                                     //TODO: i18n
@@ -357,10 +370,6 @@ class ContractExcelReader {
                             }
                             // console.log('Date value', value);
 
-                            console.log('fieldInfo.value', fieldInfo.value);
-                            console.log('typeof(fieldInfo.value)', typeof(fieldInfo.value));
-                            console.log('Object.prototype.toString.call(fieldInfo.value)', Object.prototype.toString.call(fieldInfo.value));;
-
                             break;
                         case Number:
                             value = value || '';
@@ -368,7 +377,7 @@ class ContractExcelReader {
                             // console.log(fieldName + ' => ', value);
 
                             if (!utils.isNumber(value) && typeof(value) !== 'string') {
-                                logger.error(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
+                                logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
 
                                 fieldInfo.errors.push({
                                     //TODO: i18n
@@ -396,12 +405,15 @@ class ContractExcelReader {
             (fieldInfo, callback) => {
                 // console.log('options.ref', options.ref);
                 // console.log('utils.isDefined(options.ref)', utils.isDefined(options.ref));
-                if (options.ref) {
+                // if (options.ref) {
                     // console.log('utils.isDefined(options.ref.model)', utils.isDefined(options.ref.model));
-                }
+                // }
 
-                if (typeof(value) !== 'string') {
-                    logger.error(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
+
+                fieldInfo.value = fieldInfo.value || '';
+
+                if (typeof(fieldInfo.value) !== 'string') {
+                    logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
 
                     // fieldInfo.errors.push({
                     //     //TODO: i18n
@@ -410,11 +422,34 @@ class ContractExcelReader {
 
                     return callback(null, fieldInfo);
                 }
-                
-                if (utils.isDefined(options.ref) && utils.isDefined(options.ref.model)) {
+
+
+                if (fieldInfo.value && fieldInfo.value.length && utils.isDefined(options.ref) && utils.isDefined(options.ref.model)) {
+
+                    let fieldInfoRefCache = _this._fieldInfoRefCache[fieldInfo.value];
+                    if (fieldInfoRefCache) {
+                        //This value already has a result so we reuse the same result
+                        fieldInfo.valueToSaveOverride = fieldInfoRefCache.valueToSaveOverride;
+                        fieldInfo.errors = fieldInfoRefCache.errors;
+                        fieldInfo.infos = fieldInfoRefCache.infos;
+                        fieldInfo.duplicate = fieldInfoRefCache.duplicate;
+                        fieldInfo.shouldCreateDoc = fieldInfoRefCache.shouldCreateDoc;
+                        fieldInfo.skipRow = fieldInfoRefCache.skipRow;
+
+                        return callback(null, fieldInfo);
+
+                        // fieldInfo = {
+                        //     ..._this._fieldInfoRefCache[fieldInfo.value],
+                        //     ...{
+                        //         //But we keep the current fieldName and options
+                        //         fieldName: fieldInfo.fieldName,
+                        //         options: fieldInfo.options
+                        //     }
+                        // }
+                    }
 
                     let model = mongoose.model(options.ref.model);
-                    
+
                     fieldInfo.col = model.collection.collectionName;
 
                     let defaultField = 'name';
@@ -435,21 +470,22 @@ class ContractExcelReader {
                     // console.log('query', query);
 
                     query.exec((err, docs) => {
+
                         if (err) {
-                            logger.error(err, null, 'dataLoader#_readField', 'Error trying to query model [%s] with query: %j', fieldInfo.col, query);
+                            logger.warn(err, null, 'dataLoader#_readField', 'Error trying to query model [%s] with query: %j', fieldInfo.col, query);
                         }
-                        
+
                         //No matches found
                         if (!docs || !docs.length) {
                             fieldInfo.shouldCreateDoc = true;
                             return callback(null, fieldInfo);
                         }
-                        
+
                         //Default "best" match is the first result
                         let doc = docs[0];
 
                         //Check all matches and pick the best match
-                        
+
                         //Error if there's more than one match
                         if (docs.length > 1) {
                             let valueMatchesString = docs.map(_doc => _doc[field] || "").join(", ");
@@ -457,14 +493,14 @@ class ContractExcelReader {
                             fieldInfo.errors.push({
                                 message: `El registro coincide con varios registros cargados previamente [${valueMatchesString}] y se utilizará la mejor coincidencia encontrada.`
                             });
-                            
+
                         }
 
                         let wordsInValue = fieldInfo.value.split(" ");
                         let logs = {
                             "value": wordsInValue
                         };
-                        
+
                         docs.forEach((doc, index) => {
 
                             let matchFieldValue = doc[field] || "";
@@ -472,7 +508,7 @@ class ContractExcelReader {
 
                             logs[index.toString()] = wordsInMatch;
                         });
-                        
+
                         let items = Object.keys(logs);
 
                         Jaccard({
@@ -481,18 +517,20 @@ class ContractExcelReader {
                             }
                         }).getLinks(items)
                             .then((links) => {
+
                                 let highestJaccardValue = 0;
                                 let bestJaccardMatch = null;
 
-
-                                links.forEach((link) => {
-                                    if (link.target = "value") {
-                                        if (link.value > highestJaccardValue) {
-                                            highestJaccardValue = link.value;
-                                            bestJaccardMatch = link;
+                                if (links && links.length) {
+                                    links.forEach((link) => {
+                                        if (link.target = "value") {
+                                            if (link.value > highestJaccardValue) {
+                                                highestJaccardValue = link.value;
+                                                bestJaccardMatch = link;
+                                            }
                                         }
-                                    }
-                                });
+                                    });
+                                }
 
                                 if (bestJaccardMatch) {
                                     let index = Number(bestJaccardMatch.source);
@@ -500,35 +538,41 @@ class ContractExcelReader {
                                 } else {
                                     doc = docs[0];
                                 }
-                                
+
                                 //Match found
                                 if (doc) {
                                     //Set doc._id as valueToSaveOverride
                                     fieldInfo.valueToSaveOverride = doc._id;
                                     fieldInfo.duplicate = true;
                                     fieldInfo.shouldCreateDoc = false;
-        
+
                                     fieldInfo.infos.push({
                                         message: `El registro se omitirá ya que coincide con uno cargado previamente [${doc[field]}]`
                                     });
-                                    
+
                                     //Check if doc.[field] matches fieldInfo.value will be (hopefully) done after this process
                                 } else {
                                     fieldInfo.shouldCreateDoc = true;
                                 }
-        
+
+
+                                //Cache the result
+                                if (!_this._fieldInfoRefCache[fieldInfo.value]) {
+                                    _this._fieldInfoRefCache[fieldInfo.value] = fieldInfo;
+                                }
+
                                 return callback(null, fieldInfo);
-                                
+
                             }).catch((err) => {
                                 logger.error(err, null, 'dataLoader#_readField', 'Error trying to find the best suited match using Jaccard Index');
-                                
+
                                 //Match found
                                 if (doc) {
                                     //Set doc._id as valueToSaveOverride
                                     fieldInfo.valueToSaveOverride = doc._id;
                                     fieldInfo.duplicate = true;
                                     fieldInfo.shouldCreateDoc = false;
-        
+
                                     fieldInfo.infos.push({
                                         message: `El registro se omitirá ya que coincide con uno cargado previamente [${doc[field]}]`
                                     });
@@ -536,10 +580,15 @@ class ContractExcelReader {
                                 } else {
                                     fieldInfo.shouldCreateDoc = true;
                                 }
-        
+
+                                //Cache the result
+                                if (!_this._fieldInfoRefCache[fieldInfo.value]) {
+                                    _this._fieldInfoRefCache[fieldInfo.value] = fieldInfo;
+                                }
+
                                 return callback(null, fieldInfo);
                             });
-                        
+
                     });
 
                 } else {
@@ -552,9 +601,10 @@ class ContractExcelReader {
                 let _id = null;
                 let sourceFieldInfo = null;
                 let targetFieldInfo = null;
-                
+
                 //Check if current field is a refLink
-                if (utils.isDefined(options.refLink)
+                if (fieldInfo.value && fieldInfo.value.length
+                    && utils.isDefined(options.refLink)
                     && utils.isDefined(options.refLink.linkToField) 
                     && utils.isDefined(options.refLink.shouldMatchField)) {
 
@@ -564,18 +614,18 @@ class ContractExcelReader {
 
                     if (obj[linkToField]) {
                         //Field has been already proccessed, so we can proceed to validate the link
-                        
+
                         //Check if its a valid linked field; should have a model defined
                         if (!obj[linkToField].options || !obj[linkToField].options.ref || !obj[linkToField].options.ref.model) {
                             logger.error(null, null, 'dataLoader#_readField', 'Using refLink, but linked field [%s] has no valid ref in its options', linkToField);
                             return callback(null, fieldInfo);
                         }
-                        
+
                         //Check if linked field found a match; if no match was found, the refLink validation is not possible
                         if (!obj[linkToField].valueToSaveOverride) {
                             return callback(null, fieldInfo);
                         }
-                        
+
                         model = mongoose.model(obj[linkToField].options.ref.model);
                         _id = obj[linkToField].valueToSaveOverride;
 
@@ -585,7 +635,7 @@ class ContractExcelReader {
                             shouldMatchField: shouldMatchField,
                             shouldMatchValue: fieldInfo.value
                         };
-                        
+
                         obj[linkToField].refLinkedBy.push(refLinkInfo);
                         sourceFieldInfo = obj[linkToField];
                         targetFieldInfo = fieldInfo;
@@ -612,11 +662,11 @@ class ContractExcelReader {
                     sourceFieldInfo = obj[refLinkInfo.linkFromField];
                     targetFieldInfo = fieldInfo;
                 }
-                
+
                 //Do refLink check if needed
                 if (refLinkInfo && model && _id && sourceFieldInfo && targetFieldInfo) {
 
-                    
+
                     model
                         .findOne({
                             _id: _id
@@ -646,7 +696,7 @@ class ContractExcelReader {
                     return callback(null, fieldInfo);
                 }
 
-                
+
             },
             //Validation fn moved to the end of validations due to requiring access to other fields' values
             // //Call a validation function if needed
@@ -717,6 +767,8 @@ class ContractExcelReader {
             obj[fieldName] = fieldInfo;
 
             // return mainCallback(null, obj);
+
+            console.log(`\t${fieldInfo.fieldName} done: [${fieldInfo.value}]`);
             return mainCallback(null, fieldInfo);
         });
     }
@@ -788,7 +840,7 @@ class ContractExcelReader {
         }
     }
 
-    _readContractRow(sheet, row, readRowCallback) {
+    _readContractRow(sheet, row, rowIndex, readRowCallback) {
         let _this = this;
         let cellsInfoArr = [];
 
@@ -803,6 +855,9 @@ class ContractExcelReader {
         });
 
         let rowInfo = {};
+
+        console.log(`Reading row #${rowIndex}...`);
+        let startDate = new Date();
 
         async.map(cellsInfoArr, (cellInfo, callback) => {
             let cell = cellInfo.cell;
@@ -821,14 +876,14 @@ class ContractExcelReader {
             
             switch(column) {
                 case C_IDS.PROCEDURE_TYPE:
-                    return _this._readField(rowInfo, cell.value, 'procedureType', String, {
+                    return _this._readField(rowInfo, cell, 'procedureType', String, {
                         enum: procedureTypesEnumDict,
                         required: true,
                         uppercase: true
                     }, callback);
                     break;
                 case C_IDS.CATEGORY:
-                    return _this._readField(rowInfo, cell.value, 'category', String, {
+                    return _this._readField(rowInfo, cell, 'category', String, {
                         enum: categoryEnumDict,
                         required: function (rowInfo, callback) {
                             //TODO: Centralize this validation
@@ -899,6 +954,8 @@ class ContractExcelReader {
                                 }
 
                                 return callback();
+                            } else {
+                                return callback();
                             }
 
                         },
@@ -906,7 +963,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.ADMINISTRATION:
-                    return _this._readField(rowInfo, cell.value, 'administration', String, {
+                    return _this._readField(rowInfo, cell, 'administration', String, {
                         required: true,
                         //TODO: Centralize this Regex
                         match: {
@@ -915,7 +972,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.FISCAL_YEAR:
-                    return _this._readField(rowInfo, cell.value, 'fiscalYear', String, {
+                    return _this._readField(rowInfo, cell, 'fiscalYear', String, {
                         required: true,
                         //TODO: Centralize this Regex
                         match: {
@@ -924,7 +981,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.PERIOD:
-                    return _this._readField(rowInfo, cell.value, 'period', String, {
+                    return _this._readField(rowInfo, cell, 'period', String, {
                         required: true,
                         //TODO: Centralize this Regex
                         match: {
@@ -933,16 +990,16 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_ID:
-                    return _this._readField(rowInfo, cell.value, 'contractId', String, {
+                    return _this._readField(rowInfo, cell, 'contractId', String, {
                         required: true
                         //TODO: Validations
                     }, callback);
                     break;
                 case C_IDS.PARTIDA:
-                    return _this._readField(rowInfo, cell.value, 'partida', String, {}, callback);
+                    return _this._readField(rowInfo, cell, 'partida', String, {}, callback);
                     break;
                 case C_IDS.PROCEDURE_STATE:
-                    return _this._readField(rowInfo, cell.value, 'procedureState', String, {
+                    return _this._readField(rowInfo, cell, 'procedureState', String, {
                         enum: procedureStateEnumDict,
                         required: function (rowInfo, callback) {
                             //TODO: Centralize this validation
@@ -1017,6 +1074,8 @@ class ContractExcelReader {
                                 }
     
                                 return callback();
+                            } else {
+                                return callback();
                             }
 
                         },
@@ -1024,7 +1083,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.ACCOUNCEMENT_URL:
-                    return _this._readField(rowInfo, cell.value, 'announcementUrl', String, {
+                    return _this._readField(rowInfo, cell, 'announcementUrl', String, {
                         hyperlink: true,
                         //TODO: Centralize this Regex
                         // match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
@@ -1036,18 +1095,18 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.ACCOUNCEMENT_DATE:
-                    return _this._readField(rowInfo, cell.value, 'announcementDate', Date, {}, callback);
+                    return _this._readField(rowInfo, cell, 'announcementDate', Date, {}, callback);
                     break;
                 case C_IDS.SERVICES_DESCRIPTION:
-                    return _this._readField(rowInfo, cell.value, 'servicesDescription', String, {
+                    return _this._readField(rowInfo, cell, 'servicesDescription', String, {
                         required: true
                     }, callback);
                     break;
                 case C_IDS.CLARIFICATION_MEETING_DATE:
-                    return _this._readField(rowInfo, cell.value, 'clarificationMeetingDate', Date, {}, callback);
+                    return _this._readField(rowInfo, cell, 'clarificationMeetingDate', Date, {}, callback);
                     break;
                 case C_IDS.CLARIFICATION_MEETING_JUDGEMENT_URL:
-                    return _this._readField(rowInfo, cell.value, 'clarificationMeetingJudgmentUrl', String, {
+                    return _this._readField(rowInfo, cell, 'clarificationMeetingJudgmentUrl', String, {
                         hyperlink: true,
                         match: {
                             regexStr: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
@@ -1056,7 +1115,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.PRESENTATION_PROPOSALS_DOC_URL:
-                    return _this._readField(rowInfo, cell.value, 'presentationProposalsDocUrl', String, {
+                    return _this._readField(rowInfo, cell, 'presentationProposalsDocUrl', String, {
                         hyperlink: true,
                         // match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
                         match: {
@@ -1066,7 +1125,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.SUPPLIER_NAME:
-                    return _this._readField(rowInfo, cell.value, 'supplierName', String, {
+                    return _this._readField(rowInfo, cell, 'supplierName', String, {
                         required: true,
                         ref: {
                             model: Supplier.modelName,
@@ -1077,7 +1136,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.SUPPLIER_RFC:
-                    return _this._readField(rowInfo, cell.value, 'supplierRfc', String, {
+                    return _this._readField(rowInfo, cell, 'supplierRfc', String, {
                         // required: true,
                         //TODO: Centralize this Regex
                         // match: new RegExp("^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$"),
@@ -1092,7 +1151,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.ORGANIZER_ADMINISTRATIVE_UNIT:
-                    return _this._readField(rowInfo, cell.value, 'organizerAdministrativeUnit', String, {
+                    return _this._readField(rowInfo, cell, 'organizerAdministrativeUnit', String, {
                         required: true,
                         ref: {
                             model: AdministrativeUnit.modelName,
@@ -1115,7 +1174,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.APPLICANT_ADMINISTRATIVE_UNIT:
-                    return _this._readField(rowInfo, cell.value, 'applicantAdministrativeUnit', String, {
+                    return _this._readField(rowInfo, cell, 'applicantAdministrativeUnit', String, {
                         required: true,
                         ref: {
                             model: AdministrativeUnit.modelName,
@@ -1126,30 +1185,27 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.ADMINISTRATIVE_UNIT_TYPE:
-                    return _this._readField(rowInfo, cell.value, 'administrativeUnitType', String, {
+                    return _this._readField(rowInfo, cell, 'administrativeUnitType', String, {
                         enum: administrativeUnitTypeEnumDict,
                         required: true,
                         uppercase: true
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_NUMBER:
-                    return _this._readField(rowInfo, cell.value, 'contractNumber', String, {
+                    return _this._readField(rowInfo, cell, 'contractNumber', String, {
                         //TODO: required?
                         // required: true,
                         unique: true
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_DATE:
-                    return _this._readField(rowInfo, cell.value, 'contractDate', Date, {
+                    return _this._readField(rowInfo, cell, 'contractDate', Date, {
                         required: true,
                         //TODO: Centralize this validation
                         validator: function(rowInfo, callback){
                             let yearContractDate = new Date(rowInfo.contractDate.value).getFullYear();
                             let fiscalYear = Number(rowInfo.fiscalYear.value);
                             let isValid = yearContractDate === fiscalYear;
-
-                            console.log('yearContractDate', yearContractDate);
-                            console.log('fiscalYear', fiscalYear);
 
                             let errorMessage = null;
                             if (!isValid) {
@@ -1162,28 +1218,28 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 // case C_IDS.CONTRACT_TYPE:
-                //     return _this._readField(obj, cell.value, 'contractType', String, {
+                //     return _this._readField(obj, cell, 'contractType', String, {
                 //         //TODO: Enum values for validation
                 //         enum: [],
                 //         required: true
                 //     }, callback);
                 //     break;
                 case C_IDS.TOTAL_AMOUT:
-                    return _this._readField(rowInfo, cell.value, 'totalAmount', Number, {}, callback);
+                    return _this._readField(rowInfo, cell, 'totalAmount', Number, {}, callback);
                     break;
                 case C_IDS.MIN_AMOUNT:
-                    return _this._readField(rowInfo, cell.value, 'minAmount', Number, {}, callback);
+                    return _this._readField(rowInfo, cell, 'minAmount', Number, {}, callback);
                     break;
                 case C_IDS.MAX_AMOUNT:
-                    return _this._readField(rowInfo, cell.value, 'maxAmount', Number, {}, callback);
+                    return _this._readField(rowInfo, cell, 'maxAmount', Number, {}, callback);
                     break;
                 case C_IDS.MAX_OR_TOTAL_AMOUNT:
-                    return _this._readField(rowInfo, cell.value, 'totalOrMaxAmount', Number, {
+                    return _this._readField(rowInfo, cell, 'totalOrMaxAmount', Number, {
                         required: true
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_URL:
-                    return _this._readField(rowInfo, cell.value, 'contractUrl', String, {
+                    return _this._readField(rowInfo, cell, 'contractUrl', String, {
                         required: true,
                         hyperlink: true,
                         //TODO: Centralize this regex
@@ -1195,7 +1251,7 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.AREA_IN_CHARGE:
-                    return _this._readField(rowInfo, cell.value, 'areaInCharge', String, {
+                    return _this._readField(rowInfo, cell, 'areaInCharge', String, {
                         required: true,
                         ref: {
                             model: AdministrativeUnit.modelName,
@@ -1206,30 +1262,30 @@ class ContractExcelReader {
                     }, callback);
                     break;
                 case C_IDS.UPDATE_DATE:
-                    return _this._readField(rowInfo, cell.value, 'actualizationDate', Date, {
+                    return _this._readField(rowInfo, cell, 'actualizationDate', Date, {
                         required: true,
                     }, callback);
                     break;
                 case C_IDS.NOTES:
-                    return _this._readField(rowInfo, cell.value, 'notes', String, {}, callback);
+                    return _this._readField(rowInfo, cell, 'notes', String, {}, callback);
                     break;
                 case C_IDS.KAREWA_NOTES:
-                    return _this._readField(rowInfo, cell.value, 'karewaNotes', String, {}, callback);
+                    return _this._readField(rowInfo, cell, 'karewaNotes', String, {}, callback);
                     break;
                 case C_IDS.INFORMATION_DATE:
-                    return _this._readField(rowInfo, cell.value, 'informationDate', Date, {
+                    return _this._readField(rowInfo, cell, 'informationDate', Date, {
                         required: true,
                     }, callback);
                     break;
                 case C_IDS.LIMIT_EXCEEDED:
-                    return _this._readField(rowInfo, cell.value, 'limitExceeded', String, {
+                    return _this._readField(rowInfo, cell, 'limitExceeded', String, {
                         enum: limitExceededEnumDict,
                         required: true,
                         uppercase: true
                     }, callback);
                     break;
                 case C_IDS.AMOUNT_EXCEEDED:
-                    return _this._readField(rowInfo, cell.value, 'amountExceeded', Number, {}, callback);
+                    return _this._readField(rowInfo, cell, 'amountExceeded', Number, {}, callback);
                     break;
                 case C_IDS.UNKOWN_COLUMN:
                 default:
@@ -1270,8 +1326,11 @@ class ContractExcelReader {
                         rowInfo.summary.skipRow = true;
                     }
                     
+                    // return callback();
+                    
                     
                     // this._checkValidationsForFieldInfo(rowInfo, fieldInfo, callback);
+                    // this._checkRequiredForFieldInfo(rowInfo, fieldInfo, callback);
                     
                     //Apply multiple fns with the same params, then call callback when all fns are done
                     async.applyEach([
@@ -1284,7 +1343,14 @@ class ContractExcelReader {
                     return callback(null, fieldInfo);
                 }
             }, (err, results) => {
+                if (err) {
+                    console.log('err', err);
+                }
                 //All additional validations done
+
+                let finishDate = new Date();
+                console.log(`Row #${rowIndex} done in [${finishDate.getTime() - startDate.getTime()}] millis`);
+                
                 return readRowCallback(null, rowInfo);
             });
 
@@ -1314,7 +1380,9 @@ class ContractExcelReader {
                         // console.log('Row ' + rowNumber + ' = ' + JSON.stringify(row.values));
                     });
                     
-                    async.map(rowsInfo, (rowInfo, callback) => {
+                    let rowIndex = 1;
+                    
+                    async.mapSeries(rowsInfo, (rowInfo, callback) => {
                         let row = rowInfo.row;
                         let rowNumber = rowInfo.rowNumber;
                         if (rowNumber === IDENTIFIERS_ROW_INDEX) {
@@ -1322,15 +1390,38 @@ class ContractExcelReader {
                         } else if (rowNumber === HUMAN_IDENTIFIERS_ROW_INDEX) {
                             _this._readHumanIdentifiersRow(sheet, row, callback);
                         } else {
-                            _this._readContractRow(sheet, row, callback);
+                            _this._readContractRow(sheet, row, rowIndex, callback);
                         }
+                        rowIndex++;
                     }, (err, objs) => {
                         //Delete first two rows
                         objs.splice(0, 2);
-                        let dataLoad = new DataLoad({
-                            data: objs
+                        
+                        
+                        let dataLoadDetailsArray = objs.map((obj) => {
+                            return {data: obj};
                         });
-                        return resolve(dataLoad);
+                        
+                        DataLoadDetail.insertMany(dataLoadDetailsArray, (err, savedDetails) => {
+                            
+                            if (err) {
+                                logger.error(err, null, 'dataLoader#readBuffer', 'Error trying to save DataLoadDetails in bulk');
+                            }
+                            
+                            // dataLoadDetails
+                            // let dataLoadDetailsIds = [];
+                            // if (savedDetails && savedDetails.length) {
+                            //     dataLoadDetailsIds = savedDetails.map((dataLoadDetail) => {
+                            //         return dataLoadDetail._id;
+                            //     });
+                            // }
+                            let dataLoad = new DataLoad({
+                                // details: dataLoadDetailsIds
+                                details: savedDetails
+                            });
+                            return resolve(dataLoad);
+                        });
+                        
                     });
 
                 })
@@ -1517,7 +1608,9 @@ class ContractExcelWriter {
         
         let rowIndex = 3;
         
-        for (let rowInfo of this.dataLoad.data) {
+        for (let dataLoadDetail of this.dataLoad.details) {
+            
+            let rowInfo = dataLoadDetail.data;
 
             this.addRow(sheet, rowIndex, rowInfo);
             rowIndex++;

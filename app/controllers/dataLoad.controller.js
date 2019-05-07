@@ -139,6 +139,10 @@ exports.download = (req, res, next) => {
             confirmed: false,
             'deleted.isDeleted': {'$ne': true}
         })
+        .populate({
+            path: 'details',
+            model: 'DataLoadDetail'
+        })
         .exec((err, dataLoad) => {
             if (err) {
                 logger.error(err, req, 'dataLoad.controller#download', 'Error trying to fetch current DataLoad info');
@@ -188,6 +192,10 @@ exports.current = (req, res, next) => {
             path: 'uploadedBy',
             model: 'User',
             select: 'name lastName'
+        })
+        .populate({
+            path: 'details',
+            model: 'DataLoadDetail'
         })
         .exec((err, dataLoad) => {
             if (err) {

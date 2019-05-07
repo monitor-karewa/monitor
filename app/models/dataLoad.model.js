@@ -30,7 +30,10 @@ let DataLoadSchema = new Schema({
     filename: {
         
     },
-    data: [{}],
+    details: [{
+        type: Schema.Types.ObjectId,
+        ref: 'DataLoadDetail'
+    }],
     summary: {
         newContractsCount: {
             type: Number,
@@ -77,7 +80,7 @@ class DataLoadClass {
 DataLoadSchema.statics.toJson = function (dataLoad) {
     return {
         filename: dataLoad.filename,
-        data: dataLoad.data,
+        details: dataLoad.details,
         uploadedBy: `${dataLoad.uploadedBy.name} ${dataLoad.uploadedBy.lastName}`,
         createdAt: dataLoad.createdAt
     };
@@ -99,7 +102,9 @@ DataLoadSchema.statics.getSummary = function (dataLoad) {
     let addedSuppliers = {};
     let addedAdministrativeUnits = {};
 
-    dataLoad.data.forEach((rowInfo) => {
+    dataLoad.details.forEach((dataLoadDetail) => {
+
+        let rowInfo = dataLoadDetail.data;
         if (rowInfo.summary.hasErrors) {
             errorsCount++;
         }
