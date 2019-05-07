@@ -8,24 +8,30 @@ const utils = require('./utils');
 
 const Contract = require('./../models/contract.model').Contract;
 const {
-    
+
     procedureTypesEnumDict,
     procedureTypesEnum,
-    
+    getProcedureTypesEnumObject,
+
     categoryEnumDict,
     categoryEnum,
+    getCategoryEnumObject,
 
     procedureStateEnumDict,
     procedureStateEnum,
+    getProcedureStateEnumObject,
 
     administrativeUnitTypeEnumDict,
     administrativeUnitTypeEnum,
+    getAdministrativeUnitTypeEnumObject,
 
     limitExceededEnumDict,
     limitExceededEnum,
+    getLimitExceededEnumObject,
 
-    // contractTypeEnumDict,
-    // contractTypeEnum
+    contractTypeEnumDict,
+    contractTypeEnum,
+    getContractTypeEnumObject,
 } = require('./../models/contract.model');
 const AdministrativeUnit = require('./../models/administrativeUnit.model').AdministrativeUnit;
 const Supplier = require('./../models/supplier.model').Supplier;
@@ -90,6 +96,49 @@ const C_IDS = {
     //Catch-all for unrecognized columns
     UNKOWN_COLUMN: 'UNKOWN_COLUMN'
 };
+
+//Column descriptions by ID
+const C_IDS_DESCRIPTIONS = {
+    [C_IDS.PROCEDURE_TYPE]: 'Tipo de procedimiento',
+    [C_IDS.CATEGORY]: 'Materia',
+    [C_IDS.ADMINISTRATION]: 'Administración',
+    [C_IDS.FISCAL_YEAR]: 'Ejercicio',
+    [C_IDS.PERIOD]: 'Periodo en que se reporta',
+    [C_IDS.CONTRACT_ID]: 'ID',
+    [C_IDS.PARTIDA]: 'Partida',
+    [C_IDS.PROCEDURE_STATE]: 'Estado del procedimiento',
+    [C_IDS.ACCOUNCEMENT_URL]: 'Hipervínculo a la convocatoria o invitaciones',
+    [C_IDS.ACCOUNCEMENT_DATE]: 'Fecha de la convocatoria o invitación',
+    [C_IDS.SERVICES_DESCRIPTION]: 'Descripción de las obras, bienes o servicios',
+    [C_IDS.CLARIFICATION_MEETING_DATE]: 'Fecha en la que se celebró la junta de aclaraciones',
+    [C_IDS.CLARIFICATION_MEETING_JUDGEMENT_URL]: 'Hipervínculo al fallo de la Junta de Aclaraciones',
+    [C_IDS.PRESENTATION_PROPOSALS_DOC_URL]: 'Hipervínculo al documento de la Presentación de Propuestas',
+    [C_IDS.SUPPLIER_NAME]: 'Nombre completo del o los contratista(s)',
+    [C_IDS.SUPPLIER_RFC]: 'RFC',
+    [C_IDS.ORGANIZER_ADMINISTRATIVE_UNIT]: 'Unidad administrativa convocante',
+    [C_IDS.APPLICANT_ADMINISTRATIVE_UNIT]: 'Unidad administrativa solicitante',
+    [C_IDS.ADMINISTRATIVE_UNIT_TYPE]: 'Centralizada/Descentralizada',
+    [C_IDS.CONTRACT_NUMBER]: 'Número que identifique al contrato',
+    [C_IDS.CONTRACT_DATE]: 'Fecha del contrato',
+    [C_IDS.TOTAL_AMOUT]: 'Monto total del contrato con impuestos',
+    [C_IDS.MIN_AMOUNT]: 'Monto mínimo, en su caso',
+    [C_IDS.MAX_AMOUNT]: 'Monto máximo en su caso',
+    [C_IDS.MAX_OR_TOTAL_AMOUNT]: 'Monto total o Monto máximo, en su caso',
+    [C_IDS.CONTRACT_URL]: 'Hipervínculo al documento del contrato y anexos',
+    [C_IDS.AREA_IN_CHARGE]: 'Área responsable de la información',
+    [C_IDS.UPDATE_DATE]: 'Fecha de actualización',
+    [C_IDS.NOTES]: 'Nota',
+    [C_IDS.KAREWA_NOTES]: 'Notas Karewa',
+    [C_IDS.INFORMATION_DATE]: 'Fecha de obtención de los datos',
+    [C_IDS.LIMIT_EXCEEDED]: 'Adjudicaciones Directas que exceden el límite',
+    [C_IDS.AMOUNT_EXCEEDED]: 'Monto que excede el límite de la Adjudicación',
+};
+
+const ARGB_ERRORS = "FFEAD3DC";
+
+const ARGB_INFOS_FULL_OPACITY = "FF587FE3";
+//587fe3 @0.18 alpha equals E1EBFD in RGB
+const ARGB_INFOS = "FFE1EBFD";
 
 let columnIdsKeys = Object.keys(C_IDS);
 let columnIdsValues = [];
@@ -1295,6 +1344,198 @@ class ContractExcelReader {
 
 }
 
+
+class ContractExcelWriter {
+    constructor(dataLoad) {
+        this.dataLoad = dataLoad;
+    }
+    
+    
+    addRow(sheet, rowIndex, rowInfo) {
+        sheet.getRow(rowIndex).height = 50.0;
+        this.addCell(sheet, rowIndex, 1, rowInfo.procedureType, 'enum', {enumObjectFn: getProcedureTypesEnumObject});
+        this.addCell(sheet, rowIndex, 2, rowInfo.category, 'enum', {enumObjectFn: getCategoryEnumObject});
+        this.addCell(sheet, rowIndex, 3, rowInfo.administration, 'string');
+        this.addCell(sheet, rowIndex, 4, rowInfo.fiscalYear, 'string');
+        this.addCell(sheet, rowIndex, 5, rowInfo.period, 'string');
+        this.addCell(sheet, rowIndex, 6, rowInfo.contractId, 'string');
+        this.addCell(sheet, rowIndex, 7, rowInfo.partida, 'string');
+        this.addCell(sheet, rowIndex, 8, rowInfo.procedureState, 'enum', {enumObjectFn: getProcedureStateEnumObject});
+        this.addCell(sheet, rowIndex, 9, rowInfo.announcementUrl, 'url');
+        this.addCell(sheet, rowIndex, 10, rowInfo.announcementDate, 'date');
+        this.addCell(sheet, rowIndex, 11, rowInfo.servicesDescription, 'string');
+        this.addCell(sheet, rowIndex, 12, rowInfo.clarificationMeetingDate, 'date');
+        this.addCell(sheet, rowIndex, 13, rowInfo.clarificationMeetingJudgmentUrl, 'url');
+        this.addCell(sheet, rowIndex, 14, rowInfo.presentationProposalsDocUrl, 'url');
+        this.addCell(sheet, rowIndex, 15, rowInfo.supplierName, 'string');
+        this.addCell(sheet, rowIndex, 16, rowInfo.supplierRfc, 'string');
+        this.addCell(sheet, rowIndex, 17, rowInfo.organizerAdministrativeUnit, 'string');
+        this.addCell(sheet, rowIndex, 18, rowInfo.applicantAdministrativeUnit, 'string');
+        this.addCell(sheet, rowIndex, 19, rowInfo.administrativeUnitType, 'enum', {enumObjectFn: getAdministrativeUnitTypeEnumObject});
+        this.addCell(sheet, rowIndex, 20, rowInfo.contractNumber, 'string');
+        this.addCell(sheet, rowIndex, 21, rowInfo.contractDate, 'date');
+        this.addCell(sheet, rowIndex, 22, rowInfo.totalAmount, 'currency');
+        this.addCell(sheet, rowIndex, 23, rowInfo.minAmount, 'currency');
+        this.addCell(sheet, rowIndex, 24, rowInfo.maxAmount, 'currency');
+        this.addCell(sheet, rowIndex, 25, rowInfo.totalOrMaxAmount, 'currency');
+        this.addCell(sheet, rowIndex, 26, rowInfo.contractUrl, 'url');
+        this.addCell(sheet, rowIndex, 27, rowInfo.areaInCharge, 'string');
+        this.addCell(sheet, rowIndex, 28, rowInfo.actualizationDate, 'date');
+        this.addCell(sheet, rowIndex, 29, rowInfo.notes, 'string');
+        this.addCell(sheet, rowIndex, 30, rowInfo.karewaNotes, 'string');
+        this.addCell(sheet, rowIndex, 31, rowInfo.informationDate, 'date');
+        this.addCell(sheet, rowIndex, 32, rowInfo.limitExceeded, 'string');
+        this.addCell(sheet, rowIndex, 33, rowInfo.amountExceeded, 'currency');
+    }
+    
+    addCell(sheet, rowIndex, cellIndex, fieldInfo, format, options = {}) {
+        //procedureType
+        let wrapText = false;
+
+        let hasErrors = fieldInfo.errors && fieldInfo.errors.length;
+        let hasInfos = fieldInfo.infos && fieldInfo.infos.length;
+        
+        switch(format) {
+            case 'string':
+                sheet.getRow(rowIndex).getCell(cellIndex).value = fieldInfo.value;
+                wrapText = true;
+                break;
+            case 'date':
+                //If the value is a date, it's automatically detected as a date cell
+                sheet.getRow(rowIndex).getCell(cellIndex).value = fieldInfo.value;
+                break;
+            case 'enum':
+                if (fieldInfo.valueToSaveOverride && options.enumObjectFn) {
+                    let enumInfoObj = options.enumObjectFn(fieldInfo.valueToSaveOverride);
+
+                    if (enumInfoObj) {
+                        //Valid enum value
+                        sheet.getRow(rowIndex).getCell(cellIndex).value = enumInfoObj.description;
+                    }
+                    
+                } else {
+                    //Bad enum value, but show anyway
+                    sheet.getRow(rowIndex).getCell(cellIndex).value = fieldInfo.value;
+                }
+
+                wrapText = true;
+                break;
+            case 'currency':
+                sheet.getRow(rowIndex).getCell(cellIndex).numFmt = '"$"#,##0.00;[Red]\-"$"#,##0.00';
+                sheet.getRow(rowIndex).getCell(cellIndex).value = fieldInfo.value;
+                break;
+            case 'url':
+                //Only insert hyperlink if a value is present
+                if (fieldInfo.value && fieldInfo.value.length && !hasErrors) {
+                    sheet.getRow(rowIndex).getCell(cellIndex).value = {
+                        text: fieldInfo.value,
+                        hyperlink: fieldInfo.value,
+                        tooltip: fieldInfo.value
+                    };
+                } else {
+                    sheet.getRow(rowIndex).getCell(cellIndex).value = fieldInfo.value;
+                }
+                break;
+        }
+        
+        if (wrapText) {
+            sheet.getRow(rowIndex).getCell(cellIndex).alignment = { wrapText: true };
+        }
+        
+        if (hasErrors && hasInfos) {
+            //If the field has infos and errors, show the text in blue with a red background
+            
+            sheet.getRow(rowIndex).getCell(cellIndex).fill = {
+                type: 'pattern',
+                pattern:'solid',
+                fgColor:{argb:ARGB_ERRORS},
+            };
+
+            sheet.getRow(rowIndex).getCell(cellIndex).font = {
+                //Here we use the full color without alpha to ensure visibility (because the background is red)
+                color: { argb: ARGB_INFOS_FULL_OPACITY },
+            };
+            
+            
+        } else if (hasInfos) {
+            sheet.getRow(rowIndex).getCell(cellIndex).fill = {
+                type: 'pattern',
+                pattern:'solid',
+                fgColor:{argb:ARGB_INFOS},
+            };
+        } else if (hasErrors) {
+            sheet.getRow(rowIndex).getCell(cellIndex).fill = {
+                type: 'pattern',
+                pattern:'solid',
+                fgColor:{argb:ARGB_ERRORS},
+            };
+        }
+    }
+    
+    
+    sendFileAsDownload(req, res) {
+        let workbook = new Excel.Workbook();
+        let sheet = workbook.addWorksheet("Contratos");
+        
+        let cIdKeys = Object.keys(C_IDS);
+        let cIdIndex = 1;
+
+
+        //Ignore last key; "UNKOWNK_COLUMN"
+        // cIdKeys = cIdKeys.splice(cIdKeys.length - 1, 1);
+        cIdKeys.pop();
+        
+        for (let key of cIdKeys) {
+            sheet.getColumn(cIdIndex).width = 10.00;
+            
+            //C1, C2, etc, used to map each column to a field in the database
+            // sheet.getRow(1).height = 50.0;
+            sheet.getRow(1).getCell(cIdIndex).value = C_IDS[key];
+            sheet.getRow(1).getCell(cIdIndex).alignment = { wrapText: true };
+
+
+
+            //Actual human-readable headers
+            sheet.getRow(2).height = 50.0;
+            sheet.getRow(2).getCell(cIdIndex).value = C_IDS_DESCRIPTIONS[C_IDS[key]];
+            sheet.getRow(2).getCell(cIdIndex).alignment = { wrapText: true };
+            sheet.getRow(2).getCell(cIdIndex).fill = {
+                //C0C0C0
+                type: 'gradient',
+                gradient: 'angle',
+                degree: 0,
+                stops: [
+                    {position:0, color:{argb:'FFC0C0C0'}},
+                    {position:1, color:{argb:'FFC0C0C0'}}
+                ]
+            };
+            cIdIndex++;
+        }
+
+        
+        // worksheet.addRow({id: 2, name: 'Jane Doe', dob: new Date(1965,1,7)});
+        
+        let rowIndex = 3;
+        
+        for (let rowInfo of this.dataLoad.data) {
+
+            this.addRow(sheet, rowIndex, rowInfo);
+            rowIndex++;
+        }
+        
+        res.setHeader('Content-Type', 'application/vnd.openxmlformats');
+        res.setHeader("Content-Disposition", "attachment; filename=" + "Corrección a contratos.xlsx");
+        // workbook.xlsx.write(res);
+
+        workbook.xlsx.write(res)
+            .then(function(){
+                res.end();
+            });
+        // res.end();
+    }
+}
+
 module.exports = {
-    ContractExcelReader
+    ContractExcelReader,
+    ContractExcelWriter
 };

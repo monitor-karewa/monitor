@@ -520,9 +520,12 @@
                         </div>
                         <p class="f-12 c-plain_text principal-font-semibold text-align-c d-block m-b-15">
                             Descargar archivo con validaciones</p>
-                        <button class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR
+                        <!--<button class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR-->
+                            <!--VALIDACIONES-->
+                        <!--</button>-->
+                        <a href="http://localhost:3000/api/data-load/download" target="_blank" class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR
                             VALIDACIONES
-                        </button>
+                        </a>
                     </div>
                     <div class="card">
                         <p class="f-12 c-plain_text principal-font-semibold text-align-c d-block m-b-15">

@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const ContractExcelReader = require('./../components/dataLoader').ContractExcelReader;
+const ContractExcelWriter = require('./../components/dataLoader').ContractExcelWriter;
 const DataLoad = require('./../models/dataLoad.model').DataLoad;
 
 const logger = require('./../components/logger').instance;
@@ -14,9 +15,6 @@ const logger = require('./../components/logger').instance;
  */
 exports.upload = (req, res, next) => {
 
-    console.log('req.file', req.file);
-    
-    
     //TODO: Fetch current organization id
     logger.info(null, req, 'dataLoad.controller#upload', 'TODO: Fetch current organization id');
     let currentOrganizationId = null;
@@ -121,6 +119,52 @@ exports.upload = (req, res, next) => {
             //     });
             // }, 2000);
         });
+};
+
+/**
+ * Download an Excel file with annotations to fix them.
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.download = (req, res, next) => {
+
+    //TODO: Fetch current organization id
+    logger.info(null, req, 'dataLoad.controller#download', 'TODO: Fetch current organization id');
+    let currentOrganizationId = null;
+    
+    DataLoad
+        .findOne({
+            organization: currentOrganizationId,
+            confirmed: false,
+            'deleted.isDeleted': {'$ne': true}
+        })
+        .exec((err, dataLoad) => {
+            if (err) {
+                logger.error(err, req, 'dataLoad.controller#download', 'Error trying to fetch current DataLoad info');
+            }
+
+            if (!dataLoad) {
+                return res.json({
+                    error: true,
+                    data: null
+                });
+            }
+            
+            new ContractExcelWriter(dataLoad)
+                .sendFileAsDownload(req, res);
+
+            // return res.json({
+            //     error: false,
+            //     data: /*{
+            //      filename: dataLoad.filename,
+            //      data: dataLoad.data,
+            //      uploadedBy: `${dataLoad.uploadedBy.name} ${dataLoad.uploadedBy.lastName}`,
+            //      createdAt: dataLoad.createdAt
+            //      }*/DataLoad.toJson(dataLoad)
+            // });
+        }); 
+    
 };
 
 
