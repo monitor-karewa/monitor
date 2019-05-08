@@ -336,6 +336,10 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
             // { abbreviation : "$NAD", results : 45.44} Estructura Que debe devolver el aggregate
             console.log("results");
             results.forEach((result) => {
+                if(result[0].isComplex){
+                    result[0] = variables[result[0].abbreviation].complexFn(result, result[0].abbreviation);
+                }
+
                 console.log("result", result[0]);
                 let abbreviation = result[0].abbreviation;
                 let regex = abbreviation.replace(/\$/, "");
