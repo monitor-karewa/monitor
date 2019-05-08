@@ -420,7 +420,7 @@
                 this.$v.$reset();
             },
             validateFormula(){
-                this.$store.dispatch(`${storeModule}/validateFormula`, this.entry.formula);
+                this.$store.dispatch(`${storeModule}/validateFormula`, {formula: this.entry.formula, abbreviation : this.entry.abbreviation});
             }
 
         },
