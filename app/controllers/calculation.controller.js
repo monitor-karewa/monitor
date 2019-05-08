@@ -441,6 +441,9 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
         Promise.all(aggregatePromises).then((results) => {
             // { abbreviation : "$NAD", results : 45.44} Estructura Que debe devolver el aggregate
             results.forEach((result) => {
+                if(result[0].isComplex){
+                    result[0] = variables[result[0].abbreviation].complexFn(result, result[0].abbreviation);
+                }
                 let abbreviation = result[0].abbreviation;
                 let regex = abbreviation.replace(/\$/, "");
                 regex = "\\$" + regex;
