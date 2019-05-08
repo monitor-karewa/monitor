@@ -11,12 +11,12 @@ let RouteLogSchema = new Schema({
     path: {
         type: String,
         required: true
-    },
+    }/*,
     count: {
         type: Number,
         required: true,
         default: 1
-    }
+    }*/
 });
 
 //Agregar createdAt, modifiedAt automáticamente
@@ -42,7 +42,7 @@ RouteLogSchema.statics.toJson = function (routeLog) {
 RouteLogSchema.loadClass(RouteLogClass);
 
 //Indexes
-RouteLogSchema.index({path: 1, count: -1}, {unique: false});
+RouteLogSchema.index({path: 1, createdAt: -1}, {unique: false});
 
 const RouteLog = mongoose.model('RouteLog', RouteLogSchema);
 
