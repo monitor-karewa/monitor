@@ -241,6 +241,9 @@ exports.validateFormula = (req, res, next) => {
     exploreCalculationTree(calculation, function (validTree) {
         if (validTree) {
             calculateAndValidateFormula(calculation, (err, results) => {
+                if(results && (isNaN(results.value) || results.value == Number.Infinity)){
+                    return res.json({error:true, message:req.__('calculations.formula.infinity.error'), err:err });
+                }
                 if(err){
                     return res.json({error:true, message:req.__(err.message), err:err.err });
                 } else {
@@ -453,7 +456,6 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
                 let abbreviation = result[0].abbreviation;
                 let regex = abbreviation.replace(/\$/, "");
                 regex = "\\$" + regex;
-                console.log("regex", regex);
                 calculation.formula.expression = replaceVariableForValue(regex, calculation.formula.expression, result[0].result);
             });
 
@@ -494,7 +496,6 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
                                     abbreviation: calculation.abbreviation,
                                     results : finalValue
                                 };
-                                console.log("result", result);
                                 resultsMap[calculation.abbreviation] = finalValue;
                                 return mainCallback(null, result);
                             } catch(err) {

@@ -416,10 +416,6 @@ export default {
     "calculation.validation.required":"El campo {field} del Cálculo es requerido",
     "calculations.validation.classification":"El valor para la Clasificación del Recurso no es válido",
     "calculations.validation.abbreviation":"Debe comenzar con $$, ser valores alfanúmericos y tener mínimo 3 y máximo 8 caractéres",
-    "calculations.formula.syntax.error":"La formula contiene errores de sintaxis, por favor revisa tu formula.",
-    "calculations.formula.infinity.error":"Se detecto una división entre zero, por favor revisa tu formula.",
-    "calculations.formula.reference-circular.error":"No fue posible realizar el cálculo, se detectaron referencias circulares en la formula",
-    "calculations.formula.unexpected.error":"No fue posible realizar el cálculo",
 
 
     //DataLoad
