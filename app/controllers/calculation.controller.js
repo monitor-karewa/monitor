@@ -237,17 +237,19 @@ exports.validateFormula = (req, res, next) => {
     i = 0;
     resultsMap = {};
 
-    console.log('calculation.formula.expression --> ' + calculation.formula.expression);
-
 
     exploreCalculationTree(calculation, function (validTree) {
         if (validTree) {
             calculateAndValidateFormula(calculation, (err, results) => {
-                return res.json({err: err, results: results});
+                if(err){
+                    return res.json({error:true, message:req.__(err.message), err:err.err });
+                } else {
+                    return res.json({error: false, results: results});
+                }
             });
         } else {
             console.log("Formula is not Valid");
-            return res.json({err : new Error("Formula is not valid")});
+            return res.json({error:true, message:req.__('calculations.formula.reference-circular.error') ,err : new Error("Formula is not valid")});
         }
     });
     //placeholder yes or no answer
@@ -323,7 +325,7 @@ exports.save = (req, res, next) => {
                 let formulaValidation = validateFormula(calculation.formula);
 
                     if(formulaValidation.error){
-                        return res.json({error: true, message: "La formula no es válida", err:formulaValidation.err})
+                        return res.json({error: true, message: req.__('calculations.formula.syntax.error'), err:formulaValidation.err})
                     }
                     calculation.save((err, savedCalculation) => {
                         if (err) {
@@ -364,11 +366,9 @@ exports.save = (req, res, next) => {
         for (let i = 0; i < calculation.formula.calculations.length; i++) {
             calculationObjectIds.push(mongoose.Types.ObjectId(calculation.formula.calculations[i]._id));
         }
-        console.log("@LLLLLELELELELELELGGGGGAA AAAAQUIII");
         let isValid = validateFormula();
-            console.log("isValid", isValid);
             if(isValid.error){
-                return res.json({error: true, message: "La formula no es válida", err:err})
+                return res.json({error: true, message: req.__('calculations.formula.syntax.error'), err: isValid.err})
             }
 
             calculateAndValidateFormula(calculation, (err, value) => {
@@ -402,13 +402,13 @@ let validateFormula = function(formula) {
             let regex = "\\${1,2}[A-Z0-9]+";
             let newExpression = replaceVariableForValue(regex, formula.expression, "1");
             let value = math.eval(newExpression);
-            return  {error: false, isValid: true};
+            return { error: false, isValid: true };
         } else {
-            console.log("skhjdfbgkhsh guabeh bguha");
+            return { error:true, isValid: false }
         }
 
     } catch (err) {
-        return {error: true, isValid: false, err: err};
+        return { error: true, isValid: false, err: err };
     }
 };
 
@@ -430,7 +430,7 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
     try {
         let formulaValidation = validateFormula(calculation.formula);
         if (formulaValidation.error) {
-            return mainCallback(formulaValidation.err);
+            return mainCallback({error:true, message:'calculations.formula.syntax.error', err:formulaValidation.err});
         }
 
         let aggregatePromises = {
@@ -471,13 +471,14 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
                                 AsyncEachCallback(err);
                             } else {
                                 calculation.result = res;
+
                                 AsyncEachCallback(null, res);
                             }
                         })
                     }
                     , function(err){
                         if(err){
-                            return mainCallback(err);
+                            return mainCallback({ error:true, message:'calculations.formula.unexpected.error', err:err});
                         } else {
                             try {
                                 innerCalculations.forEach((item) => {
@@ -497,7 +498,7 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
                                 resultsMap[calculation.abbreviation] = finalValue;
                                 return mainCallback(null, result);
                             } catch(err) {
-                                return mainCallback("Error attempting to calculate the result");
+                                return mainCallback({error:true, message:'calculations.formula.unexpected.error', err:err});
                             }
                         }
                     });
@@ -511,15 +512,15 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
                     resultsMap[calculation.abbreviation] = finalValue;
                     return mainCallback(null, result);
                 } catch(err) {
-                    return mainCallback("Error attempting to calculate the result");
+                    return mainCallback({error:true, message:'calculations.formula.unexpected.error', err:err});
                 }
             }
         }).catch((errors) => {
-            return mainCallback(errors);
+            return mainCallback({error:true, message:'calculations.formula.unexpected.error', err:errors});
         });
 
     } catch(err) {
-        return mainCallback(err);
+        return mainCallback({error:true, message:'calculations.formula.unexpected.error', err:err});
 
     }
 }
