@@ -140,13 +140,14 @@ var exploreCalculationTree = function (calculation, mainCallback) {
                     return element == res.abbreviation;
                 });
 
+                let calculated = false;
                 if (called) {
-                    let calculated = done.find(function (element) {
+                    calculated = done.find(function (element) {
                         return element == res.abbreviation;
                     });
                 }
 
-                if (!called || (called && !done)) {
+                if (!called || (called && !calculated)) {
                     calls.push(res.abbreviation);
 
                     async.map(res.formula.calculations, (calc, calcCallback) => {
@@ -180,13 +181,14 @@ var exploreCalculationTree = function (calculation, mainCallback) {
             return element == calculation.abbreviation;
         });
 
+        let calculated = false;
         if (called) {
-            let calculated = done.find(function (done) {
+            let calculated = done.find(function (element) {
                 return element == calculation.abbreviation;
             });
         }
 
-        if (!called || (called && !done)) {
+        if (!called || (called && !calculated)) {
             calls.push(calculation.abbreviation);
 
             async.map(calculation.formula.calculations, (calc, calcCallback) => {
@@ -215,6 +217,7 @@ var exploreCalculationTree = function (calculation, mainCallback) {
 };
 
 
+var resultsMap = {};
 
 exports.validateFormula = (req, res, next) => {
 
@@ -232,6 +235,8 @@ exports.validateFormula = (req, res, next) => {
     done = [];
     calls = [];
     i = 0;
+    resultsMap = {};
+
     console.log('calculation.formula.expression --> ' + calculation.formula.expression);
 
 
@@ -413,8 +418,14 @@ let replaceVariableForValue = function(regex, expression, value){
     return newExpression;
 };
 
-var resultsMaps = {};
 let  calculateAndValidateFormula = function(calculation, mainCallback){
+    if(resultsMap[calculation.abbreviation] != undefined){
+        let result = {
+            abbreviation: calculation.abbreviation,
+            results : resultsMap[calculation.abbreviation]
+        };
+        return result;
+    }
     //populate calculations
     try {
         let formulaValidation = validateFormula(calculation.formula);
@@ -446,9 +457,6 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
                 }
                 async.each(innerCalculations,
                     function (calculation, AsyncEachCallback) {
-                        console.log("calculation.name", calculation.name);
-                        console.log("callback", AsyncEachCallback);
-
                         calculateAndValidateFormula(calculation, function (err, res) {
                             if (err) {
                                 AsyncEachCallback(err);
@@ -471,30 +479,29 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
                                     console.log("regex", regex);
                                     calculation.formula.expression = replaceVariableForValue(regex, calculation.formula.expression, item.result.value);
                                 });
-                                console.log("calculation.formula.expression", calculation.formula.expression);
                                 finalValue = math.eval(calculation.formula.expression);
                                 let result = {
                                     abbreviation: calculation.abbreviation,
                                     results : finalValue
                                 };
+                                console.log("result", result);
+                                resultsMap[calculation.abbreviation] = finalValue;
                                 return mainCallback(null, result);
                             } catch(err) {
-                                console.log("err", err);
                                 return mainCallback("Error attempting to calculate the result");
                             }
                         }
                     });
             } else {
-                //////////////
                 try {
                     finalValue = math.eval(calculation.formula.expression);
                     let result = {
                         abbreviation: calculation.abbreviation,
                         value : finalValue
                     };
+                    resultsMap[calculation.abbreviation] = finalValue;
                     return mainCallback(null, result);
                 } catch(err) {
-                    console.log("err", err);
                     return mainCallback("Error attempting to calculate the result");
                 }
             }
