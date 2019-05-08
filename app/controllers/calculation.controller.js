@@ -408,7 +408,7 @@ let validateFormula = function(formula) {
 };
 
 
-let replaceVariableForValue = function(regex, expression, value){
+let replaceVariableForValue = function(regex, expression, value = 0){
     let newExpression = expression.replace(new RegExp(regex,"g"), value);
     return newExpression;
 };
@@ -422,16 +422,22 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
             return mainCallback(formulaValidation.err);
         }
 
-        let aggregatePromises = [];
+        let aggregatePromises = {
+            queries:[],
+            abbreviation:[]
+        };
         calculation.formula.variables.forEach((item) => {
-            aggregatePromises.push(Contracts.aggregate(variables[item.abbreviation].query))
+            aggregatePromises.queries.push(Contracts.aggregate(variables[item.abbreviation].query));
+            aggregatePromises.abbreviation.push(item.abbreviation);
         });
         let finalValue = 0;
-        Promise.all(aggregatePromises).then((results) => {
+        Promise.all(aggregatePromises.queries).then((results) => {
             // { abbreviation : "$NAD", results : 45.44} Estructura Que debe devolver el aggregate
-            results.forEach((result) => {
-                if(result[0].isComplex){
+            results.forEach((result, index) => {
+                if(result[0] && result[0].isComplex){
                     result[0] = variables[result[0].abbreviation].complexFn(result, result[0].abbreviation);
+                } else if(!result[0]){
+                    result[0] = { abbreviation:aggregatePromises.abbreviation[index] }
                 }
                 let abbreviation = result[0].abbreviation;
                 let regex = abbreviation.replace(/\$/, "");
@@ -506,7 +512,6 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
         });
 
     } catch(err) {
-        console.log("err", err);
         return mainCallback(err);
 
     }
