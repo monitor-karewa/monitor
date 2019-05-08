@@ -219,7 +219,7 @@ const limitExceededEnumDict = {
     ],
     'LIMIT_EXCEEDED': [
         {
-            regexStr: utils.toAccentsRegex('^[\s]*excede el limite', null, true),
+            regexStr: "^[\s]*" + utils.toAccentsRegex('excede el limite', null, true),
             flags: 'gi'
         },
     ]

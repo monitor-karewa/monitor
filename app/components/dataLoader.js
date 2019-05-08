@@ -293,7 +293,7 @@ class ContractExcelReader {
                             }
 
                             //Validate vs enum
-                            if (options.enum) {
+                            if (fieldInfo.value && fieldInfo.value.length && options.enum) {
                                 let enumKeys = Object.keys(options.enum);
                                 
                                 let matchFound = false;
@@ -356,11 +356,11 @@ class ContractExcelReader {
 
                             if (!utils.isDate(value) && typeof(value) !== 'string') {
                                 logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
-
-                                fieldInfo.errors.push({
-                                    //TODO: i18n
-                                    message: 'El valor indicado no cumple con el formato permitido para este campo.'
-                                });
+                                //
+                                // fieldInfo.errors.push({
+                                //     //TODO: i18n
+                                //     message: 'El valor indicado no cumple con el formato permitido para este campo.'
+                                // });
 
                                 return callback(null, fieldInfo);
                             } else if (utils.isDate(value)) {
@@ -379,10 +379,10 @@ class ContractExcelReader {
                             if (!utils.isNumber(value) && typeof(value) !== 'string') {
                                 logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
 
-                                fieldInfo.errors.push({
-                                    //TODO: i18n
-                                    message: 'El valor indicado no cumple con el formato permitido para este campo.'
-                                });
+                                // fieldInfo.errors.push({
+                                //     //TODO: i18n
+                                //     message: 'El valor indicado no cumple con el formato permitido para este campo.'
+                                // });
 
                                 return callback(null, fieldInfo);
                             }

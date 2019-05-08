@@ -113,7 +113,19 @@
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-hover form-table">
+                                <div v-show="filtering" class="col-xs-12 m-40">
+                                    <!--<svg class="spinner" width="17px" height="50px" viewBox="0 0 66 66"-->
+                                         <!--xmlns="http://www.w3.org/2000/svg">-->
+                                        <!--<circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33"-->
+                                                <!--cy="33" r="30"></circle>-->
+                                    <!--</svg>-->
+                                    <div class="d-flex justify-content-center">
+                                        <div class="spinner-border" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <table class="table table-hover form-table" v-show="!filtering">
                                     <thead>
                                     <tr>
                                         <!--<th>Proveedor<i class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>-->
@@ -158,7 +170,7 @@
                                     </thead>
                                     <tbody>
                                     <!--<tr class="height-60" v-for="(rowInfo, rowInfoIndex) in filteredDataLoad" v-if="isRowInfoVisible(rowInfo)">-->
-                                    <tr class="height-60" v-for="(dataLoadDetail, dataLoadDetailIndex) in filteredDataLoad" v-if="isRowInfoVisible(dataLoadDetail.data)">
+                                    <tr class="height-60" v-for="(dataLoadDetail, dataLoadDetailIndex) in paginatedDataLoad" v-if="isRowInfoVisible(dataLoadDetail.data)">
                                         <td>
                                             <i class="zmdi zmdi-alert-triangle c-info f-14" v-if="dataLoadDetail.data.summary.skipRow || dataLoadDetail.data.summary.hasInfos"></i>
                                             <i class="zmdi zmdi-alert-triangle c-error f-14" v-if="dataLoadDetail.data.summary.hasErrors"></i>
@@ -503,7 +515,8 @@
                             </div>
                         </div>
                     </div>
-                    <div class="vertical-center">
+                    <Pagination storeModule="dataLoad" v-show="!filtering"/>
+                    <div class="vertical-center" v-show="!filtering">
                         <!--<div class="floating-label-table info m-r-40">Omitidos (duplicados)</div>-->
                         <!--<div class="floating-label-table error">Registros con errores</div>-->
                         <div class="floating-label-table m-r-40"><i class="zmdi zmdi-alert-triangle c-info f-14"></i> Omitidos (duplicados)</div>
@@ -556,6 +569,7 @@
 //    import TableHeaderButton from '@/components/tables/headers/TableHeaderButton';
     import TableHeaderFilters from '@/components/tables/headers/TableHeaderFilters';
     import TableTdDataLoadResult from '@/components/tables/tds/TableTdDataLoadResult';
+    import Pagination from '@/components/catalogs/Pagination.vue';
 
     import {mapState} from 'vuex';
     import { bus } from '@/main';
@@ -593,7 +607,8 @@
             TableHeaderButtonsWrapper,
 //            TableHeaderButton,
             TableHeaderFilters,
-            TableTdDataLoadResult
+            TableTdDataLoadResult,
+            Pagination
         },
         computed: {
             current () {
@@ -614,9 +629,11 @@
             },
             ...mapState({
                 dataLoadInfo: state => state.dataLoad.dataLoadInfo,
-                dataLoad: state => state.dataLoad.dataLoad,
-                filteredDataLoad: state => state.dataLoad.filteredDataLoad,
+//                dataLoad: state => state.dataLoad.dataLoad,
+//                filteredDataLoad: state => state.dataLoad.filteredDataLoad,
+                paginatedDataLoad: state => state.dataLoad.paginatedDataLoad,
                 filtering: state => state.dataLoad.filtering
+//                filtering: state => true
             })
         },
         filters: {
