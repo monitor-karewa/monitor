@@ -3,7 +3,8 @@
         <AdminMainSection>
             <BackButton />
             <FloatingTitle title="data-load.title-strong" description="data-load.title.description"/>
-            <div class="row m-0 w-100">
+            <CardUploading v-show="uploading" :loading="uploading" :cancel="cancelUpload"/>
+            <div class="row m-0 w-100" v-show="!uploading">
                 <div class="col-12 col-md-8 di-flex" v-if="!showDetails">
                     <div class="card w-100">
                         <div class="floating-text m-b-30">
@@ -70,50 +71,17 @@
                                 <button class="btn-stroke button-accent" @click.prevent="toggleHideDetails">Ocultar detalles</button>
                                 <TableHeaderFilters :columns="filterRows" :hideTitle="true" :hideShowAllToggle="true"/>
                             </TableHeaderButtonsWrapper>
-                            
-                            
-                            <!--<div class="search-container">-->
-                                <!--<div class="form-search">-->
-                                    <!--<input class="input-search" type="text" name="" value=""-->
-                                           <!--placeholder="Buscar Contratos"/>-->
-                                    <!--<i class="icon zmdi zmdi-search"></i>-->
-                                    <!--<i class="icon zmdi zmdi-close"></i>-->
-                                <!--</div>-->
-                            <!--</div>-->
-                            <!--<div class="form-btn-top">-->
-                                <!---->
-                                <!---->
-                                <!---->
-                                <!--<div class="dropdown menu-filters">-->
-                                    <!--<button class="btn-stroke button-accent m-l-15" type="button"-->
-                                            <!--id="dropdownFilters" data-toggle="dropdown" aria-haspopup="true"-->
-                                            <!--aria-expanded="false">Filtrar <i-->
-                                            <!--class="zmdi zmdi-caret-down m-r-0 m-l-5 f-18"></i></button>-->
-                                    <!--<div class="dropdown-menu dropdown-menu-right"-->
-                                         <!--aria-labelledby="dropdownFilters">-->
-                                        <!--<ul>-->
-                                            <!--<li>-->
-                                                <!--<div class="checkbox">-->
-                                                    <!--<input type="checkbox" value="">-->
-                                                    <!--<i class="input-helper"></i>-->
-                                                    <!--<span>Omitidos</span>-->
-                                                <!--</div>-->
-                                            <!--</li>-->
-                                            <!--<li>-->
-                                                <!--<div class="checkbox">-->
-                                                    <!--<input type="checkbox" value="">-->
-                                                    <!--<i class="input-helper"></i>-->
-                                                    <!--<span>Errores</span>-->
-                                                <!--</div>-->
-                                            <!--</li>-->
-                                        <!--</ul>-->
-                                    <!--</div>-->
-                                <!--</div>-->
-                            <!--</div>-->
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
-                                <table class="table table-hover form-table">
+                                <div v-show="filtering" class="col-xs-12 m-40">
+                                    <div class="d-flex justify-content-center">
+                                        <div class="spinner-border" role="status">
+                                            <span class="sr-only">Loading...</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <table class="table table-hover form-table" v-show="!filtering">
                                     <thead>
                                     <tr>
                                         <!--<th>Proveedor<i class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>-->
@@ -157,352 +125,53 @@
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr class="height-60" v-for="(rowInfo, rowInfoIndex) in filteredDataLoad" v-if="isRowInfoVisible(rowInfo)">
+                                    <!--<tr class="height-60" v-for="(rowInfo, rowInfoIndex) in filteredDataLoad" v-if="isRowInfoVisible(rowInfo)">-->
+                                    <tr class="height-60" v-for="(dataLoadDetail, dataLoadDetailIndex) in paginatedDataLoad" v-if="isRowInfoVisible(dataLoadDetail.data)">
                                         <td>
-                                            <i class="zmdi zmdi-alert-triangle c-info f-14" v-if="rowInfo.summary.skipRow || rowInfo.summary.hasInfos"></i>
-                                            <i class="zmdi zmdi-alert-triangle c-error f-14" v-if="rowInfo.summary.hasErrors"></i>
+                                            <i class="zmdi zmdi-alert-triangle c-info f-14" v-if="dataLoadDetail.data.summary.skipRow || dataLoadDetail.data.summary.hasInfos"></i>
+                                            <i class="zmdi zmdi-alert-triangle c-error f-14" v-if="dataLoadDetail.data.summary.hasErrors"></i>
                                         </td>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="procedureType"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="category"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="administration"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="fiscalYear"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="period"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="contractId"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="partida"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="procedureState"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="announcementUrl" format="url"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="announcementDate" format="date"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="servicesDescription"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="clarificationMeetingDate" format="date"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="clarificationMeetingJudgmentUrl" format="url"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="presentationProposalsDocUrl" format="url"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="supplierName"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="supplierRfc"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="organizerAdministrativeUnit"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="applicantAdministrativeUnit"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="administrativeUnitType"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="contractNumber"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="contractDate" format="date"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="totalAmount" format="currency"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="minAmount" format="currency"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="maxAmount" format="currency"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="totalOrMaxAmount" format="currency"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="contractUrl" format="url"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="areaInCharge"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="actualizationDate" format="date"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="notes"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="karewaNotes"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="informationDate" format="date"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="limitExceeded"/>
-                                        <TableTdDataLoadResult :rowInfo="rowInfo" fieldName="amountExceeded" format="currency"/>
-                                        <!--<td class="text-upper" -->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.procedureType.errors.length,-->
-                                                <!--'c-info': rowInfo.procedureType.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.procedureType.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.category.errors.length,-->
-                                                <!--'c-info': rowInfo.category.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.category.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.administration.errors.length,-->
-                                                <!--'c-info': rowInfo.administration.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.administration.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.fiscalYear.errors.length,-->
-                                                <!--'c-info': rowInfo.fiscalYear.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.fiscalYear.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class=""-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.period.errors.length,-->
-                                                <!--'c-info': rowInfo.period.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.period.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.contractId.errors.length,-->
-                                                <!--'c-info': rowInfo.contractId.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.contractId.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.partida.errors.length,-->
-                                                <!--'c-info': rowInfo.partida.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.partida.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.procedureState.errors.length,-->
-                                                <!--'c-info': rowInfo.procedureState.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.procedureState.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.announcementUrl.errors.length,-->
-                                                <!--'c-info': rowInfo.announcementUrl.infos.length-->
-                                            <!--}">-->
-                                            <!--<a v-if="!rowInfo.announcementUrl.errors.length" :href="rowInfo.announcementUrl.value" target="_blank">{{rowInfo.announcementUrl.value}}</a>-->
-                                            <!--<span v-if="rowInfo.announcementUrl.errors.length">{{rowInfo.announcementUrl.value}}</span>-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.announcementDate.errors.length,-->
-                                                <!--'c-info': rowInfo.announcementDate.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.announcementDate.value | moment}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.servicesDescription.errors.length,-->
-                                                <!--'c-info': rowInfo.servicesDescription.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.servicesDescription.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.clarificationMeetingDate.errors.length,-->
-                                                <!--'c-info': rowInfo.clarificationMeetingDate.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.clarificationMeetingDate.value | moment}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.clarificationMeetingJudgmentUrl.errors.length,-->
-                                                <!--'c-info': rowInfo.clarificationMeetingJudgmentUrl.infos.length-->
-                                            <!--}">-->
-                                            <!--&lt;!&ndash;{{rowInfo.clarificationMeetingJudgmentUrl.value}}&ndash;&gt;-->
-                                            <!--<a v-if="!rowInfo.clarificationMeetingJudgmentUrl.errors.length" :href="rowInfo.clarificationMeetingJudgmentUrl.value" target="_blank">{{rowInfo.clarificationMeetingJudgmentUrl.value}}</a>-->
-                                            <!--<span v-if="rowInfo.clarificationMeetingJudgmentUrl.errors.length">{{rowInfo.clarificationMeetingJudgmentUrl.value}}</span>-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.presentationProposalsDocUrl.errors.length,-->
-                                                <!--'c-info': rowInfo.presentationProposalsDocUrl.infos.length-->
-                                            <!--}">-->
-                                            <!--&lt;!&ndash;{{rowInfo.presentationProposalsDocUrl.value}}&ndash;&gt;-->
-                                            <!--<a v-if="!rowInfo.presentationProposalsDocUrl.errors.length" :href="rowInfo.presentationProposalsDocUrl.value" target="_blank">{{rowInfo.presentationProposalsDocUrl.value}}</a>-->
-                                            <!--<span v-if="rowInfo.presentationProposalsDocUrl.errors.length">{{rowInfo.presentationProposalsDocUrl.value}}</span>-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.supplierName.errors.length,-->
-                                                <!--'c-info': rowInfo.supplierName.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.supplierName.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.supplierRfc.errors.length,-->
-                                                <!--'c-info': rowInfo.supplierRfc.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.supplierRfc.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.organizerAdministrativeUnit.errors.length,-->
-                                                <!--'c-info': rowInfo.organizerAdministrativeUnit.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.organizerAdministrativeUnit.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.applicantAdministrativeUnit.errors.length,-->
-                                                <!--'c-info': rowInfo.applicantAdministrativeUnit.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.applicantAdministrativeUnit.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.administrativeUnitType.errors.length,-->
-                                                <!--'c-info': rowInfo.administrativeUnitType.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.administrativeUnitType.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.contractNumber.errors.length,-->
-                                                <!--'c-info': rowInfo.contractNumber.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.contractNumber.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.contractDate.errors.length,-->
-                                                <!--'c-info': rowInfo.contractDate.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.contractDate.value | moment}}-->
-                                        <!--</td>-->
-                                        <!--<td class="c-accent text-align-r f-14"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.totalAmount.errors.length,-->
-                                                <!--'c-info': rowInfo.totalAmount.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.totalAmount.value | currency}}-->
-                                        <!--</td>-->
-                                        <!--<td class="c-accent text-align-r f-14"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.minAmount.errors.length,-->
-                                                <!--'c-info': rowInfo.minAmount.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.minAmount.value | currency}}-->
-                                        <!--</td>-->
-                                        <!--<td class="c-accent text-align-r f-14"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.maxAmount.errors.length,-->
-                                                <!--'c-info': rowInfo.maxAmount.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.maxAmount.value | currency}}-->
-                                        <!--</td>-->
-                                        <!--<td class="c-accent text-align-r f-14"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.totalOrMaxAmount.errors.length,-->
-                                                <!--'c-info': rowInfo.totalOrMaxAmount.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.totalOrMaxAmount.value | currency}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.contractUrl.errors.length,-->
-                                                <!--'c-info': rowInfo.contractUrl.infos.length-->
-                                            <!--}">-->
-                                            <!--&lt;!&ndash;{{rowInfo.contractUrl.value}}&ndash;&gt;-->
-                                            <!--<a v-if="!rowInfo.contractUrl.errors.length" :href="rowInfo.contractUrl.value" target="_blank">{{rowInfo.contractUrl.value}}</a>-->
-                                            <!--<span v-if="rowInfo.contractUrl.errors.length">{{rowInfo.contractUrl.value}}</span>-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.areaInCharge.errors.length,-->
-                                                <!--'c-info': rowInfo.areaInCharge.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.areaInCharge.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.actualizationDate.errors.length,-->
-                                                <!--'c-info': rowInfo.actualizationDate.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.actualizationDate.value | moment}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.notes.errors.length,-->
-                                                <!--'c-info': rowInfo.notes.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.notes.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.karewaNotes.errors.length,-->
-                                                <!--'c-info': rowInfo.karewaNotes.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.karewaNotes.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.informationDate.errors.length,-->
-                                                <!--'c-info': rowInfo.informationDate.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.informationDate.value | moment}}-->
-                                        <!--</td>-->
-                                        <!--<td class="text-upper":class="{-->
-                                                <!--'c-error': rowInfo.limitExceeded.errors.length,-->
-                                                <!--'c-info': rowInfo.limitExceeded.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.limitExceeded.value}}-->
-                                        <!--</td>-->
-                                        <!--<td class="c-accent text-align-r f-14"-->
-                                            <!--:class="{-->
-                                                <!--'c-error': rowInfo.amountExceeded.errors.length,-->
-                                                <!--'c-info': rowInfo.amountExceeded.infos.length-->
-                                            <!--}">-->
-                                            <!--{{rowInfo.amountExceeded.value | currency}}-->
-                                        <!--</td>-->
-                                        
-                                        
-                                        
-                                        
-                                        
-                                        <!--<td class="c-error text-align-r"><strong-->
-                                                <!--class="f-14">$81,400,000</strong></td>-->
-                                        <!--<td class="text-upper c-info">Body text</td>-->
-                                        <!--<td class="text-upper c-info">Body text</td>-->
-                                        <!--<td class="row-buttons-hover">-->
-                                            <!--<div class="table-buttons-hover">-->
-                                                <!--<button data-tippy="Ver" data-tippy-arrow="true"-->
-                                                        <!--data-tippy-placement="bottom"><i-->
-                                                        <!--class="zmdi zmdi-eye"></i></button>-->
-                                                <!--<button data-tippy="Editar" data-tippy-arrow="true"-->
-                                                        <!--data-tippy-placement="bottom"><i-->
-                                                        <!--class="zmdi zmdi-edit"></i></button>-->
-                                                <!--<button data-tippy="Eliminar" data-tippy-arrow="true"-->
-                                                        <!--data-tippy-placement="bottom"><i-->
-                                                        <!--class="zmdi zmdi-delete"></i></button>-->
-                                            <!--</div>-->
-                                        <!--</td>-->
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="procedureType"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="category"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="administration"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="fiscalYear"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="period"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="contractId"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="partida"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="procedureState"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="announcementUrl" format="url"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="announcementDate" format="date"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="servicesDescription"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="clarificationMeetingDate" format="date"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="clarificationMeetingJudgmentUrl" format="url"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="presentationProposalsDocUrl" format="url"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="supplierName"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="supplierRfc"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="organizerAdministrativeUnit"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="applicantAdministrativeUnit"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="administrativeUnitType"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="contractNumber"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="contractDate" format="date"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="totalAmount" format="currency"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="minAmount" format="currency"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="maxAmount" format="currency"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="totalOrMaxAmount" format="currency"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="contractUrl" format="url"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="areaInCharge"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="actualizationDate" format="date"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="notes"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="karewaNotes"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="informationDate" format="date"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="limitExceeded"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="amountExceeded" format="currency"/>
                                     </tr>
-                                    <!--<tr class="height-60">-->
-                                        <!--<td class="text-upper">FUTUFARMA SA DE CV</td>-->
-                                        <!--<td class="text-upper">INSTITUTO MUNICIPAL DE PENSIONES</td>-->
-                                        <!--<td class="c-accent text-align-r"><strong-->
-                                                <!--class="f-14">$81,400,000</strong></td>-->
-                                        <!--<td class="text-upper">Body text</td>-->
-                                        <!--<td class="text-upper">Body text</td>-->
-                                        <!--<td class="row-buttons-hover">-->
-                                            <!--<div class="table-buttons-hover">-->
-                                                <!--<button data-tippy="Ver" data-tippy-arrow="true"-->
-                                                        <!--data-tippy-placement="bottom"><i-->
-                                                        <!--class="zmdi zmdi-eye"></i></button>-->
-                                                <!--<button data-tippy="Editar" data-tippy-arrow="true"-->
-                                                        <!--data-tippy-placement="bottom"><i-->
-                                                        <!--class="zmdi zmdi-edit"></i></button>-->
-                                                <!--<button data-tippy="Eliminar" data-tippy-arrow="true"-->
-                                                        <!--data-tippy-placement="bottom"><i-->
-                                                        <!--class="zmdi zmdi-delete"></i></button>-->
-                                            <!--</div>-->
-                                        <!--</td>-->
-                                    <!--</tr>-->
-                                    <!--<tr class="height-60">-->
-                                        <!--<td class="text-upper c-error">FUTUFARMA SA DE CV</td>-->
-                                        <!--<td class="text-upper c-error">INSTITUTO MUNICIPAL DE PENSIONES</td>-->
-                                        <!--<td class="c-error text-align-r"><strong-->
-                                                <!--class="f-14">$81,400,000</strong></td>-->
-                                        <!--<td class="text-upper c-error">Body text</td>-->
-                                        <!--<td class="text-upper c-error">Body text</td>-->
-                                        <!--<td class="row-buttons-hover">-->
-                                            <!--<div class="table-buttons-hover">-->
-                                                <!--<button data-tippy="Ver" data-tippy-arrow="true"-->
-                                                        <!--data-tippy-placement="bottom"><i-->
-                                                        <!--class="zmdi zmdi-eye"></i></button>-->
-                                                <!--<button data-tippy="Editar" data-tippy-arrow="true"-->
-                                                        <!--data-tippy-placement="bottom"><i-->
-                                                        <!--class="zmdi zmdi-edit"></i></button>-->
-                                                <!--<button data-tippy="Eliminar" data-tippy-arrow="true"-->
-                                                        <!--data-tippy-placement="bottom"><i-->
-                                                        <!--class="zmdi zmdi-delete"></i></button>-->
-                                            <!--</div>-->
-                                        <!--</td>-->
-                                    <!--</tr>-->
                                     </tbody>
                                 </table>
                             </div>
                         </div>
                     </div>
-                    <div class="vertical-center">
+                    <Pagination storeModule="dataLoad" v-show="!filtering"/>
+                    <div class="vertical-center" v-show="!filtering">
                         <!--<div class="floating-label-table info m-r-40">Omitidos (duplicados)</div>-->
                         <!--<div class="floating-label-table error">Registros con errores</div>-->
                         <div class="floating-label-table m-r-40"><i class="zmdi zmdi-alert-triangle c-info f-14"></i> Omitidos (duplicados)</div>
@@ -520,23 +189,77 @@
                         </div>
                         <p class="f-12 c-plain_text principal-font-semibold text-align-c d-block m-b-15">
                             Descargar archivo con validaciones</p>
-                        <button class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR
+                        <!--<button class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR-->
+                            <!--VALIDACIONES-->
+                        <!--</button>-->
+                        <a href="http://localhost:3000/api/data-load/download" target="_blank" class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR
                             VALIDACIONES
-                        </button>
+                        </a>
                     </div>
                     <div class="card">
                         <p class="f-12 c-plain_text principal-font-semibold text-align-c d-block m-b-15">
                             Cargar archivo con correcciones</p>
-                        <button class="btn-stroke button-accent m-0-auto b-shadow-none">CARGAR
-                            CORRECCIONES
+                        <!--<button class="btn-stroke button-accent m-0-auto b-shadow-none">CARGAR-->
+                            <!--CORRECCIONES-->
+                        <!--</button>-->
+                        <button class="btn-stroke button-accent m-0-auto b-shadow-none">
+                            CARGAR CORRECCIONES
+                            <input type="file" id="file" :ref="dataFileRef" v-on:change="handleFileUpload()" :accept="fileAccept">
                         </button>
+                        <!--<input type="file" id="file" :ref="dataFileRef" v-on:change="handleFileUpload()" :accept="fileAccept" />-->
                     </div>
                     <div class="card">
-                        <button class="btn-outline c-warning m-0-auto">IGNORAR ERRORES Y CONTINUAR</button>
+                        <!--<button class="btn-outline c-warning m-0-auto" data-toggle="modal" data-target="#modal-delete-entry" v-if="hasErrors">IGNORAR ERRORES Y CONTINUAR</button>-->
+                        <button class="btn-outline m-0-auto" :class="{'c-warning': hasErrors, 'c-success': !hasErrors}" data-toggle="modal" data-target="#modal-confirm">{{confirmButtonMessage}}</button>
                     </div>
                 </div>
             </div>
         </AdminMainSection>
+        <ModalDefault id="modal-confirm" :title="$t(modalProperties.title)" :store-module="storeModule" :action="modalProperties.action">
+            <div class="details-list">
+                <p class="text-centered m-b-20">{{$t(modalMessage, modalMessageParams)}}
+                    <br/>
+                </p>
+                <ul>
+                    <li>
+                        <span class="c-success"><i class="zmdi zmdi-check-circle"></i> {{current.summary.newContractsCount || 0}}</span>
+                        Nuevos Contratos
+                    </li>
+                    <li>
+                        <span class="c-success"><i class="zmdi zmdi-check-circle"></i> {{current.summary.newSuppliersCount || 0}}</span>
+                        Nuevos Proveedores
+                    </li>
+                    <li>
+                        <span class="c-success"><i class="zmdi zmdi-check-circle"></i> {{current.summary.newAdministrativeUnitsCount || 0}}</span>
+                        Nuevas Unidades
+                        Administrativas
+                    </li>
+                </ul>
+                <ul>
+                    <li>
+                        <span class="c-info"><i class="zmdi zmdi-info-outline"></i> {{current.summary.skippedContractsCount || 0}}</span>
+                        Contratos omitidos (duplicados)
+                    </li>
+                    <li>
+                        <span class="c-info"><i class="zmdi zmdi-info-outline"></i> {{current.summary.skippedSuppliersCount || 0}}</span>
+                        Proveedores omitidos (duplicados)
+                    </li>
+                    <li>
+                        <span class="c-info"><i class="zmdi zmdi-info-outline"></i> {{current.summary.skippedAdministrativeUnitsCount || 0}}</span>
+                        Unidades Administrativas omitidas (duplicados)
+                    </li>
+                </ul>
+                <ul class="m-b-20">
+                    <li>
+                        <span class="c-error"><i class="zmdi zmdi-alert-triangle"></i> {{current.summary.errorsCount || 0}}</span>
+                        Registros con errores
+                    </li>
+                </ul>
+                <p class="text-centered">
+                    <strong>{{$t(modalProperties.confirmationQuestion)}}</strong>
+                </p>
+            </div>
+        </ModalDefault>
     </div>
 </template>
 
@@ -552,7 +275,14 @@
 //    import TableHeaderButton from '@/components/tables/headers/TableHeaderButton';
     import TableHeaderFilters from '@/components/tables/headers/TableHeaderFilters';
     import TableTdDataLoadResult from '@/components/tables/tds/TableTdDataLoadResult';
+    import Pagination from '@/components/catalogs/Pagination.vue';
 
+    import CardUploading from '@/components/files/CardUploading';
+    import ModalDefault from '@/components/modals/ModalDefault';
+
+    import api from '@/api/dataLoad.api';
+
+    import Vue from 'vue';
     import {mapState} from 'vuex';
     import { bus } from '@/main';
     import moment from 'moment';
@@ -562,8 +292,8 @@
         
         data () {
             return {
-                showDetails: false,
                 storeModule: 'dataLoad',
+                showDetails: false,
                 filterActionName: 'FILTER_CURRENT_DATA_LOAD',
                 filterRows: [
                     {
@@ -578,7 +308,20 @@
                         label: 'data-load.review.columns.errors',
                         visible: true
                     }
-                ]
+                ],
+                dataFileRef: 'dataFile',
+                allowedMimeTypes: [
+                    'application/vnd.ms-excel',
+                    'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                ],
+                uploading: false,
+                modalProperties: {
+                    action: 'CONFIRM_CURRENT',
+                    title: 'data-load.confirm.modal.title',
+                    message: 'data-load.confirm.modal.confirm-operation',
+                    messageIgnoreErrors: 'data-load.confirm.modal.confirm-operation-ignore-errors',
+                    confirmationQuestion: 'data-load.confirm.modal.confirm-operation.question'
+                }
             }
         },
         components: {
@@ -589,10 +332,14 @@
             TableHeaderButtonsWrapper,
 //            TableHeaderButton,
             TableHeaderFilters,
-            TableTdDataLoadResult
+            TableTdDataLoadResult,
+            Pagination,
+            CardUploading,
+            ModalDefault
         },
         computed: {
             current () {
+                //Ensure there's a current or at least a functional placeholder
                 return this.dataLoadInfo.current || {
                         summary: {
                             
@@ -610,10 +357,36 @@
             },
             ...mapState({
                 dataLoadInfo: state => state.dataLoad.dataLoadInfo,
-                dataLoad: state => state.dataLoad.dataLoad,
-                filteredDataLoad: state => state.dataLoad.filteredDataLoad,
+//                dataLoad: state => state.dataLoad.dataLoad,
+//                filteredDataLoad: state => state.dataLoad.filteredDataLoad,
+                paginatedDataLoad: state => state.dataLoad.paginatedDataLoad,
                 filtering: state => state.dataLoad.filtering
-            })
+//                filtering: state => true
+            }),
+            fileAccept () {
+                return this.allowedMimeTypes.join(',');
+            },
+            modalMessage () {
+                if (this.hasErrors) {
+                    return this.modalProperties.messageIgnoreErrors;
+                } else {
+                    return this.modalProperties.message;
+                }
+            },
+            modalMessageParams () {
+                return {
+                    contractsCount: 0,
+                    suppliersCount: 0,
+                    administrativeUnitsCount: 0,
+                    errorsCount: 0
+                }
+            },
+            hasErrors () {
+                return !!this.current.summary.errorsCount;
+            },
+            confirmButtonMessage () {
+                return this.hasErrors ? 'IGNORAR ERORRES Y CONTINUAR' : 'CONFIRMAR REGISTROS';
+            }
         },
         filters: {
             moment: function (date) {
@@ -650,6 +423,72 @@
                     return false;
                 }
                 return true;
+            },
+            resetInput () {
+                const input = this.$refs[this.dataFileRef];
+                input.type = 'text';
+                input.type = 'file';
+            },
+            //TODO: Centralize
+            handleFileUpload() {
+
+                this.dataFile = null;
+
+                if (this.$refs[this.dataFileRef].files && this.$refs[this.dataFileRef].files.length) {
+                    this.dataFile = this.$refs[this.dataFileRef].files[0];
+                }
+
+                if (!this.dataFile || !this.dataFile.size || !this.dataFile.type) {
+                    //TODO: toast i18n
+                    tShow(`Por favor selecciona un archivo para la carga de datos`, 'danger');
+                    return;
+                }
+
+                if (!this.allowedMimeTypes.includes(this.dataFile.type)) {
+                    //TODO: toast i18n
+                    tShow(`Por favor selecciona un archivo de hoja de cálculos para la carga de datos (.xls o .xlsx)`, 'danger');
+                    return;
+                }
+
+                this.setUploading(true);
+
+                let formData = new FormData();
+                formData.append('file', this.dataFile);
+                formData.append('idDataLoad', this.dataLoadInfo.current._id);
+
+                api.upload(formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }, (result) => {
+                    this.setUploading(false);
+                    Vue.$log.info('Response', result);
+
+                    if (result.data.error) {
+                        tShow(this.$t(result.data.message), 'danger');
+
+                        //When a data load is currently in progress, the data load info it is returned in the response
+                        if (result.data.data) {
+                            this.$store.commit('dataLoad/SET_CURRENT_DATA_LOAD_INFO', {dataLoadInfo: result.data.data});
+                        }
+                    } else {
+                        //No error, upload success
+                        this.$store.commit('dataLoad/SET_CURRENT_DATA_LOAD_INFO', {dataLoadInfo: result.data.data});
+                        this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD');
+                    }
+                    this.resetInput();
+                }, (error) => {
+                    this.setUploading(false);
+                    Vue.$log.error('Response error', error);
+                    tShow(`Ocurrió un error inesperado al cargar el archivo`);
+                    this.resetInput();
+                });
+            },
+            setUploading(value) {
+                this.uploading = value;
+            },
+            cancelUpload() {
+                //noop
             }
         },
         created() {
@@ -657,6 +496,9 @@
         mounted(){
             bus.$on('dataLoad/CURRENT_DATA_LOAD_INFO_LOADED', ({dataLoadInfo})=>{
                 //Current was canceled, confirmed, or otherwise not available, so we redirect to the non-current view
+
+                console.log('@bus.$on dataLoadInfo', dataLoadInfo);
+
                 if (!dataLoadInfo.current) {
                     this.canceled();
                 }

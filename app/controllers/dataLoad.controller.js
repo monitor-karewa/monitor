@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 
 const ContractExcelReader = require('./../components/dataLoader').ContractExcelReader;
+const ContractExcelWriter = require('./../components/dataLoader').ContractExcelWriter;
 const DataLoad = require('./../models/dataLoad.model').DataLoad;
 
 const logger = require('./../components/logger').instance;
@@ -14,9 +15,6 @@ const logger = require('./../components/logger').instance;
  */
 exports.upload = (req, res, next) => {
 
-    console.log('req.file', req.file);
-    
-    
     //TODO: Fetch current organization id
     logger.info(null, req, 'dataLoad.controller#upload', 'TODO: Fetch current organization id');
     let currentOrganizationId = null;
@@ -24,6 +22,12 @@ exports.upload = (req, res, next) => {
     // let currentUserId = null;
     logger.warn(null, req, 'dataLoad.controller#upload', 'Using hardcoded user id [5c9eafbfecdaff977f7184b1]');
     let currentUserId = mongoose.Types.ObjectId("5c9eafbfecdaff977f7184b1");
+    
+    //Optional id, received when reuploading corrections to the data previously uploaded
+    let idDataLoad = null;
+    if (req.body.idDataLoad) {
+        idDataLoad = mongoose.Types.ObjectId(req.body.idDataLoad);
+    }
 
     DataLoad
         .findOne({
@@ -41,7 +45,9 @@ exports.upload = (req, res, next) => {
                 });
                 //TODO: Error
             }
-            if (dataLoadInProgress) {
+
+            //If a DataLoad is currently in progress, and it's not a reupload of corrections to the data
+            if (dataLoadInProgress && dataLoadInProgress._id.toString() !== (idDataLoad || '').toString()) {
                 //DataLoad in progress; error!
                 return res.json({
                     "error": true,
@@ -55,7 +61,7 @@ exports.upload = (req, res, next) => {
             // TODO: fetch current organization id
             let organizationId = null;
             
-            let reader = new ContractExcelReader(organizationId);
+            let reader = new ContractExcelReader(organizationId, idDataLoad);
             
             try {
                 reader.readBuffer(req.file.buffer)
@@ -74,6 +80,11 @@ exports.upload = (req, res, next) => {
                                 //TODO: Handle err
                                 console.log('save err', err);
                                 // return res.json(...);
+                                return res.json({
+                                    "error": true,
+                                    "message": req.__('data-load.error.upload')
+                                    // "data": savedOrganization
+                                });
                             }
 
 
@@ -123,6 +134,56 @@ exports.upload = (req, res, next) => {
         });
 };
 
+/**
+ * Download an Excel file with annotations to fix them.
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.download = (req, res, next) => {
+
+    //TODO: Fetch current organization id
+    logger.info(null, req, 'dataLoad.controller#download', 'TODO: Fetch current organization id');
+    let currentOrganizationId = null;
+    
+    DataLoad
+        .findOne({
+            organization: currentOrganizationId,
+            confirmed: false,
+            'deleted.isDeleted': {'$ne': true}
+        })
+        .populate({
+            path: 'details',
+            model: 'DataLoadDetail'
+        })
+        .exec((err, dataLoad) => {
+            if (err) {
+                logger.error(err, req, 'dataLoad.controller#download', 'Error trying to fetch current DataLoad info');
+            }
+
+            if (!dataLoad) {
+                return res.json({
+                    error: true,
+                    data: null
+                });
+            }
+            
+            new ContractExcelWriter(dataLoad)
+                .sendFileAsDownload(req, res);
+
+            // return res.json({
+            //     error: false,
+            //     data: /*{
+            //      filename: dataLoad.filename,
+            //      data: dataLoad.data,
+            //      uploadedBy: `${dataLoad.uploadedBy.name} ${dataLoad.uploadedBy.lastName}`,
+            //      createdAt: dataLoad.createdAt
+            //      }*/DataLoad.toJson(dataLoad)
+            // });
+        }); 
+    
+};
+
 
 var multer  = require('multer');
 var upload = multer();
@@ -144,6 +205,10 @@ exports.current = (req, res, next) => {
             path: 'uploadedBy',
             model: 'User',
             select: 'name lastName'
+        })
+        .populate({
+            path: 'details',
+            model: 'DataLoadDetail'
         })
         .exec((err, dataLoad) => {
             if (err) {
@@ -296,6 +361,65 @@ exports.cancelCurrent = (req, res, next) => {
                     });
                 });
                 
+            });
+
+        });
+};
+
+exports.confirmCurrent = (req, res, next) => {
+
+    //TODO: Fetch current organization id
+    logger.info(null, req, 'dataLoad.controller#cancelCurrent', 'TODO: Fetch current organization id');
+    let currentOrganizationId = null;
+    
+    DataLoad
+        .findOne({
+            organization: currentOrganizationId,
+            confirmed: false,
+            'deleted.isDeleted': {'$ne': true}
+        })
+        .populate({
+            path: 'details',
+            model: 'DataLoadDetail'
+        })
+        .exec((err, dataLoad) => {
+            if (err) {
+                logger.error(err, req, 'dataLoad.controller#currentInfo', 'Error trying to fetch current DataLoad info');
+            }
+
+            if (!dataLoad) {
+                return res.json({
+                    error: true,
+                    message: req.__('data-load.confirm.error.no-data-load-in-progress'),
+                    data: null
+                });
+            }
+
+            DataLoad.confirm(dataLoad, (err, confirmResults) => {
+                console.log('confirmResults', confirmResults);
+
+                if (err) {
+                    return res.json({
+                        error: true,
+                        data: null
+                    });
+                }
+                
+                DataLoad.dataLoadInfo(currentOrganizationId, (err, dataLoadInfo) => {
+                    if (err) {
+                        logger.error(err, req, 'dataLoad.controller#currentInfo', 'Error trying to fetch current DataLoad info');
+                    }
+                    
+                    //To ensure no race conditions from reloading from the database, the current DataLoad is forced as undefined
+                    dataLoadInfo.current = null;
+                    
+                    return res.json({
+                        error: false,
+                        data: dataLoadInfo
+                    });
+                });
+
+
             });
 
         });

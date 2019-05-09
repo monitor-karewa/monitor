@@ -18,7 +18,7 @@ const procedureTypesEnumDict = {
             flags: 'gi'
         },
         {
-            regexStr: utils.toAccentsRegex('publico', null, true),
+            regexStr: utils.toAccentsRegex('public(a|o)', null, true),
             flags: 'gi'
         },
         // utils.toAccentsRegex('publico', 'gi')
@@ -213,13 +213,13 @@ const administrativeUnitTypeEnum = Object.keys(administrativeUnitTypeEnumDict);
 const limitExceededEnumDict = {
     'NOT_EXCEEDED': [
         {
-            regexStr: utils.toAccentsRegex('no excede el limite', null, true),
+            regexStr: utils.toAccentsRegex('no|no excede( el limite)?', null, true),
             flags: 'gi'
         },
     ],
     'LIMIT_EXCEEDED': [
         {
-            regexStr: utils.toAccentsRegex('^[\s]*excede el limite', null, true),
+            regexStr: "^[\s]*" + utils.toAccentsRegex('si|excede( el limite)?', null, true),
             flags: 'gi'
         },
     ]
@@ -257,8 +257,8 @@ const contractTypeEnum = Object.keys(contractTypeEnumDict);
 
 
 
-function  getProcedureTypesEnumObject () {
-    switch (this.procedureType) {
+function  getProcedureTypesEnumObject (procedureType) {
+    switch (procedureType) {
         case 'PUBLIC':
             return {description: "Público", key: "PUBLIC"};
         case 'NO_BID':
@@ -267,8 +267,8 @@ function  getProcedureTypesEnumObject () {
             return {description: "Por Invitación", key: "INVITATION"};
     }
 }
-getCategoryEnumObject = function () {
-    switch (this.category) {
+getCategoryEnumObject = function (category) {
+    switch (category) {
         case 'EXTENSION':
             return {description: "Extensión", key: "EXTENSION"};
         case 'MODIFICATION':
@@ -286,8 +286,8 @@ getCategoryEnumObject = function () {
         default: return {}
     }
 }
-getProcedureStateEnumObject = function () {
-    switch (this.procedureState) {
+getProcedureStateEnumObject = function (procedureState) {
+    switch (procedureState) {
         case 'CONCLUDED':
             return {description: "Concluído", key: "CONCLUDED"};
         case 'CANCELED':
@@ -298,22 +298,22 @@ getProcedureStateEnumObject = function () {
             return {description: "En progreso", key: "IN_PROGRESS"};
     }
 }
-getAdministrativeUnitTypeEnumObject = function () {
-    switch (this.administrativeUnitType) {
+getAdministrativeUnitTypeEnumObject = function (administrativeUnitType) {
+    switch (administrativeUnitType) {
         case 'CENTRALIZED':
             return {description: "Centralizado", key: "CENTRALIZED"};
         case 'DESCENTRALIZED':
             return {description: "Descentralizado", key: "DESCENTRALIZED"};
     }
 }
-getLimitExceededEnumObject = function () {
-    if (this.limitExceeded) {
+getLimitExceededEnumObject = function (limitExceeded) {
+    if (limitExceeded) {
         return {description: "Límite Excedido", key: "LIMIT_EXCEEDED"};
     }
     return {description: "No excedido", key: "NOT_EXCEEDED"};
 }
-getContractTypeEnumObject = function () {
-    switch (this.contractType) {
+getContractTypeEnumObject = function (contractType) {
+    switch (contractType) {
 
         case 'OPEN':
             return {description: "Abierto", key: "OPEN"};
@@ -496,7 +496,8 @@ let ContractSchema = new Schema({
     /*Fecha de actualización*/
     updateDate: {
         type: Date,
-        required: true
+        required: true,
+        default: Date.new
     },
     /*Notas*/
     notes: {
@@ -525,11 +526,22 @@ let ContractSchema = new Schema({
 });
 
 
-    ContractSchema.virtual('procedureTypeEnumObject').get(getProcedureTypesEnumObject);
-    ContractSchema.virtual('procedureStateEnumObject').get(getProcedureStateEnumObject);
-    ContractSchema.virtual('administrativeUnitTypeEnumObject').get(getAdministrativeUnitTypeEnumObject);
-    ContractSchema.virtual('contractTypeEnumObject').get(getContractTypeEnumObject);
-    ContractSchema.virtual('categoryEnumObject').get(getCategoryEnumObject);
+    // ContractSchema.virtual('procedureTypeEnumObject').get(getProcedureTypesEnumObject);
+    ContractSchema.virtual('procedureTypeEnumObject').get(function () {
+        return getProcedureTypesEnumObject(this.procedureType);
+    });
+    ContractSchema.virtual('procedureStateEnumObject').get(function () {
+        return getProcedureStateEnumObject(this.procedureState);
+    });
+    ContractSchema.virtual('administrativeUnitTypeEnumObject').get(function () {
+        return getAdministrativeUnitTypeEnumObject(this.administrativeUnitType);
+    });
+    ContractSchema.virtual('contractTypeEnumObject').get(function () {
+        return getContractTypeEnumObject(this.contractType);
+    });
+    ContractSchema.virtual('categoryEnumObject').get(function () {
+        return getCategoryEnumObject(this.category);
+    });
 
     ContractSchema.set('toObject', { virtuals: true });
     ContractSchema.set('toJSON', { virtuals: true });
@@ -585,19 +597,25 @@ module.exports = {
     
     procedureTypesEnumDict,
     procedureTypesEnum,
+    getProcedureTypesEnumObject,
 
     categoryEnumDict,
     categoryEnum,
+    getCategoryEnumObject,
 
     procedureStateEnumDict,
     procedureStateEnum,
+    getProcedureStateEnumObject,
 
     administrativeUnitTypeEnumDict,
     administrativeUnitTypeEnum,
+    getAdministrativeUnitTypeEnumObject,
 
     limitExceededEnumDict,
     limitExceededEnum,
+    getLimitExceededEnumObject,
 
     contractTypeEnumDict,
-    contractTypeEnum
+    contractTypeEnum,
+    getContractTypeEnumObject,
 };
