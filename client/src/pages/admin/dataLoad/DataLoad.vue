@@ -127,6 +127,7 @@
             }
         },
         methods:{
+            //TODO: Centralize
             handleFileUpload() {
 
                 this.dataFile = null;
@@ -161,8 +162,6 @@
                     Vue.$log.info('Response', result);
                     
                     if (result.data.error) {
-                        console.log('Vue', Vue);
-                        console.log('i18n', i18n);
                         tShow(this.$t(result.data.message), 'danger');
                         
                         //When a data load is currently in progress, the data load info it is returned in the response
@@ -197,7 +196,7 @@
         
         mounted(){
             bus.$on('dataLoad/CURRENT_DATA_LOAD_INFO_LOADED', ({dataLoadInfo})=>{
-                if (dataLoadInfo.current) {
+                if (!this._inactive && dataLoadInfo.current) {
                     this.redirectToCurrent();
                 }
             });

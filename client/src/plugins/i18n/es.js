@@ -437,5 +437,12 @@ export default {
     "data-load.review.columns.no-issues": "Sin anotaciones",
     "data-load.review.columns.skipped": "Omitidos",
     "data-load.review.columns.errors": "Errores",
+    "data-load.confirm.modal.title": "Confirmar operación",
+    "data-load.confirm.modal.confirm-operation": "Estás a punto de confirmar la información cargada de Contratos.",
+    "data-load.confirm.modal.confirm-operation-ignore-errors": "Estás a punto de confirmar la información cargada de Contratos, y se ignorarán aquellos Contratos que tienen errores.",
+    "data-load.confirm.modal.confirm-operation.question": "¿Deseas continuar y guardar los registros? Esta operación no se puede revertir.",
+    "data-load.confirm.success": "Se ha confirmado la carga de datos correctamente.",
+    "data-load.confirm.error.unexpected": "Ocurrió un error inesperado al intentar confirmar la carga de datos.",
+    "data-load.confirm.error.no-data-load-in-progress": "La carga de datos no se encuentra disponible. Por favor recarga la página para actualizar la información.",
 
 }

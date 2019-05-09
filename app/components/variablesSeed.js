@@ -382,6 +382,7 @@ let variables = {
       }]
   }),
   $NFXXVII: Variable.makeVariable({
+      //contrato y anexos
       name:"Número de formatos XXVIII publicados a tiempo en el Portal de Transparencia",
       abbreviation:"$NFXXVII",
       query:[

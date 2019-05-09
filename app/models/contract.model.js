@@ -10,39 +10,246 @@ const utils = require('../components/utils');
 
 const permissions = require('./../components/permissions');
 
-const procedureTypesEnum = [
-    'PUBLIC',
-    'NO_BID',
-    'INVITATION'
-];
-const categoryEnum = [
-    'EXTENSION',
-    'MODIFICATION',
-    'ADENDUM',
-    'ACQUISITION',
-    'SERVICES',
-    'LEASE',
-    'PUBLIC_WORKS'
-];
-const procedureStateEnum = [
-    'CONCLUDED',
-    'CANCELED',
-    'DESERTED',
-    'IN_PROGRESS',
-];
-const administrativeUnitTypeEnum = [
-    'CENTRALIZED',
-    'DESCENTRALIZED'
-];
-const limitExceededEnum = [
-    'NOT_EXCEEDED',
-    'LIMIT_EXCEEDED'
-];
 
-const contractType = [
-    'OPEN',
-    'NORMAL'
-];
+const procedureTypesEnumDict = {
+    'PUBLIC': [
+        {
+            regexStr: utils.toAccentsRegex('licitacion', null, true),
+            flags: 'gi'
+        },
+        {
+            regexStr: utils.toAccentsRegex('public(a|o)', null, true),
+            flags: 'gi'
+        },
+        // utils.toAccentsRegex('publico', 'gi')
+    ],
+    'NO_BID': [
+        {
+            regexStr: utils.toAccentsRegex('adj\.?( directa)?', null, true),
+            flags: 'gi'
+        },
+        {
+            regexStr: utils.toAccentsRegex('adjudicacion( directa)?', null, true),
+            flags: 'gi'
+        },
+        // utils.toAccentsRegex('adj\.?( directa)?', 'gi'),
+        // utils.toAccentsRegex('adjudicacion( directa)?', 'gi')
+    ],
+    'INVITATION': [
+        {
+            regexStr: utils.toAccentsRegex('invitacion', null, true),
+            flags: 'gi'
+        },
+        {
+            regexStr: utils.toAccentsRegex('proveedores', null, true),
+            flags: 'gi'
+        },
+        // utils.toAccentsRegex('invitacion', 'gi'),
+        // utils.toAccentsRegex('proveedores', 'gi')
+    ]
+};
+
+// const procedureTypesEnum = [
+//     'PUBLIC',
+//     'NO_BID',
+//     'INVITATION'
+// ];
+const procedureTypesEnum = Object.keys(procedureTypesEnumDict);
+
+
+const categoryEnumDict = {
+    'EXTENSION': [
+        {
+            regexStr: utils.toAccentsRegex('extencion', null, true),
+            flags: 'gi'
+        },
+        {
+            regexStr: utils.toAccentsRegex('ampliacion', null, true),
+            flags: 'gi'
+        },
+    ],
+    'MODIFICACION': [
+        {
+            regexStr: utils.toAccentsRegex('modifica(torio(s)?|cion(es)?)', null, true),
+            flags: 'gi'
+        },
+    ],
+    'ADENDUM': [
+        {
+            regexStr: utils.toAccentsRegex('adendum', null, true),
+            flags: 'gi'
+        },
+    ],
+    'ACQUISITION': [
+        {
+            regexStr: utils.toAccentsRegex('adquisicion(es)?', null, true),
+            flags: 'gi'
+        },
+    ],
+    'SERVICES': [
+        {
+            regexStr: utils.toAccentsRegex('servicio(s)?', null, true),
+            flags: 'gi'
+        },
+    ],
+    'LEASE': [
+        {
+            regexStr: utils.toAccentsRegex('arrendamiento(s)?', null, true),
+            flags: 'gi'
+        },
+    ],
+    'PUBLIC_WORKS': [
+        {
+            regexStr: utils.toAccentsRegex('obra(s)? publica(s)?', null, true),
+            flags: 'gi'
+        },
+    ]
+};
+
+// const categoryEnum = [
+//     'EXTENSION',
+//     'MODIFICACION',
+//     'ADENDUM',
+//     'ACQUISITION',
+//     'SERVICES',
+//     'LEASE',
+//     'PUBLIC_WORKS'
+// ];
+const categoryEnum = Object.keys(categoryEnumDict);
+
+
+
+// const procedureStateEnum = [
+//     'CONCLUDED',
+//     'CANCELED',
+//     'DESERTED',
+//     'IN_PROGRESS',
+// ];
+
+const procedureStateEnumDict = {
+    'CONCLUDED': [
+        {
+            regexStr: utils.toAccentsRegex('concluido(s)?', null, true),
+            flags: 'gi'
+        },
+        {
+            regexStr: utils.toAccentsRegex('finalizado(s)?', null, true),
+            flags: 'gi'
+        },
+        {
+            regexStr: utils.toAccentsRegex('terminado(s)?', null, true),
+            flags: 'gi'
+        },
+    ],
+    'CANCELED': [
+        {
+            regexStr: utils.toAccentsRegex('cancelado(s)?', null, true),
+            flags: 'gi'
+        },
+        {
+            regexStr: utils.toAccentsRegex('abortado(s)?', null, true),
+            flags: 'gi'
+        },
+    ],
+    'DESERTED': [
+        {
+            regexStr: utils.toAccentsRegex('desertado(s)?', null, true),
+            flags: 'gi'
+        },
+        {
+            regexStr: utils.toAccentsRegex('desierto', null, true),
+            flags: 'gi'
+        },
+        {
+            regexStr: utils.toAccentsRegex('abandonado(s)?', null, true),
+            flags: 'gi'
+        },
+    ],
+    'IN_PROGRESS': [
+        {
+            regexStr: utils.toAccentsRegex('en (proceso|progreso)', null, true),
+            flags: 'gi'
+        },
+    ],
+};
+
+
+// const procedureStateEnum = [
+//     'CONCLUDED',
+//     'CANCELED',
+//     'DESERTED',
+//     'IN_PROGRESS',
+// ];
+const procedureStateEnum = Object.keys(procedureStateEnumDict);
+
+
+const administrativeUnitTypeEnumDict = {
+    'CENTRALIZED': [
+        {
+            regexStr: utils.toAccentsRegex('centralizad(a|o)', null, true),
+            flags: 'gi'
+        },
+    ],
+    'DESCENTRALIZED': [
+        {
+            regexStr: utils.toAccentsRegex('(no |des)centralizad(a|o)', null, true),
+            flags: 'gi'
+        },
+    ]
+};
+
+// const administrativeUnitTypeEnum = [
+//     'CENTRALIZED',
+//     'DESCENTRALIZED'
+// ];
+const administrativeUnitTypeEnum = Object.keys(administrativeUnitTypeEnumDict);
+
+
+
+// const limitExceededEnum = [
+//     'NOT_EXCEEDED',
+//     'LIMIT_EXCEEDED'
+// ];
+const limitExceededEnumDict = {
+    'NOT_EXCEEDED': [
+        {
+            regexStr: utils.toAccentsRegex('no|no excede( el limite)?', null, true),
+            flags: 'gi'
+        },
+    ],
+    'LIMIT_EXCEEDED': [
+        {
+            regexStr: "^[\s]*" + utils.toAccentsRegex('si|excede( el limite)?', null, true),
+            flags: 'gi'
+        },
+    ]
+};
+const limitExceededEnum = Object.keys(limitExceededEnumDict);
+
+
+
+const contractTypeEnumDict = {
+    'OPEN': [
+        {
+            regexStr: utils.toAccentsRegex('abiert(o|a)', null, true),
+            flags: 'gi'
+        },
+    ],
+    'NORMAL': [
+        {
+            regexStr: utils.toAccentsRegex('normal|(cerrad(o|a))', null, true),
+            flags: 'gi'
+        },
+    ]
+};
+
+// const contractTypeEnum = [
+//     'OPEN',
+//     'NORMAL'
+// ];
+
+const contractTypeEnum = Object.keys(contractTypeEnumDict);
+
 /**
  * Schema de Mongoose para el modelo Contract.
  * @type {mongoose.Schema}
@@ -50,8 +257,8 @@ const contractType = [
 
 
 
-function  getProcedureTypesEnumObject () {
-    switch (this.procedureType) {
+function  getProcedureTypesEnumObject (procedureType) {
+    switch (procedureType) {
         case 'PUBLIC':
             return {description: "Público", key: "PUBLIC"};
         case 'NO_BID':
@@ -60,8 +267,8 @@ function  getProcedureTypesEnumObject () {
             return {description: "Por Invitación", key: "INVITATION"};
     }
 }
-getCategoryEnumObject = function () {
-    switch (this.category) {
+getCategoryEnumObject = function (category) {
+    switch (category) {
         case 'EXTENSION':
             return {description: "Extensión", key: "EXTENSION"};
         case 'MODIFICATION':
@@ -79,8 +286,8 @@ getCategoryEnumObject = function () {
         default: return {}
     }
 }
-getProcedureStateEnumObject = function () {
-    switch (this.procedureState) {
+getProcedureStateEnumObject = function (procedureState) {
+    switch (procedureState) {
         case 'CONCLUDED':
             return {description: "Concluído", key: "CONCLUDED"};
         case 'CANCELED':
@@ -91,22 +298,22 @@ getProcedureStateEnumObject = function () {
             return {description: "En progreso", key: "IN_PROGRESS"};
     }
 }
-getAdministrativeUnitTypeEnumObject = function () {
-    switch (this.administrativeUnitType) {
+getAdministrativeUnitTypeEnumObject = function (administrativeUnitType) {
+    switch (administrativeUnitType) {
         case 'CENTRALIZED':
             return {description: "Centralizado", key: "CENTRALIZED"};
         case 'DESCENTRALIZED':
             return {description: "Descentralizado", key: "DESCENTRALIZED"};
     }
 }
-getLimitExceededEnumObject = function () {
-    if (this.limitExceeded) {
+getLimitExceededEnumObject = function (limitExceeded) {
+    if (limitExceeded) {
         return {description: "Límite Excedido", key: "LIMIT_EXCEEDED"};
     }
     return {description: "No excedido", key: "NOT_EXCEEDED"};
 }
-getContractTypeEnumObject = function () {
-    switch (this.contractType) {
+getContractTypeEnumObject = function (contractType) {
+    switch (contractType) {
 
         case 'OPEN':
             return {description: "Abierto", key: "OPEN"};
@@ -248,10 +455,10 @@ let ContractSchema = new Schema({
         }
     },
     /* Tipo de Contrato */
-    contractType: {
-        type: String,
-        enum: contractType,
-        required: true
+    contractType:{
+      type:String,
+      enum:contractTypeEnum,
+      required:true
     },
     /* Monto total del contrato con impuestos incluidos */
     totalAmount: {
@@ -288,7 +495,8 @@ let ContractSchema = new Schema({
     /*Fecha de actualización*/
     updateDate: {
         type: Date,
-        required: true
+        required: true,
+        default: Date.new
     },
     /*Notas*/
     notes: {
@@ -317,11 +525,22 @@ let ContractSchema = new Schema({
 });
 
 
-    ContractSchema.virtual('procedureTypeEnumObject').get(getProcedureTypesEnumObject);
-    ContractSchema.virtual('procedureStateEnumObject').get(getProcedureStateEnumObject);
-    ContractSchema.virtual('administrativeUnitTypeEnumObject').get(getAdministrativeUnitTypeEnumObject);
-    ContractSchema.virtual('contractTypeEnumObject').get(getContractTypeEnumObject);
-    ContractSchema.virtual('categoryEnumObject').get(getCategoryEnumObject);
+    // ContractSchema.virtual('procedureTypeEnumObject').get(getProcedureTypesEnumObject);
+    ContractSchema.virtual('procedureTypeEnumObject').get(function () {
+        return getProcedureTypesEnumObject(this.procedureType);
+    });
+    ContractSchema.virtual('procedureStateEnumObject').get(function () {
+        return getProcedureStateEnumObject(this.procedureState);
+    });
+    ContractSchema.virtual('administrativeUnitTypeEnumObject').get(function () {
+        return getAdministrativeUnitTypeEnumObject(this.administrativeUnitType);
+    });
+    ContractSchema.virtual('contractTypeEnumObject').get(function () {
+        return getContractTypeEnumObject(this.contractType);
+    });
+    ContractSchema.virtual('categoryEnumObject').get(function () {
+        return getCategoryEnumObject(this.category);
+    });
 
     ContractSchema.set('toObject', { virtuals: true });
     ContractSchema.set('toJSON', { virtuals: true });
@@ -373,5 +592,29 @@ const Contract = mongoose.model('Contract', ContractSchema);
 
 
 module.exports = {
-    Contract
+    Contract,
+    
+    procedureTypesEnumDict,
+    procedureTypesEnum,
+    getProcedureTypesEnumObject,
+
+    categoryEnumDict,
+    categoryEnum,
+    getCategoryEnumObject,
+
+    procedureStateEnumDict,
+    procedureStateEnum,
+    getProcedureStateEnumObject,
+
+    administrativeUnitTypeEnumDict,
+    administrativeUnitTypeEnum,
+    getAdministrativeUnitTypeEnumObject,
+
+    limitExceededEnumDict,
+    limitExceededEnum,
+    getLimitExceededEnumObject,
+
+    contractTypeEnumDict,
+    contractTypeEnum,
+    getContractTypeEnumObject,
 };

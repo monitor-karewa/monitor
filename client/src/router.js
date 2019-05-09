@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-
 //Note: @ is aliased in webpack.config to './src'
 
 //User
@@ -54,9 +53,11 @@ import Login from '@/pages/admin/Login';
 // Fallback page
 import NotFound from '@/pages/errors/NotFound';
 
+import routeLogsApi from '@/api/routeLogs.api';
+
 Vue.use(Router);
 
-export default new Router({
+let router = new Router({
     // mode : 'history',
     routes: [
         {
@@ -263,3 +264,14 @@ export default new Router({
         }
     ]
 });
+
+router.afterEach((to, from) => {
+    //After every route is loaded, register a new RouteLog in the database, as long as it does not include the word 'admin'
+    if (!to.path.includes('/admin/')) {
+        routeLogsApi.register({path: to.path}, {}, () => {
+        }, () => {
+        })
+    }
+});
+
+export default router;

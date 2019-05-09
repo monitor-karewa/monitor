@@ -48,6 +48,7 @@ const userRoutes = require('./app/routes/users.routes');
 const organizationRoutes = require('./app/routes/organization.routes');
 
 const dataLoadRoutes = require('./app/routes/dataLoad.routes');
+const routeLogRoutes = require('./app/routes/routeLog.routes');
 
 // Controllers
 const securityController = require('./app/controllers/security.controller');
@@ -161,6 +162,12 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use((req, res, next) => {
+    //Read X-CURRENT-ORGANIZATION-ID header
+    req.currentOrganizationId = req.headers['x-current-organization-id'] || req.headers['X-CURRENT-ORGANIZATION-ID'];
+    next();
+});
+
 // ======================
 // Routes with session
 // ======================
@@ -184,6 +191,7 @@ app.use('/api/data-load', dataLoadRoutes);
 
 app.use('/api/calculations', calculationRoutes);
 app.use('/api/contracts', contractRoutes);
+app.use('/api/route-logs', routeLogRoutes);
 
 
 app.get('*', function(req, res){

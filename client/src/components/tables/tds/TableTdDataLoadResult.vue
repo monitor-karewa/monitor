@@ -5,10 +5,10 @@
             'c-info': hasInfos
         }">
         <template v-if="!format || format === 'string'">
-            {{info.value}}
+            <span :class="tippyTooltipClassName">{{info.value | ellipsify}}</span>
         </template>
         <template v-if="format === 'url'">
-            <a v-if="!hasErrors" :href="info.value" target="_blank">{{info.value}}</a>
+            <a v-if="!hasErrors" :href="info.value" :class="tippyTooltipClassName" target="_blank">{{info.value | ellipsify}}</a>
             <span v-if="hasErrors">{{info.value}}</span>
         </template>
         <template v-if="format === 'currency'">
@@ -33,17 +33,43 @@
     export default {
         data () {
             return {
+                maxTextLength: 30
             }
         },
         components: {
         },
         filters: {
             moment: function (date) {
-                if (!utils.isDate(date)) {
+                let m = moment(date);
+                if (!m.isValid()) {
                     return '';
                 }
-                return moment(date).format('MM/DD/YYYY');
-            }
+                let formattedDate = m.utc().format('MM/DD/YYYY');
+                if (!formattedDate) {
+                    return '';
+                }
+                
+                return formattedDate;
+            },
+            ellipsify: function (str) {
+                let charNum = 30;
+                let suffix = '...';
+                if (utils.isNotDefined(str)) {
+                    str = '';
+                }
+
+//                if (utils.isNotDefined(charNum)) {
+//                    charNum = 20;
+//                }
+
+                if (str.length > charNum) {
+                    return str.substr(0, charNum - suffix.length) + suffix;
+                } else {
+                    return str;
+                }
+//                ellipsify(str, charNum, suffix) {
+//                },
+            } 
         },
         computed: {
             //TODO: A better name for this computed value
@@ -57,12 +83,20 @@
             hasInfos() {
                 return this.info.infos.length;
             },
+
+            tippyTooltipClassName() {
+                if (this.info.value && this.info.value.length && this.info.value.length > this.maxTextLength) {
+                    return `tippy-tooltip--${this.fieldName}-${this._uid}`;
+                } else {
+                    return '';
+                }
+            },
             
             tippyErrorsClassName() {
-                return `tippy-errors-${this.fieldName}`;
+                return `tippy-errors-${this.fieldName}-${this._uid}`;
             },
             tippyInfosClassName() {
-                return `tippy-infos-${this.fieldName}`;
+                return `tippy-infos-${this.fieldName}-${this._uid}`;
             },
             
             tippyErrorsContent() {
@@ -95,17 +129,34 @@
                 default: 'string'
             }
         },
+        methods: {
+            updateTooltips() {
+                if (this.hasErrors) {
+                    tippy(`.${this.tippyErrorsClassName}`, {
+                        content: this.tippyErrorsContent
+                    });
+                }
+                if (this.hasInfos) {
+                    tippy(`.${this.tippyInfosClassName}`, {
+                        content: this.tippyInfosContent
+                    });
+                }
+                if (this.tippyTooltipClassName.length) {
+                    tippy(`.${this.tippyTooltipClassName}`, {
+                        content: `<span class="f-14">${this.info.value}</span>`,
+                        interactive: true,
+                        maxWidth: 750
+                    });
+                }
+            }  
+        },
+        watch: {
+            'rowInfo': function (val, oldVal) {
+                this.updateTooltips();
+            }
+        },
         mounted () {
-            if (this.hasErrors) {
-                tippy(`.${this.tippyErrorsClassName}`, {
-                    content: this.tippyErrorsContent
-                });
-            }
-            if (this.hasInfos) {
-                tippy(`.${this.tippyInfosClassName}`, {
-                    content: this.tippyInfosContent
-                });
-            }
+            this.updateTooltips();
         }
     }
 </script>
