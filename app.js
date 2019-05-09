@@ -50,6 +50,9 @@ const organizationRoutes = require('./app/routes/organization.routes');
 const dataLoadRoutes = require('./app/routes/dataLoad.routes');
 const routeLogRoutes = require('./app/routes/routeLog.routes');
 
+
+const publicSupplierRoutes = require('./app/routes/publicSupplier.routes');
+
 // Controllers
 const securityController = require('./app/controllers/security.controller');
 
@@ -147,6 +150,8 @@ if (!isProd) {
 // Routes without session
 // ======================
 app.use('/', indexRoutes);
+///public-api/suppliers/list 
+app.use('/public-api/suppliers', publicSupplierRoutes);
 
 // ======================
 // Session initialization
