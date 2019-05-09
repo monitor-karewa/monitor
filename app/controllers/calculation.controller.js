@@ -369,30 +369,27 @@ exports.save = (req, res, next) => {
         for (let i = 0; i < calculation.formula.calculations.length; i++) {
             calculationObjectIds.push(mongoose.Types.ObjectId(calculation.formula.calculations[i]._id));
         }
-        let isValid = validateFormula();
+        let isValid = validateFormula(calculation.formula);
             if(isValid.error){
                 return res.json({error: true, message: req.__('calculations.formula.syntax.error'), err: isValid.err})
             }
 
-            calculateAndValidateFormula(calculation, (err, value) => {
-                console.log("err", err);
-                console.log("+++ Resultado Final +++", value);
-                calculation.save((err, savedCalculation) => {
-                    if (err) {
-                        logger.error(err, req, 'calculation.controller#save', 'Error al guardar Calculation');
-                        return res.json({
-                            "error": true,
-                            "message": req.__('general.error.save')
-                        });
-                    }
-
-                    return res.json({
-                        "error": false,
-                        "message": req.__('general.success.created'),
-                        "data": savedCalculation
-                    });
+        calculation.save((err, savedCalculation) => {
+            if (err) {
+                logger.error(err, req, 'calculation.controller#save', 'Error al guardar Calculation');
+                return res.json({
+                    "error": true,
+                    "message": req.__('general.error.save')
                 });
+            }
+
+            return res.json({
+                "error": false,
+                "message": req.__('general.success.created'),
+                "data": savedCalculation
             });
+        });
+
 
     }
 };

@@ -136,25 +136,31 @@
                 </div>
 
                 <div class="m-t-40 m-b-50">
-                    <div class="col-md-6">
-                        <div class="floating-text-form">
-                            <h1>Variables usadas</h1>
-                            <p>Cálculo para mostrar el indice de perdidas al año</p>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="floating-text-form">
+                                <h1>Variables usadas</h1>
+                                <p>Cálculo para mostrar el indice de perdidas al año</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-12 col-md-12 m-b-30">
+                                <a @click="validateFormula()" class="btn-stroke button-accent"><i class="zmdi zmdi-plus"></i> Verificar fórmula</a>
+                            </div>
                         </div>
                     </div>
-                    <div class="col-md-6">
-                        <div class="col-12 col-md-6 m-b-30">
-                            <a @click="validateFormula()" class="btn-stroke button-accent"><i class="zmdi zmdi-plus"></i> Verificar fórmula</a>
-                        </div>
+                    <div class="col-md-12 m-b-30">
+                        <span v-if="formulaValidation.error" class="c-error">{{formulaValidation.message}}</span>
                     </div>
-                    <div>
-                        <p>
-                            {{formulaValidated}}
-                        </p>
-                        <p>
-                            {{formulaValidation}}
-                        </p>
-                    </div>
+                    <!--<div>-->
+                        <!--<p>-->
+                            <!--{{formulaValidated}}-->
+                        <!--</p>-->
+                        <!--<p>-->
+                            <!--{{formulaValidation}}-->
+                        <!--</p>-->
+                    <!--</div>-->
                     <div class="vertical-center m-b-20" v-for="variable in entry.formula.variables">
                         <span class="w-15 m-r-10"><strong class="c-accent f-12">{{variable.abbreviation}}　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</strong></span>
                         <div class="floating-text-form">
@@ -186,7 +192,7 @@
 
             <div class="modal-footer aditional-text" slot="footer">
                 <div class="total-footer">
-                    <span v-if="formulaValidated && formulaValidation.result" > RESULTADO: <strong>{{displayResult(formulaValidation.result)}}</strong></span>
+                    <span v-if="formulaValidated && !formulaValidation.error" > RESULTADO: <strong>{{displayResult(formulaValidation.results.value)}}</strong></span>
                     <p>La vista previa del resultado del cálculo solo está disponible en cálculos
                         generales</p>
                 </div>
