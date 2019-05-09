@@ -7,6 +7,7 @@ var publicSupplierController = require('./../controllers/publicSupplier.controll
  * Load Suppliers info
  */
 router.get('/list', publicSupplierController.list);
+router.get('/download/:format', publicSupplierController.download);
 
 
 module.exports = router;

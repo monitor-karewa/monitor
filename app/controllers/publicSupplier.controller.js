@@ -3,18 +3,16 @@ const {Contract} = require('./../models/contract.model');
 
 const logger = require('./../components/logger').instance;
 
+const {ExcelExporter} = require('./../components/exporter');
 
-exports.list = (req, res, next) => {
+function _getPageFromReq(req) {
+    return Number(req.query.page) || 1;
+}
 
-    let page = Number(req.query.page) || 1;
-    let paginateOptions = {
-        page: page,
-        limit: 10,
-        sortBy: {
-            total: -1
-        } 
-    };
+function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
     
+    let paginate = !!options.paginate;
+
     let aggregate = Contract.aggregate([
         {
             $group: {
@@ -121,26 +119,48 @@ exports.list = (req, res, next) => {
         }
     ]);
     
-    Contract.aggregatePaginate(aggregate, paginateOptions, (err, suppliers, pageCount, itemCount) => {
+    if (!paginate) {
+        return aggregate.exec(callback);
+    } else {
+
+        let page = _getPageFromReq(req);
+        let paginateOptions = {
+            page: page,
+            limit: 10,
+            sortBy: {
+                total: -1
+            }
+        };
+        
+        return Contract.aggregatePaginate(aggregate, paginateOptions, callback);
+    }
+}
+
+
+exports.list = (req, res, next) => {
+
+    let page = _getPageFromReq(req);
+
+    _aggregateSuppliersFromContracts(req, res, {paginate: true}, (err, suppliers, pageCount, itemCount) => {
         if (err) {
             logger.error(err, req, 'publicSupplier.controller#list', 'Error trying to query suppliers info from aggregate');
             return res.json({
                 error: true
             });
         }
-        
+
         let totals = {
             totalCount: 0,
             publicCount: 0,
             invitationCount: 0,
             noBidCount: 0,
-            
+
             total: 0,
             public: 0,
             invitation: 0,
             noBid: 0,
         };
-        
+
         suppliers.forEach((supplierInfo) => {
             totals.totalCount += supplierInfo.contractsCount;
             totals.publicCount += supplierInfo.publicCount;
@@ -152,7 +172,7 @@ exports.list = (req, res, next) => {
             totals.invitation += supplierInfo.invitation;
             totals.noBid += supplierInfo.noBid;
         });
-        
+
         let pagination = {
             total: itemCount,
             page: page,
@@ -170,4 +190,48 @@ exports.list = (req, res, next) => {
             data: data
         });
     });
+};
+
+exports.download = (req, res, next) => {
+    let format = req.params.format;
+    
+    if (!['xls', 'pdf', 'json'].includes(format)) {
+        res.status(404);
+        return res.end();
+    }
+
+    _aggregateSuppliersFromContracts(req, res, {paginate: false}, (err, suppliers) => {
+        new ExcelExporter()
+            .setPropInfoArray([
+                {
+                    header: 'NOMBRE DEL PROVEEDOR',
+                    propName: 'name'
+                },
+                {
+                    header: 'LICITACIÓN PÚBLICA',
+                    propName: 'public',
+                    format: 'currency'
+                },
+                {
+                    header: 'POR INVITACIÓN',
+                    propName: 'invitation',
+                    format: 'currency'
+                },
+                {
+                    header: 'ADJ. DIRECTA',
+                    propName: 'noBid',
+                    format: 'currency'
+                },
+                {
+                    header: 'MONTO TOTAL',
+                    propName: 'total',
+                    format: 'currency'
+                },
+            ])
+            .setDocs(suppliers)
+            .setTitle('Proveedores')
+            .setFileName('proveedores')
+            .exportToFile(req, res);
+    });
+    
 };

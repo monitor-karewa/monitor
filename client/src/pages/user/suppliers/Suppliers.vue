@@ -18,13 +18,67 @@
                             <h1 m-t-0>
                                 Proveedores
                             </h1>
-                            <div class="side-right">
+                            <div class="side-right d-flex">
                                 <a href="" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
                                         class="zmdi zmdi-share"></i> Compartir</a>
-                                <a href="" class="btn-raised button-accent text-capi m-l-10" tabindex=""><i
-                                        class="zmdi zmdi-download"></i> DESCARGAR DATOS DE PROVEEDORES</a>
+                                <!--<a href="" class="btn-raised button-accent text-capi m-l-10" tabindex=""><i-->
+                                        <!--class="zmdi zmdi-download"></i> DESCARGAR DATOS DE PROVEEDORES</a>-->
+
+                                <div class="dropdown p-l-10">
+                                    <button class="btn-raised button-accent" type="button" id="dropdownDownloadOptions"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="zmdi zmdi-download"></i> DESCARGAR DATOS DE PROVEEDORES
+                                    </button>
+                                    <div class="dropdown-menu dropdown-options dropdown-menu-right"
+                                         aria-labelledby="dropdownDownloadOptions">
+                                        <span>Descargar datos con formato:</span>
+                                        <div class="container-dropdown">
+                                            <a class="dropdown-item" href="downloadPdfUrl" target="_blank">
+                                                <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-pdf.svg"
+                                                     alt="Empty"/>
+                                            </a>
+                                            <a class="dropdown-item" :href="downloadXlsUrl" target="_blank">
+                                                <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-xls.svg"
+                                                     alt="Empty"/>
+                                            </a>
+                                            <a class="dropdown-item" href="downloadJsonUrl" target="_blank">
+                                                <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-json.svg"
+                                                     alt="Empty"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
+
+
+                        <!--<div class="row m-b-50">-->
+                            <!--<h1 class="f-20 m-t-0 m-b-10 col-12">Dropdown</h1>-->
+                            <!--<div class="dropdown col-12">-->
+                                <!--<button class="btn-raised button-accent" type="button" id="dropdownOptions"-->
+                                        <!--data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">-->
+                                    <!--Dropdown FILES-->
+                                <!--</button>-->
+                                <!--<div class="dropdown-menu dropdown-options dropdown-menu-right"-->
+                                     <!--aria-labelledby="dropdownOptions">-->
+                                    <!--<span>Title</span>-->
+                                    <!--<div class="container-dropdown">-->
+                                        <!--<a class="dropdown-item" href="#">-->
+                                            <!--<img class="img-fluid" src="@/assets/images/Illustrations/icon-file-pdf.svg"-->
+                                                 <!--alt="Empty"/>-->
+                                        <!--</a>-->
+                                        <!--<a class="dropdown-item" href="#">-->
+                                            <!--<img class="img-fluid" src="@/assets/images/Illustrations/icon-file-xls.svg"-->
+                                                 <!--alt="Empty"/>-->
+                                        <!--</a>-->
+                                        <!--<a class="dropdown-item" href="#">-->
+                                            <!--<img class="img-fluid" src="@/assets/images/Illustrations/icon-file-json.svg"-->
+                                                 <!--alt="Empty"/>-->
+                                        <!--</a>-->
+                                    <!--</div>-->
+                                <!--</div>-->
+                            <!--</div>-->
+                        <!--</div>-->
 
                         <p class="f-14 c-plain_text principal-font-regular">Aquí podrás encontrar la lista de todos los
                             proveedores que han sido contratados por el
@@ -236,13 +290,18 @@
     
     import {mapState} from 'vuex';
     
+    import baseApi from '@/api/base.api';
+    
+    
     const storeModule = 'publicSuppliers';
+    const apiNamespace = 'suppliers';
 
     export default {
         data() {
             return {
                 storeModule: storeModule,
-                changePageAction: 'LOAD_SUPPLIERS'
+                changePageAction: 'LOAD_SUPPLIERS',
+                baseApi: baseApi,
             }
         },
         components: {
@@ -253,7 +312,21 @@
             ...mapState({
                 suppliers: state => state[storeModule].suppliers,
                 totals: state => state[storeModule].totals
-            })
+            }),
+            downloadPdfUrl () {
+                return `${baseApi.baseUrl}/public-api/${apiNamespace}/download/pdf`;
+            },
+            downloadXlsUrl () {
+                return `${baseApi.baseUrl}/public-api/${apiNamespace}/download/xls`;
+            },
+            downloadJsonUrl () {
+                return `${baseApi.baseUrl}/public-api/${apiNamespace}/download/xls`;
+            }
+        },
+        methods: {
+            download (format) {
+                this.$store.dispatch('publicSuppliers/DOWNLOAD', format);
+            }
         },
         mounted() {
             this.$store.dispatch('publicSuppliers/LOAD_SUPPLIERS');
