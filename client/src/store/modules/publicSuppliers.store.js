@@ -4,7 +4,12 @@ import i18n from '@/plugins/i18n';
 
 const state = {
     suppliers: [],
-    totals: {}
+    totals: {},
+    pagination: {
+        total: 0,
+        page: 1,
+        pages: 1
+    },
 };
 
 const getters = {
@@ -12,8 +17,12 @@ const getters = {
 };
 
 const actions = {
-    LOAD_SUPPLIERS ({commit}) {
-        apiPublicSuppliers.list({}, (result) => {
+    LOAD_SUPPLIERS ({commit}, page) {
+        let query = '';
+        if (page) {
+            query += `?page=${page}`;
+        }
+        apiPublicSuppliers.list({query}, (result) => {
             commit('SET_SUPPLIERS', result.data.data); 
         }, (err) => {
             tShow(i18n.t('suppliers.public.load.error'), 'danger');
@@ -23,7 +32,10 @@ const actions = {
 };
 
 const mutations = {
-    SET_SUPPLIERS (state, {suppliers, totals}) {
+    SET_SUPPLIERS (state, {suppliers, totals, pagination}) {
+        if (pagination) {
+            state.pagination = pagination;
+        }
         state.suppliers = suppliers || [];
         state.totals = totals || {};
     }

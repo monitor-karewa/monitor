@@ -5,11 +5,21 @@ const logger = require('./../components/logger').instance;
 
 
 exports.list = (req, res, next) => {
-    Contract.aggregate([
+
+    let page = Number(req.query.page) || 1;
+    let paginateOptions = {
+        page: page,
+        limit: 10,
+        sortBy: {
+            total: -1
+        } 
+    };
+    
+    let aggregate = Contract.aggregate([
         {
             $group: {
                 _id: '$supplier',
-                
+
                 contractsCount: {$sum: 1},
                 publicCount: {
                     $sum: {
@@ -38,7 +48,7 @@ exports.list = (req, res, next) => {
                         }
                     }
                 },
-                
+
                 public: {
                     $sum: {
                         $cond: {
@@ -65,7 +75,8 @@ exports.list = (req, res, next) => {
                             else: 0
                         }
                     }
-                }
+                },
+                total: {$sum: "$totalOrMaxAmount"}
             }
         },
         {
@@ -101,13 +112,16 @@ exports.list = (req, res, next) => {
                 publicCount: 1,
                 invitationCount: 1,
                 noBidCount: 1,
-                
+
                 public: 1,
                 invitation: 1,
-                noBid: 1
+                noBid: 1,
+                total: 1
             }
         }
-    ]).exec((err, suppliers) => {
+    ]);
+    
+    Contract.aggregatePaginate(aggregate, paginateOptions, (err, suppliers, pageCount, itemCount) => {
         if (err) {
             logger.error(err, req, 'publicSupplier.controller#list', 'Error trying to query suppliers info from aggregate');
             return res.json({
@@ -138,10 +152,17 @@ exports.list = (req, res, next) => {
             totals.invitation += supplierInfo.invitation;
             totals.noBid += supplierInfo.noBid;
         });
+        
+        let pagination = {
+            total: itemCount,
+            page: page,
+            pages: pageCount
+        };
 
         let data = {
             totals: totals,
-            suppliers: suppliers
+            suppliers: suppliers,
+            pagination: pagination
         };
 
         return res.json({

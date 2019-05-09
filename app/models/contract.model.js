@@ -5,6 +5,8 @@ const { check, validationResult } = require('express-validator/check');
 
 const pluginCreatedUpdated = require('mongoose-createdat-updatedat');
 const mongoosePagination = require('mongoose-paginate');
+const mongooseAggregatePaginate = require('mongoose-aggregate-paginate');
+
 const utils = require('../components/utils');
 
 
@@ -551,6 +553,9 @@ ContractSchema.plugin(pluginCreatedUpdated);
 
 //Paginación
 ContractSchema.plugin(mongoosePagination);
+
+//Paginación con aggregates
+ContractSchema.plugin(mongooseAggregatePaginate);
 
 //Clase del modelo Contract.
 class ContractClass {

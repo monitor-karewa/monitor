@@ -184,11 +184,6 @@
                                     </thead>
                                     <tbody>
                                     <tr v-for="supplier in suppliers">
-                                        <!--<td class="">{{supplier.name}}</td>-->
-                                        <!--<td class="text-align-r">{{supplier.licitacionPublica}}</td>-->
-                                        <!--<td class="text-align-r">{{supplier.porInvitacion}}</td>-->
-                                        <!--<td class="text-align-r">{{supplier.adjudicacionDirecta}}</td>-->
-                                        <!--<td class="text-align-r c-accent">{{supplier.montoTotal}}</td>-->
                                         <td class="">{{supplier.name}}</td>
                                         <td class="text-align-r">{{supplier.public | currency}}</td>
                                         <td class="text-align-r">{{supplier.invitation | currency}}</td>
@@ -206,10 +201,6 @@
                                         <td class="text-align-r p-t-15 p-b-15">{{totals.invitation | currency}}</td>
                                         <td class="text-align-r p-t-15 p-b-15">{{totals.noBid | currency}}</td>
                                         <td class="text-align-r p-t-15 p-b-15 c-accent">{{totals.total | currency}}</td>
-                                        <!--<td class="text-align-r p-t-15 p-b-15">$1,055,177,509.74</td>-->
-                                        <!--<td class="text-align-r p-t-15 p-b-15">$149,337,687.59</td>-->
-                                        <!--<td class="text-align-r p-t-15 p-b-15">$1,098,345,291.46</td>-->
-                                        <!--<td class="text-align-r p-t-15 p-b-15 c-accent">$2,302,860,488.81</td>-->
                                         <td class="text-align-r p-t-15 p-b-15"></td>
                                     </tr>
                                     </tbody>
@@ -218,7 +209,8 @@
                         </div>
                     </div>
                 </div>
-
+                
+                <Pagination :store-module="storeModule" :changePageAction="changePageAction"/>
 
                 <!-- ADITIONAL INFO ONLY -->
                 <p class="f-12 c-plain_text principal-font-regular">
@@ -240,6 +232,7 @@
 
 <script>
     import MoreInfo from '@/components/general/MoreInfo';
+    import Pagination from '@/components/catalogs/Pagination';
     
     import {mapState} from 'vuex';
     
@@ -248,82 +241,13 @@
     export default {
         data() {
             return {
-//                suppliers: [
-//                    {
-//                        name: "CENTRO PARA EL ESTUDIO DE LA OSTEOPOROSIS MENOPAUSIA METABOLISMO MINERAL COMMSA SA DE CV",
-//                        licitacionPublica: "$0.00",
-//                        porInvitacion: "$0.00",
-//                        adjudicacionDirecta: "CENTRO PARA EL ESTUDIO DE LA OSTEOPOROSIS MENOPAUSIA METABOLISMO MINERAL COMMSA SA DE CV",
-//                        montoTotal: "$267,438,726.85"
-//                    },
-//                    {
-//                        name: "MERP EDIFICACIONES Y TERRACERIAS SA DE CV",
-//                        licitacionPublica: "$83,760,842.79",
-//                        porInvitacion: "$39,924,791.80",
-//                        adjudicacionDirecta: "$24,085,369.24",
-//                        montoTotal: "$147,771,003.84"
-//                    },
-//                    {
-//                        name: "GCC comercial SA DE CV",
-//                        licitacionPublica: "$102,866,337.58",
-//                        porInvitacion: "$0.00",
-//                        adjudicacionDirecta: "$17,178.62",
-//                        montoTotal: "$102,883,516.20"
-//                    },
-//                    {
-//                        name: "CONSTRUCCIONES MARRO SA DE CV",
-//                        licitacionPublica: "$23,980,030.81",
-//                        porInvitacion: "$2,398,871.43",
-//                        adjudicacionDirecta: "$31,458,674.04",
-//                        montoTotal: "$57,837,576.28"
-//                    },
-//                    {
-//                        name: "TEPORACA CONSTRUCTORA SA DE CV",
-//                        licitacionPublica: "$0.00",
-//                        porInvitacion: "$$4,399,802.55",
-//                        adjudicacionDirecta: "$31,369,617.86",
-//                        montoTotal: "$35,769,420.41"
-//                    },
-//                    {
-//                        name: "URBANIZADORA Y EDIFICADORA DE MEXICO SA DE CV",
-//                        licitacionPublica: "$0.00",
-//                        porInvitacion: "$0.00",
-//                        adjudicacionDirecta: "$27,779,997.20",
-//                        montoTotal: "$27,779,997.20"
-//                    },
-//                    {
-//                        name: "JOEL OSCAR ESPARZA GONZALEZ",
-//                        licitacionPublica: "$19,248,367.08",
-//                        porInvitacion: "$4,589,931.52",
-//                        adjudicacionDirecta: "$1,159,603.18",
-//                        montoTotal: "$24,997,901.77"
-//                    },
-//                    {
-//                        name: "STAHL CONSTRUCCIONES SA DE CV",
-//                        licitacionPublica: "$12,807,926.08",
-//                        porInvitacion: "$5,406,479.39",
-//                        adjudicacionDirecta: "$5,418,698.23",
-//                        montoTotal: "$23,633,103.70"
-//                    },
-//                    {
-//                        name: "DELICIAS TRANSPORTE DE ASFALTO SA DE CV",
-//                        licitacionPublica: "$0.00",
-//                        porInvitacion: "$5,527,786.63",
-//                        adjudicacionDirecta: "$15,389,188.93",
-//                        montoTotal: "$20,916,975.56"
-//                    },
-//                    {
-//                        name: "IVAN NOE SIMENTAL ORTEGA",
-//                        licitacionPublica: "$19,762,898.31",
-//                        porInvitacion: "$0.00",
-//                        adjudicacionDirecta: "$19,762,898.31",
-//                        montoTotal: "$19,762,898.31"
-//                    },
-//                ]
+                storeModule: storeModule,
+                changePageAction: 'LOAD_SUPPLIERS'
             }
         },
         components: {
-            MoreInfo
+            MoreInfo,
+            Pagination
         },
         computed: {
             ...mapState({
