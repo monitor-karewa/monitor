@@ -362,7 +362,6 @@ let ContractSchema = new Schema({
     /* ID / Número de Folio o Nomenclatura / Identificador */
     contractId: {
         type: String,
-        required: true,
         //TODO:Definir otro Id aparte que sea karewaId(Pendiente)
         //TODO:Definir el formato que debe llevar el ID(Dejarlo Libre)
     },

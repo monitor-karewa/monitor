@@ -40,7 +40,7 @@
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Introduce la abreviación del cálcuo"
+                        <input type="text" class="form-control fg-input" placeholder="Introduce la abreviación del cálculo"
                                v-model="$v.entry.abbreviation.$model" @input="delayTouch($v.entry.abbreviation)">
                         <label class="fg-label">Abreviación del cálculo
                             <small></small>
@@ -136,10 +136,31 @@
                 </div>
 
                 <div class="m-t-40 m-b-50">
-                    <div class="floating-text-form">
-                        <h1>Variables usadas</h1>
-                        <p>Cálculo para mostrar el indice de perdidas al año</p>
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="floating-text-form">
+                                <h1>Variables usadas</h1>
+                                <p>Cálculo para mostrar el indice de perdidas al año</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-12 col-md-12 m-b-30">
+                                <a @click="validateFormula()" class="btn-stroke button-accent"><i class="zmdi zmdi-plus"></i> Verificar fórmula</a>
+                            </div>
+                        </div>
                     </div>
+                    <div class="col-md-12 m-b-30">
+                        <span v-if="formulaValidation.error" class="c-error">{{formulaValidation.message}}</span>
+                    </div>
+                    <!--<div>-->
+                        <!--<p>-->
+                            <!--{{formulaValidated}}-->
+                        <!--</p>-->
+                        <!--<p>-->
+                            <!--{{formulaValidation}}-->
+                        <!--</p>-->
+                    <!--</div>-->
                     <div class="vertical-center m-b-20" v-for="variable in entry.formula.variables">
                         <span class="w-15 m-r-10"><strong class="c-accent f-12">{{variable.abbreviation}}　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</strong></span>
                         <div class="floating-text-form">
@@ -167,9 +188,19 @@
                         </label>
                     </div>
                 </div>
-
-
             </div>
+
+            <div class="modal-footer aditional-text" slot="footer">
+                <div class="total-footer">
+                    <span v-if="formulaValidated && !formulaValidation.error" > RESULTADO: <strong>{{displayResult(formulaValidation.results.value)}}</strong></span>
+                    <p>La vista previa del resultado del cálculo solo está disponible en cálculos
+                        generales</p>
+                </div>
+                <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar
+                </button>
+                <button type="submit" class="btn-raised button-accent m-l-15">Agregar</button>
+            </div>
+
 
         </modalEntry>
 
@@ -219,7 +250,7 @@
                     {label: 'general.created-at', field: 'createdAt', type: 'Date', visible:true}
                 ],
                 variableSelected : undefined,
-                displayFormLabel : "Porcentaje",
+                displayFormLabel : "Normal",
                 entry : {
                     name: "",
                     description: "",
@@ -255,7 +286,7 @@
                         if (value == null || value == undefined || value == "") {
                             return true
                         }
-                        return (/^\${2}[a-zA-Z0-9]{1,7}$/).test(value);
+                        return (/^\${2}[A-Z0-9]{1,7}$/).test(value);
                     }
                 },
                 type: {
@@ -360,6 +391,13 @@
                     case 'NORMAL': this.displayFormLabel = "Normal"; break;
                 }
             },
+            displayResult(value) {
+                switch (this.entry.displayForm) {
+                    case 'AMOUNT': return "$" + value;
+                    case 'PERCENTAGE': return value +"%";
+                    case 'NORMAL': return value;
+                }
+            },
             debounce: function debounce(func, wait, immediate) {
                 var timeout;
                 return function () {
@@ -387,6 +425,9 @@
                 };
                 this.$v.$reset();
             },
+            validateFormula(){
+                this.$store.dispatch(`${storeModule}/validateFormula`, {formula: this.entry.formula, abbreviation : this.entry.abbreviation});
+            }
 
         },
         created() {
@@ -464,7 +505,9 @@
             },
             ...mapState({
                 variables: state => state[storeModule].variables,
-                calculations: state => state[storeModule].calculations
+                calculations: state => state[storeModule].calculations,
+                formulaValidation: state => state[storeModule].formulaValidation,
+                formulaValidated: state => state[storeModule].formulaValidated
             }),
             ...mapGetters(
                     storeModule , ['variablesObj']
@@ -476,6 +519,6 @@
         beforeMount(){
             this.$store.dispatch(`${storeModule}/fetchVariables`);
             this.$store.dispatch(`${storeModule}/fetchCalculations`);
-        }
+        },
     }
 </script>

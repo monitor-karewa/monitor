@@ -27,6 +27,10 @@
                 </div>
 
             </div>
+            <div class="modal-footer aditional-text" slot="footer">
+                <button type="button" class="btn-stroke button-info_text" data-dismiss="modal"> Cancelar </button>
+                <button type="submit"  class="btn-raised button-accent m-l-15"> Guardar </button>
+            </div>
         </ModalEntry>
 
         <ModalDanger :id="'modal-delete-entry'" :title="'Eliminar Organización'" :confirm="confirmDeletion">
