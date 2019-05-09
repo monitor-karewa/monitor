@@ -1,4 +1,6 @@
-import apiPublicSuppliers from '@/api/publicSuppliers.api'; 
+import apiPublicSuppliers from '@/api/publicSuppliers.api';
+
+import i18n from '@/plugins/i18n';
 
 const state = {
     suppliers: [],
@@ -14,7 +16,8 @@ const actions = {
         apiPublicSuppliers.list({}, (result) => {
             commit('SET_SUPPLIERS', result.data.data); 
         }, (err) => {
-            
+            tShow(i18n.t('suppliers.public.load.error'), 'danger');
+            commit('SET_SUPPLIERS', {}); 
         })
     }
 };
