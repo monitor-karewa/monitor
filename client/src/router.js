@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-
 //Note: @ is aliased in webpack.config to './src'
 
 //User

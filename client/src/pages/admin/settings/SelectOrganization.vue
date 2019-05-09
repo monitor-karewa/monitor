@@ -41,6 +41,7 @@
     import AdminMainSection from '@/components/admin/AdminMainSection';
     let storeModule = 'organizations';
     import {mapState} from 'vuex';
+    import axios from 'axios';
 
     export default {
         name: "SelectOrganization",
@@ -63,7 +64,12 @@
         },
         methods:{
             selectOrganization(id){
-                console.log("select organization id", id);
+                this.$session.set('currentOrganizationId', id);
+                axios.defaults.headers.common['X-CURRENT-ORGANIZATION-ID'] = id;
+                
+                let redirectTo = this.$router.currentRoute.query.redirectTo || '/admin';
+
+                this.$router.push(redirectTo);
             }
         }
     }

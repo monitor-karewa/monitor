@@ -162,6 +162,12 @@ app.use((req, res, next) => {
     next();
 });
 
+app.use((req, res, next) => {
+    //Read X-CURRENT-ORGANIZATION-ID header
+    req.currentOrganizationId = req.headers['x-current-organization-id'] || req.headers['X-CURRENT-ORGANIZATION-ID'];
+    next();
+});
+
 // ======================
 // Routes with session
 // ======================
