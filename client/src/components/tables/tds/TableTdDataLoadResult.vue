@@ -129,24 +129,34 @@
                 default: 'string'
             }
         },
+        methods: {
+            updateTooltips() {
+                if (this.hasErrors) {
+                    tippy(`.${this.tippyErrorsClassName}`, {
+                        content: this.tippyErrorsContent
+                    });
+                }
+                if (this.hasInfos) {
+                    tippy(`.${this.tippyInfosClassName}`, {
+                        content: this.tippyInfosContent
+                    });
+                }
+                if (this.tippyTooltipClassName.length) {
+                    tippy(`.${this.tippyTooltipClassName}`, {
+                        content: `<span class="f-14">${this.info.value}</span>`,
+                        interactive: true,
+                        maxWidth: 750
+                    });
+                }
+            }  
+        },
+        watch: {
+            'rowInfo': function (val, oldVal) {
+                this.updateTooltips();
+            }
+        },
         mounted () {
-            if (this.hasErrors) {
-                tippy(`.${this.tippyErrorsClassName}`, {
-                    content: this.tippyErrorsContent
-                });
-            }
-            if (this.hasInfos) {
-                tippy(`.${this.tippyInfosClassName}`, {
-                    content: this.tippyInfosContent
-                });
-            }
-            if (this.tippyTooltipClassName.length) {
-                tippy(`.${this.tippyTooltipClassName}`, {
-                    content: `<span class="f-14">${this.info.value}</span>`,
-                    interactive: true,
-                    maxWidth: 750
-                });
-            }
+            this.updateTooltips();
         }
     }
 </script>

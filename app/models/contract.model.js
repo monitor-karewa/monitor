@@ -18,7 +18,7 @@ const procedureTypesEnumDict = {
             flags: 'gi'
         },
         {
-            regexStr: utils.toAccentsRegex('publico', null, true),
+            regexStr: utils.toAccentsRegex('public(a|o)', null, true),
             flags: 'gi'
         },
         // utils.toAccentsRegex('publico', 'gi')
@@ -213,13 +213,13 @@ const administrativeUnitTypeEnum = Object.keys(administrativeUnitTypeEnumDict);
 const limitExceededEnumDict = {
     'NOT_EXCEEDED': [
         {
-            regexStr: utils.toAccentsRegex('no excede el limite', null, true),
+            regexStr: utils.toAccentsRegex('no|no excede( el limite)?', null, true),
             flags: 'gi'
         },
     ],
     'LIMIT_EXCEEDED': [
         {
-            regexStr: "^[\s]*" + utils.toAccentsRegex('excede el limite', null, true),
+            regexStr: "^[\s]*" + utils.toAccentsRegex('si|excede( el limite)?', null, true),
             flags: 'gi'
         },
     ]
@@ -496,7 +496,8 @@ let ContractSchema = new Schema({
     /*Fecha de actualización*/
     updateDate: {
         type: Date,
-        required: true
+        required: true,
+        default: Date.new
     },
     /*Notas*/
     notes: {

@@ -28,6 +28,11 @@ export default {
         return axios.post(`${baseApi.baseUrl}/api/${namespace}/cancel-current`, params)
             .then(onSuccess)
             .catch(onError);
+    },
+    confirmCurrent: (params = {}, onSuccess, onError) => {
+        return axios.post(`${baseApi.baseUrl}/api/${namespace}/confirm-current`, params)
+            .then(onSuccess)
+            .catch(onError);
     }
     // delete: (params = {}, onSuccess, onError) => {
     //     return axios.post(`${base.baseUrl}/api/${namespace}/delete`, { "_id" : params.id })

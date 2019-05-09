@@ -158,6 +158,20 @@ const actions = {
         //     commit('SET_FILTERING', false);
         // }, 2000);
     },
+    //Confirm current and save to database
+    CONFIRM_CURRENT: ({commit}) => {
+        dataLoadApi.confirmCurrent({}, (response) => {
+            if (response.data.error) {
+                tShow(i18n.t('data-load.confirm.error.unexpected'), 'danger');
+            } else {
+                commit('SET_CURRENT_DATA_LOAD_INFO', {dataLoadInfo: response.data.data});
+                // commit('SET_PAGE_AND_PAGINATE', {page: 1});
+                tShow(i18n.t('data-load.confirm.success'), 'success');
+            }
+        }, (err) => {
+            tShow(i18n.t('data-load.confirm.error.unexpected'), 'danger');
+        });
+    }
 };
 
 const mutations = {

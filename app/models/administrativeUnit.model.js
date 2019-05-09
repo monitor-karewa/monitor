@@ -18,8 +18,7 @@ let AdministrativeUnitSchema = new Schema({
         required: true
     },
     notes: {
-        type: String,
-        required: true
+        type: String
     },
     deleted: require("./schemas/deleted.schema").Deleted
 });

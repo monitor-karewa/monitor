@@ -149,8 +149,9 @@ for (let key of columnIdsKeys) {
 }
 
 class ContractExcelReader {
-    constructor(organizationId) {
+    constructor(organizationId, idDataLoad) {
         this.organizationId = organizationId;
+        this.idDataLoad = idDataLoad;
         this.columns = [];
         this.elements = [];
         this._fieldInfoRefCache = {};
@@ -245,6 +246,9 @@ class ContractExcelReader {
                     skipRow: false,
                     refLinkedBy: [],
                     refLink: null,
+                    overrides: {
+                        refStrategy: null
+                    },
                     options: options
                 };
                 return callback(null, fieldInfo);
@@ -282,6 +286,34 @@ class ContractExcelReader {
                                 // return callback(null, fieldInfo);
                                 fieldInfo.value = fieldInfo.value.toString();
                                 logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] forced to String.', fieldName);
+                            }
+
+
+                            //Check for reference check strategy override
+                            //[!r#] at the start of a string overrides the ref check strategy, where # is a number from 0 to 2
+                            if (fieldInfo.value && fieldInfo.value.length) {
+                                let regexMatchRefStrategy = fieldInfo.value.match("^!r[0-2]");
+                                if (regexMatchRefStrategy) {
+                                    //Get the 3rd char (base 0) from the value; which is the override code we're looking for
+                                    let overrideStr = fieldInfo.value.charAt(2);
+                                    let refStrategyOverride = null;
+                                    //TODO: dynamic check based on the REG_STRATEGY map
+                                    switch(overrideStr) {
+                                        case '0':
+                                            refStrategyOverride = REF_STRATEGIES.EXACT;
+                                            break;
+                                        case '1':
+                                            refStrategyOverride = REF_STRATEGIES.CONTAINS;
+                                            break;
+                                        case '2':
+                                            refStrategyOverride = REF_STRATEGIES.SUBSET;
+                                            break;
+                                        default:
+                                    }
+                                    fieldInfo.overrides.refStrategy = refStrategyOverride;
+                                    //Remove the override value from the string
+                                    fieldInfo.value = fieldInfo.value.substr(3, fieldInfo.value.length);
+                                }
                             }
 
 
@@ -339,7 +371,7 @@ class ContractExcelReader {
                                 // }
                             }
 
-                            if (options.match && options.match.regexStr) {
+                            if (fieldInfo.value && fieldInfo.value.length && options.match && options.match.regexStr) {
                                 let regex = new RegExp(options.match.regexStr, options.match.flags);
                                 if (!regex.test(fieldInfo.value)) {
                                     //Invalid value for match / regex!
@@ -465,6 +497,13 @@ class ContractExcelReader {
 
                     let field = options.ref.field || defaultField;
                     let strategy = options.ref.strategy || defaultStrategy;
+                    
+                    
+                    //Apply manual override (see value parsing for more info)
+                    //Note: 0 as a number is a valid option, so we have to check for a non-null and non-undefined value
+                    if (utils.isDefined(fieldInfo.overrides.refStrategy)) {
+                        strategy = fieldInfo.overrides.refStrategy;
+                    }
 
                     let query = _this._buildRefCheckQuery(model, field, fieldInfo.value, strategy);
                     // console.log('query', query);
@@ -733,10 +772,10 @@ class ContractExcelReader {
             // },
             //Check if the field value is unique
             (fieldInfo, callback) => {
-                if (utils.isDefined(options.unique) && utils.isNotDefined(fieldInfo.value)) {
+                if (utils.isDefined(options.unique) && fieldInfo.value && fieldInfo.value.length) {
 
                     let query = {
-                        fieldName: fieldInfo.value
+                        [fieldName]: fieldInfo.value
                     };
                     Contract
                         .find(query)
@@ -748,7 +787,7 @@ class ContractExcelReader {
 
                             if (count) {
                                 fieldInfo.infos.push({
-                                    message: 'Este registro ya existe en la base de datos.'
+                                    message: 'Este registro se omitirá debido a que ya existe en la base de datos.'
                                 });
 
                                 fieldInfo.skipRow = true;
@@ -924,7 +963,7 @@ class ContractExcelReader {
                             let regexOptionMatch = null;
                             let matchingCategory = null;
 
-                            if (rowInfo.procedureState.value) {
+                            if (rowInfo.category.value && rowInfo.category.valueToSaveOverride && rowInfo.servicesDescription.value) {
 
                                 for (let category of categoryEnum) {
 
@@ -947,7 +986,7 @@ class ContractExcelReader {
                                     }
                                 }
 
-                                if (regexOptionMatch && matchingCategory) {
+                                if (regexOptionMatch && matchingCategory && matchingCategory !== rowInfo.category.valueToSaveOverride) {
                                     let errorMessage = "El valor de este campo no coincide con la categoría indicada en la descripción del contrato.";
 
                                     return callback(null, errorMessage);
@@ -991,7 +1030,8 @@ class ContractExcelReader {
                     break;
                 case C_IDS.CONTRACT_ID:
                     return _this._readField(rowInfo, cell, 'contractId', String, {
-                        required: true
+                        required: true,
+                        unique: true
                         //TODO: Validations
                     }, callback);
                     break;
@@ -1044,7 +1084,7 @@ class ContractExcelReader {
                             let regexOptionMatch = null;
                             let matchingProcedureState = null;
                             
-                            if (rowInfo.procedureState.value) {
+                            if (rowInfo.procedureState.value && rowInfo.procedureState.valueToSaveOverride && rowInfo.notes.value) {
 
                                 for (let procedureState of procedureStateEnum) {
 
@@ -1067,7 +1107,7 @@ class ContractExcelReader {
                                     }
                                 }
     
-                                if (regexOptionMatch && matchingProcedureState) {
+                                if (regexOptionMatch && matchingProcedureState && matchingProcedureState !== rowInfo.procedureState.valueToSaveOverride) {
                                     let errorMessage = "El valor de este campo no coincide con el estado de procedimiento indicado en las notas del contrato.";
     
                                     return callback(null, errorMessage);
@@ -1297,7 +1337,11 @@ class ContractExcelReader {
             //All columns processed for row
 
             //Create a summary for the row obj
-            rowInfo.summary = {};
+            rowInfo.summary = {
+                hasErrors: false,
+                hasInfos: false,
+                skipRow: false,
+            };
             
             let fieldNames = Object.keys(rowInfo);
             
@@ -1402,6 +1446,34 @@ class ContractExcelReader {
                             return {data: obj};
                         });
                         
+                        
+                        /*
+                        if (_this.idDataLoad) {
+                            DataLoad
+                                .findOne({
+                                    _id: _this.idDataLoad
+                                })
+                                .exec((err, dataLoad) => {
+                                    if (err) {
+                                        logger.error(err, null, 'dataLoader#readBuffer', 'Error trying to query existing DataLoad');
+                                    }
+                                    DataLoadDetail
+                                        .remove({id: {$in: dataLoad.details}})
+                                        .exec((err) => {
+                                            if (err) {
+                                                logger.error(err, null, 'dataLoader#readBuffer', 'Error trying to delete obsolete DataLoadDetail from db, unused details may me kept in the database.');
+                                            }
+                                            
+                                            dataLoad.details = [];
+                                            return resolve(dataLoad);
+                                        });
+                                });
+                        }
+                        
+                        let dataLoad = new DataLoad({
+                            data: objs
+                         */
+                        
                         DataLoadDetail.insertMany(dataLoadDetailsArray, (err, savedDetails) => {
                             
                             if (err) {
@@ -1415,11 +1487,53 @@ class ContractExcelReader {
                             //         return dataLoadDetail._id;
                             //     });
                             // }
-                            let dataLoad = new DataLoad({
-                                // details: dataLoadDetailsIds
-                                details: savedDetails
-                            });
-                            return resolve(dataLoad);
+
+
+                            if (_this.idDataLoad) {
+                                DataLoad
+                                    .findOne({
+                                        _id: _this.idDataLoad
+                                    })
+                                    .exec((err, dataLoad) => {
+                                        if (err) {
+                                            logger.error(err, null, 'dataLoader#readBuffer', 'Error trying to query existing DataLoad to update its details');
+                                        }
+                                        if (!dataLoad) {
+                                            let dataLoad = new DataLoad({
+                                                // details: dataLoadDetailsIds
+                                                details: savedDetails
+                                            });
+                                            return resolve(dataLoad);
+                                        }
+                                        
+                                        let dataLoadDetailsIds = (dataLoad.details || []).map((detail) => {
+                                            console.log('mongoose.Types.ObjectId(detail._id)', mongoose.Types.ObjectId(detail._id));
+                                            return mongoose.Types.ObjectId(detail._id);
+                                        });
+
+                                        console.log('dataLoadDetailsIds', dataLoadDetailsIds);
+
+                                        DataLoadDetail
+                                            .deleteMany({_id: {$in: dataLoadDetailsIds}})
+                                            .exec((err, results) => {
+                                                if (err) {
+                                                    logger.error(err, null, 'dataLoader#readBuffer', 'Error trying to delete obsolete DataLoadDetail from db, unused details may me kept in the database.');
+                                                }
+
+                                                console.log('results (from deletion)', results);
+
+                                                //Overwrite with new details
+                                                dataLoad.details = savedDetails;
+                                                return resolve(dataLoad);
+                                            });
+                                    });
+                            } else {
+                                let dataLoad = new DataLoad({
+                                    // details: dataLoadDetailsIds
+                                    details: savedDetails
+                                });
+                                return resolve(dataLoad);
+                            }
                         });
                         
                     });
