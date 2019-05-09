@@ -173,7 +173,7 @@ exports.save = (req, res, next) => {
             .findOne(qById)
             .exec((err, contract) => {
                 if (err || !contract) {
-                    logger.error(req, err, 'contract.controller#save', 'Error al consultar Contract');
+                    logger.error(err, req, 'contract.controller#save', 'Error al consultar Contract');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.save')
@@ -219,7 +219,7 @@ exports.save = (req, res, next) => {
 
                                 contract.save((err, savedContract) => {
                                     if (err) {
-                                        logger.error(req, err, 'contract.controller#save', 'Error al guardar Contract');
+                                        logger.error(err, req, 'contract.controller#save', 'Error al guardar Contract');
                                         return res.json({
                                             errors: true,
                                             message: req.__('general.error.save')
@@ -278,10 +278,18 @@ exports.save = (req, res, next) => {
 
                         contract.save((err, savedContract) => {
                             if (err) {
-                                logger.error(req, err, 'contract.controller#save', 'Error al guardar Contract');
+                                let errors = [];
+                                if(err.code == 11000){
+                                    errors.push({message:"El campo Número de contrato debe ser único, se encontro otro registro con el mismo valor."})
+                                }
+                                for(let item in err.errors){
+                                    errors.push(err.errors[item]);
+                                }
+                                logger.error(err, req, 'contract.controller#save', 'Error al guardar Contract');
                                 return res.json({
                                     "error": true,
-                                    "message": req.__('general.error.save')
+                                    "message": req.__('general.error.save'),
+                                    "errors":errors
                                 });
                             }
 

@@ -53,15 +53,16 @@
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
                                :placeholder="$t('contracts.new.administration-period.placeholder')"
-                               v-model="entry.administrationPeriod">
+                               v-model="entry.administrationPeriod"
+                               @input="delayTouch($v.entry.administrationPeriod)">
                         <label class="fg-label">{{$t('contracts.new.administration-period.label')}}
                             <small></small>
                             <br>
                             <strong>{{$t('contracts.new.administration-period.sub-label')}}</strong>
                         </label>
                     </div>
-                    <!--<span v-if="$v.entry.administrationPeriod.$invalid  && $v.entry.administrationPeriod.$dirty"-->
-                          <!--class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.administration-period.label')})}}</span>-->
+                    <span v-if="$v.entry.administrationPeriod.$invalid  && $v.entry.administrationPeriod.$dirty && !$v.entry.administrationPeriod.validAdministrationPeriod"
+                          class="c-error">{{$t(regExpErrorMessage, {field:$t('contracts.new.administration-period.label'), example:'2017-2019' })}}</span>
                 </div>
 
                 <!--fiscal year-->
@@ -69,14 +70,16 @@
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
                                :placeholder="$t('contracts.new.fiscal-year.placeholder')"
-                               v-model="entry.fiscalYear">
+                               v-model="entry.fiscalYear"
+                               @input="delayTouch($v.entry.fiscalYear)"
+                        >
                         <label class="fg-label">{{$t('contracts.new.fiscal-year.label')}}
                             <small></small>
                             <br>
                             <strong>{{$t('contracts.new.fiscal-year.sub-label')}}</strong>
                         </label>
                     </div>
-                    <!--<span v-if="$v.entry.fiscalYear.$invalid && $v.entry.fiscalYear.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.administration-period.label')})}}</span>-->
+                    <span v-if="$v.entry.fiscalYear.$invalid && $v.entry.fiscalYear.$dirty && !$v.entry.fiscalYear.validFiscalYear" class="c-error">{{$t(regExpErrorMessage, {field:$t('contracts.new.fiscal-year.label'), example:'2019'})}}</span>
                 </div>
 
                 <!--period-->
@@ -84,15 +87,17 @@
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
                                :placeholder="$t('contracts.new.period.placeholder')"
-                               v-model="entry.period">
+                               v-model="entry.period"
+                                @input="delayTouch($v.entry.period)"
+                        >
                         <label class="fg-label">{{$t('contracts.new.period.label')}}
                             <small></small>
                             <br>
                             <strong>{{$t('contracts.new.period.sub-label')}}</strong>
                         </label>
                     </div>
-                    <!--<span v-if="$v.entry.period.$invalid && $v.entry.period.$dirty"
-                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.administration-period.label'})}}</span>-->
+                    <span v-if="$v.entry.period.$invalid && $v.entry.period.$dirty  && !$v.entry.period.validPeriod"
+                          class="c-error">{{$t(regExpErrorMessage, {field:$t('contracts.new.period.label'), example:"1o 2019"})}}</span>
                 </div>
 
                 <!--contractId-->
@@ -151,15 +156,15 @@
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
                                :placeholder="$t('contracts.new.announcementUrl.placeholder')"
-                               v-model="entry.announcementUrl">
+                               v-model="entry.announcementUrl" @input="delayTouch($v.entry.announcementUrl)">
                         <label class="fg-label">{{$t('contracts.new.announcementUrl.label')}}
                             <small></small>
                             <br>
                             <strong>{{$t('contracts.new.announcementUrl.sub-label')}}</strong>
                         </label>
                     </div>
-                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
-                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.announcementUrl.label'})}}</span> -->
+                    <span v-if="$v.entry.announcementUrl.$invalid && $v.entry.announcementUrl.$dirty && !$v.entry.announcementUrl.validAnnouncementUrl"
+                          class="c-error">{{$t(regExpErrorMessage, {field:$t('contracts.new.announcementUrl.label'), example:"http://www.ejemplo.com"})}}</span>
                 </div>
 
 
@@ -218,15 +223,15 @@
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
                                :placeholder="$t('contracts.new.clarificationMeetingJudgmentUrl.placeholder')"
-                               v-model="entry.clarificationMeetingJudgmentUrl">
+                               v-model="entry.clarificationMeetingJudgmentUrl" @input="delayTouch($v.entry.clarificationMeetingJudgmentUrl)">
                         <label class="fg-label">{{$t('contracts.new.clarificationMeetingJudgmentUrl.label')}}
                             <small></small>
                             <br>
                             <strong>{{$t('contracts.new.clarificationMeetingJudgmentUrl.sub-label')}}</strong>
                         </label>
                     </div>
-                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
-                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.clarificationMeetingJudgmentUrl.label'})}}</span> -->
+                    <span v-if="$v.entry.clarificationMeetingJudgmentUrl.$invalid && $v.entry.clarificationMeetingJudgmentUrl.$dirty && !$v.entry.clarificationMeetingJudgmentUrl.validClarificationMeetingJudgmentUrl"
+                          class="c-error">{{$t(regExpErrorMessage, {field:$t('contracts.new.clarificationMeetingJudgmentUrl.label'), example:"http://www.ejemplo.com"})}}</span>
                 </div>
 
                 <!--presentationProposalsDocUrl-->
@@ -234,15 +239,15 @@
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
                                :placeholder="$t('contracts.new.presentationProposalsDocUrl.placeholder')"
-                               v-model="entry.presentationProposalsDocUrl">
+                               v-model="entry.presentationProposalsDocUrl" @input="delayTouch($v.entry.presentationProposalsDocUrl)">
                         <label class="fg-label">{{$t('contracts.new.presentationProposalsDocUrl.label')}}
                             <small></small>
                             <br>
                             <strong>{{$t('contracts.new.presentationProposalsDocUrl.sub-label')}}</strong>
                         </label>
                     </div>
-                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
-                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.presentationProposalsDocUrl.label'})}}</span> -->
+                    <span v-if="$v.entry.presentationProposalsDocUrl.$invalid && $v.entry.presentationProposalsDocUrl.$dirty && !$v.entry.presentationProposalsDocUrl.validPresentationProposalsDocUrl"
+                          class="c-error">{{$t(regExpErrorMessage, {field:$t('contracts.new.presentationProposalsDocUrl.label'), example:"http://www.ejemplo.com"})}}</span>
                 </div>
 
                 <!-- Supplier-->
@@ -410,15 +415,15 @@
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
                                :placeholder="$t('contracts.new.contract-url.placeholder')"
-                               v-model="entry.contractUrl">
+                               v-model="entry.contractUrl" @input="delayTouch($v.entry.contractUrl)">
                         <label class="fg-label">{{$t('contracts.new.contract-url.label')}}
                             <small></small>
                             <br>
                             <strong>{{$t('contracts.new.contract-url.sub-label')}}</strong>
                         </label>
                     </div>
-                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
-                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.contract-url.label'})}}</span> -->
+                    <span v-if="$v.entry.contractUrl.$invalid && $v.entry.contractUrl.$dirty && !$v.entry.contractUrl.validContractUrl"
+                          class="c-error">{{$t(regExpErrorMessage, {field:$t('contracts.new.contract-url.label'), example:"http://www.ejemplo.com"})}}</span>
                 </div>
 
 
@@ -539,8 +544,11 @@
 
             </div>
             <div class="modal-footer aditional-text" slot="footer">
+                <div v-if="formErrors && formErrors.length">
+                    <p class="c-error" v-for="error in formErrors">{{error.message}}</p>
+                </div>
                 <button type="button" class="btn-stroke button-info_text" data-dismiss="modal"> Cancelar </button>
-                <button type="submit"  class="btn-raised button-accent m-l-15"> Guardar </button>
+                <button type="submit"  class="btn-raised button-accent m-l-15" > Guardar </button>
             </div>
         </modalEntry>
 
@@ -575,6 +583,8 @@
 
     const storeModule = 'contracts';
     const docName = 'contracts.contract';
+    const touchMap = new WeakMap();
+    const urlRegExp = new RegExp("(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})");
 
     let baseCatalog = catalog.configure({
         storeModule: storeModule,
@@ -673,6 +683,66 @@
         },
         validations: {
             entry: {
+                administrationPeriod: {
+                    validAdministrationPeriod: (value) => {
+                        if (value == null || value == undefined || value == "") {
+                            return true
+                        }
+                        return (/^[12][0-9]{3}-[12][0-9]{3}$/).test(value)
+                    }
+                },
+                fiscalYear: {
+                    validFiscalYear: (value) => {
+                        if (value == null || value == undefined || value == "") {
+                            return true
+                        }
+                        return (/^[12][0-9]{3}$/).test(value)
+
+                    }
+                },
+                period: {
+                    validPeriod: (value) => {
+                        if (value == null || value == undefined || value == "") {
+                            return true
+                        }
+                        return (/^[1234]o\s2[0-9]{3}$/).test(value)
+
+                    }
+                },
+                announcementUrl: {
+                    validAnnouncementUrl: (value) => {
+                        if (value == null || value == undefined || value == "") {
+                            return true
+                        }
+                        return urlRegExp.test(value)
+                    }
+                },
+                clarificationMeetingJudgmentUrl: {
+                    validClarificationMeetingJudgmentUrl: (value) => {
+                        if (value == null || value == undefined || value == "") {
+                            return true
+                        }
+                        return urlRegExp.test(value)
+                    }
+                },
+                presentationProposalsDocUrl: {
+                    validPresentationProposalsDocUrl: (value) => {
+                        if (value == null || value == undefined || value == "") {
+                            return true
+                        }
+                        return urlRegExp.test(value)
+                    }
+                },
+                contractUrl: {
+                    validContractUrl: (value) => {
+                        if (value == null || value == undefined || value == "") {
+                            return true
+                        }
+                        return urlRegExp.test(value)
+                    }
+                }
+
+
                 // procedureType: {
                 //     required
                 // },
@@ -811,7 +881,10 @@
             requiredErrorMessage() {
                 return 'contracts.validation.required'
             },
-            ...mapGetters(storeModule, ['docsUpdatedLength']),
+            regExpErrorMessage(){
+                return 'contracts.validation.regex.message';
+            },
+            ...mapGetters(storeModule, ['docsUpdatedLength','formErrors']),
             ...mapState({
                 suppliers: state => state[storeModule].suppliers,
                 administrativeUnits: state => state[storeModule].administrativeUnits,
@@ -844,6 +917,8 @@
             });
             bus.$on(storeModule + DOC_CREATED, () => {
                 // this.administrationPeriod = "";
+                $('#ModalEntry').modal('hide');
+                this.$store.dispatch (`${storeModule}/clearFormErrors`);
                 this.$v.$reset();
                 tShow("Elemento Creado!", 'info');
             });
