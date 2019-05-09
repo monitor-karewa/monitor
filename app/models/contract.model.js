@@ -345,19 +345,19 @@ let ContractSchema = new Schema({
     administrationPeriod: {
         type: String,
         required: true,
-        match: new RegExp("^[12][0-9]{3}-[12][0-9]{3}$")
+        match: [new RegExp("^[12][0-9]{3}-[12][0-9]{3}$"), 'El campo Administración no cumple con el formato esperado. Ejemplo: 2017-2019']
     },
     /* Ejercicio */
     fiscalYear: {
         type: String,
         required: true,
-        match: new RegExp("^[12][0-9]{3}")
+        match: [new RegExp("^[12][0-9]{3}$"), 'El campo Ejercicio no cumple con el formato esperado. Ejemplo: 2019']
     },
     /* Periodo que se reporta */
     period: {
         type: String,
         required: true,
-        match: new RegExp("^[1234]o\\s2[0-9]{3}$")
+        match: [new RegExp("^[1234]o\\s2[0-9]{3}$"), 'El campo Periodo no cumple con el formato esperado. Ejemplo: 1o 2019']
     },
     /* ID / Número de Folio o Nomenclatura / Identificador */
     contractId: {
@@ -382,8 +382,8 @@ let ContractSchema = new Schema({
     },
     /*Hipervínculo a la convocatoria o invitaciones*/
     announcementUrl:{
-        //TODO: match regex?
-        type:String
+        type:String,
+        match: [new RegExp("(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"), 'El campo Hipervínculo a la convocatoria o invitaciones no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
     },
     /* Fecha de la convocatoria o invitación */
     announcementDate:{
@@ -402,13 +402,13 @@ let ContractSchema = new Schema({
     },
     /* Hipervínculo al fallo de Junta de Aclaraciones */
     clarificationMeetingJudgmentUrl:{
-        //TODO: match regex?
         type:String,
+        match: [new RegExp("(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"), 'El campo Hipervínculo al fallo de Junta de Aclaraciones no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
     },
     /* Hipervínculo al documento de la Presentación de Propuestas */
     presentationProposalsDocUrl:{
-        //TODO: match regex?
-        type:String
+        type:String,
+        match: [new RegExp("(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"), 'El campo Hipervínculo al documento de la Presentación de Propuestas no cumple con el formato esperado . Ejemplo: www.ejemplo.com']
     },
     /* Proveedor */
     supplier: {
@@ -482,8 +482,8 @@ let ContractSchema = new Schema({
     },
     /*Hipervínculo al documento del contrato y anexos*/
     contractUrl:{
-        //TODO: match uri?
-        type : String
+        type : String,
+        match: [new RegExp("(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"), 'El campo Hipervínculo al documento del contrato y anexos no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
         // required:true
     },
     /*Área responsable de la información*/
