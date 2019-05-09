@@ -130,7 +130,8 @@ var done = [];
 var calls = [];
 var i = 0;
 var exploreCalculationTree = function (calculation, mainCallback) {
-    if (typeof calculation === 'string') {
+
+    if (typeof calculation === 'string' || calculation instanceof mongoose.Types.ObjectId) {
         Calculation.findOne(
             {_id: mongoose.Types.ObjectId(calculation)}
         ).exec(function (err, res) {
@@ -156,7 +157,6 @@ var exploreCalculationTree = function (calculation, mainCallback) {
                                 done.push(calc.abbreviation);
                                 return calcCallback(null, true);
                             } else {
-                                console.log("false1");
                                 return calcCallback(new Error('Invalid calculation'));
                                 // return mainCallback(false);
                             }
@@ -273,10 +273,10 @@ exports.validateFormula = (req, res, next) => {
 
 
 exports.evaluateFormula = (req, res, next) => {
-    console.log("UNSPORTED OPERATION : calculation.controller#evaluateFormula");
+    console.log("UNSUPPORTED OPERATION : calculation.controller#evaluateFormula");
     res.json({
         error : true,
-        message : "UNSPORTED OPERATION : calculation.controller#evaluateFormula"
+        message : "UNSUPPORTED OPERATION : calculation.controller#evaluateFormula"
     })
 };
 
@@ -310,7 +310,6 @@ exports.save = (req, res, next) => {
                         message: req.__('general.error.save')
                     });
                 }
-
 
                 //Update doc fields
                 calculation.name = req.body.name;
@@ -350,7 +349,6 @@ exports.save = (req, res, next) => {
         
     } else {
         //Create
-
 
         let calculation = new Calculation({
             name : req.body.name,
@@ -395,8 +393,6 @@ exports.save = (req, res, next) => {
 };
 
 let validateFormula = function(formula) {
-    console.log("formula", formula);
-    // $NPEPE +
     try {
         if (formula && formula.expression) {
             let regex = "\\${1,2}[A-Z0-9]+";
@@ -404,7 +400,7 @@ let validateFormula = function(formula) {
             let value = math.eval(newExpression);
             return { error: false, isValid: true };
         } else {
-            return { error:true, isValid: false }
+            return { error:false, isValid: false }
         }
 
     } catch (err) {
@@ -418,7 +414,29 @@ let replaceVariableForValue = function(regex, expression, value = 0){
     return newExpression;
 };
 
-let  calculateAndValidateFormula = function(calculation, mainCallback){
+
+
+let calculateAndValidateFormula = function(calculation, callback){
+
+    if (typeof calculation === 'string' || calculation instanceof mongoose.Types.ObjectId) {
+        Calculation.findOne(
+            {_id: mongoose.Types.ObjectId(calculation)}
+        ).exec(function (err, res) {
+            //Result (callback)
+            if(err){
+                console.log("Error Finding calculation");
+            } else {
+                calculation = res;
+                processCalculation(calculation, callback)
+            }
+        });
+    } else {
+        processCalculation(calculation, callback)
+    }
+};
+
+let  processCalculation = function(calculation, mainCallback){
+    // console.log("calculation", calculation);
     if(resultsMap[calculation.abbreviation] != undefined){
         let result = {
             abbreviation: calculation.abbreviation,
@@ -426,7 +444,7 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
         };
         return result;
     }
-    //populate calculations
+
     try {
         let formulaValidation = validateFormula(calculation.formula);
         if (formulaValidation.error) {
@@ -456,21 +474,21 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
                 calculation.formula.expression = replaceVariableForValue(regex, calculation.formula.expression, result[0].result);
             });
 
-            if(calculation.formula.calculations && calculation.formula.calculations.length){
+            if (calculation.formula.calculations && calculation.formula.calculations.length) {
                 let innerCalculations = [];
-                for (let k = 0; k <  calculation.formula.calculations.length; k++) {
+                for (let k = 0; k < calculation.formula.calculations.length; k++) {
                     innerCalculations.push(calculation.formula.calculations[k])
                     ///async parallel
                     /////
                 }
+                let variablesToReplace = [];
                 async.each(innerCalculations,
                     function (calculation, AsyncEachCallback) {
                         calculateAndValidateFormula(calculation, function (err, res) {
                             if (err) {
                                 AsyncEachCallback(err);
                             } else {
-                                calculation.result = res;
-
+                                variablesToReplace.push(res);
                                 AsyncEachCallback(null, res);
                             }
                         })
@@ -480,18 +498,17 @@ let  calculateAndValidateFormula = function(calculation, mainCallback){
                             return mainCallback({ error:true, message:'calculations.formula.unexpected.error', err:err});
                         } else {
                             try {
-                                innerCalculations.forEach((item) => {
-                                    console.log("calculation", item.result);
-                                    let regex = item.result.abbreviation.replace(/\$\$/, "");
-                                    console.log("regex", regex);
+                                variablesToReplace.forEach((item) => {
+                                    let regex = item.abbreviation.replace(/\$\$/, "");
                                     regex = "\\$\\$" + regex;
-                                    console.log("regex", regex);
-                                    calculation.formula.expression = replaceVariableForValue(regex, calculation.formula.expression, item.result.value);
+                                    calculation.formula.expression = replaceVariableForValue(regex, calculation.formula.expression, item.value);
                                 });
+
                                 finalValue = math.eval(calculation.formula.expression);
+
                                 let result = {
                                     abbreviation: calculation.abbreviation,
-                                    results : finalValue
+                                    value : finalValue
                                 };
                                 resultsMap[calculation.abbreviation] = finalValue;
                                 return mainCallback(null, result);
