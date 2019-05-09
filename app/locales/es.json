@@ -8,5 +8,9 @@
 	"data-load.error.upload": "Ocurrió un error al procesar el archivo. Por favor intenta nuevamente.",
 	"data-load.error.upload.data-load-in-progress": "data-load.error.upload.data-load-in-progress",
 	"data-load.cancel.error.no-data-load-in-progress": "data-load.cancel.error.no-data-load-in-progress",
-	"data-load.cancel.success": "data-load.cancel.success"
+	"data-load.cancel.success": "data-load.cancel.success",
+	"calculations.formula.syntax.error":"La formula contiene errores de sintaxis, por favor revisa tu formula.",
+	"calculations.formula.infinity.error":"Se detecto una división entre zero, esto puede ser por la ausencia de registros que cumplan con el criterio de las variables usadas",
+	"calculations.formula.reference-circular.error":"No fue posible realizar el cálculo, se detectaron referencias circulares en la formula",
+	"calculations.formula.unexpected.error":"No fue posible realizar el cálculo"
 }
