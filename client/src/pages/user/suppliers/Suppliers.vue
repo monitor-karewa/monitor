@@ -244,7 +244,7 @@
                                         <td class="text-align-r">{{supplier.noBid | currency}}</td>
                                         <td class="text-align-r c-accent">{{supplier.total | currency}}</td>
                                         <td class="text-align-r">
-                                            <router-link to="/supplier" class="btn-stroke button-primary table-btn-stroke">
+                                            <router-link :to="'/suppliers/' + supplier._id" class="btn-stroke button-primary table-btn-stroke">
                                                 Ver más
                                             </router-link>
                                         </td>

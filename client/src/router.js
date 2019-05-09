@@ -80,7 +80,7 @@ let router = new Router({
                     component: Suppliers
                 },
                 {
-                    path: 'supplier',
+                    path: 'suppliers/:id',
                     name: 'SupplierDetail',
                     component: SupplierDetail
                 },

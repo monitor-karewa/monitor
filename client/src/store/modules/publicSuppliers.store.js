@@ -10,6 +10,7 @@ const state = {
         page: 1,
         pages: 1
     },
+    detail: {}
 };
 
 const getters = {
@@ -28,6 +29,15 @@ const actions = {
             tShow(i18n.t('suppliers.public.load.error'), 'danger');
             commit('SET_SUPPLIERS', {}); 
         })
+    },
+    LOAD_SUPPLIER_DETAIL ({commit}, id) {
+        let query = `?id=${id}`;
+        apiPublicSuppliers.detail({query}, (result) => {
+            commit('SET_SUPPLIER_DETAIL', result.data.data); 
+        }, (err) => {
+            tShow(i18n.t('suppliers.public.load.error'), 'danger');
+            commit('SET_SUPPLIER_DETAIL', {}); 
+        })
     }
 };
 
@@ -38,6 +48,9 @@ const mutations = {
         }
         state.suppliers = suppliers || [];
         state.totals = totals || {};
+    },
+    SET_SUPPLIER_DETAIL (state, detail) {
+        state.detail = detail;
     }
 };
 

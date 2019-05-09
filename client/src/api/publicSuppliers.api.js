@@ -8,12 +8,12 @@ export default {
         return axios.get(`${base.baseUrl}/public-api/${namespace}/list${params.query || ''}`, params)
             .then(onSuccess)
             .catch(onError);
-    }/*,
-    save: (params = {}, onSuccess, onError) => {
-        return axios.post(`${base.baseUrl}/api/${namespace}/save`, params)
+    },
+    detail: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/public-api/${namespace}/detail${params.query || ''}`, params)
             .then(onSuccess)
             .catch(onError);
-    },
+    }/*,
     delete: (params = {}, onSuccess, onError) => {
         return axios.post(`${base.baseUrl}/api/${namespace}/delete`, { "_id" : params.id })
             .then(onSuccess)

@@ -2,6 +2,7 @@ const Supplier = require('./../models/supplier.model').Supplier;
 const {Contract} = require('./../models/contract.model');
 
 const logger = require('./../components/logger').instance;
+const mongoose = require('mongoose');
 
 const {ExcelExporter} = require('./../components/exporter');
 
@@ -46,7 +47,7 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
                         }
                     }
                 },
-
+                
                 public: {
                     $sum: {
                         $cond: {
@@ -188,6 +189,180 @@ exports.list = (req, res, next) => {
         return res.json({
             error: false,
             data: data
+        });
+    });
+};
+
+exports.detail = (req, res, next) => {
+    let supplierId = req.query.id;
+    
+    if (supplierId) {
+        supplierId = mongoose.Types.ObjectId(supplierId);
+    }
+    
+    Contract.aggregate([
+        {
+            $match: {
+                "supplier": supplierId 
+            }
+        },
+        {
+            $project: {
+                supplier: 1,
+                _id: 1,
+                servicesDescription: 1,
+                totalOrMaxAmount: 1,
+                informationDate: 1,
+                procedureType: 1
+            }
+        },
+        {
+            $group: {
+                _id: '$supplier',
+                contracts: {$push: '$$ROOT'},
+                'totalPublic': {
+                    $sum: {
+                        $cond: {
+                            if: {$eq: ["$procedureType", "PUBLIC"]},
+                            then: "$totalOrMaxAmount",
+                            else: 0
+                        }
+                    }
+                },
+                'totalInvitation': {
+                    $sum: {
+                        $cond: {
+                            if: {$eq: ["$procedureType", "INVITATION"]},
+                            then: "$totalOrMaxAmount",
+                            else: 0
+                        }
+                    }
+                },
+                'totalNoBid': {
+                    $sum: {
+                        $cond: {
+                            if: {$eq: ["$procedureType", "NO_BID"]},
+                            then: "$totalOrMaxAmount",
+                            else: 0
+                        }
+                    }
+                },
+                total: {$sum: "$totalOrMaxAmount"},
+                count: {$sum: 1}
+            },
+            
+        },
+        {
+            $lookup: {
+                from: Supplier.collection.name,
+                let: { "supplierId": "$_id" },
+                pipeline: [
+                    {
+                        "$match": {
+                            "$expr": {
+                                "$eq": [ "$_id", "$$supplierId" ] }
+                        }
+                    },
+                    {
+                        "$project": {
+                            "name": 1
+                        }
+                    }
+                ],
+                as: "supplier"
+            }
+        },
+        {
+            $unwind: {
+                path: "$supplier",
+                preserveNullAndEmptyArrays: true
+            },
+        },
+        {
+            $project: {
+                supplier: 1,
+                contracts: 1,
+                totals: {
+                    total: "$total",
+                    public: "$totalPublic",
+                    invitation: "$totalInvitation",
+                    noBid: "$totalNoBid"
+                }
+            }
+        },
+        {
+            $project: {
+                supplier: 1,
+                totals: 1,
+                public: {
+                    $filter: {
+                        input: "$contracts",
+                        as: "contract",
+                        cond: { $eq: [ "$$contract.procedureType", "PUBLIC" ] }
+                    }
+                },
+                invitation: {
+                    $filter: {
+                        input: "$contracts",
+                        as: "contract",
+                        cond: { $eq: [ "$$contract.procedureType", "INVITATION" ] }
+                    }
+                },
+                noBid: {
+                    $filter: {
+                        input: "$contracts",
+                        as: "contract",
+                        cond: { $eq: [ "$$contract.procedureType", "NO_BID" ] }
+                    }
+                },
+            }
+        }
+        
+    ]).exec((err, supplierDetails) => {
+
+
+        // {
+        //     supplier: {
+        //         _id: '',
+        //         name: ''
+        //     },
+        //     totals: {
+        //         total: 0,
+        //         count: 0,
+        //         public: 0,
+        //         invitation: 0,
+        //         noBid: 0
+        //     },
+        //     public: [{
+        //         _id: '',
+        //         servicesDescription: '',
+        //         totalOrMaxAmount: 0,
+        //         informationDate: Date()
+        //     }],
+        //     invitation: [{
+        //         _id: '',
+        //         servicesDescription: '',
+        //         totalOrMaxAmount: 0,
+        //         informationDate: Date()
+        //     }],
+        //     noBid: [{
+        //         _id: '',
+        //         servicesDescription: '',
+        //         totalOrMaxAmount: 0,
+        //         informationDate: Date()
+        //     }]
+        // }
+        console.log('supplierDetails[0]', supplierDetails[0]);
+
+        if (err) {
+            return res.json({
+                error: true
+            });
+        }
+
+        return res.json({
+            error: false,
+            data: supplierDetails[0]
         });
     });
 };
