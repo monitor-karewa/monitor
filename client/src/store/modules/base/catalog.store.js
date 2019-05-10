@@ -17,7 +17,8 @@ export default function (api, storeName) {
         docName: '',
         selectedDocId: '',
         isEditingTable : false,
-        entrySelected : {}
+        entrySelected : {},
+        formErrors : []
     };
 
     const getters = {
@@ -41,7 +42,8 @@ export default function (api, storeName) {
                 return state.listQuery.search;
             }
             return "";
-        }
+        },
+        formErrors:  state => state.formErrors
 
     };
 
@@ -124,16 +126,23 @@ export default function (api, storeName) {
             api.save(
                 data,
                 (result) => {
+
                     Vue.$log.info('Response', result);
-                    //result.data.data.docs
-                    // commit('updateDocs', {
-                    //     docs: result.data.data.docs
-                    // });
-                    dispatch(`${storeName}/list`,{},{root:true});
-                    if(data._id){
-                        bus.$emit(storeName + events.DOC_UPDATED);
-                    }else{
-                        bus.$emit(storeName + events.DOC_CREATED);
+                    if(result.data.error){
+                        Vue.$log.error('Response error', result.data.message);
+                        tShow(result.data.message,'danger');
+                        commit("SET_FORM_ERRORS", result.data.errors);
+                    } else {
+                        //result.data.data.docs
+                        // commit('updateDocs', {
+                        //     docs: result.data.data.docs
+                        // });
+                        dispatch(`${storeName}/list`,{},{root:true});
+                        if(data._id){
+                            bus.$emit(storeName + events.DOC_UPDATED);
+                        }else{
+                            bus.$emit(storeName + events.DOC_CREATED);
+                        }
                     }
                 },
                 (error) => {
@@ -182,6 +191,9 @@ export default function (api, storeName) {
             commit('CLEAR_DOCS_UPDATED');
             commit('SET_EDIT_TABLE',payload);
         },
+        clearFormErrors({commit}){
+            commit('CLEAR_FORM_ERRORS');
+        }
         // clearSelectedEntry({commit}){
         //     commit('CLEAR_SELECTED_ENTRY');
         // }
@@ -223,6 +235,13 @@ export default function (api, storeName) {
         CLEAR_DOCS_UPDATED(state){
             state.docsUpdated = [];
         },
+        SET_FORM_ERRORS(state, payload){
+            state.formErrors = payload
+        },
+        CLEAR_FORM_ERRORS(state){
+            state.formErrors = []
+        }
+
         // CLEAR_SELECTED_ENTRY(state){
         //     state.entrySelected = {};
         // }
