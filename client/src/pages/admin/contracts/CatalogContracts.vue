@@ -27,6 +27,8 @@
                         </select>
                         <label class="fg-label">{{$t('contracts.new.procedure-type.label')}}</label>
                     </div>
+                    <span v-if="$v.entry.procedureType.$invalid  && $v.entry.procedureType.$dirty && !$v.entry.procedureType.required">
+                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.procedure-type.label')})}}</span>
                 </div>
 
                 <!--Category-->
@@ -34,7 +36,7 @@
                     <div class="fg-line">
                         <select v-model="entry.category" class="form-control select selectpicker"
                                 data-live-search="true"
-                                :title="$t('contracts.new.procedure-type.placeholder')"
+                                :title="$t('contracts.new.category.placeholder')"
                                 data-live-search-placeholder="Realiza una búsqueda..">
                             <option value="EXTENSION"> {{$t('contracts.procedure-type.extension')}}</option>
                             <option value="MODIFICATION"> {{$t('contracts.procedure-type.modification')}}</option>
@@ -44,8 +46,10 @@
                             <option value="LEASE"> {{$t('contracts.procedure-type.lease')}}</option>
                             <option value="PUBLIC_WORKS"> {{$t('contracts.procedure-type.public-works')}}</option>
                         </select>
-                        <label class="fg-label">{{$t('contracts.new.procedure-type.label')}}</label>
+                        <label class="fg-label">{{$t('contracts.new.category.label')}}</label>
                     </div>
+                    <span v-if="$v.entry.category.$invalid  && $v.entry.category.$dirty && !$v.entry.category.required"
+                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.category.label')})}}</span>
                 </div>
 
                 <!--administrationPeriod-->
@@ -63,6 +67,8 @@
                     </div>
                     <span v-if="$v.entry.administrationPeriod.$invalid  && $v.entry.administrationPeriod.$dirty && !$v.entry.administrationPeriod.validAdministrationPeriod"
                           class="c-error">{{$t(regExpErrorMessage, {field:$t('contracts.new.administration-period.label'), example:'2017-2019' })}}</span>
+                    <span v-if="$v.entry.administrationPeriod.$invalid  && $v.entry.administrationPeriod.$dirty && !$v.entry.administrationPeriod.required"
+                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.administration-period.label')})}}</span>
                 </div>
 
                 <!--fiscal year-->
@@ -80,6 +86,8 @@
                         </label>
                     </div>
                     <span v-if="$v.entry.fiscalYear.$invalid && $v.entry.fiscalYear.$dirty && !$v.entry.fiscalYear.validFiscalYear" class="c-error">{{$t(regExpErrorMessage, {field:$t('contracts.new.fiscal-year.label'), example:'2019'})}}</span>
+                    <span v-if="$v.entry.fiscalYear.$invalid  && $v.entry.fiscalYear.$dirty && !$v.entry.fiscalYear.required"
+                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.fiscal-year.label')})}}</span>
                 </div>
 
                 <!--period-->
@@ -98,6 +106,8 @@
                     </div>
                     <span v-if="$v.entry.period.$invalid && $v.entry.period.$dirty  && !$v.entry.period.validPeriod"
                           class="c-error">{{$t(regExpErrorMessage, {field:$t('contracts.new.period.label'), example:"1o 2019"})}}</span>
+                    <span v-if="$v.entry.period.$invalid  && $v.entry.period.$dirty && !$v.entry.period.required"
+                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.period.label')})}}</span>
                 </div>
 
                 <!--contractId-->
@@ -148,6 +158,8 @@
                         </select>
                         <label class="fg-label">{{$t('contracts.new.procedure-state.label')}}</label>
                     </div>
+                    <span v-if="$v.entry.procedureState.$invalid  && $v.entry.procedureState.$dirty && !$v.entry.procedureState.required"
+                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.procedure-state.label')})}}</span>
                 </div>
 
 
@@ -197,8 +209,8 @@
                             <strong>{{$t('contracts.new.servicesDescription.sub-label')}}</strong>
                         </label>
                     </div>
-                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
-                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.servicesDescription.label'})}}</span> -->
+                    <span v-if="$v.entry.servicesDescription.$invalid  && $v.entry.servicesDescription.$dirty && !$v.entry.servicesDescription.required"
+                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.servicesDescription.label')})}}</span>
                 </div>
 
 
@@ -261,6 +273,8 @@
                         </select>
                         <label class="fg-label">{{$t('contracts.new.supplier.label')}}</label>
                     </div>
+                    <span v-if="$v.entry.supplier.$invalid  && $v.entry.supplier.$dirty && !$v.entry.supplier.required"
+                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.supplier.label')})}}</span>
                 </div>
 
                 <!-- Organizer AdministrativeUnit-->
@@ -274,6 +288,8 @@
                         </select>
                         <label class="fg-label">{{$t('contracts.new.organizer-administrative-unit.label')}}</label>
                     </div>
+                    <span v-if="$v.entry.organizerAdministrativeUnit.$invalid  && $v.entry.organizerAdministrativeUnit.$dirty && !$v.entry.organizerAdministrativeUnit.required"
+                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.organizer-administrative-unit.label')})}}</span>
                 </div>
 
                 <!-- Applicant AdministrativeUnit-->
@@ -287,6 +303,8 @@
                         </select>
                         <label class="fg-label">{{$t('contracts.new.applicant-administrative-unit.label')}}</label>
                     </div>
+                    <span v-if="$v.entry.applicantAdministrativeUnit.$invalid  && $v.entry.applicantAdministrativeUnit.$dirty && !$v.entry.applicantAdministrativeUnit.required"
+                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.applicant-administrative-unit.label')})}}</span>
                 </div>
 
 
@@ -302,6 +320,8 @@
                         </select>
                         <label class="fg-label">{{$t('contracts.new.administrative-unit-type.label')}}</label>
                     </div>
+                    <span v-if="$v.entry.administrativeUnitType.$invalid  && $v.entry.administrativeUnitType.$dirty && !$v.entry.administrativeUnitType.required"
+                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.administrative-unit-type.label')})}}</span>
                 </div>
 
 
@@ -338,8 +358,8 @@
                             <strong>{{$t('contracts.new.contract-date.sub-label')}}</strong>
                         </label>
                     </div>
-                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
-                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.contractDate.label'})}}</span> -->
+                    <span v-if="$v.entry.contractDate.$invalid  && $v.entry.contractDate.$dirty && !$v.entry.contractDate.required"
+                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.contract-date.label')})}}</span>
                 </div>
 
 
@@ -355,6 +375,8 @@
                         </select>
                         <label class="fg-label">{{$t('contracts.new.contract-type.label')}}</label>
                     </div>
+                    <span v-if="$v.entry.contractType.$invalid  && $v.entry.contractType.$dirty && !$v.entry.contractType.required"
+                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.contract-type.label')})}}</span>
                 </div>
 
 
@@ -405,8 +427,8 @@
                             <strong>{{$t('contracts.new.total-or-max-amount.sub-label')}}</strong>
                         </label>
                     </div>
-                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
-                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.total-or-max-amount.label'})}}</span> -->
+                    <span v-if="$v.entry.totalOrMaxAmount.$invalid  && $v.entry.totalOrMaxAmount.$dirty && !$v.entry.totalOrMaxAmount.required"
+                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.total-or-max-amount.label')})}}</span>
                 </div>
 
 
@@ -438,6 +460,8 @@
                         </select>
                         <label class="fg-label">{{$t('contracts.new.responsible-administrative-unit.label')}}</label>
                     </div>
+                    <span v-if="$v.entry.areaInCharge.$invalid  && $v.entry.areaInCharge.$dirty && !$v.entry.areaInCharge.required"
+                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.responsible-administrative-unit.label')})}}</span>
                 </div>
 
 
@@ -454,8 +478,8 @@
                             <strong>{{$t('contracts.new.update-date.sub-label')}}</strong>
                         </label>
                     </div>
-                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
-                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.update-date.label'})}}</span> -->
+                    <span v-if="$v.entry.updateDate.$invalid  && $v.entry.updateDate.$dirty && !$v.entry.updateDate.required"
+                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.update-date.label')})}}</span>
                 </div>
 
                 <!--Notes -->
@@ -503,6 +527,8 @@
                             <strong>{{$t('contracts.new.information-date.sub-label')}}</strong>
                         </label>
                     </div>
+                    <span v-if="$v.entry.informationDate.$invalid  && $v.entry.informationDate.$dirty && !$v.entry.informationDate.required"
+                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.information-date.label')})}}</span>
                     <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
                           class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.information-date.label'})}}</span> -->
                 </div>
@@ -683,7 +709,14 @@
         },
         validations: {
             entry: {
+                procedureType:{
+                  required
+                },
+                category:{
+                  required
+                },
                 administrationPeriod: {
+                    required,
                     validAdministrationPeriod: (value) => {
                         if (value == null || value == undefined || value == "") {
                             return true
@@ -692,6 +725,7 @@
                     }
                 },
                 fiscalYear: {
+                    required,
                     validFiscalYear: (value) => {
                         if (value == null || value == undefined || value == "") {
                             return true
@@ -701,6 +735,7 @@
                     }
                 },
                 period: {
+                    required,
                     validPeriod: (value) => {
                         if (value == null || value == undefined || value == "") {
                             return true
@@ -740,7 +775,43 @@
                         }
                         return urlRegExp.test(value)
                     }
-                }
+                },
+                procedureState:{
+                    required
+                },
+                servicesDescription:{
+                    required
+                },
+                supplier:{
+                    required
+                },
+                organizerAdministrativeUnit:{
+                    required
+                },
+                applicantAdministrativeUnit:{
+                    required
+                },
+                administrativeUnitType:{
+                    required
+                },
+                contractType:{
+                    required
+                },
+                contractDate:{
+                    required
+                },
+                totalOrMaxAmount:{
+                    required
+                },
+                areaInCharge:{
+                    required
+                },
+                updateDate:{
+                    required
+                },
+                informationDate:{
+                    required
+                },
 
 
                 // procedureType: {
