@@ -330,7 +330,7 @@ let ContractSchema = new Schema({
     procedureType: {
         type: String,
         enum: procedureTypesEnum,
-        required: true,
+        required: [true, "El campo Tipo de procedimiento es requerido"],
         uppercase: true
     },
     /* Materia */
@@ -346,19 +346,19 @@ let ContractSchema = new Schema({
     /* Administracion */
     administrationPeriod: {
         type: String,
-        required: true,
+        required: [true, "El campo Administración es requerido"],
         match: [new RegExp("^[12][0-9]{3}-[12][0-9]{3}$"), 'El campo Administración no cumple con el formato esperado. Ejemplo: 2017-2019']
     },
     /* Ejercicio */
     fiscalYear: {
         type: String,
-        required: true,
+        required: [true, "El campo Ejercicio es requerido"],
         match: [new RegExp("^[12][0-9]{3}$"), 'El campo Ejercicio no cumple con el formato esperado. Ejemplo: 2019']
     },
     /* Periodo que se reporta */
     period: {
         type: String,
-        required: true,
+        required: [true, "El campo Periodo es requerido"],
         match: [new RegExp("^[1234]o\\s2[0-9]{3}$"), 'El campo Periodo no cumple con el formato esperado. Ejemplo: 1o 2019']
     },
     /* ID / Número de Folio o Nomenclatura / Identificador */
@@ -395,7 +395,7 @@ let ContractSchema = new Schema({
     /* Descripción de las obras, bienes o servicios */
     servicesDescription: {
         type: String,
-        required: true
+        required: [true, "El campo Descripción de las obras es requerido"],
     },
     /* Fecha en la que se celebró la junta de aclaraciones */
     clarificationMeetingDate:{
@@ -416,13 +416,13 @@ let ContractSchema = new Schema({
     supplier: {
         type: Schema.Types.ObjectId,
         ref: 'Supplier',
-        required: true
+        required: [true, "El campo Proveedor es requerido"],
     },
     /* Unidad administrativa convocante */
     organizerAdministrativeUnit: {
         type: Schema.Types.ObjectId,
         ref: 'AdministrativeUnit',
-        required: true,
+        required: [true, "El campo U. administrativa convocante es requerido"],
         validator: function () {
             return this.administrativeUnitType === 'DESCENTRALIZADA' ? this.organizerAdministrativeUnit == this.applicantAdministrativeUnit : true
         }
@@ -431,13 +431,13 @@ let ContractSchema = new Schema({
     applicantAdministrativeUnit: {
         type: Schema.Types.ObjectId,
         ref: 'AdministrativeUnit',
-        required: true
+        required: [true, "El campo U. administrativa solicitante es requerido"],
     },
     /* Centralizada/Descentralizada */
     administrativeUnitType: {
         type: String,
         enum: administrativeUnitTypeEnum,
-        required: true,
+        required: [true, "El campo Tipo de U. Administrativa es requerido"],
         uppercase: true
     },
     /* Número que identifique al contrato */
@@ -449,7 +449,7 @@ let ContractSchema = new Schema({
     /* Fecha del contrato */
     contractDate: {
         type: Date,
-        required: true,
+        required: [true, "El campo Fecha del contrato es requerido"],
         validator: function () {
             let yearContractDate = new Date(this.contractDate).getFullYear();
             let fiscalYear = Number(this.fiscalYear);
@@ -460,7 +460,7 @@ let ContractSchema = new Schema({
     contractType:{
       type:String,
       enum:contractTypeEnum,
-      required:true
+      required: [true, "El campo Tipo de contrato es requerido"],
     },
     /* Monto total del contrato con impuestos incluidos */
     totalAmount: {
@@ -478,7 +478,7 @@ let ContractSchema = new Schema({
     /* Monto total o Monto máximo, en su caso */
     totalOrMaxAmount: {
         type: Number,
-        required: true
+        required: [true, "El campo Monto total o Máximo es requerido"],
         // Si es NORMAL - es el monto total
         // Si es ABIERTO - es el monto máximo
     },
@@ -492,12 +492,12 @@ let ContractSchema = new Schema({
     areaInCharge: {
         type: Schema.Types.ObjectId,
         ref: 'AdministrativeUnit',
-        required: true
+        required: [true, "El campo Área responsable de la información es requerido"],
     },
     /*Fecha de actualización*/
     updateDate: {
         type: Date,
-        required: true,
+        required: [true, "El campo Fecha de actualización es requerido"],
         default: Date.new
     },
     /*Notas*/
@@ -511,7 +511,7 @@ let ContractSchema = new Schema({
     /*Fecha de obtención de los datos*/
     informationDate: {
         type: Date,
-        required: true
+        required: [true, "El campo Fecha de obtención de datos es requerido"],
     },
     /*Adjudicaciones Directas que exceden el límite*/
     limitExceeded: {

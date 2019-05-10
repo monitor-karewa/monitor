@@ -292,10 +292,12 @@ export default {
 
 
     "contracts.new.procedure-type.placeholder" : "Selecciona el tipo de procedimiento",
+    "contracts.new.category.placeholder" : "Selecciona la categoría",
     "contracts.procedure-type.public" : "Público",
     "contracts.procedure-type.no-bid" : "Adjudicación directa",
     "contracts.procedure-type.invitation" : "Por invitación",
     "contracts.new.procedure-type.label" : "Tipo de Procedimiento",
+    "contracts.new.category.label" : "Categoría",
     "contracts.procedure-type.extension" : "Extensión",
     "contracts.procedure-type.modification" : "Modificación",
     "contracts.procedure-type.adendum" : "Addendum",
