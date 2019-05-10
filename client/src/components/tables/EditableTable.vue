@@ -23,13 +23,36 @@
                                     <tbody>
                                     <tr v-for="(doc, index) in docs" :key="`doc-${index}`">
                                         <td v-for="(column) in tableColumns" v-if="column.visible">
-                                            <span v-if="!isEditingTable">
-                                                {{ getValueForField(doc, column)}}
-                                            </span>
-
                                             <input v-if="isEditingTable" type="text" class="form-control fg-input"
                                                    :placeholder="doc[column.field]" :value="doc[column.field]"
                                                    @input="updateDocFromEditableTable($event,doc,column.field)"/>
+
+                                            <span v-else-if="column.type == 'currency'">
+                                                {{ getValueForField(doc, column) | currency}}
+                                            </span>
+                                            <span v-else-if="column.type == 'i18n'">
+                                                {{ $tc(getValueForField(doc, column))}}
+                                            </span>
+
+                                            <span v-else-if="column.type == 'boolean'">
+                                                <div v-if="getValueForField(doc, column)">
+                                                    <span class="f-20 horizontal-center c-accent">
+                                                        <i class="zmdi zmdi-check-square"></i>
+                                                    </span>
+                                                </div>
+                                                <div v-else>
+                                                    <span class="f-20 horizontal-center">
+                                                        <i class="zmdi zmdi-square-o"></i>
+                                                    </span>
+                                                </div>
+                                            </span>
+                                            <span v-else-if="column.type == 'highlight'" class="c-accent">
+                                                <strong>{{getValueForField(doc, column)}}</strong>
+                                            </span>
+                                            <span v-else>
+                                                {{ getValueForField(doc, column)}}
+                                            </span>
+
                                             <!--
                                                 OTHER TYPE OF FIELDS
                                                 <span v-else-if="">
@@ -185,6 +208,9 @@
                     }
 
                     var day = date.getDate();
+                    if(day < 10){
+                        day = "0"+ day;
+                    }
                     var monthIndex = date.getMonth();
                     var year = date.getFullYear();
 

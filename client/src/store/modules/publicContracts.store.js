@@ -40,7 +40,6 @@ const getters = {
         }
         return query;
     },
-    docsUpdatedLength: state => state.docsUpdated.length,
     getSearchString(state){
         if(state.listQuery){
             return state.listQuery.search;
