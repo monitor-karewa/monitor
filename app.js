@@ -47,6 +47,9 @@ const contractRoutes = require('./app/routes/contract.routes');
 const userRoutes = require('./app/routes/users.routes');
 const organizationRoutes = require('./app/routes/organization.routes');
 
+//public api
+const publicContractRoutes = require('./app/routes/publicContract.routes');
+
 const dataLoadRoutes = require('./app/routes/dataLoad.routes');
 const routeLogRoutes = require('./app/routes/routeLog.routes');
 
@@ -186,6 +189,10 @@ app.use('/api/suppliers', supplierRoutes);
 app.use('/api/resources', resourceRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/organizations', organizationRoutes);
+
+//Public Api
+app.use('/public-api/contracts', publicContractRoutes);
+
 
 //TODO Leave just one
 app.use('/api/administrative-units', administrativeUnitRoutes);

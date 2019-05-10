@@ -12,6 +12,8 @@ import calculations from '@/store/modules/calculations.store';
 import organizations from '@/store/modules/organizations.store';
 import dataLoad from '@/store/modules/dataLoad.store';
 
+//user
+import publicContracts from '@/store/modules/publicContracts.store';
 import publicSuppliersStore from '@/store/modules/publicSuppliers.store';
 
 
@@ -38,6 +40,7 @@ export default new Vuex.Store({
         dataLoad: dataLoad,
         //public stores (for users)
         publicSuppliers: publicSuppliersStore,
+        publicContracts : publicContracts
     },
     store: store,
     actions: actions,

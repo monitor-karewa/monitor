@@ -250,6 +250,7 @@ export default {
 
 
     //Contracts
+    "contracts.doc-name": "Contrato | Contratos",
     "contracts.contract": "Contrato",
     "contracts.supplier" : "Proveedor",
     "contracts.administrativeUnit" : "Unidad Administrativa",
@@ -448,5 +449,30 @@ export default {
     "data-load.confirm.success": "Se ha confirmado la carga de datos correctamente.",
     "data-load.confirm.error.unexpected": "Ocurrió un error inesperado al intentar confirmar la carga de datos.",
     "data-load.confirm.error.no-data-load-in-progress": "La carga de datos no se encuentra disponible. Por favor recarga la página para actualizar la información.",
+
+
+    //Enums
+    "PUBLIC" :  "Pública",
+    "NO_BID" :  "Adjudicación Directa",
+    "INVITATION" : "Por invitación",
+    "EXTENSION" : "Extensión",
+    "MODIFICACION" : "Modificación",
+    "ADENDUM" : "Adendum",
+    "ACQUISITION" : "Adquisición",
+    "SERVICES" : "Servicios",
+    "LEASE" : "Arrendamiento",
+    "PUBLIC_WORKS" : "Obras públicas",
+    "CONCLUDED" : "Concluído",
+    "CANCELED" : "Cancelado",
+    "DESERTED" : "Desierto",
+    "IN_PROGRESS" : "En progreso",
+    "CENTRALIZED" : "Centralizado",
+    "DESCENTRALIZED" : "Descentralizado",
+    "NOT_EXCEEDED" : "Excedido",
+    "LIMIT_EXCEEDED" : "No excedido",
+    "OPEN" : "Abierto",
+    "NORMAL" :  "Normal"
+
+
 
 }

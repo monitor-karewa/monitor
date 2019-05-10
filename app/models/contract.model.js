@@ -62,7 +62,7 @@ const procedureTypesEnum = Object.keys(procedureTypesEnumDict);
 const categoryEnumDict = {
     'EXTENSION': [
         {
-            regexStr: utils.toAccentsRegex('extencion', null, true),
+            regexStr: utils.toAccentsRegex('extension', null, true),
             flags: 'gi'
         },
         {
