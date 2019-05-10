@@ -160,25 +160,29 @@
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color accent">
-                            <span>$57,837,576.28</span>
+                            <!--<span>$57,837,576.28</span>-->
+                            <span>{{totals.total | currency}}</span>
                             <label>MONTO TOTAL</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color red">
-                            <span>$23,980,030.81</span>
+                            <!--<span>$23,980,030.81</span>-->
+                            <span>{{totals.public | currency}}</span>
                             <label>MONTO TOTAL DE CONTRATOS POR LICITACIÓN PÚBLICA</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color yellow">
-                            <span>$2,398,871.43</span>
+                            <!--<span>$2,398,871.43</span>-->
+                            <span>{{totals.invitation | currency}}</span>
                             <label>MONTO TOTAL DE CONTRATOS POR INVITACIÓN</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color green">
-                            <span>$31,458,674.04</span>
+                            <!--<span>$31,458,674.04</span>-->
+                            <span>{{totals.noBid | currency}}</span>
                             <label>MONTO TOTAL DE CONTRATOS POR ADJUDICACIÓN DIRECTA</label>
                         </div>
                     </div>
@@ -188,15 +192,15 @@
                 <div class="card">
                     <div class="floating-title-panel small">
                         <h1>Contratos</h1>
-                        <p class="d-block f-14 c-plain_text principal-font-regular m-b-40">Se registró un total de 28
-                            contratos en el Periodo Administrativo 2016 - 2018. <br/> Para ver
+                        <p class="d-block f-14 c-plain_text principal-font-regular m-b-40">Se han registrado un total de {{totals.count}}
+                            contratos para este Proveedor. <br/> Para ver
                             más información de un contrato en específico, haz clic en la opción “Expandir”.</p>
 
                         <div id="accordion" class="collapsible-status">
                             <div class="collapsible-content">
                                 <div class="col-12 collapsible-header success" id="headingOne">
                                     <div class="info-container">
-                                        <h4>1</h4>
+                                        <h4>{{public.length}}</h4>
                                         <h2>CONTRATO POR LICITACIÓN PÚBLICA</h2>
                                     </div>
                                     <div class="">
@@ -223,15 +227,15 @@
 
                                         <!-- CONTENIDO EXPANDIBLE -->
                                         <div class="row">
-                                            <div class="col-12 col-md-4 col-lg-3" v-for="contrato in contratos.slice(0,1)">
+                                            <div class="col-12 col-md-4 col-lg-3" v-for="contract in public">
                                                 <div class="card-background">
-                                                    <p>{{contrato.titulo}}</p>
+                                                    <p>{{contract.servicesDescription}}</p>
                                                     <div>
                                                     <span>
-                                                        <label>{{contrato.cantidad}}</label>
-                                                        <small>{{contrato.fecha}}</small>
+                                                        <label>{{contract.totalOrMaxAmount | currency}}</label>
+                                                        <small>{{contract.informationDate}}</small>
                                                     </span>
-                                                        <router-link to="/contract" class="btn-stroke xs button-primary">
+                                                        <router-link :to="'/contracts/' + contract._id" class="btn-stroke xs button-primary">
                                                             Ver más
                                                         </router-link>
                                                     </div>
@@ -245,7 +249,7 @@
                             <div class="collapsible-content">
                                 <div class="col-12 collapsible-header warning" id="headingTwo">
                                     <div class="info-container">
-                                        <h4>1</h4>
+                                        <h4>{{invitation.length}}</h4>
                                         <h2>CONTRATO POR INVITACIÓN</h2>
                                     </div>
                                     <div class="">
@@ -272,15 +276,15 @@
 
                                         <!-- CONTENIDO EXPANDIBLE -->
                                         <div class="row">
-                                            <div class="col-12 col-md-4 col-lg-3" v-for="contrato in contratos.slice(0,1)">
+                                            <div class="col-12 col-md-4 col-lg-3" v-for="contract in invitation">
                                                 <div class="card-background">
-                                                    <p>{{contrato.titulo}}</p>
+                                                    <p>{{contract.servicesDescription}}</p>
                                                     <div>
                                                     <span>
-                                                        <label>{{contrato.cantidad}}</label>
-                                                        <small>{{contrato.fecha}}</small>
+                                                        <label>{{contract.totalOrMaxAmount | currency}}</label>
+                                                        <small>{{contract.informationDate}}</small>
                                                     </span>
-                                                        <router-link to="/contract" class="btn-stroke xs button-primary">
+                                                        <router-link :to="'/contracts/' + contract._id" class="btn-stroke xs button-primary">
                                                             Ver más
                                                         </router-link>
                                                     </div>
@@ -295,7 +299,7 @@
                             <div class="collapsible-content">
                                 <div class="col-12 collapsible-header error" id="headingThree">
                                     <div class="info-container">
-                                        <h4>7</h4>
+                                        <h4>{{noBid.length}}</h4>
                                         <h2>CONTRATOS POR ADJUDICACIÓN DIRECTA</h2>
                                     </div>
                                     <div class="">
@@ -321,15 +325,15 @@
 
                                     <!-- CONTENIDO EXPANDIBLE -->
                                     <div class="row">
-                                        <div class="col-12 col-md-4 col-lg-3" v-for="contrato in contratos">
+                                        <div class="col-12 col-md-4 col-lg-3" v-for="contract in noBid">
                                             <div class="card-background">
-                                                <p>{{contrato.titulo}}</p>
+                                                <p>{{contract.servicesDescription}}</p>
                                                 <div>
                                                     <span>
-                                                        <label>{{contrato.cantidad}}</label>
-                                                        <small>{{contrato.fecha}}</small>
+                                                        <label>{{contract.totalOrMaxAmount | currency}}</label>
+                                                        <small>{{contract.informationDate}}</small>
                                                     </span>
-                                                    <router-link to="/contract" class="btn-stroke xs button-primary">
+                                                    <router-link :to="'/contracts/' + contract._id" class="btn-stroke xs button-primary">
                                                         Ver más
                                                     </router-link>
                                                 </div>
@@ -368,7 +372,11 @@
 
 <script>
     import MoreInfo from '@/components/general/MoreInfo';
-
+    
+    import {mapState} from 'vuex';
+    
+    const storeModule = 'publicSuppliers';
+    
     export default {
         data() {
             return {
@@ -414,11 +422,33 @@
         components: {
             MoreInfo
         },
+        computed: {
+            ...mapState({
+                detail: state => state[storeModule].detail
+            }),
+            supplier() {
+                return this.detail.supplier || {};
+            },
+            totals() {
+                return this.detail.totals || {};
+            },
+            public() {
+                return this.detail.public || [];
+            },
+            invitation() {
+                return this.detail.invitation || [];
+            },
+            noBid() {
+                return this.detail.noBid || [];
+            },
+        },
         methods: {},
         created() {
         },
         mounted() {
-
+            let supplierId = this.$route.params.id;
+            console.log('this.$route.params.id', supplierId);
+            this.$store.dispatch('publicSuppliers/LOAD_SUPPLIER_DETAIL', supplierId);
         }
     }
 </script>

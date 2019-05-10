@@ -191,6 +191,7 @@ export default {
     "suppliers.name": "Nombre o razón social",
     "suppliers.rfc": "RFC",
     "suppliers.notes": "Notas",
+    "suppliers.public.load.error": "La información de Proveedores no se encuentra disponible en este momento.",
 
 
     //Organizations
