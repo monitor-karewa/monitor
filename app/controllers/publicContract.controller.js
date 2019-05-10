@@ -90,7 +90,6 @@ exports.getTotals = (req, res, next) => {
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     query = {...query, ...qNotDeleted};
-    console.log("publicContract.controller#getTotals");
     Contract.aggregate([
             {
                 $match : {}
@@ -143,7 +142,6 @@ exports.getTotals = (req, res, next) => {
         console.log("err", err);
         res.json({error:true, message: err.toString()});
     } else {
-        console.log("result", result);
         res.json(result);
     }
 
