@@ -95,7 +95,6 @@
                         pageOptions.push(pageToAdd);
                     }
                 }
-                
                 return pageOptions;
             }
         },
@@ -116,14 +115,18 @@
                     return;
                 }
                 let storeModule = this.$props.storeModule;
-                this.$store.dispatch(`${storeModule}/changePage`, page);
+                this.$store.dispatch(`${storeModule}/${this.changePageAction}`, page);
             },
             submitEntry : function (entryData){
 
             }
         },
         props: {
-            'storeModule': String
+            'storeModule': String,
+            'changePageAction': {
+                type: String,
+                default: 'changePage'
+            },
         }
     }
 </script>
