@@ -102,7 +102,30 @@ const actions = {
             return state.listQuery.search;
         }
         return "";
-    }
+    },
+    changePage ({commit, getters, state}, page) {
+        console.log('page --> ' + page);
+        let oldPage = state.pagination.page;
+        commit('UPDATE_PAGE',page);
+        // console.log(`Calling action ${storeName}/changePage`);
+        Vue.$log.info(`Calling action ${storeName}/changePage`);
+        let query = getters.getUrlQuery;
+        contractsApi.list(
+            { query },
+            (result) => {
+                Vue.$log.info('Response', result);
+                //result.data.data.docs
+                // commit('updateDocs', {
+                //     docs: result.data.data.docs
+                // });
+                commit('updateDocs', result.data.data);
+            },
+            (error) => {
+                Vue.$log.error('Response error', error);
+                tShow(`Hubo un error en el paginado: ${error}`);
+            }
+        )
+    },
     };
 
 const mutations = {
@@ -122,6 +145,9 @@ const mutations = {
     SET_SEARCH(state,search){
         state.listQuery.search = search;
     },
+    UPDATE_PAGE(state,page){
+        state.pagination.page = page;
+    }
 };
 
 

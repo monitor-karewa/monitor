@@ -200,6 +200,7 @@
                         </div>
                     </div>
                 </div>
+                <Pagination  :store-module="storeModule"/>
 
                 <!-- ADITIONAL INFO ONLY -->
                 <p class="f-12 c-plain_text principal-font-regular">
@@ -229,6 +230,7 @@
     import MoreInfo from '@/components/general/MoreInfo';
     const storeModule = 'publicContracts';
     const docName = 'contracts.contract';
+    import Pagination from '@/components/catalogs/Pagination';
     import { mapState, mapGetters } from 'vuex';
     import moment from 'moment';
     import TableTdFormat from '@/components/tables/tds/TableTdFormat';
@@ -247,7 +249,8 @@
         },
         components: {
             MoreInfo,
-            TableTdFormat
+            TableTdFormat,
+            Pagination
         },
         created() {
             window.$(document).ready(function () {
