@@ -600,7 +600,7 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import {bus} from '@/main';
-    import {DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT} from "@/store/events";
+    import {DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT, DOC_UPDATED} from "@/store/events";
     import ModalDanger from "@/components/modals/ModalDanger";
     import ModalDefault from "@/components/modals/ModalDefault";
     import { required, minLength, maxLength } from 'vuelidate/lib/validators';
@@ -978,7 +978,7 @@
                 touchMap.set($v, setTimeout($v.$touch, 1000))
             },
             clearEntry() {
-                this.$store.dispatch (`${storeModule}/clearSelectedEntry`);
+//                this.$store.dispatch (`${storeModule}/clearSelectedEntry`);
                 this.$v.$reset();
             }
         },
@@ -993,11 +993,17 @@
                 this.$v.$reset();
                 tShow("Elemento Creado!", 'info');
             });
+            bus.$on(storeModule + DOC_UPDATED, () => {
+                $('#ModalEntry').modal('hide');
+                this.$store.dispatch (`${storeModule}/clearFormErrors`);
+                this.$v.$reset();
+                tShow("Elemento Actualizado!", 'info');
+            });
             bus.$on(storeModule + DOC_START_EDIT, (entry) => {
                     this.clearEntry();
                     this.entry._id = entry._id;
-                    this.entry.supplier._id = entry.supplier._id;
-                    this.entry.supplier.name = entry.supplier.name;
+                    this.entry.supplier = entry.supplier;
+//                    this.entry.supplier.name = entry.supplier.name;
                     this.entry.administrativeUnit = entry.administrativeUnit;
                     this.entry.procedureType = entry.procedureType;
                     this.entry.category = entry.category;
