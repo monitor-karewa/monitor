@@ -191,6 +191,7 @@ export default {
     "suppliers.name": "Nombre o razón social",
     "suppliers.rfc": "RFC",
     "suppliers.notes": "Notas",
+    "suppliers.public.load.error": "La información de Proveedores no se encuentra disponible en este momento.",
 
 
     //Organizations
@@ -391,6 +392,7 @@ export default {
     "contracts.new.amount-exceeded.placeholder" : "Ingresa la cantidad",
     "contracts.new.amount-exceeded.label" : "Cantidad excedida",
     "contracts.new.amount-exceeded.sub-label" : "Indica cuál es la cantidad en exceso",
+    "contracts.validation.regex.message" : "El campo {field} no tiene el formato correcto.\nEjemplo: {example}",
 
     //Resources
     "resources.resource": "Recurso | Recursos",

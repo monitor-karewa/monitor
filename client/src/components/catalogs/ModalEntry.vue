@@ -63,7 +63,9 @@
                         actionName = "save";
                     }
                     this.$store.dispatch(`${this.$props.storeModule}/${actionName}`, this.$props.entry);
-                    $('#ModalEntry').modal('hide');
+                    if(this.$props.storeModule !== 'contracts'){
+                        $('#ModalEntry').modal('hide');
+                    }
                 } else {
                     tShow('El formulario contiene errores', 'info');
                 }
