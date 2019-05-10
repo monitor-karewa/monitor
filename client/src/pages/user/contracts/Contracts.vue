@@ -16,6 +16,7 @@
                         <div class="floating-title-panel">
                             <h1 m-t-0>
                                 Contratos
+
                             </h1>
                             <div class="side-right">
                                 <a href="" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
@@ -145,9 +146,17 @@
                                         <th class="text-align-l">Id. proceso</th>
                                         <th class="text-align-l">Descripción de la obra</th>
                                         <th class="text-align-l">Monto total</th>
-                                        <th class="text-align-l">Fecha del contrato<i
-                                                class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>
+                                        <th class="text-align-l">Fecha del contrato<i class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>
                                         <th class="text-align-l">Tipo de procedimiento</th>
+                                        <th class="text-align-l">Estdo del procedimiento</th>
+                                        <th class="text-align-l">Unidad Administrativa Solicitante</th>
+                                        <th class="text-align-l">Materia</th>
+                                        <th class="text-align-l">Tipo de contrato</th>
+                                        <th class="text-align-l">Notas</th>
+                                        <th class="text-align-l">Hipervínculo a la convocatoria</th>
+                                        <th class="text-align-l">Hipervínculo al documento del contrato</th>
+                                        <th class="text-align-l">Hipervínculo al documento de la Presentación de Propuestas</th>
+                                        <th class="text-align-l">Fecha de obtención de los datos</th>
                                     </tr>
                                     </thead>
                                     <tbody>
@@ -157,13 +166,25 @@
                                                 Ver más
                                             </router-link>
                                         </td>
-                                        <td class="text-align-l">{{contract.id}}</td>
-                                        <td class="text-align-l">{{contract.descripcionObra}}</td>
-                                        <td class="text-align-l c-accent">{{contract.montoTotal}}</td>
-                                        <td class="text-align-l" style="text-transform: uppercase">{{contract.FechaDelContrato}}</td>
+                                        <TableTdFormat :fieldName="'contractId'"    :value="contract.contractId"  class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :fieldName="'servicesDescription'"    :value="contract.servicesDescription"  class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :format="'currency'" :fieldName="'totalAmount'"    :value="contract.totalAmount"  :currency="true" class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :format="'date'"     :fieldName="'contractDate'"    :value="contract.contractDate" class="text-align-l c-accent"></TableTdFormat>
+
                                         <td class="text-align-l">
-                                            <div class="badge" :class="{ 'badge-green' : contract.tipoProcedimiento == 'Licitación Pùblica', 'badge-red' : contract.tipoProcedimiento == 'Adjudicación directa'}">{{contract.tipoProcedimiento}}</div>
+                                            <div class="badge" :class="{ 'badge-yellow' : contract.procedureType == 'INVITATION', 'badge-green' : contract.procedureType == 'PUBLIC', 'badge-red' : contract.procedureType == 'NO_BID'}">{{$t(contract.procedureType)}}</div>
                                         </td>
+
+                                        <TableTdFormat :fieldName="'procedureState'"    :value="contract.procedureState"  :i18n="true" class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :fieldName="'applicantAdministrativeUnit'"    :value="contract.applicantAdministrativeUnit.name"  class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :fieldName="'category'"    :value="contract.category"  :i18n="true" class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :fieldName="'contractType'"    :value="contract.contractType"  :i18n="true" class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :fieldName="'notes'"    :value="contract.notes"  class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :format="'url'" :fieldName="'announcementUrl'"    :value="contract.announcementUrl"  class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :format="'url'" :fieldName="'contractUrl'"    :value="contract.contractUrl"  class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :format="'url'" :fieldName="'presentationProposalsDocUrl'"    :value="contract.presentationProposalsDocUrl"  class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :format="'date'" :fieldName="'informationDate'"    :value="contract.informationDate"  classda="text-align-l c-accent"> </TableTdFormat>
+                                        <TableTdFormat :format="'date'" :fieldName="'contractDate'"    :value="contract.contractDate"  class="text-align-l" style="text-transform: uppercase"> </TableTdFormat>
                                     </tr>
                                     <!--<tr class="bgm-cards">-->
                                         <!--<td class="p-t-15 p-b-10 f-bold">TOTAL</td>-->
@@ -206,85 +227,42 @@
 <script>
 
     import MoreInfo from '@/components/general/MoreInfo';
+    const storeModule = 'publicContracts';
+    const docName = 'contracts.contract';
+    import { mapState, mapGetters } from 'vuex';
+    import moment from 'moment';
+    import TableTdFormat from '@/components/tables/tds/TableTdFormat';
+
 
     export default {
         data() {
             return {
-                contracts: [
-                    {
-                        id: "IMPELP02/2017",
-                        descripcionObra: "contratación de servicio de farmacia subrogada",
-                        montoTotal: "$81,400,000.00",
-                        FechaDelContrato: "19/diciembre/2017",
-                        tipoProcedimiento: "Licitación Pùblica"
-                    },
-                    {
-                        id: "IMPELP04/2016",
-                        descripcionObra: "Prestación del servicio de farmacia subrogada",
-                        montoTotal: "$72,208,045.00",
-                        FechaDelContrato: "01/diciembre/2016",
-                        tipoProcedimiento: "Licitación Pùblica"
-                    },
-                    {
-                        id: "AD020/17",
-                        descripcionObra: "Servicio para el suministro de combustible (gasolina y diesel) para el parque vehicular propiedad del Municipio de Chihuahua",
-                        montoTotal: "$70,300,000.00",
-                        FechaDelContrato: "07/diciembre/2016",
-                        tipoProcedimiento: "Adjudicación directa"
-                    },
-                    {
-                        id: "MET0411185E7",
-                        descripcionObra: "CONSTRUCCIÓN DE GAZA EN EL PERIFERICO DE LA JUVENTUD Y AV. LA CANTERA",
-                        montoTotal: "$69,770,177.00",
-                        FechaDelContrato: "19/mayo/2017",
-                        tipoProcedimiento: "Licitación Pùblica"
-                    },
-                    {
-                        id: "AD128/17",
-                        descripcionObra: "CONTRATACION DEL SERVICIO DE SUMINISTRO DE COMBUSTIBLE DE GASOLINA Y DIESEL PARA LOS VEHICULOS Y EDIFICIOS",
-                        montoTotal: "$60,311,399.00",
-                        FechaDelContrato: "01/julio/2017",
-                        tipoProcedimiento: "Adjudicación directa"
-                    },
-                    {
-                        id: "AD131/18",
-                        descripcionObra: "SERVICIO PARA EL SUMINISTRO DE COMBUSTIBLE DE GASOLINA Y DIESEL PARA EL PARQUE VEHICULAR Y EDIFICIOS PROPIEDAD DEL MUNICIPIO DE CHIHUAHUA",
-                        montoTotal: "$60,152,282.00",
-                        FechaDelContrato: "01/marzo/2018",
-                        tipoProcedimiento: "Adjudicación directa"
-                    },
-                    {
-                        id: "DOPM0673/16",
-                        descripcionObra: "CONSTRUCCIÓN DE COLECTOR EN VARIAS COLONIAS AL SUR DE LA CIUDAD (1A ETAPA)",
-                        montoTotal: "$52,381,951.00",
-                        FechaDelContrato: "08/diciembre/2017",
-                        tipoProcedimiento: "Licitación Pùblica"
-                    },
-                    {
-                        id: "CUM01/17",
-                        descripcionObra: "Licitación Pública para adquisición de concreto hidráulico y material triturado",
-                        montoTotal: "$40,720,828.00",
-                        FechaDelContrato: "10/febrero/2017",
-                        tipoProcedimiento: "Licitación Pùblica"
-                    },
-                    {
-                        id: "CUM01/2018",
-                        descripcionObra: "Suministro de concreto hidráulico y material base",
-                        montoTotal: "$35,389,809.00",
-                        FechaDelContrato: "02/marzo/2018",
-                        tipoProcedimiento: "Licitación Pùblica"
-                    },
-                ]
+                storeModule : storeModule,
             }
         },
+        computed  : {
+            ...mapState({
+                contracts: state => state[storeModule].contracts,
+            }),
+        },
         components: {
-            MoreInfo
+            MoreInfo,
+            TableTdFormat
         },
         created() {
             window.$(document).ready(function () {
                 window.$('.selectpicker').selectpicker();
                 $('.selectpicker').selectpicker();
             });
+        },
+        beforeMount() {
+            this.$store.dispatch(`${storeModule}/list`);
+            this.$store.commit(`${storeModule}/setDocName`, {docName: docName});
+        },
+        filters: {
+            moment: function (date) {
+                return moment(date).format('DD/MM/YYYY');
+            }
         },
     }
 </script>
