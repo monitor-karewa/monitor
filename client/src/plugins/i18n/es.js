@@ -250,6 +250,7 @@ export default {
 
 
     //Contracts
+    "contracts.doc-name": "Contrato | Contratos",
     "contracts.contract": "Contrato",
     "contracts.supplier" : "Proveedor",
     "contracts.administrativeUnit" : "Unidad Administrativa",

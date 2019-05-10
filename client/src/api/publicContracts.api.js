@@ -10,20 +10,11 @@ export default {
             .then(onSuccess)
             .catch(onError);
     },
-    save: (params = {}, onSuccess, onError) => {
-        return axios.post(`${base.baseUrl}/public-api/${namespace}/save`, params)
-            .then(onSuccess)
-            .catch(onError);
-    },
-    retrieveSuppliers: (params = {}, onSuccess, onError) => {
-        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/suppliers`,   params )
-            .then(onSuccess)
-            .catch(onError);
-    },
-    retrieveAdministrativeUnits: (params = {}, onSuccess, onError) => {
-        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/administrative-units`,   params )
+    calculateTotals: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/public-api/${namespace}/totals${params.query || ''}`, params)
             .then(onSuccess)
             .catch(onError);
     }
+
 
 }

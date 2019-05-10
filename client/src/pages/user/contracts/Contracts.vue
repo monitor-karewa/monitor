@@ -110,25 +110,25 @@
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color accent">
-                            <span>$2,302,860,488.81</span>
+                            <span>{{totals.totalAmount | currency}}</span>
                             <label>MONTO TOTAL</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color red">
-                            <span>$1,055,177,509.74</span>
+                            <span>{{totals.PUBLIC | currency}}</span>
                             <label>Monto total de contratos por Licitación pública</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color yellow">
-                            <span>$149,337,687.59</span>
+                            <span>{{totals.INVITATION | currency}}</span>
                             <label>Monto total de contratos por Invitación</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color green">
-                            <span>$1,098,345,291.46</span>
+                            <span>{{totals.NO_BID | currency}}</span>
                             <label>Monto total de contratos por Adjudicación Directa</label>
                         </div>
                     </div>
@@ -144,6 +144,7 @@
                                     <tr>
                                         <th class="" style="min-width:0px;">Opciones</th>
                                         <th class="text-align-l">Id. proceso</th>
+                                        <th class="text-align-l">Id. Contrato</th>
                                         <th class="text-align-l">Descripción de la obra</th>
                                         <th class="text-align-l">Monto total</th>
                                         <th class="text-align-l">Fecha del contrato<i class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>
@@ -167,6 +168,7 @@
                                             </router-link>
                                         </td>
                                         <TableTdFormat :fieldName="'contractId'"    :value="contract.contractId"  class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :fieldName="'contractNumber'"    :value="contract.contractNumber"  class="text-align-l"> </TableTdFormat>
                                         <TableTdFormat :fieldName="'servicesDescription'"    :value="contract.servicesDescription"  class="text-align-l"> </TableTdFormat>
                                         <TableTdFormat :format="'currency'" :fieldName="'totalAmount'"    :value="contract.totalAmount"  :currency="true" class="text-align-l"> </TableTdFormat>
                                         <TableTdFormat :format="'date'"     :fieldName="'contractDate'"    :value="contract.contractDate" class="text-align-l c-accent"></TableTdFormat>
@@ -229,7 +231,7 @@
 
     import MoreInfo from '@/components/general/MoreInfo';
     const storeModule = 'publicContracts';
-    const docName = 'contracts.contract';
+    const docName = 'contracts.doc-name';
     import Pagination from '@/components/catalogs/Pagination';
     import { mapState, mapGetters } from 'vuex';
     import moment from 'moment';
@@ -245,6 +247,7 @@
         computed  : {
             ...mapState({
                 contracts: state => state[storeModule].contracts,
+                totals: state => state[storeModule].totals, //I like totals
             }),
         },
         components: {
@@ -259,8 +262,9 @@
             });
         },
         beforeMount() {
+            this.$store.dispatch(`${storeModule}/getTotals`);
             this.$store.dispatch(`${storeModule}/list`);
-            this.$store.commit(`${storeModule}/setDocName`, {docName: docName});
+            this.$store.commit(`${storeModule}/setDocName`,  docName);
         },
         filters: {
             moment: function (date) {

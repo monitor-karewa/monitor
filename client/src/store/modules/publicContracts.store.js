@@ -6,8 +6,6 @@ import Vue from "vue";
 const storeName = "publicContracts";
 
 const state = {
-    docs: [],
-    docsUpdated :[],
     pagination: {
         total: 0,
         page: 1,
@@ -16,12 +14,16 @@ const state = {
     listQuery : {
         search : ""
     },
-    docName: '',
+    docName: "",
     selectedDocId: '',
     isEditingTable : false,
-    entrySelected : {},
     contracts : [],
-    administrativeUnits : [],
+    totals: {
+        totalAmount: 0.00,
+        NO_BID: 0.00,
+        PUBLIC: 0.00,
+        INVITATION: 0.00
+    }
 };
 
 const getters = {
@@ -48,15 +50,6 @@ const getters = {
 };
 
 const actions = {
-    /**
-     * Retrieves suppliers from DB to make them available at selection
-     */
-    getSuppliers({commit}){
-        contractsApi.retrieveSuppliers({},
-            (result)=>{
-                commit('SET_SUPPLIERS', result.data.data.docs);
-            })
-    },
     /**
      * Retrieves suppliers from DB to make them available at selection
      */
@@ -97,6 +90,11 @@ const actions = {
             }
         )
     },
+    getTotals({commit}) {
+        contractsApi.calculateTotals({}, function (result) {
+            commit('SET_TOTALS', result.data);
+        })
+    },
     getSearchString(state) {
         if (state.listQuery) {
             return state.listQuery.search;
@@ -107,7 +105,6 @@ const actions = {
         console.log('page --> ' + page);
         let oldPage = state.pagination.page;
         commit('UPDATE_PAGE',page);
-        // console.log(`Calling action ${storeName}/changePage`);
         Vue.$log.info(`Calling action ${storeName}/changePage`);
         let query = getters.getUrlQuery;
         contractsApi.list(
@@ -118,14 +115,14 @@ const actions = {
                 // commit('updateDocs', {
                 //     docs: result.data.data.docs
                 // });
-                commit('updateDocs', result.data.data);
+                commit('SET_CONTRACTS', result.data.data);
             },
             (error) => {
                 Vue.$log.error('Response error', error);
                 tShow(`Hubo un error en el paginado: ${error}`);
             }
         )
-    },
+    }
     };
 
 const mutations = {
@@ -147,6 +144,24 @@ const mutations = {
     },
     UPDATE_PAGE(state,page){
         state.pagination.page = page;
+    },
+    SET_TOTALS(state,results){
+        if(results && results.length){
+            state.totals.totalAmount = results[0].totalAmount;
+            for (let i = 0; i < results.length; i++) {
+                state.totals[results[i]._id] = results[i].total;
+            }
+        } else {
+            state.totals = {
+                totalAmount: 0.00,
+                NO_BID: 0.00,
+                PUBLIC: 0.00,
+                INVITATION: 0.00
+            }
+        }
+
+        Vue.$log.info("state.totals", state.totals);
+        // state.pagination.page = page;
     }
 };
 
