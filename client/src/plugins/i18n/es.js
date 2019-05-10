@@ -421,6 +421,10 @@ export default {
     "calculation.validation.required":"El campo {field} del Cálculo es requerido",
     "calculations.validation.classification":"El valor para la Clasificación del Recurso no es válido",
     "calculations.validation.abbreviation":"Debe comenzar con $$, ser valores alfanúmericos y tener mínimo 3 y máximo 8 caractéres",
+    "GENERAL" : "General",
+    "CONTRACT" : "Contrato",
+    "PERCENTAGE" : "Porcentaje",
+    "AMOUNT" : "Cantidad",
 
 
     //DataLoad
@@ -449,6 +453,10 @@ export default {
     "data-load.confirm.success": "Se ha confirmado la carga de datos correctamente.",
     "data-load.confirm.error.unexpected": "Ocurrió un error inesperado al intentar confirmar la carga de datos.",
     "data-load.confirm.error.no-data-load-in-progress": "La carga de datos no se encuentra disponible. Por favor recarga la página para actualizar la información.",
+
+
+    //Calculations
+    "calculations.formula.expression" : "Fórmula",
 
 
     //Enums
