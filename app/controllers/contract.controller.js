@@ -219,15 +219,23 @@ exports.save = (req, res, next) => {
 
                                 contract.save((err, savedContract) => {
                                     if (err) {
+                                        let errors = [];
+                                        if(err.code == 11000){
+                                            errors.push({message:"El campo Número de contrato debe ser único, se encontro otro registro con el mismo valor."})
+                                        }
+                                        for(let item in err.errors){
+                                            errors.push(err.errors[item]);
+                                        }
                                         logger.error(err, req, 'contract.controller#save', 'Error al guardar Contract');
                                         return res.json({
-                                            errors: true,
-                                            message: req.__('general.error.save')
+                                            error: true,
+                                            message: req.__('general.error.save'),
+                                            errors: errors
                                         });
                                     }
 
                                     return res.json({
-                                        errors: false,
+                                        error: false,
                                         message: req.__('general.success.updated'),
                                         data: savedContract
                                     });
