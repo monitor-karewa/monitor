@@ -14,6 +14,11 @@ export default {
         return axios.get(`${base.baseUrl}/public-api/${namespace}/totals${params.query || ''}`, params)
             .then(onSuccess)
             .catch(onError);
+    },
+    detail: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/public-api/${namespace}/detail${params.query || ''}`, params)
+            .then(onSuccess)
+            .catch(onError);
     }
 
 

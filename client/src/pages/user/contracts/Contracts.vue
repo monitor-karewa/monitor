@@ -163,7 +163,7 @@
                                     <tbody>
                                     <tr v-for="contract in contracts">
                                         <td class="" style="min-width:0px;">
-                                            <router-link to="/contract" class="btn-stroke button-primary table-btn-stroke">
+                                            <router-link :to="'/contracts/'+ contract._id" class="btn-stroke button-primary table-btn-stroke">
                                                 Ver más
                                             </router-link>
                                         </td>

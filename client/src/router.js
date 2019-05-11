@@ -85,7 +85,7 @@ let router = new Router({
                     component: SupplierDetail
                 },
                 {
-                    path: 'contract',
+                    path: 'contracts/:id',
                     name: 'ContractDetail',
                     component: ContractDetail
                 },

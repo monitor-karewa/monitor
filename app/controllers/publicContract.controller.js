@@ -78,6 +78,46 @@ exports.list = (req, res, next) => {
 
 
 /**
+ * Consulta los registros de Contract disponibles.
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.detail = (req, res, next) => {
+    let contractId = req.query.id;
+    let paginationOptions = pagination.getDefaultPaginationOptions(req);
+
+    let query = {"_id": contractId};
+
+    //query["field"] = value;
+
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    query = {...query, ...qNotDeleted};
+
+    Contract
+        .findOne(
+            query).populate(['supplier','applicantAdministrativeUnit']).exec(
+        (err, result) => {
+            if (err) {
+                logger.error(err, req, 'contract.controller#list', 'Error al consultar lista de Contract');
+                return res.json({
+                    errors: true,
+                    message: res.__('general.error.unexpected-error')
+                });
+            }
+
+            return res.json({
+                errors: false,
+                message: "",
+                data: result
+            });
+        }
+    );
+};
+
+
+
+/**
  * Consulta los totales de los contratos, totales y por tipo
  */
 exports.getTotals = (req, res, next) => {
