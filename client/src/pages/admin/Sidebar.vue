@@ -55,9 +55,16 @@
                 </ul>
             </div>
             <div class="footer-sidebar">
-                <router-link :to="linksFooter.to">
-                    <i :class="linksFooter.icon"></i> {{linksFooter.name}}
-                </router-link>
+                <!--<router-link :to="linksFooter.to">-->
+                    <!--<i :class="linksFooter.icon"></i> {{linksFooter.name}}-->
+                <!--</router-link>-->
+
+                <a @click.prevent="logout">
+                    <i class="zmdi zmdi-power"></i> Cerrar Sesión
+                </a>
+                <!--<router-link :to="linksFooter.to">-->
+                    <!--<i :class="linksFooter.icon"></i> {{linksFooter.name}}-->
+                <!--</router-link>-->
                 <!--<a href=""><i class="zmdi zmdi-power"></i> Cerrar Sesión </a>-->
             </div>
         </aside>
@@ -144,6 +151,11 @@
             }
         },
         components: {
+        },
+        methods: {
+            logout () {
+                this.$store.dispatch('accounts/LOGOUT');
+            }
         },
         mounted: () => {
             window.$('#hideMenu').on('click', function() {

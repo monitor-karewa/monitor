@@ -28,6 +28,7 @@ exports.index = (req, res, next) => {
  * @param next
  */
 exports.list = (req, res, next) => {
+    console.log('req.user', req.user);
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
 
     let query = {};

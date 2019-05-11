@@ -34,17 +34,29 @@
 
 <script>
   import "@/assets/javascripts/vendors.js";
-    export default {
-        data () {
-            return {
-            }
-        },
-        components: {
-        },
-        mounted () {
-            $(document).ready(function () {
-                $('.selectpicker').selectpicker();
-            });
-        }
-    }
+  
+  import axios from 'axios';
+
+  export default {
+      data () {
+          return {}
+      },
+      components: {},
+      mounted () {
+          $(document).ready(function () {
+              $('.selectpicker').selectpicker();
+          });
+      },
+      created (){
+          let sessionExists = this.$session.exists();
+          if (sessionExists) {
+              let token = this.$session.get('jwt');
+              axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+              let currentOrganizationId = this.$session.get('currentOrganizationId');
+              axios.defaults.headers.common['X-CURRENT-ORGANIZATION-ID'] = currentOrganizationId;
+          }
+          
+      }
+  }
 </script>
