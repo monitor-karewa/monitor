@@ -1,5 +1,9 @@
 const passport = require('passport');
+const jwt = require('jsonwebtoken');
 const logger = require('./../components/logger').instance;
+const config = require('./../../config/config').get();
+
+const User = require('./../models/user.model').User;
 
 /**
  * Middleware to check if user has logged in. If no session is detected, the user is redirected to '/login'.
@@ -11,8 +15,56 @@ exports.checkLogin = (req, res, next) => {
     if (req.user) {
         return next();
     } else {
-        return res.redirect('/login');
+        //403 Not allowed
+        let error = new Error('Acceso denegado');
+        error.status = 403;
+        return next(error);
+        // return res.redirect('/login');
     }
+};
+
+exports.loadUserSession = (req, res, next) => {
+    let token = req.headers['x-access-token'] || req.headers['authorization'];
+
+    let tokenPrefix = 'Bearer ';
+    if (token && token.startsWith(tokenPrefix)) {
+        // Remove 'Bearer ' from string
+        token = token.slice(tokenPrefix.length, token.length);
+    }
+
+    if (token) {
+        jwt.verify(token, config.session.options.secret, function(err, decoded) {
+
+            if (err) {
+                console.log('Error trying to verify jwt', err);
+            }
+
+            User.findOne({_id: decoded.userId, active: true}).lean().exec((err, user) => {
+                if (err) {
+                    console.log('Error trying to find User from jwt', err);
+                    // let error = new Error('Acceso denegado');
+                    // error.status = 403;
+                    // return next(error);
+                }
+                // if (!user) {
+                    // let error = new Error('Acceso denegado');
+                    // error.status = 403;
+                    // return next(error);
+                // }
+                req.user = user;
+                return next();
+            });
+        });
+    } else {
+        //403 Not allowed
+        // let error = new Error('Acceso denegado');
+        // error.status = 403;
+        // return next(error);
+
+        return next();
+        // return next();
+    }
+
 };
 
 /**
@@ -25,52 +77,6 @@ exports.login = (req, res, next) => {
     return res.render('login');
 };
 
-/**
- * Attempts a user login with username/password. Additionally, [rememberMe] can be defined to keep user session for 
- * some time. For more information, see passportManager.
- * @param req -
- * @param res -
- * @param next -
- */
-exports.doLogin = (req, res, next) => {
-    //local-login is defined in passportManager
-    console.log('doLogin');
-    passport.authenticate('local-login', function (err, user, info) {
-        if (err) {
-            //TODO: Log error
-            return next(err)
-        } else {
-            if (!user) {
-                return res.json({
-                    error: true,
-                    message: info.message
-                });
-            }
-            req.login(user, function (err) {
-                if (err) {
-                    return res.json({
-                        error: true,
-                        message: 'An error occurred trying to log in. Please try again later.'
-                    });
-                }
-
-                if (req.body.rememberMe) {
-                    req.session.cookie.maxAge = 30 * 24 * 60 * 60 * 1000; // Cookie expires after 30 days
-                } else {
-                    req.session.cookie.expires = false; // Cookie expires at end of session
-                }
-                
-                return res.json({
-                    error: false,
-                    message: info.message,
-                    data: {
-                        redirectTo: '/admin'
-                    }
-                });
-            });
-        }
-    })(req, res, next);
-};
 
 /**
  * Valida si un usuario cuenta con el permiso indicado

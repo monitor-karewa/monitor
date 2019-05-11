@@ -177,6 +177,12 @@ export default {
     "calculations.calculation": "Cálculo| Cálculos",
 
 
+    //Accounts
+    "accounts.login.error": "Usuario o contraseña incorrectos. Por favor intenta nuevamente.",
+    "accounts.login.info.redirecting": "Por favor inicia sesión para continuar.",
+    "accounts.organization.info.redirecting": "Por favor selecciona una Organización para continuar.",
+    "accounts.logout.success": "Tu sesión se ha cerrado correctamente.",
+    
     //Suppliers
     "suppliers.supplier": "Proveedor | Proveedores",
     "suppliers.new.name.label": "Nombre o razón social",

@@ -28,6 +28,7 @@
                     <div class="dropdown-menu" aria-labelledby="dropdownUserMenu">
                         <form>
                             <router-link to="/admin/select-organization" class="dropdown-item">Seleccionar Organización</router-link>
+                            <a @click="logout" class="dropdown-item">Cerrar sesión</a>
                         </form>
                     </div>
                 </div>
@@ -42,7 +43,7 @@
 
 <script>
     import catalog from '@/mixins/catalog.mixin';
-
+    
     export default {
         data () {
             return {
@@ -50,11 +51,17 @@
         },
         components: {
         },
-        mounted: () => {
+        mounted() {
             window.$('#showMenu').on('click', function() {
                 $('.sidebar').addClass('small-sidebar');
                 $('.backdrop').addClass('active');
             });
+        },
+        methods: {
+            logout () {
+                let _session = this.$session;
+                this.$store.dispatch('accounts/LOGOUT', {_session});
+            }
         }
     }
 </script>

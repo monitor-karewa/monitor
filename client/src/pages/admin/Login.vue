@@ -51,14 +51,14 @@
                 <div class="form">
                     <div class="form-group fg-float m-b-40">
                         <div class="fg-line  basic-input">
-                            <input type="text" class="form-control fg-input" placeholder="Usuario" value="admin">
+                            <input type="text" class="form-control fg-input" placeholder="Usuario" value="admin" v-model="username">
                             <label class="fg-label">Usuario <!--<small>(small text)</small>--></label>
                         </div>
                     </div>
 
                     <div class="form-group fg-float">
                         <div class="fg-line  basic-input">
-                            <input type="password" class="form-control fg-input" placeholder="Contraseña" value="admin">
+                            <input type="password" class="form-control fg-input" placeholder="Contraseña" value="admin" v-model="password">
                             <label class="fg-label">Contraseña <!--<small>(small text)</small>--></label>
                         </div>
                         <!--<span class="error-span">Error message</span>-->
@@ -86,14 +86,20 @@
                         <a href="" class="btn-outline p-l-5 p-r-10 vertical-center"><i class="zmdi zmdi-long-arrow-left"></i><strong>Volver al Monitor</strong> </a>
                     </div>
                     <div class="col-6 col-md-6 m-b-30 login-btn">
-                        <router-link :to="'/admin'" class="float-right btn-raised button-accent btn-loading vertical-center">
-                            <!--<div class="m-r-10">-->
-                                <!--<svg class="spinner" width="17px" height="17px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">-->
-                                    <!--<circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>-->
-                                <!--</svg>-->
-                            <!--</div>-->
+                        
+                        <button @click="login" class="float-right btn-raised button-accent btn-loading vertical-center">
                             INICIAR SESIÓN
-                        </router-link>
+                        </button>
+                        
+                        
+                        <!--<router-link :to="'/admin'" class="float-right btn-raised button-accent btn-loading vertical-center">-->
+                            <!--&lt;!&ndash;<div class="m-r-10">&ndash;&gt;-->
+                                <!--&lt;!&ndash;<svg class="spinner" width="17px" height="17px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">&ndash;&gt;-->
+                                    <!--&lt;!&ndash;<circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33" cy="33" r="30"></circle>&ndash;&gt;-->
+                                <!--&lt;!&ndash;</svg>&ndash;&gt;-->
+                            <!--&lt;!&ndash;</div>&ndash;&gt;-->
+                            <!--INICIAR SESIÓN-->
+                        <!--</router-link>-->
                         <!--<a href="" class="float-right btn-raised button-accent btn-loading vertical-center">-->
                             <!--<div class="m-r-10">-->
                                 <!--<svg class="spinner" width="17px" height="17px" viewBox="0 0 66 66" xmlns="http://www.w3.org/2000/svg">-->
@@ -128,13 +134,45 @@
 </style>
 
 <script>
+    import axios from 'axios';
+    import {bus} from '@/main';
+    
+    const storeModule = 'accounts';
+    
+    import i18n from '@/plugins/i18n';
+    
     export default {
         data () {
             return {
-                test: 'Workaround; empty data triggers error on router'
+                username: 'admin@app.admin',
+                password: 'admin',
+            }
+        },
+        methods: {
+            login () {
+                let _session = this.$session;
+                let credentials = {
+                    username: this.username,
+                    password: this.password,
+                };
+                this.$store.dispatch(`${storeModule}/LOGIN`, {credentials, _session});
             }
         },
         components: {
+        },
+        mounted() {
+            //Check if user was redirected
+            if (this.$router.currentRoute.query.redirectTo) {
+                tShow(i18n.t('accounts.login.info.redirecting'), 'info');
+            }
+            
+//            bus.$on('LOGIN_SUCCESS', (token) => {
+//                if (token) {
+//                    this.$session.set('jwt', token);
+//
+//                    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+//                }
+//            });
         }
     }
 </script>

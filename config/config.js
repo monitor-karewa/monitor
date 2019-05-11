@@ -12,7 +12,9 @@ const config = {
                 name: "Admin",
                 lastName: "Admin",
                 email: "admin@app.admin",
-                password: "admin"
+                password: "admin",
+                administratorType: 'GENERAL',
+                permissions: []
             }
         },
         mongo: {
@@ -58,7 +60,9 @@ const config = {
                 name: "Admin",
                 lastName: "Admin",
                 email: "admin@app.admin",
-                password: "admin"
+                password: "admin",
+                administratorType: 'GENERAL',
+                permissions: []
             }
         },
         mongo: {
