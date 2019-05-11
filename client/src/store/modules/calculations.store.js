@@ -16,7 +16,6 @@ const getters = {
         return state.variables;
     },
     calculationsForFormula : function (state) {
-        Vue.$log.info('state.calculations' , state.calculations);
         return state.calculations;
     }
 };
@@ -41,7 +40,6 @@ const actions = {
             });
     },
     validateFormula({commit}, formula){
-        Vue.$log.info('formula' , formula);
         calculationsApi.validateFormula(formula, (results) => {
                 commit("SET_FORMULA_VALIDATION",results.data);
             },
@@ -55,7 +53,6 @@ const actions = {
 
 const mutations = {
     SET_VARIABLES(state,vars){
-        Vue.$log.info('vars' , vars);
         state.variables = vars;
     },
     SET_FORMULA_CALCULATIONS(state,calculations){

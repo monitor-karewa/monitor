@@ -68,15 +68,12 @@ const actions = {
         } else {
             commit('SET_SEARCH',"");
         }
-        Vue.$log.info(`Calling action ${storeName}/list`);
-
         let query = getters.getUrlQuery;
 
         contractsApi.list(
             { query },
             (result) => {
                 // console.log('result', result);
-                Vue.$log.info('Response', result);
                 //result.data.data.docs
                 // commit('updateDocs', {
                 //     docs: result.data.data.docs
@@ -105,12 +102,10 @@ const actions = {
         console.log('page --> ' + page);
         let oldPage = state.pagination.page;
         commit('UPDATE_PAGE',page);
-        Vue.$log.info(`Calling action ${storeName}/changePage`);
         let query = getters.getUrlQuery;
         contractsApi.list(
             { query },
             (result) => {
-                Vue.$log.info('Response', result);
                 //result.data.data.docs
                 // commit('updateDocs', {
                 //     docs: result.data.data.docs
@@ -126,7 +121,6 @@ const actions = {
     loadContractDetail({commit}, id) {
 
         let query = `?id=${id}`;
-        Vue.$log.info("publicContracts.store#loadContractDetail D::");
         contractsApi.detail({query}, (result) => {
             commit('SET_CONTRACT_DETAIL', result.data);
         }, (err) => {
@@ -138,7 +132,6 @@ const actions = {
 
 const mutations = {
     SET_CONTRACTS(state, {docs, total, page, pages}) {
-        Vue.$log.info("contracts", docs);
         state.contracts = docs;
         state.pagination.total = total;
         state.pagination.page = page;
