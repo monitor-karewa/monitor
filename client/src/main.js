@@ -41,8 +41,6 @@ router.beforeEach((to, from, next) => {
         return next();
     }
 
-    console.log('to.path', to.path);
-
     if (!isLoggedIn) {
         return next(`/login?redirectTo=${to.path}`);
     } else {
@@ -56,24 +54,18 @@ router.beforeEach((to, from, next) => {
         //     tShow(i18n.t('accounts.organization.info.redirecting'), 'info');
         //     return next(`/admin/select-organization?redirectTo=${to.path}`);
         // }
-        
-        console.log('headingToSelectOrganization', headingToSelectOrganization);
-        console.log('hasOrganizationSelected', hasOrganizationSelected);
 
         if (headingToSelectOrganization) {
             return next();
         }
         
         if (!headingToSelectOrganization && !hasOrganizationSelected) {
-            console.log('#$############ redirecting to selectorganization');
             tShow(i18n.t('accounts.organization.info.redirecting'), 'info');
             
             let redirectToParam = '';
             if (to.path !== '/admin/select-organization') {
                 redirectToParam = `?redirectTo=${to.path}`;
             }
-
-            console.log('redirectToParam', redirectToParam);
 
             return next(`/admin/select-organization${redirectToParam}`);
         } else {

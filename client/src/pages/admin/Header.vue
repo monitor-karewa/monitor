@@ -44,8 +44,6 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     
-//    import {bus} from '@/main';
-
     export default {
         data () {
             return {
@@ -58,15 +56,11 @@
                 $('.sidebar').addClass('small-sidebar');
                 $('.backdrop').addClass('active');
             });
-            
-//            bus.$on('LOGOUT', () => {
-//                this.$session.destroy();
-//                this.$router.push('/');
-//            });
         },
         methods: {
             logout () {
-                this.$store.dispatch('accounts/LOGOUT');
+                let _session = this.$session;
+                this.$store.dispatch('accounts/LOGOUT', {_session});
             }
         }
     }

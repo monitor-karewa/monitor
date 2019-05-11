@@ -154,7 +154,8 @@
         },
         methods: {
             logout () {
-                this.$store.dispatch('accounts/LOGOUT');
+                let _session = this.$session; 
+                this.$store.dispatch('accounts/LOGOUT', {_session});
             }
         },
         mounted: () => {

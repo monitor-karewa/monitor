@@ -34,10 +34,10 @@
 
         },
         created() {
-            bus.$on('LOGOUT', () => {
-                this.$session.destroy();
-                this.$router.push('/');
-            });
+//            bus.$on('LOGOUT', () => {
+//                this.$session.destroy();
+//                this.$router.push('/');
+//            });
         }
     }
 </script>

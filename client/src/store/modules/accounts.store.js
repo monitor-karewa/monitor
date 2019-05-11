@@ -36,9 +36,12 @@ let actions = {
             tShow(i18n.t('accounts.login.error'), 'danger');
         });
     },
-    LOGOUT ({}) {
+    LOGOUT ({}, {_session}) {
+        
         tShow(i18n.t('accounts.logout.success'), 'success');
-        bus.$emit('LOGOUT');
+
+        _session.destroy();
+        router.push('/');
     }
 };
 let mutations = {};
