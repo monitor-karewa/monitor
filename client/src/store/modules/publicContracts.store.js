@@ -23,7 +23,8 @@ const state = {
         NO_BID: 0.00,
         PUBLIC: 0.00,
         INVITATION: 0.00
-    }
+    },
+    contractDetail : {}
 };
 
 const getters = {
@@ -121,6 +122,17 @@ const actions = {
                 tShow(`Hubo un error en el paginado: ${error}`);
             }
         )
+    },
+    loadContractDetail({commit}, id) {
+
+        let query = `?id=${id}`;
+        Vue.$log.info("publicContracts.store#loadContractDetail D::");
+        contractsApi.detail({query}, (result) => {
+            commit('SET_CONTRACT_DETAIL', result.data);
+        }, (err) => {
+            tShow(i18n.t('suppliers.public.load.error'), 'danger');
+            commit('SET_CONTRACT_DETAIL', {});
+        })
     }
     };
 
@@ -159,8 +171,10 @@ const mutations = {
             }
         }
 
-        Vue.$log.info("state.totals", state.totals);
         // state.pagination.page = page;
+    },
+    SET_CONTRACT_DETAIL (state, detail) {
+        state.contractDetail = detail.data;
     }
 };
 
