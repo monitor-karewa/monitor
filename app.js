@@ -71,6 +71,8 @@ const logger = require('./app/components/logger').instance;
 const passportManger = require('./app/components/passportManager');
 const seedsManager = require('./app/components/seedsManager');
 
+const {USER_PERMISSIONS_DICT} = require('./app/models/user.model');
+
 // ============
 // Configuration
 // ============
@@ -163,6 +165,7 @@ app.use('/', indexRoutes);
 ///public-api/suppliers/list 
 app.use('/public-api/accounts', accountRoutes);
 app.use('/public-api/suppliers', publicSupplierRoutes);
+app.use('/public-api/contracts', publicContractRoutes);
 
 app.use('/public-api/route-logs', routeLogRoutes);
 
@@ -189,27 +192,18 @@ app.use((req, res, next) => {
 // app.use('/api/users', usersRoutes);
 // app.use('/security', securityRoutes);
 app.use('/admin', securityController.checkLogin, adminRoutes);
-app.use('/api/recursos', securityController.checkLogin, recursoRoutes);
-app.use('/api/unidades', securityController.checkLogin, unidadesRoutes);
-app.use('/api/calculos', securityController.checkLogin, calculoRoutes);
-app.use('/api/suppliers', securityController.checkLogin, supplierRoutes);
-app.use('/api/resources', securityController.checkLogin, resourceRoutes);
-app.use('/api/users', securityController.checkLogin, userRoutes);
-app.use('/api/organizations', securityController.checkLogin, organizationRoutes);
-
-//Public Api
-app.use('/public-api/contracts', securityController.checkLogin, publicContractRoutes);
-
-
+app.use('/api/resources', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.RESOURCES), resourceRoutes);
+app.use('/api/calculos', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CALCULATIONS), calculoRoutes);
+app.use('/api/suppliers', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.SUPPLIERS), supplierRoutes);
+app.use('/api/users', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.USERS), userRoutes);
+//Note: Organizations can be loaded (/list) without permission, to be used in /select-organization
+app.use('/api/organizations', securityController.checkLogin/*, securityController.checkPermission(USER_PERMISSIONS_DICT.ORGANIZATIONS)*/, organizationRoutes);
 //TODO Leave just one
-app.use('/api/administrative-units', securityController.checkLogin, administrativeUnitRoutes);
-app.use('/api/administrativeUnits', securityController.checkLogin, administrativeUnitRoutes);
-
-app.use('/api/data-load', securityController.checkLogin, dataLoadRoutes);
-//---
-
-app.use('/api/calculations', securityController.checkLogin, calculationRoutes);
-app.use('/api/contracts', securityController.checkLogin, contractRoutes);
+app.use('/api/administrative-units', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.ADMINISTRATIVE_UNITS), administrativeUnitRoutes);
+app.use('/api/administrativeUnits', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.ADMINISTRATIVE_UNITS), administrativeUnitRoutes);
+app.use('/api/calculations', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CALCULATIONS), calculationRoutes);
+app.use('/api/contracts', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CONTRACTS), contractRoutes);
+app.use('/api/data-load', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CONTRACTS), dataLoadRoutes);
 
 
 app.get('*', function(req, res){

@@ -20,7 +20,7 @@
                         <div v-if="linkArrayIndex > 0" class="divider"></div>
                         
                         <!--Insertar enlace-->
-                        <router-link v-for="(link, index) in linkArray" tag="li" :to="link.to" :key="'sidemenu-link-' + linkArrayIndex + '-' + index" exact-active-class="active">
+                        <router-link v-for="(link, index) in linkArray" v-if="hasAccess(link.permission)" tag="li" :to="link.to" :key="'sidemenu-link-' + linkArrayIndex + '-' + index" exact-active-class="active">
                             <a><i :class="link.icon"></i> {{link.name}} </a>
                         </router-link>
                     </template>
@@ -77,6 +77,9 @@
 </style>
 
 <script>
+    
+    import {mapState} from 'vuex';
+    
     export default {
         data () {
             return {
@@ -94,43 +97,50 @@
                             name: "Usuarios",
                             to: "/admin/users",
                             icon: "zmdi zmdi-accounts",
-                            admin: true
+                            admin: true,
+                            permission: "USERS"
                         },
                         {
                             name: "Proveedores",
                             to: "/admin/suppliers",
                             icon: "zmdi zmdi-account",
-                            admin: true
+                            admin: true,
+                            permission: "SUPPLIERS"
                         },
                         {
                             name: "Organizaciones",
                             to: "/admin/organizations",
                             icon: "zmdi zmdi-city-alt",
-                            admin: true
+                            admin: true,
+                            permission: "ORGANIZATIONS"
                         },
                         {
                             name: "U. Administrativas",
                             to: "/admin/administrative-units",
                             icon: "zmdi zmdi-input-composite",
-                            admin: true
+                            admin: true,
+                            permission: "ADMINISTRATIVE_UNITS"
                         },
                         {
                             name: "Contratos",
                             to: "/admin/contracts",
                             icon: "zmdi zmdi-file-text",
-                            admin: true
+                            admin: true,
+                            permission: "CONTRACTS"
                         },
                         {
                             name: "Recursos",
                             to: "/admin/resources",
                             icon: "zmdi zmdi-link",
-                            admin: true
+                            admin: true,
+                            permission: "RESOURCES"
                         },
                         {
                             name: "Cálculos",
                             to: "/admin/calculations",
                             icon: "zmdi zmdi-confirmation-number",
-                            admin: true
+                            admin: true,
+                            permission: "CALCULATIONS"
                         }
                     ],
                     [
@@ -138,7 +148,8 @@
                             name: "Configuración",
                             to: "/admin/settings",
                             icon: "zmdi zmdi-settings",
-                            admin: true
+                            admin: true,
+                            permission: "SETTINGS"
                         }
                     ]
                 ],
@@ -152,11 +163,26 @@
         },
         components: {
         },
+        computed: {
+            permissions () {
+                return this.$session.get('permissions') || [];
+            }
+        },
         methods: {
             logout () {
                 let _session = this.$session; 
                 this.$store.dispatch('accounts/LOGOUT', {_session});
+            },
+            hasAccess (permission) {
+                if (!permission) {
+                    return true;
+                }
+                
+                return this.permissions && this.permissions.includes(permission);
             }
+        },
+        onCreate: {
+            
         },
         mounted: () => {
             window.$('#hideMenu').on('click', function() {

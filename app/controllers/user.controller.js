@@ -107,7 +107,10 @@ exports.save = (req, res, next) => {
                 user.name = req.body.name;
                 user.lastName = req.body.lastName;
                 user.email = req.body.email;
-                user.password = req.body.password;
+                user.notes = req.body.notes;
+                user.active = Boolean(req.body.active);
+                user.administratorType = req.body.administratorType;
+                user.permissions = req.body.permissions;
 
                 user.save((err, savedUser) => {
                     if (err) {

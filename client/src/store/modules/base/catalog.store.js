@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { bus } from '@/main';
 import * as events from "../../events";
+import i18n from '@/plugins/i18n';
 
 export default function (api, storeName) {
     const state = {
@@ -143,6 +144,7 @@ export default function (api, storeName) {
                         }else{
                             bus.$emit(storeName + events.DOC_CREATED);
                         }
+                        tShow(i18n.t('general.catalog.update.success'), 'success');
                     }
                 },
                 (error) => {

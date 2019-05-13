@@ -5,6 +5,8 @@ const config = require('./../../config/config').get();
 
 const logger = require('./../components/logger').instance;
 
+const {USER_PERMISSIONS} = require('./../models/user.model');
+
 /**
  * Attempts a user login with username/password. Additionally, [rememberMe] can be defined to keep user session for
  * some time. For more information, see passportManager.
@@ -35,10 +37,14 @@ exports.login = (req, res, next) => {
         };
 
         let token = jwt.sign(payload, config.session.options.secret);
+        
+        let permissions = user.getPermissions();
 
+        let result = {token, permissions};
+        
         return res.json({
             error: false,
-            data: token
+            data: result
         });
     })(req, res, next);
 };

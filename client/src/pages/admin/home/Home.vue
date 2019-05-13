@@ -8,7 +8,7 @@
                         <h1>¡Hola, Cesar!</h1>
                         <label>LUNES 03 DE DICIEMBRE DEL 2018</label>
                     </div>
-                    <template v-if="currentDataLoadInfo && currentDataLoadInfo.uploadedBy">
+                    <template v-if="currentDataLoadInfo && currentDataLoadInfo.uploadedBy && hasAccessToDataLoad">
                         <div class="side-right">
                             <p>Tienes una carga de <strong>datos pendiente</strong></p>
                             <small>Comenzada por: <strong>{{currentDataLoadInfo.uploadedBy}}</strong></small>
@@ -145,8 +145,14 @@
         },
         computed: {
             ...mapState({
-                currentDataLoadInfo: state => state.dataLoad.dataLoadInfo.current
-            })
+                currentDataLoadInfo: state => state.dataLoad.dataLoadInfo.current,
+            }),
+            permissions () {
+                return this.$session.get('permissions') || [];
+            },
+            hasAccessToDataLoad() {
+                return this.permissions && this.permissions.includes('CONTRACTS');
+            }
         },
         components: {
             AdminMainSection
@@ -155,7 +161,9 @@
         created() {
         },
         mounted() {
-            this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO');
+            if (this.hasAccessToDataLoad) {
+                this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO');
+            }
             $(document).ready(function () {
                 $('.selectpicker').selectpicker();
             });
