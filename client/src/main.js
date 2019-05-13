@@ -34,16 +34,43 @@ router.beforeEach((to, from, next) => {
     //Also, admin/Index.vue has a copy of this logic because:
     //On app start, this router guard is not called, but the beforeMount hook of the Index.vue is called
     //On route change, this router guard is called, but the beforeMount hook of the Index.vue is not called
+    let isLoggedIn = vue.$session.has('jwt');
     let hasOrganizationSelected = vue.$session.has('currentOrganizationId');
 
-    if (!to.path.match('^/admin')) {
+    if (!to.path.match(new RegExp('^/admin'))) {
         return next();
     }
 
-    if (to.path !== '/admin/select-organization' && !hasOrganizationSelected) {
-        return next(`/admin/select-organization?redirectTo=${to.path}`);
+    if (!isLoggedIn) {
+        return next(`/login?redirectTo=${to.path}`);
     } else {
-        return next();
+        let headingToSelectOrganization = to.path.match(new RegExp('^/admin/select-organization'));
+        
+        // if (headingToSelectOrganization) {
+        //     return next();
+        // }
+        //
+        // if (!hasOrganizationSelected) {
+        //     tShow(i18n.t('accounts.organization.info.redirecting'), 'info');
+        //     return next(`/admin/select-organization?redirectTo=${to.path}`);
+        // }
+
+        if (headingToSelectOrganization) {
+            return next();
+        }
+        
+        if (!headingToSelectOrganization && !hasOrganizationSelected) {
+            tShow(i18n.t('accounts.organization.info.redirecting'), 'info');
+            
+            let redirectToParam = '';
+            if (to.path !== '/admin/select-organization') {
+                redirectToParam = `?redirectTo=${to.path}`;
+            }
+
+            return next(`/admin/select-organization${redirectToParam}`);
+        } else {
+            return next();
+        }
     }
 
 });

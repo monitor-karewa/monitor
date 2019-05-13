@@ -8,6 +8,7 @@ const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const i18n = require("i18n");
+const jwt = require('jsonwebtoken');
 
 // Database
 const mongoose = require('mongoose');
@@ -21,10 +22,13 @@ const compression = require('compression');
 const helmet = require('helmet');
 
 // Flash notifications
-const flash = require('express-flash-notification');
+const flash = require('express-flash-notification');``
 
 // Security
 const cors = require('cors');
+
+
+const User = require('./app/models/user.model').User;
 
 
 // =======
@@ -37,6 +41,7 @@ const adminRoutes = require('./app/routes/admin.routes');
 const recursoRoutes = require('./app/routes/recurso.routes');
 const unidadesRoutes = require('./app/routes/unidadAdministrativa.routes');
 const calculoRoutes = require('./app/routes/calculo.routes');
+const accountRoutes = require('./app/routes/account.routes');
 // const usersRoutes = require('./app/routes/users.routes');
 
 const supplierRoutes = require('./app/routes/supplier.routes');
@@ -65,6 +70,8 @@ const isProd = require('./config/config').isProd();
 const logger = require('./app/components/logger').instance;
 const passportManger = require('./app/components/passportManager');
 const seedsManager = require('./app/components/seedsManager');
+
+const {USER_PERMISSIONS_DICT} = require('./app/models/user.model');
 
 // ============
 // Configuration
@@ -104,7 +111,9 @@ app.set('views', path.join(__dirname, 'views'));
 app.set('view engine', 'pug');
 
 // Initialize PassportJS
-passportManger.init();
+// passportManger.init();
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Ensure database basic config
 seedsManager.init();
@@ -154,7 +163,11 @@ if (!isProd) {
 // ======================
 app.use('/', indexRoutes);
 ///public-api/suppliers/list 
+app.use('/public-api/accounts', accountRoutes);
 app.use('/public-api/suppliers', publicSupplierRoutes);
+app.use('/public-api/contracts', publicContractRoutes);
+
+app.use('/public-api/route-logs', routeLogRoutes);
 
 // ======================
 // Session initialization
@@ -162,17 +175,14 @@ app.use('/public-api/suppliers', publicSupplierRoutes);
 app.use(session(config.session.options));
 app.use(flash(app));
 
-app.use(passport.initialize());
-app.use(passport.session());
+// app.use(passport.initialize());
+// app.use(passport.session());
 
-app.use((req, res, next) => {
-    res.locals.user = req.user;
-    next();
-});
+app.use(securityController.loadUserSession);
 
 app.use((req, res, next) => {
     //Read X-CURRENT-ORGANIZATION-ID header
-    req.currentOrganizationId = req.headers['x-current-organization-id'] || req.headers['X-CURRENT-ORGANIZATION-ID'];
+    req.currentOrganizationId = req.headers['x-current-organization-id'];
     next();
 });
 
@@ -180,30 +190,20 @@ app.use((req, res, next) => {
 // Routes with session
 // ======================
 // app.use('/api/users', usersRoutes);
-app.use('/security', securityRoutes);
+// app.use('/security', securityRoutes);
 app.use('/admin', securityController.checkLogin, adminRoutes);
-app.use('/api/recursos', recursoRoutes);
-app.use('/api/unidades', unidadesRoutes);
-app.use('/api/calculos', calculoRoutes);
-app.use('/api/suppliers', supplierRoutes);
-app.use('/api/resources', resourceRoutes);
-app.use('/api/users', userRoutes);
-app.use('/api/organizations', organizationRoutes);
-
-//Public Api
-app.use('/public-api/contracts', publicContractRoutes);
-
-
+app.use('/api/resources', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.RESOURCES), resourceRoutes);
+app.use('/api/calculos', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CALCULATIONS), calculoRoutes);
+app.use('/api/suppliers', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.SUPPLIERS), supplierRoutes);
+app.use('/api/users', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.USERS), userRoutes);
+//Note: Organizations can be loaded (/list) without permission, to be used in /select-organization
+app.use('/api/organizations', securityController.checkLogin/*, securityController.checkPermission(USER_PERMISSIONS_DICT.ORGANIZATIONS)*/, organizationRoutes);
 //TODO Leave just one
-app.use('/api/administrative-units', administrativeUnitRoutes);
-app.use('/api/administrativeUnits', administrativeUnitRoutes);
-
-app.use('/api/data-load', dataLoadRoutes);
-//---
-
-app.use('/api/calculations', calculationRoutes);
-app.use('/api/contracts', contractRoutes);
-app.use('/api/route-logs', routeLogRoutes);
+app.use('/api/administrative-units', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.ADMINISTRATIVE_UNITS), administrativeUnitRoutes);
+app.use('/api/administrativeUnits', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.ADMINISTRATIVE_UNITS), administrativeUnitRoutes);
+app.use('/api/calculations', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CALCULATIONS), calculationRoutes);
+app.use('/api/contracts', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CONTRACTS), contractRoutes);
+app.use('/api/data-load', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CONTRACTS), dataLoadRoutes);
 
 
 app.get('*', function(req, res){

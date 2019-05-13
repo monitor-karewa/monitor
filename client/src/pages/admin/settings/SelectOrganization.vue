@@ -43,6 +43,8 @@
     import {mapState} from 'vuex';
     import axios from 'axios';
 
+    import i18n from '@/plugins/i18n';
+
     export default {
         name: "SelectOrganization",
         data() {
@@ -54,6 +56,12 @@
             BackButton,
             AdminMainSection
         },
+//        mounted() {
+            //Check if user was redirected
+//            if (this.$router.currentRoute.query.redirectTo) {
+//                tShow(i18n.t('accounts.organization.info.redirecting'), 'info');
+//            }
+//        },
         beforeMount() {
             this.$store.dispatch(`${storeModule}/list`);
         },

@@ -12,11 +12,11 @@
         </div>
         <div class="right col-md-9 col-8">
             <div class="links">
-                <router-link to="/admin/data-load" class="btn-raised xs button-accent hideresp">
+                <router-link to="/admin/data-load" v-if="hasAccessToDataLoad" class="btn-raised xs button-accent hideresp">
                     <i class="zmdi zmdi-plus"></i> Cargar datos
                 </router-link>
-                <a href="" class="btn-circle-icon hideresp m-l-30"><i class="zmdi zmdi-notifications-none"></i></a>
-                <a href="" class="btn-circle-icon hideresp m-r-30"><i class="zmdi zmdi-settings"></i></a>
+                <!--<a href="" class="btn-circle-icon hideresp m-l-30"><i class="zmdi zmdi-notifications-none"></i></a>-->
+                <!--<a href="" class="btn-circle-icon hideresp m-r-30"><i class="zmdi zmdi-settings"></i></a>-->
                 <div class="topMenuDropdown dropdown">
                     <button class="dropdown-toggle" type="button" id="dropdownUserMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div>
@@ -27,7 +27,8 @@
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownUserMenu">
                         <form>
-                            <router-link to="/admin/select-organization" class="dropdown-item">Seleccionar Organización</router-link>
+                            <router-link to="/admin/select-organization" class="dropdown-item c-pointer">Seleccionar Organización</router-link>
+                            <a @click="logout" class="dropdown-item c-pointer">Cerrar sesión</a>
                         </form>
                     </div>
                 </div>
@@ -42,19 +43,34 @@
 
 <script>
     import catalog from '@/mixins/catalog.mixin';
-
+    import {mapState} from 'vuex';
+    
     export default {
         data () {
             return {
             }
         },
+        computed: {
+            permissions () {
+                return this.$session.get('permissions') || [];
+            },
+            hasAccessToDataLoad() {
+                return this.permissions && this.permissions.includes('CONTRACTS');
+            }
+        },
         components: {
         },
-        mounted: () => {
+        mounted() {
             window.$('#showMenu').on('click', function() {
                 $('.sidebar').addClass('small-sidebar');
                 $('.backdrop').addClass('active');
             });
+        },
+        methods: {
+            logout () {
+                let _session = this.$session;
+                this.$store.dispatch('accounts/LOGOUT', {_session});
+            }
         }
     }
 </script>

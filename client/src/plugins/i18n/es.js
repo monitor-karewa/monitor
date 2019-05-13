@@ -173,10 +173,17 @@ export default {
     "general.modal-editable-table.ok-button":"GUARDAR",
     "general.card-uploading.loading":"Cargando...",
     "general.card-uploading.might-take-a-while":"Esto proceso puede demorar unos minutos…",
+    "general.catalog.update.success":"El registro se ha actualizado exitosamente.",
 
     "calculations.calculation": "Cálculo| Cálculos",
 
 
+    //Accounts
+    "accounts.login.error": "Usuario o contraseña incorrectos. Por favor intenta nuevamente.",
+    "accounts.login.info.redirecting": "Por favor inicia sesión para continuar.",
+    "accounts.organization.info.redirecting": "Por favor selecciona una Organización para continuar.",
+    "accounts.logout.success": "Tu sesión se ha cerrado correctamente.",
+    
     //Suppliers
     "suppliers.supplier": "Proveedor | Proveedores",
     "suppliers.new.name.label": "Nombre o razón social",
@@ -243,8 +250,10 @@ export default {
 
     "users.new.admin-type.radio-button.custom.users": "Usuarios",
     "users.new.admin-type.radio-button.custom.suppliers": "Proveedores",
+    "users.new.admin-type.radio-button.custom.organizations": "Organizaciones",
     "users.new.admin-type.radio-button.custom.administrative-units": "Unidades Administrativas",
     "users.new.admin-type.radio-button.custom.contracts": "Contratos",
+    "users.new.admin-type.radio-button.custom.resources": "Recursos",
     "users.new.admin-type.radio-button.custom.calculations": "Cálculos",
     "users.new.admin-type.radio-button.custom.settings": "Configuración",
 
@@ -292,12 +301,12 @@ export default {
 
 
     "contracts.new.procedure-type.placeholder" : "Selecciona el tipo de procedimiento",
-    "contracts.new.category.placeholder" : "Selecciona la categoría",
+    "contracts.new.category.placeholder" : "Selecciona la materia",
     "contracts.procedure-type.public" : "Público",
     "contracts.procedure-type.no-bid" : "Adjudicación directa",
     "contracts.procedure-type.invitation" : "Por invitación",
     "contracts.new.procedure-type.label" : "Tipo de Procedimiento",
-    "contracts.new.category.label" : "Categoría",
+    "contracts.new.category.label" : "Materia",
     "contracts.procedure-type.extension" : "Extensión",
     "contracts.procedure-type.modification" : "Modificación",
     "contracts.procedure-type.adendum" : "Addendum",
@@ -373,6 +382,8 @@ export default {
     "contracts.new.total-or-max-amount.placeholder" : "Ingresa el monto total",
     "contracts.new.total-or-max-amount.label" : "Monto total",
     "contracts.new.total-or-max-amount.sub-label" : "Monto total o Monto máximo, en su caso",
+    "contracts.new.total-amount.label" : "Monto total c/impuestos",
+    "contracts.new.total-amount.sub-label" : "Monto total con impuestos incluidos",
     "contracts.new.contract-url.placeholder" : "Ingresa la url",
     "contracts.new.contract-url.label" : "Enlace a Contrato",
     "contracts.new.contract-url.sub-label" : "Hipervínculo al documento del contrato y anexos",
