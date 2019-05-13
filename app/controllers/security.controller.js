@@ -6,7 +6,7 @@ const config = require('./../../config/config').get();
 const User = require('./../models/user.model').User;
 
 /**
- * Middleware to check if user has logged in. If no session is detected, the user is redirected to '/login'.
+ * Middleware to check if user has logged in. If no session is detected, a 403 error is returned.
  * @param req -
  * @param res -
  * @param next -
@@ -20,6 +20,25 @@ exports.checkLogin = (req, res, next) => {
         error.status = 403;
         return next(error);
         // return res.redirect('/login');
+    }
+};
+
+/**
+ * Middleware to validate a permission for the current user. If the current user has no access, a 403 error is returned.
+ * @param permission permission to check
+ */
+exports.checkPermission = (permission) => {
+    return (req, res, next) => {
+        console.log('req.user', req.user);
+        if (req.user.hasPermission(permission)) {
+            return next();
+        } else {
+            //403 Not allowed
+            let error = new Error('Acceso denegado');
+            error.status = 403;
+            return next(error);
+            // return res.redirect('/login');
+        }
     }
 };
 
@@ -39,7 +58,7 @@ exports.loadUserSession = (req, res, next) => {
                 console.log('Error trying to verify jwt', err);
             }
 
-            User.findOne({_id: decoded.userId, active: true}).lean().exec((err, user) => {
+            User.findOne({_id: decoded.userId, active: true}).exec((err, user) => {
                 if (err) {
                     console.log('Error trying to find User from jwt', err);
                     // let error = new Error('Acceso denegado');

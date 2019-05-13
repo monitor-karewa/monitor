@@ -104,6 +104,11 @@
                             <span>{{$t('users.new.admin-type.radio-button.custom.suppliers')}}</span>
                         </div>
                         <div class="checkbox m-b-20">
+                            <input type="checkbox" value="ORGANIZATIONS" v-model="$v.doc.permissions.$model">
+                            <i class="input-helper"></i>
+                            <span>{{$t('users.new.admin-type.radio-button.custom.organizations')}}</span>
+                        </div>
+                        <div class="checkbox m-b-20">
                             <input type="checkbox" value="ADMINISTRATIVE_UNITS" v-model="$v.doc.permissions.$model">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.admin-type.radio-button.custom.administrative-units')}}</span>
@@ -112,6 +117,11 @@
                             <input type="checkbox" value="CONTRACTS" v-model="$v.doc.permissions.$model">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.admin-type.radio-button.custom.contracts')}}</span>
+                        </div>
+                        <div class="checkbox m-b-20">
+                            <input type="checkbox" value="RESOURCES" v-model="$v.doc.permissions.$model">
+                            <i class="input-helper"></i>
+                            <span>{{$t('users.new.admin-type.radio-button.custom.resources')}}</span>
                         </div>
                         <div class="checkbox m-b-20">
                             <input type="checkbox" value="CALCULATIONS" v-model="$v.doc.permissions.$model">

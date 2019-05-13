@@ -173,6 +173,7 @@ export default {
     "general.modal-editable-table.ok-button":"GUARDAR",
     "general.card-uploading.loading":"Cargando...",
     "general.card-uploading.might-take-a-while":"Esto proceso puede demorar unos minutos…",
+    "general.catalog.update.success":"El registro se ha actualizado exitosamente.",
 
     "calculations.calculation": "Cálculo| Cálculos",
 
@@ -249,8 +250,10 @@ export default {
 
     "users.new.admin-type.radio-button.custom.users": "Usuarios",
     "users.new.admin-type.radio-button.custom.suppliers": "Proveedores",
+    "users.new.admin-type.radio-button.custom.organizations": "Organizaciones",
     "users.new.admin-type.radio-button.custom.administrative-units": "Unidades Administrativas",
     "users.new.admin-type.radio-button.custom.contracts": "Contratos",
+    "users.new.admin-type.radio-button.custom.resources": "Recursos",
     "users.new.admin-type.radio-button.custom.calculations": "Cálculos",
     "users.new.admin-type.radio-button.custom.settings": "Configuración",
 

@@ -9,7 +9,7 @@ import router from "@/router";
 import session from "@/plugins/vueSession";
 
 let state = {
-    
+    // permissions: []
 };
 
 let getters = {};
@@ -20,13 +20,17 @@ let actions = {
                 tShow(i18n.t('accounts.login.error'), 'danger');
             } else {
 
-                let token = result.data.data;
+                let {token, permissions} = result.data.data;
 
                 if (token) {
 
                     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                     
                     _session.set('jwt', token);
+                    _session.set('permissions', permissions);
+                    //Permissions are to be set in the session to persist on page reloads
+                    // commit('SET_PERMISSIONS', {permissions});
+                    
                     let redirectTo = router.currentRoute.query.redirectTo || '/admin';
                     router.push(redirectTo);
                 }
@@ -44,7 +48,11 @@ let actions = {
         router.push('/');
     }
 };
-let mutations = {};
+let mutations = {
+    // SET_PERMISSIONS (state, {permissions}) {
+    //     state.permissions = permissions;
+    // }
+};
 
 export default {
     namespaced: true,
