@@ -13,7 +13,7 @@
         </AdminMainSection>
 
         <ModalEntry v-bind:storeModule="storeModule" :validator="$v"
-                       :data="doc">
+                       :entry="doc">
 
             <div>
                 <div class="form-group fg-float subtitle">
@@ -172,7 +172,7 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
-    import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
+    import { DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
     import  ModalDefault from "@/components/modals/ModalDefault";
     import { required, email, minLength, requiredIf } from 'vuelidate/lib/validators';
@@ -207,6 +207,7 @@
                     action:"saveDocsUpdated"
                 },
                 doc:{
+                    _id:null,
                     name:"",
                     lastName:"",
                     email:"",
@@ -263,6 +264,10 @@
                 }
                 touchMap.set($v, setTimeout($v.$touch, 1000));
 
+            },
+            clearEntry(){
+                this.entry = {};
+                this.$v.$reset();
             }
         },
         created(){
@@ -275,10 +280,37 @@
                 this.doc.email = "";
                 this.doc.active = true;
                 this.doc.permissions  =  [];
-                this.doc.administratorType  =  "CUSTOM";
+                this.doc.administratorType  =  "GENERAL";
                 this.doc.notes = "";
                 this.$v.$reset();
                 tShow("El usuario fue creado correctamente", 'info');
+            });
+            bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
+                this.clearEntry();
+
+                this.doc._id = entry._id;
+                
+                this.doc.name = entry.name;
+                this.$v.doc.name.$touch();
+
+                this.doc.lastName = entry.lastName;
+                this.$v.doc.lastName.$touch();
+
+                this.doc.email = entry.email;
+                this.$v.doc.email.$touch();
+
+                this.doc.active = entry.active;
+                this.$v.doc.active.$touch();
+
+                this.doc.permissions  =  entry.permissions || [];
+                this.$v.doc.permissions.$touch();
+
+                this.doc.administratorType  =  entry.administratorType || "GENERAL";
+                this.$v.doc.administratorType.$touch();
+
+                this.doc.notes = entry.notes || "";
+//                this.$v.doc.notes.$touch();
+                
             });
         },
         mounted(){
