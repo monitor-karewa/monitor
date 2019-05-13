@@ -292,12 +292,12 @@ export default {
 
 
     "contracts.new.procedure-type.placeholder" : "Selecciona el tipo de procedimiento",
-    "contracts.new.category.placeholder" : "Selecciona la categoría",
+    "contracts.new.category.placeholder" : "Selecciona la materia",
     "contracts.procedure-type.public" : "Público",
     "contracts.procedure-type.no-bid" : "Adjudicación directa",
     "contracts.procedure-type.invitation" : "Por invitación",
     "contracts.new.procedure-type.label" : "Tipo de Procedimiento",
-    "contracts.new.category.label" : "Categoría",
+    "contracts.new.category.label" : "Materia",
     "contracts.procedure-type.extension" : "Extensión",
     "contracts.procedure-type.modification" : "Modificación",
     "contracts.procedure-type.adendum" : "Addendum",
@@ -373,6 +373,8 @@ export default {
     "contracts.new.total-or-max-amount.placeholder" : "Ingresa el monto total",
     "contracts.new.total-or-max-amount.label" : "Monto total",
     "contracts.new.total-or-max-amount.sub-label" : "Monto total o Monto máximo, en su caso",
+    "contracts.new.total-amount.label" : "Monto total c/impuestos",
+    "contracts.new.total-amount.sub-label" : "Monto total con impuestos incluidos",
     "contracts.new.contract-url.placeholder" : "Ingresa la url",
     "contracts.new.contract-url.label" : "Enlace a Contrato",
     "contracts.new.contract-url.sub-label" : "Hipervínculo al documento del contrato y anexos",

@@ -158,8 +158,6 @@
                         </select>
                         <label class="fg-label">{{$t('contracts.new.procedure-state.label')}}</label>
                     </div>
-                    <span v-if="$v.entry.procedureState.$invalid  && $v.entry.procedureState.$dirty && !$v.entry.procedureState.required"
-                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.procedure-state.label')})}}</span>
                 </div>
 
 
@@ -379,6 +377,21 @@
                           class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.contract-type.label')})}}</span>
                 </div>
 
+                <!--totalAmount-->
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input"
+                               :placeholder="$t('contracts.new.min-amount.placeholder')"
+                               v-model="entry.totalAmount">
+                        <label class="fg-label">{{$t('contracts.new.total-amount.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('contracts.new.total-amount.sub-label')}}</strong>
+                        </label>
+                    </div>
+                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
+                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.min-amount.label'})}}</span> -->
+                </div>
 
 
                 <!--minAmount-->
@@ -776,9 +789,7 @@
                         return urlRegExp.test(value)
                     }
                 },
-                procedureState:{
-                    required
-                },
+
                 servicesDescription:{
                     required
                 },
