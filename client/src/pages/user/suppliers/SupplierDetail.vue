@@ -431,7 +431,7 @@
             },
             totals() {
                 return this.detail.totals || {};
-            },
+            }, 
             public() {
                 return this.detail.public || [];
             },

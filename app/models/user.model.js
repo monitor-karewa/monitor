@@ -6,6 +6,18 @@ const pluginCreatedUpdated = require('mongoose-createdat-updatedat');
 
 const regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+const USER_PERMISSIONS = ["USERS", "SUPPLIERS", "ORGANIZATIONS", "ADMINISTRATIVE_UNITS", "CONTRACTS", "RESOURCES", "CALCULATIONS", "SETTINGS"];
+const USER_PERMISSIONS_DICT = {
+    USERS: "USERS",
+    SUPPLIERS: "SUPPLIERS",
+    ORGANIZATIONS: "ORGANIZATIONS",
+    ADMINISTRATIVE_UNITS: "ADMINISTRATIVE_UNITS",
+    CONTRACTS: "CONTRACTS",
+    RESOURCES: "RESOURCES",
+    CALCULATIONS: "CALCULATIONS",
+    SETTINGS: "SETTINGS"
+};
+
 /**
  * Mongoose Schema for User.
  * @type {mongoose.Schema}
@@ -88,6 +100,22 @@ class UserClass {
     verifyPassword(password) {
         return this.password && bcrypt.compareSync(password, this.password);
     };
+    
+    getPermissions () {
+        if (this.administratorType === 'GENERAL') {
+            return USER_PERMISSIONS;
+        } else {
+            return this.permissions || [];
+        }
+    }
+    
+    hasPermission (permission) {
+        if (this.administratorType === 'GENERAL' || !permission) {
+            return true;
+        } else {
+            return (this.permissions || []).includes(permission);
+        }
+    }
 }
 
 //Load class
@@ -99,5 +127,7 @@ userSchema.index({email: 1}, {unique: true});
 let User = mongoose.model('User', userSchema);
 
 module.exports = {
-    User
+    User,
+    USER_PERMISSIONS,
+    USER_PERMISSIONS_DICT
 };

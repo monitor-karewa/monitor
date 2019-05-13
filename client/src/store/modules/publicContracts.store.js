@@ -23,7 +23,8 @@ const state = {
         NO_BID: 0.00,
         PUBLIC: 0.00,
         INVITATION: 0.00
-    }
+    },
+    contractDetail : {}
 };
 
 const getters = {
@@ -40,7 +41,6 @@ const getters = {
         }
         return query;
     },
-    docsUpdatedLength: state => state.docsUpdated.length,
     getSearchString(state){
         if(state.listQuery){
             return state.listQuery.search;
@@ -68,15 +68,12 @@ const actions = {
         } else {
             commit('SET_SEARCH',"");
         }
-        Vue.$log.info(`Calling action ${storeName}/list`);
-
         let query = getters.getUrlQuery;
 
         contractsApi.list(
             { query },
             (result) => {
                 // console.log('result', result);
-                Vue.$log.info('Response', result);
                 //result.data.data.docs
                 // commit('updateDocs', {
                 //     docs: result.data.data.docs
@@ -105,12 +102,10 @@ const actions = {
         console.log('page --> ' + page);
         let oldPage = state.pagination.page;
         commit('UPDATE_PAGE',page);
-        Vue.$log.info(`Calling action ${storeName}/changePage`);
         let query = getters.getUrlQuery;
         contractsApi.list(
             { query },
             (result) => {
-                Vue.$log.info('Response', result);
                 //result.data.data.docs
                 // commit('updateDocs', {
                 //     docs: result.data.data.docs
@@ -122,12 +117,21 @@ const actions = {
                 tShow(`Hubo un error en el paginado: ${error}`);
             }
         )
+    },
+    loadContractDetail({commit}, id) {
+
+        let query = `?id=${id}`;
+        contractsApi.detail({query}, (result) => {
+            commit('SET_CONTRACT_DETAIL', result.data);
+        }, (err) => {
+            tShow(i18n.t('suppliers.public.load.error'), 'danger');
+            commit('SET_CONTRACT_DETAIL', {});
+        })
     }
     };
 
 const mutations = {
     SET_CONTRACTS(state, {docs, total, page, pages}) {
-        Vue.$log.info("contracts", docs);
         state.contracts = docs;
         state.pagination.total = total;
         state.pagination.page = page;
@@ -160,8 +164,10 @@ const mutations = {
             }
         }
 
-        Vue.$log.info("state.totals", state.totals);
         // state.pagination.page = page;
+    },
+    SET_CONTRACT_DETAIL (state, detail) {
+        state.contractDetail = detail.data;
     }
 };
 

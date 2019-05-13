@@ -173,10 +173,17 @@ export default {
     "general.modal-editable-table.ok-button":"GUARDAR",
     "general.card-uploading.loading":"Cargando...",
     "general.card-uploading.might-take-a-while":"Esto proceso puede demorar unos minutos…",
+    "general.catalog.update.success":"El registro se ha actualizado exitosamente.",
 
     "calculations.calculation": "Cálculo| Cálculos",
 
 
+    //Accounts
+    "accounts.login.error": "Usuario o contraseña incorrectos. Por favor intenta nuevamente.",
+    "accounts.login.info.redirecting": "Por favor inicia sesión para continuar.",
+    "accounts.organization.info.redirecting": "Por favor selecciona una Organización para continuar.",
+    "accounts.logout.success": "Tu sesión se ha cerrado correctamente.",
+    
     //Suppliers
     "suppliers.supplier": "Proveedor | Proveedores",
     "suppliers.new.name.label": "Nombre o razón social",
@@ -243,8 +250,10 @@ export default {
 
     "users.new.admin-type.radio-button.custom.users": "Usuarios",
     "users.new.admin-type.radio-button.custom.suppliers": "Proveedores",
+    "users.new.admin-type.radio-button.custom.organizations": "Organizaciones",
     "users.new.admin-type.radio-button.custom.administrative-units": "Unidades Administrativas",
     "users.new.admin-type.radio-button.custom.contracts": "Contratos",
+    "users.new.admin-type.radio-button.custom.resources": "Recursos",
     "users.new.admin-type.radio-button.custom.calculations": "Cálculos",
     "users.new.admin-type.radio-button.custom.settings": "Configuración",
 
@@ -423,6 +432,10 @@ export default {
     "calculation.validation.required":"El campo {field} del Cálculo es requerido",
     "calculations.validation.classification":"El valor para la Clasificación del Recurso no es válido",
     "calculations.validation.abbreviation":"Debe comenzar con $$, ser valores alfanúmericos y tener mínimo 3 y máximo 8 caractéres",
+    "GENERAL" : "General",
+    "CONTRACT" : "Contrato",
+    "PERCENTAGE" : "Porcentaje",
+    "AMOUNT" : "Cantidad",
 
 
     //DataLoad
@@ -451,6 +464,10 @@ export default {
     "data-load.confirm.success": "Se ha confirmado la carga de datos correctamente.",
     "data-load.confirm.error.unexpected": "Ocurrió un error inesperado al intentar confirmar la carga de datos.",
     "data-load.confirm.error.no-data-load-in-progress": "La carga de datos no se encuentra disponible. Por favor recarga la página para actualizar la información.",
+
+
+    //Calculations
+    "calculations.formula.expression" : "Fórmula",
 
 
     //Enums
