@@ -1,4 +1,5 @@
 const {Contract} = require('./../models/contract.model');
+const {Organization} = require('./../models/organization.model');
 
 const logger = require('./../components/logger').instance;
 const mongoose = require('mongoose');
@@ -9,7 +10,8 @@ function _aggregateAmountByPeriods(req, res, callback) {
     let aggregate = Contract.aggregate([
         {
             $match:{
-                "deleted.isDeleted":false
+                "deleted.isDeleted":false,
+                "organization":Organization.currentOrganizationId(req)
             }
         },
         {
@@ -59,7 +61,8 @@ function _aggregateAmountByProcedure(req, res, callback) {
     let aggregate = Contract.aggregate([
         {
             $match:{
-                "deleted.isDeleted":false
+                "deleted.isDeleted":false,
+                "organization":Organization.currentOrganizationId(req)
             }
         },
         {
