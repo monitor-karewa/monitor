@@ -30,17 +30,17 @@ function _aggregateAmountByPeriods(req, res, callback) {
                 },
                 totalPublic:{
                     $sum:{
-                        $cond:{if:{$eq:["$_id.procedureType", "PUBLIC"]}, then:"$totalAmount", else:0}
+                        $cond:{if:{$eq:["$_id.procedureType", "PUBLIC"]}, then:{ $divide: [ "$totalAmount", 1000000] }, else:0}
                     }
                 },
                 totalNoBid:{
                     $sum:{
-                        $cond:{if:{$eq:["$_id.procedureType", "NO_BID"]}, then:"$totalAmount", else:0}
+                        $cond:{if:{$eq:["$_id.procedureType", "NO_BID"]}, then:{ $divide: [ "$totalAmount", 1000000] }, else:0}
                     }
                 },
                 totalInvitation:{
                     $sum:{
-                        $cond:{if:{$eq:["$_id.procedureType", "INVITATION"]}, then:"$totalAmount", else:0}
+                        $cond:{if:{$eq:["$_id.procedureType", "INVITATION"]}, then:{ $divide: [ "$totalAmount", 1000000] }, else:0}
                     }
                 }
 
