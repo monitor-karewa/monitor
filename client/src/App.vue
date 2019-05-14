@@ -5,7 +5,6 @@
       <!--<router-link to="/about">About</router-link>-->
     <!--</div>-->
     <router-view name="header"/>
-    <router-view name="header2"/>
     <router-view name="sidebar"/>
     <router-view/>
     <router-view name="footer"/>

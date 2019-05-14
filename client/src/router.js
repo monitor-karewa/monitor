@@ -65,20 +65,9 @@ let router = new Router({
         {
             path: '/select-organization',
             name: 'SelectOrganization',
-            // component: UserSelectOrganization,
             components: {
                 header: UserHeader,
-                // header2: UserCover,
                 default: UserSelectOrganization,
-            },
-            props: {
-                // default: {
-                //     defaultRedirectTo: '/',
-                // },
-                // header2: {
-                //     showFilters: false,
-                //     showOrganizationSelect: true
-                // }
             }
         },
         {
