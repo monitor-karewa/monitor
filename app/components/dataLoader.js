@@ -180,8 +180,8 @@ class ContractExcelReader {
         return callback();
     }
 
-    _buildRefCheckQuery(model, field, value, strategy) {
-        let query = {};
+    _buildRefCheckQuery(currentOrganizationId, model, field, value, strategy) {
+        let query = {organization: currentOrganizationId};
         switch (strategy) {
             case REF_STRATEGIES.EXACT:
                 query[field] = value;
@@ -505,7 +505,7 @@ class ContractExcelReader {
                         strategy = fieldInfo.overrides.refStrategy;
                     }
 
-                    let query = _this._buildRefCheckQuery(model, field, fieldInfo.value, strategy);
+                    let query = _this._buildRefCheckQuery(_this.organizationId, model, field, fieldInfo.value, strategy);
                     // console.log('query', query);
 
                     query.exec((err, docs) => {

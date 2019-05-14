@@ -15,6 +15,12 @@ organizationSchema = mongoose.Schema({
         type: String,
         required: true
     },
+    shortName: {
+        type: String,
+        required: true,
+        min: 2,
+        max: 12
+    },
     deleted: require("./schemas/deleted.schema").Deleted
 });
 
@@ -56,6 +62,21 @@ organizationSchema.loadClass(OrganizationClass);
 
 //Indexes
 organizationSchema.index({name: 1}, {unique: true});
+
+organizationSchema.statics.qByOrganization = function (req) {
+    let currentOrganizationId = this.currentOrganizationId(req);
+    return {
+        organization: currentOrganizationId
+    };
+};
+
+organizationSchema.statics.currentOrganizationId = function (req) {
+    let currentOrganizationId = req.currentOrganizationId;
+    if (currentOrganizationId) {
+        currentOrganizationId = mongoose.Types.ObjectId(currentOrganizationId);
+    }
+    return currentOrganizationId;
+};
 
 let Organization = mongoose.model('Organization', organizationSchema);
 

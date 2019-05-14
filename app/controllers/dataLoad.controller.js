@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const ContractExcelReader = require('./../components/dataLoader').ContractExcelReader;
 const ContractExcelWriter = require('./../components/dataLoader').ContractExcelWriter;
 const DataLoad = require('./../models/dataLoad.model').DataLoad;
+const Organization = require('./../models/organization.model').Organization;
 
 const logger = require('./../components/logger').instance;
 
@@ -15,13 +16,8 @@ const logger = require('./../components/logger').instance;
  */
 exports.upload = (req, res, next) => {
 
-    //TODO: Fetch current organization id
-    logger.info(null, req, 'dataLoad.controller#upload', 'TODO: Fetch current organization id');
-    let currentOrganizationId = null;
-    logger.info(null, req, 'dataLoad.controller#upload', 'TODO: Fetch current user id');
-    // let currentUserId = null;
-    logger.warn(null, req, 'dataLoad.controller#upload', 'Using hardcoded user id [5c9eafbfecdaff977f7184b1]');
-    let currentUserId = mongoose.Types.ObjectId("5c9eafbfecdaff977f7184b1");
+    let currentOrganizationId = Organization.currentOrganizationId(req);
+    let currentUserId = req.user._id;
     
     //Optional id, received when reuploading corrections to the data previously uploaded
     let idDataLoad = null;
@@ -58,10 +54,7 @@ exports.upload = (req, res, next) => {
             
             // paymentExcelReader.readObject(excelObject, req, (err, result) => {
             
-            // TODO: fetch current organization id
-            let organizationId = null;
-            
-            let reader = new ContractExcelReader(organizationId, idDataLoad);
+            let reader = new ContractExcelReader(currentOrganizationId, idDataLoad);
             
             try {
                 reader.readBuffer(req.file.buffer)
@@ -142,9 +135,7 @@ exports.upload = (req, res, next) => {
  */
 exports.download = (req, res, next) => {
 
-    //TODO: Fetch current organization id
-    logger.info(null, req, 'dataLoad.controller#download', 'TODO: Fetch current organization id');
-    let currentOrganizationId = null;
+    let currentOrganizationId = Organization.currentOrganizationId(req);
     
     DataLoad
         .findOne({
@@ -191,9 +182,7 @@ var upload = multer();
 exports.beforeUpload = upload.single('file');
 
 exports.current = (req, res, next) => {
-    //TODO: Fetch current organization id
-    logger.info(null, req, 'dataLoad.controller#currentInfo', 'TODO: Fetch current organization id');
-    let currentOrganizationId = null;
+    let currentOrganizationId = Organization.currentOrganizationId(req);
 
     DataLoad
         .findOne({
@@ -236,9 +225,7 @@ exports.current = (req, res, next) => {
 
 
 exports.currentInfo = (req, res, next) => {
-    //TODO: Fetch current organization id
-    logger.info(null, req, 'dataLoad.controller#currentInfo', 'TODO: Fetch current organization id');
-    let currentOrganizationId = null;
+    let currentOrganizationId = Organization.currentOrganizationId(req);
 
     DataLoad.dataLoadInfo(currentOrganizationId, (err, dataLoadInfo) => {
         return res.json({
@@ -307,12 +294,8 @@ exports.currentInfo = (req, res, next) => {
 
 exports.cancelCurrent = (req, res, next) => {
 
-    //TODO: Fetch current organization id
-    logger.info(null, req, 'dataLoad.controller#cancelCurrent', 'TODO: Fetch current organization id');
-    let currentOrganizationId = null;
-
-    logger.info(null, req, 'dataLoad.controller#cancelCurrent', 'TODO: Fetch current user id');
-    let currentUserId = null;
+    let currentOrganizationId = Organization.currentOrganizationId(req);
+    let currentUserId = req.user._id;
     
     DataLoad
         .findOne({
@@ -368,9 +351,7 @@ exports.cancelCurrent = (req, res, next) => {
 
 exports.confirmCurrent = (req, res, next) => {
 
-    //TODO: Fetch current organization id
-    logger.info(null, req, 'dataLoad.controller#cancelCurrent', 'TODO: Fetch current organization id');
-    let currentOrganizationId = null;
+    let currentOrganizationId = Organization.currentOrganizationId(req);
     
     DataLoad
         .findOne({

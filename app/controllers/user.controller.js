@@ -2,6 +2,7 @@ const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 
 const User = require('./../models/user.model').User;
+const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const {validationResult} = require('express-validator/check');
@@ -44,7 +45,8 @@ exports.list = (req, res, next) => {
     //query["field"] = value;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    query = {...query, ...qNotDeleted};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...qNotDeleted, ...qByOrganization};
 
     User
         .paginate(
@@ -91,9 +93,11 @@ exports.save = (req, res, next) => {
     if (id) {
         //Update
         let qById = {_id: id};
+        let qByOrganization = Organization.qByOrganization(req);
+        let query = {...qById, ...qByOrganization};
 
         User
-            .findOne(qById)
+            .findOne(query)
             .exec((err, user) => {
                 if (err || !user) {
                     logger.error(req, err, 'user.controller#save', 'Error al consultar User');
@@ -133,6 +137,7 @@ exports.save = (req, res, next) => {
         //Create
 
         let user = new User({
+            organization: Organization.currentOrganizationId(req),
             name: req.body.name,
             lastName : req.body.lastName,
             email : req.body.email,
@@ -179,8 +184,11 @@ exports.saveUpdatedDocs = (req, res, next) => {
     if(docsUpdated){
         try{
             docsUpdated.forEach((doc) => {
+                let qById = {_id: doc._id};
+                let qByOrganization = Organization.qByOrganization(req);
+                let query = {...qById, ...qByOrganization};
                 User
-                    .findOne({_id: doc._id})
+                    .findOne(query)
                     .exec((err, user) => {
                         user.name = doc.name;
                         user.lastName = doc.lastName;
@@ -229,7 +237,8 @@ exports.delete = (req, res, next) => {
     query["_id"] = req.body._id;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    query = {...query, ...qNotDeleted};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...qNotDeleted, ...qByOrganization};
 
     User
         .find(query)

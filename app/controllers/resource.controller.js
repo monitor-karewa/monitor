@@ -2,6 +2,7 @@ const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 
 const Resource = require('./../models/resource.model').Resource;
+const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const { validationResult } = require('express-validator/check');
@@ -33,7 +34,8 @@ exports.list = (req, res, next) => {
     //query["field"] = value;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    query = {...query, ...qNotDeleted};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...qNotDeleted, ...qByOrganization};
 
     Resource
         .paginate(
@@ -80,9 +82,11 @@ exports.save = (req, res, next) => {
     if (id) {
         //Update
         let qById = {_id: id};
+        let qByOrganization = Organization.qByOrganization(req);
+        let query = {...qById, ...qByOrganization};
 
         Resource
-            .findOne(qById)
+            .findOne(query)
             .exec((err, resource) => {
                 if (err || !resource) {
                     logger.error(req, err, 'resource.controller#save', 'Error al consultar Resource');
@@ -118,6 +122,7 @@ exports.save = (req, res, next) => {
         //Create
 
         let resource = new Resource({
+            organization: Organization.currentOrganizationId(req),
             title : req.body.title,
             classification : req.body.classification,
             url: req.body.url
@@ -159,8 +164,11 @@ exports.saveUpdatedDocs = (req, res, next) => {
     if(docsUpdated){
         try{
             docsUpdated.forEach((doc) => {
+                let qById = {_id: doc._id};
+                let qByOrganization = Organization.qByOrganization(req);
+                let query = {...qById, ...qByOrganization};
                 Resource
-                    .findOne({_id: doc._id})
+                    .findOne(query)
                     .exec((err, resource) => {
                         resource.title = doc.title;
                         resource.classification = doc.classification;
@@ -205,7 +213,8 @@ exports.delete = (req, res, next) => {
     query["_id"] = req.body._id;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    query = {...query, ...qNotDeleted};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...qNotDeleted, ...qByOrganization};
 
     Resource
         .find(query)

@@ -2,6 +2,7 @@ const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 
 const AdministrativeUnit = require('./../models/administrativeUnit.model').AdministrativeUnit;
+const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const { validationResult } = require('express-validator/check');
@@ -33,7 +34,8 @@ exports.list = (req, res, next) => {
     //query["field"] = value;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    query = {...query, ...qNotDeleted};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...qByOrganization, ...query, ...qNotDeleted};
 
     AdministrativeUnit
         .paginate(
@@ -80,9 +82,12 @@ exports.save = (req, res, next) => {
     if (id) {
         //Update
         let qById = {_id: id};
+        let qByOrganization = Organization.qByOrganization(req);
+        
+        let query = {...qById, ...qByOrganization};
 
         AdministrativeUnit
-            .findOne(qById)
+            .findOne(query)
             .exec((err, administrativeUnit) => {
                 if (err || !administrativeUnit) {
                     logger.error(req, err, 'administrativeUnit.controller#save', 'Error al consultar AdministrativeUnit');
@@ -117,6 +122,7 @@ exports.save = (req, res, next) => {
         //Create
 
         let administrativeUnit = new AdministrativeUnit({
+            organization: Organization.currentOrganizationId(req),
             name: req.body.name,
             notes: req.body.notes
         });
@@ -158,14 +164,20 @@ exports.saveUpdatedDocs = (req, res, next) => {
     if(docsUpdated){
         try{
             docsUpdated.forEach((doc) => {
+                let qById = {_id: doc._id};
+                let qByOrganization = Organization.qByOrganization(req);
+
+                let query = {...qById, ...qByOrganization};
                 AdministrativeUnit
-                    .findOne({_id: doc._id})
+                    .findOne(query)
                     .exec((err, administrativeUnit) => {
                         administrativeUnit.name = doc.name;
                         administrativeUnit.notes = doc.notes;
 
                         administrativeUnit.save((err) => {
-                            logger.error(err, req, 'administrativeUnit.controller#saveUpdatedDocs', 'Error al actualizar lista de AdministrativeUnit');
+                            if (err) {
+                                logger.error(err, req, 'administrativeUnit.controller#saveUpdatedDocs', 'Error al actualizar lista de AdministrativeUnit');
+                            }
                         });
 
                     });
@@ -203,7 +215,9 @@ exports.delete = (req, res, next) => {
     query["_id"] = req.body._id;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    query = {...query, ...qNotDeleted};
+    let qByOrganization = Organization.qByOrganization(req);
+    
+    query = {...query, ...qNotDeleted, ...qByOrganization};
 
     AdministrativeUnit
         .find(query)
