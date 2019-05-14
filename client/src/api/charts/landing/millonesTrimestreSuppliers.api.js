@@ -13,17 +13,17 @@ export default {
         let labels = [];
         let datasets= [
             {
-                label: 'PUBLIC',
+                name: 'Lic. pública',
                 backgroundColor: '#6ec284',
                 data: []
             },
             {
-                label: 'INVITATION',
+                name: 'Por invitación',
                 backgroundColor: '#ffc043',
                 data: []
             },
             {
-                label: 'NO_BID',
+                name: 'Adj. directa',
                 backgroundColor: '#eb6262',
                 data: []
             }

@@ -1,7 +1,7 @@
 <template>
     <div>
-        <div class="small">
-            <doughnut-chart :chart-data="customChartData" :options="chartOptions"></doughnut-chart>
+        <div>
+            <apexchart type=donut width=380 :options="chartOptions" :series="series" />
         </div>
         <div class="graph-info">
             <div class="info">
@@ -28,10 +28,8 @@
 </template>
 
 <script>
-    import DoughnutChart from '@/components/charts/DoughnutChart.js'
     import chart from '@/mixins/chart.mixin';
     const storeModule = 'ejercidoProcedimientoChart';
-    import { mapGetters } from 'vuex';
 
     let defaultChartData = {
         labels: [],
@@ -43,17 +41,28 @@
         storeModule: storeModule, defaultChartData
     });
     export default {
-        components: {
-            DoughnutChart
-        },
+        components: {},
         mixins: [baseChart],
         data () {
             return {
                 storeModule: storeModule,
-                chartOptions:{
-                    legend: {
-                        display: false
-                    }
+                chartOptions: {
+                    labels:["Lic. pública", "Por invitación", "Adj. directa"],
+                    colors: ['#6ec284', '#ffc043', '#eb6262'],
+                    legend:{
+                      show:false
+                    },
+                    responsive: [{
+                        breakpoint: 480,
+                        options: {
+                            chart: {
+                                width: 500
+                            },
+                            legend: {
+                                position: 'bottom',
+                            }
+                        }
+                    }]
                 },
                 publicPorcentage:0,
                 invitationPercentage:0,
@@ -66,7 +75,6 @@
         computed: {
             percentagePublic() {
                 return  this.publicPorcentage || 0;
-
             },
             percentageInvitation() {
                 return this.invitationPercentage|| 0;
@@ -76,6 +84,17 @@
             },
             totalAmount(){
                 return this.finalTotal || 0;
+            },
+            series(){
+                let datasets = this.customChartData.datasets;
+                let data =[]
+                if(this.customChartData != undefined && this.customChartData.datasets){
+                    data = datasets[0].data;
+                } else {
+                    data = [0,0,0];
+                }
+
+                return data;
             }
         },
         methods: {
@@ -108,20 +127,20 @@
 </script>
 
 <style>
-    .small {
+    /*.small {*/
 
-        max-height: 700px;
-        margin:  10px auto;
-        /*width: 80% !important;*/
-    }
-    .small #bar-chart {
-        height: 500px !important;
-        width: 100% !important;
-    }
-    .small #doughnut-chart {
-        max-height: 240px !important;
-        max-width: 240px !important;
-        margin: auto;
-    }
+        /*max-height: 700px;*/
+        /*margin:  10px auto;*/
+        /*!*width: 80% !important;*!*/
+    /*}*/
+    /*.small #bar-chart {*/
+        /*height: 500px !important;*/
+        /*width: 100% !important;*/
+    /*}*/
+    /*.small #doughnut-chart {*/
+        /*max-height: 240px !important;*/
+        /*max-width: 240px !important;*/
+        /*margin: auto;*/
+    /*}*/
 </style>
 

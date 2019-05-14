@@ -28,65 +28,67 @@ function _aggregateAmountByPeriods(req, res, callback) {
                     period:"$_id.period",
                     year:"$_id.year",
                 },
-                types:{
-                    $push:{
-                        totalAmount:"$totalAmount",
-                        procedureType:"$_id.procedureType"
+                totalPublic:{
+                    $sum:{
+                        $cond:{if:{$eq:["$_id.procedureType", "PUBLIC"]}, then:"$totalAmount", else:0}
+                    }
+                },
+                totalNoBid:{
+                    $sum:{
+                        $cond:{if:{$eq:["$_id.procedureType", "NO_BID"]}, then:"$totalAmount", else:0}
+                    }
+                },
+                totalInvitation:{
+                    $sum:{
+                        $cond:{if:{$eq:["$_id.procedureType", "INVITATION"]}, then:"$totalAmount", else:0}
                     }
                 }
+
             }
         },
         {
-            $group:{
-                _id:"$_id.year",
-                periods:{
-                    $push:{
-                        period:"$_id.period",
-                        types:"$types"
+            $sort:{"_id.year":-1, "_id.period":-1}
+        }
+    ]);
+
+    return aggregate.exec(callback);
+}
+
+function _aggregateAmountByProcedure(req, res, callback) {
+
+    let aggregate = Contract.aggregate([
+        {
+            $match:{
+                "deleted.isDeleted":false
+            }
+        },
+        {
+            $group: {
+                _id: "$procedureType",
+                totalAmount:{$sum:"$totalOrMaxAmount"}
+            }
+        },
+        {
+            $group: {
+                _id: 1,
+                totalPublic:{
+                    $sum:{
+                        $cond:{if:{$eq:["$_id", "PUBLIC"]}, then:"$totalAmount", else:0}
+                    }
+                },
+                totalNoBid:{
+                    $sum:{
+                        $cond:{if:{$eq:["$_id", "NO_BID"]}, then:"$totalAmount", else:0}
+                    }
+                },
+                totalInvitation:{
+                    $sum:{
+                        $cond:{if:{$eq:["$_id", "INVITATION"]}, then:"$totalAmount", else:0}
                     }
                 }
+
             }
         }
-        // {
-        //     $lookup: {
-        //         from: Supplier.collection.name,
-        //         let: { "supplierId": "$_id" },
-        //         pipeline: [
-        //             {
-        //                 "$match": {
-        //                     "$expr": {
-        //                         "$eq": [ "$_id", "$$supplierId" ] }
-        //                 }
-        //             },
-        //             {
-        //                 "$project": {
-        //                     "name": 1
-        //                 }
-        //             }
-        //         ],
-        //         as: "supplier"
-        //     }
-        // },
-        // {
-        //     $unwind: {
-        //         path: "$supplier",
-        //         preserveNullAndEmptyArrays: true
-        //     },
-        // },
-        // {
-        //     $project: {
-        //         name: "$supplier.name",
-        //         contractsCount: 1,
-        //         publicCount: 1,
-        //         invitationCount: 1,
-        //         noBidCount: 1,
-        //
-        //         public: 1,
-        //         invitation: 1,
-        //         noBid: 1,
-        //         total: 1
-        //     }
-        // }
     ]);
 
     return aggregate.exec(callback);
@@ -94,10 +96,9 @@ function _aggregateAmountByPeriods(req, res, callback) {
 
 
 exports.amountByPeriods = (req, res, next) => {
-
-    _aggregateAmountByPeriods(req, res, (err, years, pageCount, itemCount) => {
+    _aggregateAmountByPeriods(req, res, (err, years) => {
         if (err) {
-            logger.error(err, req, 'publicHome.controller#amountByPeriods', 'Error trying to query amounts by period');
+            logger.error(err, req, 'landing.controller#amountByPeriods', 'Error trying to query amounts by period');
             return res.json({
                 error: true
             });
@@ -105,6 +106,47 @@ exports.amountByPeriods = (req, res, next) => {
         return res.json({
             error: false,
             data: years
+        });
+    });
+};
+
+exports.amountByProcedure = (req, res, next) => {
+    _aggregateAmountByProcedure(req, res, (err, amounts) => {
+        if (err) {
+            logger.error(err, req, 'landing.controller#amountByPeriods', 'Error trying to query amounts by period');
+            return res.json({
+                error: true
+            });
+        }
+        let labels = ["Lic. pública", "Por invitación"," Adj. Directa"];
+
+        logger.info(err, req, 'landing.controller#amountByPeriods', amounts[0]);
+        let datasets= [];
+        if(amounts.length>0){
+            datasets= [
+                {
+                    data: [amounts[0].totalPublic, amounts[0].totalInvitation, amounts[0].totalNoBid],
+                    backgroundColor: ["#6ec284","#ffc043","#eb6262"]
+                }
+            ]
+        } else {
+            datasets= [
+                {
+                    data: [0, 0, 0],
+                    backgroundColor: ["#6ec284","#ffc043","#eb6262"]
+                }
+            ]
+        }
+
+
+        let tempData= {data:{
+                labels: labels,
+                datasets: datasets
+            }};
+        logger.info(err, req, 'landing.controller#amountByPeriods', datasets);
+        return res.json({
+            error: false,
+            data: tempData
         });
     });
 };

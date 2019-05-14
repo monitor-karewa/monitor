@@ -1,11 +1,10 @@
 <template>
-    <div class="small">
-        <bar-chart :chart-data="customChartData" :options="chartOptions"></bar-chart>
+    <div>
+        <apexchart type=bar height=500 :options="chartOptions" :series="customChartData.datasets" />
     </div>
 </template>
 
 <script>
-    import BarChart from '@/components/charts/BarChart.js'
     import chart from '@/mixins/chart.mixin';
     const storeModule = 'millonesTrimestreChart';
 
@@ -20,22 +19,52 @@
     });
     export default {
         components: {
-            BarChart
         },
         mixins: [baseChart],
         data () {
             return {
                 storeModule: storeModule,
-                chartOptions:{
-                    responsive:true,
-                    scales: {
-                        yAxes: [{
-                            ticks: {
-                                callback: function(value, index, values) {
-                                    return '$' + value;
-                                }
+                chartOptions: {
+                    colors: ['#6ec284', '#ffc043', '#eb6262'],
+                    chart: {
+                        toolbar: {
+                            show: false
+                        }
+                    },
+                    plotOptions: {
+                        bar: {
+                            horizontal: false,
+                            columnWidth: '55%'
+                            // endingShape: 'rounded'
+                        }
+                    },
+                    dataLabels: {
+                        enabled: false
+                    },
+                    stroke: {
+                        show: true,
+                        width: 2,
+                        colors: ['transparent']
+                    },
+
+                    xaxis: {
+                        categories: [],
+                    },
+                    yaxis: {
+                        title: {
+                            text: '$ (millones de pesos)'
+                        }
+                    },
+                    fill: {
+                        opacity: 1,
+                        colors: ['#6ec284', '#ffc043', '#eb6262']
+                    },
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return "$ " + val
                             }
-                        }]
+                        }
                     }
                 }
             }
@@ -43,14 +72,19 @@
         mounted () {
         },
         methods: {
+        },
+        watch: {
+            customChartData: function (val) {
+                this.chartOptions = {
+                    xaxis:{
+                        categories:val.labels
+                    }
+                }
+            }
         }
     }
 </script>
 
 <style>
-    .small {
-        /*max-width: 600px;*/
-        /*margin:  150px auto;*/
-    }
 </style>
 

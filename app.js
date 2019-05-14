@@ -52,6 +52,7 @@ const routeLogRoutes = require('./app/routes/routeLog.routes');
 
 
 const publicSupplierRoutes = require('./app/routes/publicSupplier.routes');
+const landingRoutes = require('./app/routes/landing.routes');
 
 // Controllers
 const securityController = require('./app/controllers/security.controller');
@@ -152,6 +153,7 @@ if (!isProd) {
 app.use('/', indexRoutes);
 ///public-api/suppliers/list 
 app.use('/public-api/suppliers', publicSupplierRoutes);
+app.use('/public-api/landing', landingRoutes);
 
 // ======================
 // Session initialization

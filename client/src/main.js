@@ -10,6 +10,7 @@ import store from '@/store';
 import '@/registerServiceWorker';
 import i18n from '@/plugins/i18n';
 import vuelidate from '@/plugins/vuelidate';
+import '@/plugins/vueApexChart';
 import VueCurrencyFilter from '@/plugins/currencyFilter';
 import VueSession from '@/plugins/vueSession';
 
