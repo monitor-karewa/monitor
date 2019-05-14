@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const Contract = require('./../models/contract.model').Contract;
 const Supplier = require('./../models/supplier.model').Supplier;
 const AdministrativeUnit = require('./../models/administrativeUnit.model').AdministrativeUnit;
+const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const { validationResult } = require('express-validator/check');
@@ -37,7 +38,8 @@ exports.list = (req, res, next) => {
     //query["field"] = value;
     
     let qNotDeleted = deletedSchema.qNotDeleted();
-    query = {...query, ...qNotDeleted};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...qNotDeleted, ...qByOrganization};
 
     Contract
         .paginate(
@@ -92,7 +94,8 @@ exports.detail = (req, res, next) => {
     //query["field"] = value;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    query = {...query, ...qNotDeleted};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...qNotDeleted, ...qByOrganization};
 
     Contract
         .findOne(
@@ -129,10 +132,11 @@ exports.getTotals = (req, res, next) => {
     //query["field"] = value;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    query = {...query, ...qNotDeleted};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...qNotDeleted, ...qByOrganization};
     Contract.aggregate([
             {
-                $match : {}
+                $match : query
             },
             {
                 $group  : {

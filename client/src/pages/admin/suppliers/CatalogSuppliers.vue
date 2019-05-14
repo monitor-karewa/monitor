@@ -178,7 +178,12 @@
                 touchMap.set($v, setTimeout($v.$touch, 1000))
             },
             clearEntry(){
-                this.entry = {};
+                this.entry = {
+                    _id: "",
+                    name : "",
+                    rfc : "",
+                    notes: ""
+                };
                 this.$v.$reset();
             }
         },

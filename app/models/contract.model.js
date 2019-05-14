@@ -326,6 +326,11 @@ getContractTypeEnumObject = function (contractType) {
 
 
 let ContractSchema = new Schema({
+    organization: {
+        type: Schema.Types.ObjectId,
+        ref: 'Organization',
+        required: true
+    },
     /* Tipo de procedimiento */
     procedureType: {
         type: String,

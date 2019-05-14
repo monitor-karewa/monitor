@@ -5,6 +5,7 @@
       <!--<router-link to="/about">About</router-link>-->
     <!--</div>-->
     <router-view name="header"/>
+    <router-view name="header2"/>
     <router-view name="sidebar"/>
     <router-view/>
     <router-view name="footer"/>
@@ -55,6 +56,12 @@
 
               let currentOrganizationId = this.$session.get('currentOrganizationId');
               axios.defaults.headers.common['X-CURRENT-ORGANIZATION-ID'] = currentOrganizationId;
+
+              let currentOrganizationName = this.$session.get('currentOrganizationName');
+              let currentOrganizationShortName = this.$session.get('currentOrganizationShortName');
+              
+              this.$store.commit('currentOrganizationName', currentOrganizationName);
+              this.$store.commit('currentOrganizationShortName', currentOrganizationShortName);
           }
           
       }

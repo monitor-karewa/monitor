@@ -8,6 +8,8 @@ import UserIndex from '@/pages/user/Index';
 import UserHeader from '@/pages/user/Header';
 import UserFooter from '@/pages/user/Footer';
 import UserHome from '@/pages/user/home/Home';
+import UserCover from '@/pages/user/home/Cover';
+import UserSelectOrganization from '@/pages/user/home/SelectOrganization';
 
 import Suppliers from '@/pages/user/suppliers/Suppliers';
 import SupplierDetail from '@/pages/user/suppliers/SupplierDetail';
@@ -60,6 +62,25 @@ Vue.use(Router);
 let router = new Router({
     // mode : 'history',
     routes: [
+        {
+            path: '/select-organization',
+            name: 'SelectOrganization',
+            // component: UserSelectOrganization,
+            components: {
+                header: UserHeader,
+                // header2: UserCover,
+                default: UserSelectOrganization,
+            },
+            props: {
+                // default: {
+                //     defaultRedirectTo: '/',
+                // },
+                // header2: {
+                //     showFilters: false,
+                //     showOrganizationSelect: true
+                // }
+            }
+        },
         {
             path: '/',
             // name: 'UserIndex',

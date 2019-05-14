@@ -29,7 +29,6 @@ exports.checkLogin = (req, res, next) => {
  */
 exports.checkPermission = (permission) => {
     return (req, res, next) => {
-        console.log('req.user', req.user);
         if (req.user.hasPermission(permission)) {
             return next();
         } else {

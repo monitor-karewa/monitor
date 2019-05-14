@@ -8,6 +8,12 @@ const pluginCreatedUpdated = require('mongoose-createdat-updatedat');
  * @type {mongoose.Schema}
  */
 let RouteLogSchema = new Schema({
+    organization: {
+        type: Schema.Types.ObjectId,
+        ref: 'Organization',
+        //Some routes are organization-free, such as contact, about, select-organizations
+        required: false
+    },
     path: {
         type: String,
         required: true
