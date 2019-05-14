@@ -16,7 +16,6 @@
                         <div class="floating-title-panel">
                             <h1 m-t-0>
                                 Contratos
-
                             </h1>
                             <div class="side-right">
                                 <a href="" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
@@ -29,80 +28,18 @@
                         <p class="f-14 c-plain_text principal-font-regular">Aquí podrás encontrar la lista de todos los contratos que han sido firmados por el Municipio de Chihuahua.<br/>
                             Si quieres consultar los detalles de un contraro haz clic en “Ver más”.</p>
 
-                        <div class="filter">
-                            <div class="filter-container">
-                                <input class="input-search" type="text" name="" value="" placeholder="Escribe el nombre del contrato.."/>
-                            </div>
-                            <button class="filter-btn" type="button" name="button">Buscar</button>
-                        </div>
+                        <!--filters-->
+                        <PublicFilter
+                                :store-module="storeModule"
+                                :administrativeUnits="adminstrativeUnitsForFilter"
+                                :fiscalYears="fiscalYears"
+                                :trimonths="trimonths"
+                                :administrationPeriods="administrationPeriods"
+                                :procedureTypes="procedureTypes"
+                        >
 
-                        <div class="m-t-10">
-                            <div class="filter-box">
-                                <div class="filter">
-                                    <div class="filter-container row m-0">
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar administración"
-                                                        title="Por administración">
-                                                    <option>ADMINISTRACIÓN 2016-2018</option>
-                                                    <option>ADMINISTRACIÓN 2013-2015</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar año" title="Por año…">
-                                                    <option>2019</option>
-                                                    <option>2018</option>
-                                                    <option>2017</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar trimestre"
-                                                        title="Por trimestre…">
-                                                    <optgroup label="2018">
-                                                        <option>3º 2018</option>
-                                                        <option>2º 2018</option>
-                                                        <option>1º 2018</option>
-                                                    </optgroup>
-                                                    <optgroup label="2017">
-                                                        <option>3º 2017</option>
-                                                        <option>2º 2017</option>
-                                                        <option>1º 2017</option>
-                                                    </optgroup>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar administrativa"
-                                                        title="Por unidad administrativa…">
-                                                    <option>ATENCIÓN CIUDADANA</option>
-                                                    <option>CENTRO DE ATENCIÓN Y PREVENCIÓN PSICOLÓGICAS</option>
-                                                    <option>COMUNICACIÓN SOCIAL</option>
-                                                    <option>CONSEJO DE URBANIZACIÓN</option>
-                                                    <option>DESARROLLO ECONOMICO Y TURÍSTICO</option>
-                                                    <option>DESARROLLO HUMANO Y EDUCACIÓN</option>
-                                                    <option>DESARROLLO INTEGRAL DE LA FAMILIA</option>
-                                                    <option>DESARROLLO RURAL</option>
-                                                    <option>DESARROLLO URBANO Y ECOLOGÍA</option>
-                                                    <option>DESPACHO DE LA PRESIDENCIA</option>
-                                                    <option>DIRECCIÓN DE OBRAS PUBLICAS MUNICIPALES</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button class="filter-btn" type="button" name="button">Filtrar</button>
-                                </div>
+                        </PublicFilter>
 
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -236,6 +173,7 @@
     import { mapState, mapGetters } from 'vuex';
     import moment from 'moment';
     import TableTdFormat from '@/components/tables/tds/TableTdFormat';
+    import PublicFilter from '@/components/filters/PublicFilter.vue';
 
 
     export default {
@@ -247,13 +185,19 @@
         computed  : {
             ...mapState({
                 contracts: state => state[storeModule].contracts,
+                adminstrativeUnitsForFilter: state => state[storeModule].adminstrativeUnitsForFilter,
+                fiscalYears: state => state[storeModule].fiscalYears,
+                trimonths: state => state[storeModule].trimonths,
+                administrationPeriods: state => state[storeModule].administrationPeriods,
+                procedureTypes: state => state[storeModule].procedureTypes,
                 totals: state => state[storeModule].totals, //I like totals
             }),
         },
         components: {
             MoreInfo,
             TableTdFormat,
-            Pagination
+            Pagination,
+            PublicFilter
         },
         created() {
             window.$(document).ready(function () {
@@ -265,6 +209,19 @@
             this.$store.dispatch(`${storeModule}/getTotals`);
             this.$store.dispatch(`${storeModule}/list`);
             this.$store.commit(`${storeModule}/setDocName`,  docName);
+
+            //for the filters
+            this.$store.dispatch(`${storeModule}/getAdministrativeUnitsForFilter`);
+            this.$store.dispatch(`${storeModule}/getFiscalYears`);
+            this.$store.dispatch(`${storeModule}/getTrimonths`);
+            this.$store.dispatch(`${storeModule}/getAdministrationPeriods`);
+            this.$store.dispatch(`${storeModule}/getProcedureTypes`);
+
+        },
+        mounted(){
+            this.$nextTick(function () {
+                $('.selectpicker').selectpicker('refresh');
+            })
         },
         filters: {
             moment: function (date) {

@@ -2,6 +2,7 @@ import Vue from "vue";
 
 const axios = require('axios');
 import base from '@/api/base.api';
+
 const namespace = 'contracts';
 
 export default {
@@ -19,7 +20,41 @@ export default {
         return axios.get(`${base.baseUrl}/public-api/${namespace}/detail${params.query || ''}`, params)
             .then(onSuccess)
             .catch(onError);
-    }
-
+    },
+    retrieveSuppliers: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/suppliers`, params)
+            .then(onSuccess)
+            .catch(onError);
+    },
+    retrieveAdministrativeUnitsForFilter: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/administrative-units`, params)
+            .then(onSuccess)
+            .catch(onError);
+    },
+    retrieveFiscalYears: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/fiscal-years`, params)
+            .then(onSuccess)
+            .catch(onError);
+    },
+    retrieveAdministrationPeriods: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/administration-periods`, params)
+            .then(onSuccess)
+            .catch(onError);
+    },
+    retrieveTrimonths: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/trimonths`, params)
+            .then(onSuccess)
+            .catch(onError);
+    },
+    retrieveProceudureTypes : (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/procedure-types`, params)
+            .then(onSuccess)
+            .catch(onError);
+    },
+    filteredList: (params = {}, onSuccess, onError) => {
+        return axios.post(`${base.baseUrl}/public-api/${namespace}/filtered-list${params.query || ''}`, params)
+            .then(onSuccess)
+            .catch(onError);
+    },
 
 }
