@@ -72,7 +72,7 @@ exports.list = (req, res, next) => {
 
         if (req.body.filters.trimonths && req.body.filters.trimonths.length) {
             for (let i = 0; i < req.body.filters.trimonths.length; i++) {
-                orBuilder.push({period: req.body.filters.trimonths[i].trimonth})
+                orBuilder.push({period: req.body.filters.trimonths[i].period})
             }
             andBuilder.push({$or: orBuilder});
             orBuilder = [];

@@ -114,7 +114,7 @@ const actions = {
                 filters : filters
             },
             (result) => {
-                commit('SET_CONTRACTS', result.data.data);
+                commit('SET_SUPPLIERS', result.data.data);
             },
             (error) => {
                 Vue.$log.error('Response error', error);
@@ -149,6 +149,9 @@ const mutations = {
     },
     SET_PROCEDURE_TYPES(state, procedureTypes) {
         state.procedureTypes = procedureTypes;
+    },
+    UPDATE_PAGE(state, page) {
+        state.pagination.page = page;
     },
     /**
      * Saves which was the last query used so it can change page when there are filtered results

@@ -2,6 +2,7 @@ const Supplier = require('./../models/supplier.model').Supplier;
 const {Contract} = require('./../models/contract.model');
 const {Organization} = require('./../models/organization.model');
 const deletedSchema = require('./../models/schemas/deleted.schema');
+const utils = require('./../components/utils.js');
 
 const logger = require('./../components/logger').instance;
 const mongoose = require('mongoose');
@@ -16,6 +17,8 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
     
     let paginate = !!options.paginate;
     let query = {};
+    let orBuilder = [];
+    let andBuilder = [];
 
     if (req.body && req.body.filters) {
 
@@ -45,7 +48,7 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
 
         if (req.body.filters.trimonths && req.body.filters.trimonths.length) {
             for (let i = 0; i < req.body.filters.trimonths.length; i++) {
-                orBuilder.push({period: req.body.filters.trimonths[i].trimonth})
+                orBuilder.push({period: req.body.filters.trimonths[i].period})
             }
             andBuilder.push({$or: orBuilder});
             orBuilder = [];
@@ -74,6 +77,7 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
             query = {$and : andBuilder};
         }
     }
+
 
 
     let qNotDeleted = deletedSchema.qNotDeleted();

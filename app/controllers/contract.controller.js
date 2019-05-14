@@ -35,7 +35,7 @@ exports.list = (req, res, next) => {
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     let qByOrganization = Organization.qByOrganization(req);
-    let query = {...query, ...qNotDeleted, ...qByOrganization};
+    let query = {...qNotDeleted, ...qByOrganization};
 
     Contract
         .paginate(
