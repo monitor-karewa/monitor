@@ -8,7 +8,7 @@
                         <img class="img-fluid" src="@/assets/images/Logos/logo-karewa-xs.png" alt="Logo" />
                         <div>
                             <small>Monitor</small>
-                            <label>Karewa</label>
+                            <label>{{currentOrganizationShortName}}</label>
                         </div>
                     </div>
                     <div id="hideMenu" class="btn-close-resp"><a><i class="zmdi zmdi-close"></i></a></div>
@@ -164,6 +164,10 @@
         components: {
         },
         computed: {
+            ...mapState({
+                currentOrganizationName: state => state.currentOrganizationName,
+                currentOrganizationShortName: state => state.currentOrganizationShortName
+            }),
             permissions () {
                 return this.$session.get('permissions') || [];
             }

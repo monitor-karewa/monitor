@@ -28,7 +28,7 @@ class DataLoadDetailClass {
     }
 }
 
-DataLoadDetailSchema.statics.toContractObj = function (detailObj) {
+DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
     //Actual detail
     let detail = detailObj.data;
     
@@ -40,6 +40,7 @@ DataLoadDetailSchema.statics.toContractObj = function (detailObj) {
         detail: detail,
         // supplierId: 
         contract: {
+            organization: dataLoad.organization,
             
             //enum
             procedureType: detail.procedureType.valueToSaveOverride,
@@ -82,7 +83,7 @@ DataLoadDetailSchema.statics.toContractObj = function (detailObj) {
             
             //enum
             // contractType : detail.contractType.valueToSaveOverride,
-            contractType : 'OPEN',
+            contractType : 'NORMAL',
             
             totalAmount : detail.totalAmount.value,
             minAmount : detail.minAmount.value,
@@ -107,7 +108,7 @@ DataLoadDetailSchema.statics.toContractObj = function (detailObj) {
     };
 };
 
-DataLoadDetailSchema.statics.toSuppliersArray = function (detailObj) {
+DataLoadDetailSchema.statics.toSuppliersArray = function (dataLoad, detailObj) {
     //Actual detail
     let detail = detailObj.data;
     
@@ -123,13 +124,14 @@ DataLoadDetailSchema.statics.toSuppliersArray = function (detailObj) {
     
     return [
         {
+            organization: dataLoad.organization,
             name: detail.supplierName.value,
             rfc: detail.supplierRfc.value
         }
     ]
 };
 
-DataLoadDetailSchema.statics.toAdministrativeUnitsArray = function (detailObj) {
+DataLoadDetailSchema.statics.toAdministrativeUnitsArray = function (dataLoad, detailObj) {
     //Actual detail
     let detail = detailObj.data;
     
@@ -141,18 +143,21 @@ DataLoadDetailSchema.statics.toAdministrativeUnitsArray = function (detailObj) {
     
     if (detail.organizerAdministrativeUnit.shouldCreateDoc) {
         administrativeUnits.push({
+            organization: dataLoad.organization,
             name: detail.organizerAdministrativeUnit.value
         });
     }
     
     if (detail.applicantAdministrativeUnit.shouldCreateDoc) {
         administrativeUnits.push({
+            organization: dataLoad.organization,
             name: detail.applicantAdministrativeUnit.value
         });
     }
     
     if (detail.areaInCharge.shouldCreateDoc) {
         administrativeUnits.push({
+            organization: dataLoad.organization,
             name: detail.areaInCharge.value
         });
     }

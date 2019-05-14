@@ -21,8 +21,7 @@ let DataLoadSchema = new Schema({
     organization: {
         type: Schema.Types.ObjectId,
         ref: 'Organization',
-        // required: true
-        required: false
+        required: true
     },
     uploadedBy: {
         type: Schema.Types.ObjectId,
@@ -123,7 +122,9 @@ DataLoadSchema.statics.getSummary = function (dataLoad) {
         if (rowInfo.summary.skipRow) {
             skippedContractsCount++;
         } else {
-            newContractsCount++;
+            if (!rowInfo.summary.hasErrors) {
+                newContractsCount++;
+            }
             
             if (rowInfo.supplierName.shouldCreateDoc) {
                 if (!addedSuppliers[rowInfo.supplierName.value]) {
@@ -250,17 +251,13 @@ DataLoadSchema.statics.confirm = function (dataLoad, confirmCallback) {
         //TODO: Save Contact, Suppliers, AdministrativeUnits, etc
         
         let mappedValue =  {
-            contractInfo: DataLoadDetail.toContractObj(detail),
-            suppliers: DataLoadDetail.toSuppliersArray(detail),
-            administrativeUnits: DataLoadDetail.toAdministrativeUnitsArray(detail)
+            contractInfo: DataLoadDetail.toContractObj(dataLoad, detail),
+            suppliers: DataLoadDetail.toSuppliersArray(dataLoad, detail),
+            administrativeUnits: DataLoadDetail.toAdministrativeUnitsArray(dataLoad, detail)
         };
         
         return callback(null, mappedValue);
     }, (err, mappedDetails) => {
-
-        console.log('mappedDetails.length', mappedDetails.length);
-        console.log('mappedDetails.length', mappedDetails.length);
-
         //Each mappedDetail has the form:
         // {
         //     contractInfo: {detail: {...}, contract: {...}},
@@ -279,8 +276,6 @@ DataLoadSchema.statics.confirm = function (dataLoad, confirmCallback) {
                     //Flatmap; all supplier arrays as one single array
                     // .flatMap(detailObj => detailObj.suppliers);
 
-                console.log('suppliersArrayOfArrays', suppliersArrayOfArrays);
-
                 let supplierObjsToSave = suppliersArrayOfArrays
                     //Remove duplicates
                     .filter(supplier => {
@@ -293,8 +288,6 @@ DataLoadSchema.statics.confirm = function (dataLoad, confirmCallback) {
                             return true;
                         }
                     });
-
-                console.log('supplierObjsToSave', supplierObjsToSave);
 
                 Supplier
                     .insertMany(supplierObjsToSave, (err, savedSuppliers) => {

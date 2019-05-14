@@ -174,6 +174,14 @@ export default {
     "general.card-uploading.loading":"Cargando...",
     "general.card-uploading.might-take-a-while":"Esto proceso puede demorar unos minutos…",
     "general.catalog.update.success":"El registro se ha actualizado exitosamente.",
+    "general.files.documents.download":"Descargar",
+    "general.files.documents.download-unavailable":"Documento no disponible",
+    "general.files.documents.download-document":"Descargar documento",
+    "general.files.backup.description":"Puedes descargar el archivo desde la fuente original o utilizar el respaldo de Monitor Karewa.",
+    "general.files.backup.original-unavailable":"Enlace original no disponible",
+    "general.files.backup.original-download":"Descargar (original)",
+    "general.files.backup.backup-unavailable":"Respaldo no disponible",
+    "general.files.backup.backup-download":"Descargar (respaldo)",
 
     "calculations.calculation": "Cálculo| Cálculos",
 
@@ -204,8 +212,12 @@ export default {
     //Organizations
     "organizations.organization": "Organización | Organizaciones",
     "organizations.name" : "Nombre",
+    "organizations.short-name" : "Nombre corto",
     "organizations.validation.required":"El campo {field} de la Organización es requerido",
     "organizations.validation.max.name":"El nombre excede los {maxLength} caracteres permitidos",
+    "organizations.validation.max.short-name":"El nombre corto excede los {maxLength} caracteres permitidos",
+    "organizations.validation.min.short-name":"El nombre corto no cumple con los {minLength} caracteres mínimos",
+    "organizations.public.load.error": "La información de Organizaciones no se encuentra disponible en este momento.",
 
     //Adminsitrative Units
     "administrativeUnits.administrativeUnit": "Unidad administrativa | Unidades administrativas",

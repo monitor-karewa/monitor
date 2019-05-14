@@ -29,7 +29,6 @@ exports.checkLogin = (req, res, next) => {
  */
 exports.checkPermission = (permission) => {
     return (req, res, next) => {
-        console.log('req.user', req.user);
         if (req.user.hasPermission(permission)) {
             return next();
         } else {
@@ -115,6 +114,7 @@ exports.hasPermission = hasPermission;
  * @param permission {string} clave del permiso
  * @param kind {string} tipo del permiso
  * @returns {function(*, *, *)} middleware para validar el permiso
+ * @deprecated use #checkPermission instead
  */
 exports.validatePermission = (permission, kind) => {
     //permission: 

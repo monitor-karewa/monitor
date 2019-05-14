@@ -1,5 +1,7 @@
 const Supplier = require('./../models/supplier.model').Supplier;
 const {Contract} = require('./../models/contract.model');
+const {Organization} = require('./../models/organization.model');
+const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const logger = require('./../components/logger').instance;
 const mongoose = require('mongoose');
@@ -14,7 +16,14 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
     
     let paginate = !!options.paginate;
 
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    let qByOrganization = Organization.qByOrganization(req);
+    let query = {...qNotDeleted, ...qByOrganization};
+
     let aggregate = Contract.aggregate([
+        {
+            $match: query
+        },
         {
             $group: {
                 _id: '$supplier',
@@ -168,7 +177,7 @@ exports.list = (req, res, next) => {
             totals.invitationCount += supplierInfo.invitationCount;
             totals.noBidCount += supplierInfo.noBidCount;
 
-            totals.total += supplierInfo.publicCount;
+            totals.total += supplierInfo.total;
             totals.public += supplierInfo.public;
             totals.invitation += supplierInfo.invitation;
             totals.noBid += supplierInfo.noBid;

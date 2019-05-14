@@ -144,7 +144,6 @@ export default function (api, storeName) {
                         }else{
                             bus.$emit(storeName + events.DOC_CREATED);
                         }
-                        tShow(i18n.t('general.catalog.update.success'), 'success');
                     }
                 },
                 (error) => {

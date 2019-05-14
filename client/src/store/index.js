@@ -14,12 +14,15 @@ import dataLoad from '@/store/modules/dataLoad.store';
 import accounts from '@/store/modules/accounts.store';
 
 //user
+import publicOrganizationsStore from '@/store/modules/publicOrganizations.store';
 import publicContracts from '@/store/modules/publicContracts.store';
 import publicSuppliersStore from '@/store/modules/publicSuppliers.store';
+import millonesTrimestreChart from '@/store/modules/landingCharts/millonesTrimestreChart.store';
+import ejercidoProcedimientoChart from '@/store/modules/landingCharts/ejercidoProcedimientoChart.store';
 
 
 import actions from '@/store/actions';
-import store from '@/store/store';
+import state from '@/store/state';
 import mutations from '@/store/mutations';
 
 
@@ -33,6 +36,8 @@ export default new Vuex.Store({
         session: sessionStore,
         suppliers: suppliersStore,
         administrativeUnits : administrativeUnits,
+        millonesTrimestreChart : millonesTrimestreChart,
+        ejercidoProcedimientoChart : ejercidoProcedimientoChart,
         contracts : contracts,
         resources : resources,
         users : users,
@@ -41,10 +46,11 @@ export default new Vuex.Store({
         dataLoad: dataLoad,
         accounts: accounts,
         //public stores (for users)
+        publicOrganizations: publicOrganizationsStore,
         publicSuppliers: publicSuppliersStore,
         publicContracts : publicContracts
     },
-    store: store,
+    state: state,
     actions: actions,
     mutations: mutations,
     strict: debug,

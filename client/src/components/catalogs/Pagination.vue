@@ -126,7 +126,7 @@
             'changePageAction': {
                 type: String,
                 default: 'changePage'
-            },
+            }
         }
     }
 </script>

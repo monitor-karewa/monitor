@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 
 const Calculation = require('./../models/calculation.model').Calculation;
 const Contracts = require('./../models/contract.model').Contract;
+const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 const variables = require('./../components/variablesSeed').variables;
 const async = require('async');
@@ -47,7 +48,9 @@ exports.list = (req, res, next) => {
     // query["field"] = value;
     
     let qNotDeleted = deletedSchema.qNotDeleted();
-    query = {...query, ...qNotDeleted};
+    let qByOrganization = Organization.qByOrganization(req);
+
+    query = {...query, ...qNotDeleted, ...qByOrganization};
 
 
     Calculation
@@ -100,7 +103,8 @@ exports.getCalculationsForFormula = (req, res, next) => {
     // query["field"] = value;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    query = {...query, ...qNotDeleted};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...qNotDeleted, ...qByOrganization};
 
     Calculation
         .find(
@@ -301,9 +305,11 @@ exports.save = (req, res, next) => {
     if (id) {
         //Update
         let qById = {_id: id};
+        let qByOrganization = Organization.qByOrganization(req);
+        let query = {...qById, ...qByOrganization};
 
         Calculation
-            .findOne(qById)
+            .findOne(query)
             .exec((err, calculation) => {
                 if (err || !calculation) {
                     logger.error(err, req, 'calculation.controller#save', 'Error al consultar Calculation');
@@ -388,6 +394,7 @@ exports.save = (req, res, next) => {
         //Create
 
         let calculation = new Calculation({
+            organization: Organization.currentOrganizationId(req),
             name : req.body.name,
             description : req.body.description,
             type : req.body.type,
@@ -642,7 +649,8 @@ exports.delete = (req, res, next) => {
     query["_id"] = req.body._id;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    query = {...query, ...qNotDeleted};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...qNotDeleted, ...qByOrganization};
     
     Calculation
         .find(query)
