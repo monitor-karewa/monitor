@@ -174,6 +174,14 @@ export default {
     "general.card-uploading.loading":"Cargando...",
     "general.card-uploading.might-take-a-while":"Esto proceso puede demorar unos minutos…",
     "general.catalog.update.success":"El registro se ha actualizado exitosamente.",
+    "general.files.documents.download":"Descargar",
+    "general.files.documents.download-unavailable":"Documento no disponible",
+    "general.files.documents.download-document":"Descargar documento",
+    "general.files.backup.description":"Puedes descargar el archivo desde la fuente original o utilizar el respaldo de Monitor Karewa.",
+    "general.files.backup.original-unavailable":"Enlace original no disponible",
+    "general.files.backup.original-download":"Descargar (original)",
+    "general.files.backup.backup-unavailable":"Respaldo no disponible",
+    "general.files.backup.backup-download":"Descargar (respaldo)",
 
     "calculations.calculation": "Cálculo| Cálculos",
 

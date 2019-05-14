@@ -52,7 +52,17 @@ function _backupUrl(url, callback) {
 
     request({
         uri: url,
-        encoding: null
+        encoding: null,
+        
+        //request uses NodeJS's http client under the hood.
+        //Sometimes, http throws an error upon making a valid request
+        //We set the family to 4 to avoid this error
+        //For more information:
+        
+        //https://github.com/request/request-promise-native/issues/6#issuecomment-282537910
+        
+        //Or google "npm request Error: getaddrinfo ENOTFOUND"
+        family: 4
     }, (err, response, body) => {
         if (err) {
             logger.error(null, null, 'jobManager#_backupUrl', 'Request failed for url [%s]', url);
@@ -200,13 +210,13 @@ agenda.define(TASKS.BACKUP_CONTRACT_URLS, (job, done) => {
                 logger.error(err, null, 'jobManager#(after parallel)', 'Backup unsuccessful for contract [%s]', contract._id.toString());
             }
 
-            contract.backedUp = true;
-
-            
             //Skip if nothing to update
             if (!update) {
                 return callback();
             }
+            
+            //Else update the Contract and mark as backed up
+            update.backedUp = true;
 
             Contract.updateOne({_id: contract._id}, {$set: update}, {}, (err) => {
                 if (err) {
