@@ -1,21 +1,16 @@
-var express = require('express');
-var router = express.Router();
+const express = require('express');
+const router = express.Router();
 
-var organizationController = require('./../controllers/organization.controller');
-var Organization = require('./../models/organization.model').Organization;
-var securityController = require('./../controllers/security.controller');
-
-
-/* GET organizations listing. */
-router.get('/', function(req, res, next) {
-  res.send('respond with a resource');
-});
+const organizationController = require('./../controllers/organization.controller');
+const Organization = require('./../models/organization.model').Organization;
+const securityController = require('./../controllers/security.controller');
+const {USER_PERMISSIONS_DICT} = require('./../models/user.model');
 
 /**
  * GET /list
  * Consulta de registros
  */
-router.get('/list', securityController.validatePermission(Organization.permission, 'read'), organizationController.list);
+router.get('/list', organizationController.list);
 
 /**
  * POST /save
@@ -28,12 +23,12 @@ router.post('/save', organizationController.save);
  * POST /delete
  * Borrar un registro
  */
-router.post('/delete', securityController.validatePermission(Organization.permission, 'delete'), organizationController.delete);
+router.post('/delete', organizationController.delete);
 
 /**
  * POST /save-updated-docs
  * Actualiza la información de varios registros
  */
-router.post('/save-updated-docs', securityController.validatePermission(Organization.permission, 'edit'), organizationController.saveUpdatedDocs);
+router.post('/save-updated-docs', organizationController.saveUpdatedDocs);
 
 module.exports = router;

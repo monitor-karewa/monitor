@@ -1,7 +1,11 @@
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
+const mongoose = require('mongoose');
 
 const Contract = require('./../models/contract.model').Contract;
+const Supplier = require('./../models/supplier.model').Supplier;
+const AdministrativeUnit = require('./../models/administrativeUnit.model').AdministrativeUnit;
+const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const { validationResult } = require('express-validator/check');
@@ -27,18 +31,25 @@ exports.index = (req, res, next) => {
  */
 exports.list = (req, res, next) => {
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
+    paginationOptions.lean = false;
 
-    let query = {};
-    
-    //query["field"] = value;
-    
-    //let qNotDeleted = deletedSchema.qNotDeleted();
-    //query = {...query, ...qNotDeleted};
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    let qByOrganization = Organization.qByOrganization(req);
+    let query = {...query, ...qNotDeleted, ...qByOrganization};
 
     Contract
         .paginate(
             query,
-            paginationOptions,
+            {
+                ...paginationOptions,
+                populate : [
+                    'supplier',
+                    'administrativeUnit ',
+                    'organizerAdministrativeUnit ',
+                    'areaInCharge ',
+                    'applicantAdministrativeUnit '
+                ]
+            },
             (err, result) => {
                 if (err) {
                     logger.error(err, req, 'contract.controller#list', 'Error al consultar lista de Contract');
@@ -62,6 +73,74 @@ exports.list = (req, res, next) => {
         );
 };
 
+
+/**
+ * Queries the possible suppliers fot this contract
+ */
+exports.retrieveSuppliers = (req, res, next) => {
+    let paginationOptions = pagination.getDefaultPaginationOptions(req);
+
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    let qByOrganization = Organization.qByOrganization(req);
+    let query = {...qNotDeleted, ...qByOrganization};
+
+    Supplier
+        .find(
+            query,
+            (err, result) => {
+                if (err) {
+                    logger.error(err, req, 'contract.controller#list', 'Error al consultar lista de Suppliers');
+                    return res.json({
+                        errors: true,
+                        message: res.__('general.error.unexpected-error')
+                    });
+                }
+
+                return res.json({
+                    errors: false,
+                    message: "",
+                    data: {
+                        docs: result,
+                    }
+                });
+            }
+        );
+};
+
+
+/**
+ * Queries the possible suppliers fot this contract
+ */
+exports.retrieveAdministrativeUnits = (req, res, next) => {
+    let paginationOptions = pagination.getDefaultPaginationOptions(req);
+
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    let qByOrganization = Organization.qByOrganization(req);
+    let query = {...qNotDeleted, ...qByOrganization};
+
+    AdministrativeUnit
+        .find(
+            query,
+            (err, result) => {
+                if (err) {
+                    logger.error(err, req, 'contract.controller#list', 'There was an error retrieving the Admiinstrative Units');
+                    return res.json({
+                        errors: true,
+                        message: res.__('general.error.unexpected-error')
+                    });
+                }
+
+                return res.json({
+                    errors: false,
+                    message: "",
+                    data: {
+                        docs: result,
+                    }
+                });
+            }
+        );
+};
+
 /**
  * Guarda un Contract. 
  * @param req
@@ -72,21 +151,21 @@ exports.save = (req, res, next) => {
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-        console.log("errors.array()", errors.array());
         return res.status(422).json({ errors: errors.array() });
     }
-    
+
     let id = req.body._id;
-    
     if (id) {
         //Update
         let qById = {_id: id};
+        let qByOrganization = Organization.qByOrganization(req);
+        let query = {...qById, ...qByOrganization};
 
         Contract
-            .findOne(qById)
+            .findOne(query)
             .exec((err, contract) => {
                 if (err || !contract) {
-                    logger.error(req, err, 'contract.controller#save', 'Error al consultar Contract');
+                    logger.error(err, req, 'contract.controller#save', 'Error al consultar Contract');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.save')
@@ -94,66 +173,142 @@ exports.save = (req, res, next) => {
                 }
 
                 //Update doc fields
-                contract.supplier = req.body.supplier;
-                contract.administrativeUnit = req.body.administrativeUnit;
+                contract.supplier = mongoose.Types.ObjectId(req.body.supplier._id);
                 contract.amount = req.body.amount;
                 contract.procedureType = req.body.procedureType;
+                contract.category = req.body.category;
+                contract.administrationPeriod = req.body.administrationPeriod;
+                contract.fiscalYear = req.body.fiscalYear;
+                contract.period = req.body.period;
+                contract.contractId = req.body.contractId;
+                contract.partida = req.body.partida;
+                contract.procedureState = req.body.procedureState;
+                contract.announcementUrl = req.body.announcementUrl;
+                contract.announcementDate = req.body.announcementDate;
+                contract.servicesDescription = req.body.servicesDescription;
+                contract.clarificationMeetingDate = req.body.clarificationMeetingDate;
+                contract.clarificationMeetingJudgmentUrl = req.body.clarificationMeetingJudgmentUrl;
+                contract.presentationProposalsDocUrl = req.body.presentationProposalsDocUrl;
+                contract.supplier = req.body.supplier;
+                contract.organizerAdministrativeUnit = mongoose.Types.ObjectId(req.body.organizerAdministrativeUnit._id);
+                contract.applicantAdministrativeUnit = mongoose.Types.ObjectId(req.body.applicantAdministrativeUnit._id);
+                contract.administrativeUnitType = req.body.administrativeUnitType;
+                contract.contractNumber = req.body.contractNumber;
+                contract.contractDate = req.body.contractDate;
+                contract.contractType = req.body.contractType;
+                contract.totalAmount = req.body.totalAmount;
+                contract.minAmount = req.body.minAmount;
+                contract.maxAmount = req.body.maxAmount;
+                contract.totalOrMaxAmount = req.body.totalOrMaxAmount;
+                contract.contractUrl = req.body.contractUrl;
+                contract.areaInCharge = mongoose.Types.ObjectId(req.body.areaInCharge._id);
+                contract.updateDate = req.body.updateDate;
+                contract.notes = req.body.notes;
+                contract.karewaNotes = req.body.karewaNotes;
+                contract.informationDate = req.body.informationDate;
+                contract.limitExceeded = req.body.limitExceeded;
+                contract.amountExceeded = req.body.amountExceeded;
 
-                contract.save((err, savedContract) => {
-                    if (err) {
-                        logger.error(req, err, 'contract.controller#save', 'Error al guardar Contract');
-                        return res.json({
-                            errors: true,
-                            message: req.__('general.error.save')
+                                contract.save((err, savedContract) => {
+                                    if (err) {
+                                        let errors = [];
+                                        if(err.code == 11000){
+                                            errors.push({message:"El campo Número de contrato debe ser único, se encontro otro registro con el mismo valor."})
+                                        }
+                                        for(let item in err.errors){
+                                            errors.push(err.errors[item]);
+                                        }
+                                        logger.error(err, req, 'contract.controller#save', 'Error al guardar Contract');
+                                        return res.json({
+                                            error: true,
+                                            message: req.__('general.error.save'),
+                                            errors: errors
+                                        });
+                                    }
+
+                                    return res.json({
+                                        error: false,
+                                        message: req.__('general.success.updated'),
+                                        data: savedContract
+                                    });
+                                });
+                            });
+
+                    } else {
+                        //Create
+
+                        let contract = new Contract({
+                            organization: Organization.currentOrganizationId(req),
+                            amount : req.body.amount,
+                            procedureType : req.body.procedureType,
+                            category : req.body.category,
+                            administrationPeriod : req.body.administrationPeriod,
+                            fiscalYear : req.body.fiscalYear,
+                            period : req.body.period,
+                            contractId : req.body.contractId,
+                            partida : req.body.partida,
+                            procedureState : req.body.procedureState,
+                            announcementUrl : req.body.announcementUrl,
+                            announcementDate : req.body.announcementDate,
+                            servicesDescription : req.body.servicesDescription,
+                            clarificationMeetingDate : req.body.clarificationMeetingDate,
+                            clarificationMeetingJudgmentUrl : req.body.clarificationMeetingJudgmentUrl,
+                            presentationProposalsDocUrl : req.body.presentationProposalsDocUrl,
+                            administrativeUnitType : req.body.administrativeUnitType,
+                            contractNumber : req.body.contractNumber,
+                            contractDate : req.body.contractDate,
+                            contractType : req.body.contractType,
+                            totalAmount : req.body.totalAmount,
+                            minAmount : req.body.minAmount,
+                            maxAmount : req.body.maxAmount,
+                            totalOrMaxAmount : req.body.totalOrMaxAmount,
+                            contractUrl : req.body.contractUrl,
+                            updateDate : req.body.updateDate,
+                            notes : req.body.notes,
+                            karewaNotes : req.body.karewaNotes,
+                            informationDate : req.body.informationDate,
+                            limitExceeded : req.body.limitExceeded,
+                            amountExceeded : req.body.amountExceeded,
+                            supplier :  mongoose.Types.ObjectId(req.body.supplier._id),
+                            administrativeUnit :  mongoose.Types.ObjectId(req.body.administrativeUnit._id),
+                            organizerAdministrativeUnit :  mongoose.Types.ObjectId(req.body.organizerAdministrativeUnit._id),
+                            applicantAdministrativeUnit :  mongoose.Types.ObjectId(req.body.applicantAdministrativeUnit._id),
+                            areaInCharge : mongoose.Types.ObjectId(req.body.areaInCharge._id),
+                        });
+
+
+                        contract.save((err, savedContract) => {
+                            if (err) {
+                                let errors = [];
+                                if(err.code == 11000){
+                                    errors.push({message:"El campo Número de contrato debe ser único, se encontro otro registro con el mismo valor."})
+                                }
+                                for(let item in err.errors){
+                                    errors.push(err.errors[item]);
+                                }
+                                logger.error(err, req, 'contract.controller#save', 'Error al guardar Contract');
+                                return res.json({
+                                    "error": true,
+                                    "message": req.__('general.error.save'),
+                                    "errors":errors
+                                });
+                            }
+
+                            return res.json({
+                                "error": false,
+                                "message": req.__('general.success.created'),
+                                "data": savedContract
+                            });
                         });
                     }
-        
-                    return res.json({
-                        errors: false,
-                        message: req.__('general.success.updated'),
-                        data: savedContract
-                    });
-                });
-            });
-        
-    } else {
-        //Create
+                };
 
-        let contract = new Contract({
-            name: req.body.name
-        });
-
-        //Update doc fields
-        contract.supplier = req.body.supplier;
-        contract.administrativeUnit = req.body.administrativeUnit;
-        contract.amount = req.body.amount;
-        contract.procedureType = req.body.procedureType;
-
-
-        contract.save((err, savedContract) => {
-            if (err) {
-                logger.error(req, err, 'contract.controller#save', 'Error al guardar Contract');
-                return res.json({
-                    "error": true,
-                    "message": req.__('general.error.save')
-                });
-            }
-
-            return res.json({
-                "error": false,
-                "message": req.__('general.success.created'),
-                "data": savedContract
-            });
-        });
-    }
-};
-
-/**
- * Edita un grupo de Contracts
- * @param req
- * @param res
- * @param next
- */
+                /**
+                 * Edita un grupo de Contracts
+                 * @param req
+                 * @param res
+                 * @param next
+                 */
 exports.saveUpdatedDocs = (req, res, next) => {
     // const errors = validationResult(req);
     // if (!errors.isEmpty()) {
@@ -166,8 +321,11 @@ exports.saveUpdatedDocs = (req, res, next) => {
     if(docsUpdated){
         try{
             docsUpdated.forEach((doc) => {
+                let qById = {_id: doc._id};
+                let qByOrganization = Organization.qByOrganization(req);
+                let query = {...qById, ...qByOrganization};
                 Contract
-                    .findOne({_id: doc._id})
+                    .findOne(query)
                     .exec((err, contract) => {
                         contract.supplier = doc.supplier;
                         contract.administrativeUnit = doc.administrativeUnit;
@@ -213,7 +371,8 @@ exports.delete = (req, res, next) => {
     query["_id"] = req.body._id;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    query = {...query, ...qNotDeleted};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...qNotDeleted, ...qByOrganization};
     
     Contract
         .find(query)

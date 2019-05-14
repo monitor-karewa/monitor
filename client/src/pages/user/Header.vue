@@ -3,12 +3,19 @@
         <header id="header" class="header clearfix">
             <div class="neutral-width topbar">
                 <div class="left col-md-3 col-4 p-0">
-                    <img class="img-fluid" src="@/assets/images/Logos/logo-karewa.png" alt="Logo" />
+                    <div class="logo-full">
+                        <img class="img-fluid" src="@/assets/images/Logos/logo-karewa-xs.png" alt="Logo"/>
+                        <div>
+                            <small>Monitor</small>
+                            <label class="f-14">{{currentOrganizationShortName}}</label>
+                        </div>
+                    </div>
+                    <!--<img class="img-fluid" src="@/assets/images/Logos/logo-karewa.png" alt="Logo" />-->
                 </div>
                 <div class="right col-md-9 col-8 p-0">
                     <div class="admin">
                         <ul>
-                            <router-link v-for="(link, index) in links" :key="'link' + index" :to="link.to" tag="li">
+                            <router-link v-for="(link, index) in links" :key="'link' + index" :to="link.to" tag="li" exact-active-class="active">
                                 <a>{{link.name}}</a>
                             </router-link>
                         </ul>
@@ -34,6 +41,9 @@
 </template>
 <style></style>
 <script>
+    
+    import {mapState} from 'vuex';
+    
     export default {
         data () {
             return {
@@ -41,6 +51,10 @@
                     {
                         name: 'Inicio',
                         to: '/'
+                    },
+                    {
+                        name: 'Cambiar Organización',
+                        to: '/select-organization'
                     },
                     {
                         name: 'Proveedores',
@@ -68,6 +82,16 @@
                     }
                 ]
             }
+        },
+        computed: {
+            ...mapState({
+                currentOrganizationName: state => state.currentOrganizationName,
+                currentOrganizationShortName: state => state.currentOrganizationShortName
+            })
+        },
+        mounted() {
+//            this.currentOrganizationName = this.$session.get('currentOrganizationName');
+//            this.currentOrganizationShortName = this.$session.get('currentOrganizationShortName');
         }
     }
 </script>

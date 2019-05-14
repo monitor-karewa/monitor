@@ -13,6 +13,11 @@ const permissions = require('./../components/permissions');
  * @type {mongoose.Schema}
  */
 let SupplierSchema = new Schema({
+    organization: {
+        type: Schema.Types.ObjectId,
+        ref: 'Organization',
+        required: true
+    },
     name: {
         type: String,
         required: true,
@@ -20,8 +25,8 @@ let SupplierSchema = new Schema({
         max: 100
     },
     rfc: {
-        type: String,
-        required: true
+        type: String/*,
+        required: true*/
     },
     notes: {
         type: String

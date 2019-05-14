@@ -2,6 +2,7 @@ const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 
 const Supplier = require('./../models/supplier.model').Supplier;
+const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const { validationResult } = require('express-validator/check');
@@ -47,7 +48,8 @@ exports.list = (req, res, next) => {
 
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    query = {...query, ...qNotDeleted};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...qNotDeleted, ...qByOrganization};
 
     Supplier
         .paginate(
@@ -94,10 +96,12 @@ exports.saveUpdatedDocs = (req, res, next) => {
     if(docsUpdated){
         try{
             docsUpdated.forEach((doc) => {
-               Supplier
-                  .findOne({_id: doc._id})
+                let qById = {_id: doc._id};
+                let qByOrganization = Organization.qByOrganization(req);
+                let query = {...qById, ...qByOrganization};
+                Supplier
+                  .findOne(query)
                   .exec((err, supplier) => {
-                      console.log("err", err);
                       supplier.name = doc.name;
                       supplier.rfc = doc.rfc;
                       supplier.notes = doc.notes;
@@ -145,9 +149,11 @@ exports.save = (req, res, next) => {
     if (id) {
         //Update
         let qById = {_id: id};
+        let qByOrganization = Organization.qByOrganization(req);
+        let query = {...qById, ...qByOrganization};
 
         Supplier
-            .findOne(qById)
+            .findOne(query)
             .exec((err, supplier) => {
                 if (err || !supplier) {
                     logger.error(req, err, 'supplier.controller#save', 'Error al consultar Supplier');
@@ -183,6 +189,7 @@ exports.save = (req, res, next) => {
         //Create
         let supplier = new Supplier({
             //Update doc fields
+            organization: Organization.currentOrganizationId(req),
             name : req.body.name,
             rfc : req.body.rfc,
             notes : req.body.notes
@@ -219,7 +226,8 @@ exports.delete = (req, res, next) => {
     query["_id"] = req.body._id;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    query = {...query, ...qNotDeleted};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...qNotDeleted, ...qByOrganization};
 
     Supplier
         .find(query)

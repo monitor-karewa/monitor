@@ -1,7 +1,7 @@
 <template>
     <td class="row-buttons-hover">
         <div class="table-buttons-hover">
-            <button data-tippy="Ver" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-eye"></i></button>
+            <!--<button data-tippy="Ver" data-tippy-arrow="true"  data-tippy-placement="bottom"><i class="zmdi zmdi-eye"></i></button>-->
             <button data-tippy="Editar" data-tippy-arrow="true"  data-tippy-placement="bottom" data-toggle="modal" data-target="#ModalEntry" @click="editEvent"><i class="zmdi zmdi-edit"></i></button>
             <button data-tippy="Eliminar" data-tippy-arrow="true"  data-tippy-placement="bottom" data-toggle="modal" data-target="#modal-delete-entry" @click="deleteEntry"><i class="zmdi zmdi-delete"></i></button>
         </div>
@@ -26,6 +26,8 @@
             },
             editEvent(){
                 //fix to pass the entry through the state and manage the state & vuelidate
+                $('.selectpicker').selectpicker();
+                $('.selectpicker').selectpicker('refresh');
                 bus.$emit(this.$props.storeModule+DOC_START_EDIT, this.$props.entry);
             }
         },

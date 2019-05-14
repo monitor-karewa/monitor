@@ -13,13 +13,17 @@ const permissions = require('./../components/permissions');
  * @type {mongoose.Schema}
  */
 let AdministrativeUnitSchema = new Schema({
+    organization: {
+        type: Schema.Types.ObjectId,
+        ref: 'Organization',
+        required: true
+    },
     name: {
         type: String,
         required: true
     },
     notes: {
-        type: String,
-        required: true
+        type: String
     },
     deleted: require("./schemas/deleted.schema").Deleted
 });

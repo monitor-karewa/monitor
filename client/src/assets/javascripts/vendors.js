@@ -21,6 +21,7 @@ require('gaugeJS').Gauge;
 require('tippy.js');
 require('popper.js');
 require('moment');
+require('bootstrap-datepicker');
 
 
 //------------------------------------------
@@ -31,5 +32,6 @@ require('bootstrap-select/dist/css/bootstrap-select.min.css');
 require('animate.css/animate.min.css');
 require('tippy.js/index.css');
 require('material-design-iconic-font/dist/css/material-design-iconic-font.min.css');
+require('bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css');
 
 import './main';

@@ -103,6 +103,7 @@ exports.save = (req, res, next) => {
 
                 //Update doc fields
                 organization.name = req.body.name;
+                organization.shortName = req.body.shortName;
 
 
                 organization.save((err, savedOrganization) => {
@@ -126,7 +127,8 @@ exports.save = (req, res, next) => {
         //Create
 
         let organization = new Organization({
-            name: req.body.name
+            name: req.body.name,
+            shortName: req.body.shortName
         });
 
         organization.save((err, savedOrganization) => {
@@ -169,9 +171,12 @@ exports.saveUpdatedDocs = (req, res, next) => {
                     .findOne({_id: doc._id})
                     .exec((err, organization) => {
                         organization.name = doc.name;
+                        organization.shortName = doc.shortName;
 
                         organization.save((err) => {
-                            logger.error(err, req, 'organization.controller#saveUpdatedDocs', 'Error al actualizar lista de Organization');
+                            if (err) {
+                                logger.error(err, req, 'organization.controller#saveUpdatedDocs', 'Error al actualizar lista de Organization');
+                            }
                         });
 
                     });

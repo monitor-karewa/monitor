@@ -25,7 +25,22 @@
                     </div>
                     <span v-if="$v.entry.name.$invalid && $v.entry.name.$dirty" class="c-error">{{$t(nameErrorMessage, {field:'Nombre', maxLength:$v.entry.name.$params.maxLength.max})}}</span>
                 </div>
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre" v-model="$v.entry.shortName.$model">
+                        <label class="fg-label">Nombre corto de la organización
+                            <small></small>
+                            <br>
+                            <strong>Introduce el nombre corto de la organización (máximo 12 caracteres)</strong>
+                        </label>
+                    </div>
+                    <span v-if="$v.entry.shortName.$invalid && $v.entry.shortName.$dirty" class="c-error">{{$t(shortNameErrorMessage, {field:'Nombre corto', maxLength:$v.entry.shortName.$params.maxLength.max, minLength:$v.entry.shortName.$params.minLength.min})}}</span>
+                </div>
 
+            </div>
+            <div class="modal-footer aditional-text" slot="footer">
+                <button type="button" class="btn-stroke button-info_text" data-dismiss="modal"> Cancelar </button>
+                <button type="submit"  class="btn-raised button-accent m-l-15"> Guardar </button>
             </div>
         </ModalEntry>
 
@@ -58,7 +73,8 @@
     import  ModalDefault from "@/components/modals/ModalDefault";
     const storeModule = 'organizations';
     const docName = 'organizations.organization';
-    import { required, maxLength } from 'vuelidate/lib/validators';
+    const touchMap = new WeakMap();
+    import { required, maxLength, minLength } from 'vuelidate/lib/validators';
     import { mapGetters } from 'vuex';
 
     let baseCatalog = catalog.configure({
@@ -73,10 +89,12 @@
                 storeModule: storeModule,
                 tableColumns: [
                     {label:"organizations.name", field:'name', visible : true },
+                    {label:"organizations.short-name", field:'shortName', visible : true },
                     {label:"general.created-at", field:'created_at', visible : true , type:'Date'}
                 ],
                 entry:{
-                    name:""
+                    name:0,
+                    shortName:0
                 },
                 modalProperties:{
                     title:"general.modal-editable-table.title",
@@ -88,11 +106,22 @@
         },
         computed:{
             nameErrorMessage(){
-                if(!this.$v.name.required){
+                if(!this.$v.entry.name.required){
                     return 'organizations.validation.required';
                 }
-                if(!this.$v.name.maxLength){
+                if(!this.$v.entry.name.maxLength){
                     return 'organizations.validation.max.name';
+                }
+            },
+            shortNameErrorMessage(){
+                if(!this.$v.entry.shortName.required){
+                    return 'organizations.validation.required';
+                }
+                if(!this.$v.entry.shortName.maxLength){
+                    return 'organizations.validation.max.short-name';
+                }
+                if(!this.$v.entry.shortName.minLength){
+                    return 'organizations.validation.min.short-name';
                 }
             },
             ...mapGetters(storeModule,['docsUpdatedLength'])
@@ -105,8 +134,18 @@
             confirmDeletion(){
                 this.deleteElementSelected();
             },
+            delayTouch($v) {
+                $v.$reset();
+                if (touchMap.has($v)) {
+                    clearTimeout(touchMap.get($v))
+                }
+                touchMap.set($v, setTimeout($v.$touch, 1000))
+            },
             clearEntry(){
-                this.entry = {};
+                this.entry = {
+                    name:"",
+                    shortName:""
+                };
                 this.$v.$reset();
             }
         },
@@ -118,10 +157,13 @@
                 this.clearEntry();
                 tShow("La organización fue creada correctamente", 'info');
             });
-            bus.$on(storeModule+events.DOC_START_EDIT, (entry)=>{
-                this.entry.name = entry.name;
-                this.$v.entry.name.$touch();
-            });
+//            bus.$on(storeModule+events.DOC_START_EDIT, (entry)=>{
+//                this.entry.name = entry.name;
+//                this.$v.entry.name.$touch();
+//                
+//                this.entry.shortName = entry.shortName;
+//                this.$v.entry.shortName.$touch();
+//            });
             bus.$on(storeModule+events.DOC_UPDATED, ()=>{
                 tShow("Los cambios en la organización fueron guardados", 'info');
                 this.clearEntry();
@@ -132,8 +174,12 @@
             bus.$on(storeModule+events.DOC_START_EDIT, (entry)=>{
                 this.clearEntry();
                 this.entry._id = entry._id;
+                
                 this.entry.name = entry.name;
                 this.$v.entry.name.$touch();
+                
+                this.entry.shortName = entry.shortName || "";
+                this.$v.entry.shortName.$touch();
             });
         },
         validations:{
@@ -141,6 +187,11 @@
                 name: {
                     required,
                     maxLength: maxLength(100)
+                },
+                shortName: {
+                    required,
+                    minLength: minLength(2),
+                    maxLength: maxLength(12)
                 }
             }
         }

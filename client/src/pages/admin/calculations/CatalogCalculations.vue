@@ -12,37 +12,49 @@
             />
         </AdminMainSection>
 
-        <NewEntryModal v-bind:storeModule="storeModule" v-bind:data="doc" v-bind:validator="$v">
+        <ModalEntry :storeModule="storeModule" :validator="$v" :entry="entry">
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce el nombre del cálculo"
-                               v-model="$v.doc.name.$model">
+                               v-model="entry.name">
                         <label class="fg-label">Nombre del Cálculo
                             <small></small>
                             <br>
                             <strong>Introduce el nombre del Cálculo</strong>
                         </label>
-                        <span v-if="$v.doc.name.$invalid && $v.doc.name.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'nombre'})}}</span>
+                        <span v-if="$v.entry.name.$invalid && $v.entry.name.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'nombre'})}}</span>
                     </div>
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce la descripción"
-                               v-model="$v.doc.description.$model">
+                               v-model="entry.description">
                         <label class="fg-label">Descripción del cálculo
                             <small></small>
                             <br>
-                            <strong>Introduce las descripción del cálculo</strong>
+                            <strong>Introduce la descripción del cálculo</strong>
                         </label>
                     </div>
-                    <span v-if="$v.doc.description.$invalid && $v.doc.description.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'descripción'})}}</span>
+                    <span v-if="$v.entry.description.$invalid && $v.entry.description.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'descripción'})}}</span>
+                </div>
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input" placeholder="Introduce la abreviación del cálculo"
+                               v-model="$v.entry.abbreviation.$model" @input="delayTouch($v.entry.abbreviation)">
+                        <label class="fg-label">Abreviación del cálculo
+                            <small></small>
+                            <br>
+                            <strong>Introduce la abreviación del cálculo</strong>
+                        </label>
+                    </div>
+                    <span v-if="$v.entry.abbreviation.$invalid && $v.entry.abbreviation.$dirty" class="c-error">{{$t(abbreviationErrorMessage, {field:'abreviación'})}}</span>
                 </div>
 
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <div class="checkbox">
-                            <input type="checkbox" value="" v-model="doc.enabled">
+                            <input type="checkbox" value="" v-model="entry.enabled">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.enabled.checkbox-label')}} </span>
                             <p class="fg-label "> {{$t('users.new.enabled.label')}}
@@ -57,7 +69,7 @@
                     <div class="fg-line basic-input">
                         <div class="input-radio-check col-md-12 p-0">
                             <div class=" check-container col-md-6">
-                                <input class="m-t-20" type="radio" value="GENERAL" v-model="$v.doc.type.$model"
+                                <input class="m-t-20" type="radio" value="GENERAL" v-model="entry.type"
                                        name="type" id="one">
                                 <span class="role m-t-20"
                                       for="general">{{$t('calculation.new.calculation-type.radio-button.general')}}</span>
@@ -68,10 +80,99 @@
                                 </p>
                             </div>
                             <div class=" check-container col-md-6">
-                                <input value="CONTRACT" type="radio" v-model="$v.doc.type.$model" name="role" id="two">
+                                <input value="CONTRACT" type="radio" v-model="entry.type" name="role" id="two">
                                 <span for="custom">{{$t('calculation.new.calculation-type.radio-button.contract')}}</span>
                             </div>
-                            <span v-if="$v.doc.type.$invalid && $v.doc.type.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Tipo de Cálculo'})}}</span>
+                            <span v-if="$v.entry.type.$invalid && $v.entry.type.$dirty" class="c-error">{{$t(requiredErrorMessage, {field:'Tipo de Cálculo'})}}</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="floating-text-form">
+                    <h1>Fórmula</h1>
+                    <p>Formula para obtener el resultado del cálculo</p>
+                </div>
+
+                <div class="form-group fg-float dropdown-inside p-t-0">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input" @change="addVariablesFromFormulaString()" v-model="entry.formula.expression" placeholder="Introduce la fórmula">
+                        <div class="dropdown">
+                            <button class="btn-stroke xs button-accent" type="button" id="dropdownInput"
+                                    data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                {{displayFormLabel}} <i class="zmdi zmdi-caret-down m-r-0 m-l-5 f-18"></i></button>
+                            <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownInput"
+                                 x-placement="bottom-end">
+                                <ul>
+                                    <li @click="setDisplayForm('NORMAL')">Normal</li>
+                                    <li @click="setDisplayForm('AMOUNT')">Cantidad</li>
+                                    <li @click="setDisplayForm('PERCENTAGE')">Porcentaje</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="vertical-center">
+                    <div class="form-group fg-float basic-select w-70 m-r-30 p-t-0 m-b-0">
+                        <div class="fg-line">
+                            <select @change="addToFormula($event)" v-model="variableSelected" class="form-control select selectpicker" data-live-search="true"
+                                    data-live-search-placeholder="Search placeholder"
+                                    title="Agregar variable">
+                                <optgroup label="GENERAL">
+                                    <option :value="item.abbreviation" v-for="item in variablesObj">{{item.name}}</option>
+                                </optgroup>
+                                <optgroup label="Otros Cálculos">
+                                    <option :value="calculation.abbreviation" v-for="calculation in calculations">{{'('+calculation.abbreviation+') '+calculation.name}}</option>
+                                </optgroup>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mini-buttons">
+                        <button type="button" class="mini-btn p-0" @click="addToFormula('+')"><span class="f-25 m-t--5 align-middle">+</span></button>
+                        <button type="button" class="mini-btn p-0" @click="addToFormula('*')"><span class="f-30 align-middle">*</span></button>
+                        <button type="button" class="mini-btn p-0" @click="addToFormula('-')"><span class="f-25 m-t--5 align-middle">-</span></button>
+                        <button type="button" class="mini-btn m-r-0" @click="addToFormula('/')">/</button>
+                    </div>
+                </div>
+
+                <div class="m-t-40 m-b-50">
+                    <div class="row">
+
+                        <div class="col-md-6">
+                            <div class="floating-text-form">
+                                <h1>Variables usadas</h1>
+                                <p>Cálculo para mostrar el indice de perdidas al año</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-12 col-md-12 m-b-30">
+                                <a @click="validateFormula()" class="btn-stroke button-accent"><i class="zmdi zmdi-plus"></i> Verificar fórmula</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-12 m-b-30">
+                        <span v-if="formulaValidation.error" class="c-error">{{formulaValidation.message}}</span>
+                    </div>
+                    <!--<div>-->
+                        <!--<p>-->
+                            <!--{{formulaValidated}}-->
+                        <!--</p>-->
+                        <!--<p>-->
+                            <!--{{formulaValidation}}-->
+                        <!--</p>-->
+                    <!--</div>-->
+                    <div class="vertical-center m-b-20" v-for="variable in entry.formula.variables">
+                        <span class="w-15 m-r-10"><strong class="c-accent f-12">{{variable.abbreviation}}　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</strong></span>
+                        <div class="floating-text-form">
+                            <h1>{{variable.name}}</h1>
+                            <p class="m-b-0"> {{variable.description}}</p>
+                        </div>
+                    </div>
+                    <div class="vertical-center m-b-20" v-for="calculation in entry.formula.calculations">
+                        <span class="w-15 m-r-10"><strong class="c-accent f-12">{{calculation.abbreviation}}　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</strong></span>
+                        <div class="floating-text-form">
+                            <h1>{{calculation.name}}</h1>
+                            <p class="m-b-0"> {{calculation.description}}</p>
                         </div>
                     </div>
                 </div>
@@ -79,7 +180,7 @@
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce las notas adicionales"
-                               v-model="doc.notes">
+                               v-model="entry.notes">
                         <label class="fg-label">Notas del cálculo
                             <small></small>
                             <br>
@@ -87,11 +188,21 @@
                         </label>
                     </div>
                 </div>
-
-
             </div>
 
-        </NewEntryModal>
+            <div class="modal-footer aditional-text" slot="footer">
+                <div class="total-footer">
+                    <span v-if="formulaValidated && !formulaValidation.error" > RESULTADO: <strong>{{displayResult(formulaValidation.results.value)}}</strong></span>
+                    <p>La vista previa del resultado del cálculo solo está disponible en cálculos
+                        generales</p>
+                </div>
+                <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar
+                </button>
+                <button type="submit" class="btn-raised button-accent m-l-15">Agregar</button>
+            </div>
+
+
+        </modalEntry>
 
         <ModalDanger :id="'modal-delete-entry'"  :title="$tc(docName, 1)" :confirm="confirmDeletion">
             <p class="text-centered">Esta acción borrará el registro del catálogo permanentemente
@@ -111,9 +222,10 @@
     import catalog from '@/mixins/catalog.mixin';
     import {bus} from '@/main';
     import ModalDanger from "@/components/modals/ModalDanger";
-    import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
+    import { DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT, DOC_UPDATED, DOC_START_CREATE } from "@/store/events";
     import { required, minLength, maxLength } from 'vuelidate/lib/validators';
     const touchMap = new WeakMap();
+    import { mapState, mapGetters } from 'vuex';
 
     const storeModule = 'calculations';
     const docName = 'calculations.calculation';
@@ -130,29 +242,53 @@
                 storeModule: storeModule,
                 tableHeaders: ['Nombre', 'Descripción', 'Tipo','Habilitado','Notas','general.created-at'],
                 tableColumns: [
-                    {label: 'calculations.name', field: 'name', visible:true},
-                    {label: 'calculations.description', field: 'description', visible:true},
-                    {label: 'calculations.type', field: 'type', visible:true},
-                    {label: 'calculations.enabled', field: 'enabled', visible:true},
-                    {label: 'calculations.notes', field: 'notes', visible:true},
-                    {label: 'general.created-at', field: 'created_at', type: 'Date', visible:true}
+                    {label: 'calculations.name', field: 'name', visible: true},
+                    {label: 'calculations.description', field: 'description', visible: true},
+                    {label: 'calculations.type', field: 'type', visible: true, type:"i18n" },
+                    {label: 'calculations.formula.expression', field: 'formula.expression', visible: true, type:"highlight" },
+                    {label: 'calculations.enabled', field: 'enabled', type:"boolean", visible: true},
+                    {label: 'calculations.notes', field: 'notes', visible: true},
+                    {label: 'general.created-at', field: 'createdAt', type: 'Date', visible: true}
                 ],
-                doc: {
+                variableSelected : undefined,
+                displayFormLabel : "Normal",
+                entry : {
                     name: "",
                     description: "",
+                    abbreviation: "",
                     type: undefined,
                     enabled: false,
-                    notes: ""
+                    formula : {
+                        expression : "",
+                        variables : [],
+                        calculations : []
+                    },
+                    displayForm : "NORMAL",
+                    notes: "",
+                },
+                errors : {
+                    flag : false,
+                    invalidVariables : []
                 }
+
             }
         },
         validations:{
-            doc : {
+            entry : {
                 name: {
                     required,
                 },
                 description: {
                     required,
+                },
+                abbreviation: {
+                    required,
+                    validAbbreviation: (value) => {
+                        if (value == null || value == undefined || value == "") {
+                            return true
+                        }
+                        return (/^\${2}[A-Z0-9]{1,7}$/).test(value);
+                    }
                 },
                 type: {
                     required,
@@ -163,7 +299,7 @@
             ModalDanger
         },
         methods: {
-            confirmDeletion(){
+            confirmDeletion() {
                 this.deleteElementSelected();
             },
             delayTouch($v) {
@@ -172,20 +308,168 @@
                     clearTimeout(touchMap.get($v))
                 }
                 touchMap.set($v, setTimeout($v.$touch, 1000))
+            },
+            addToFormula(element) {
+                if (element) {
+                    if (this.entry.formula.expression.length > 0) {
+                        this.entry.formula.expression += " ";
+                    }
+                    if (typeof element == "string") {
+                        this.entry.formula.expression += element;
+                    } else { //then it's a variable
+                        this.entry.formula.expression += element.target.value;
+                        this.addVariablesFromFormulaString();
+                    }
+                }
+            },
+            findVariableByAbbreviation(abbr) {
+                    if (this.variablesObj[abbr]) {
+                        return this.variablesObj[abbr];
+                    }
+                return undefined;
+            },
+            findCalculationsByAbbreviation(abbr) {
+                for (let i = 0; i < this.calculationsForFormula.length; i++) {
+                    if(this.calculationsForFormula[i].abbreviation == abbr){
+                        return this.calculationsForFormula[i];
+                    }
+                }
+                return undefined;
+            },
+            parseVariablesFromFormulaString() {
+                // this.debounce(function () {
+                    this.errors.flag = false;
+                    const regex = /\$[A-Z]+/g;
+                    let tempVariable;
+                    let tempVariables = [];
+                    let variablesFound = this.entry.formula.expression.match(regex);
+                    if(variablesFound && variablesFound.length > 0) {
+                        for (let i = 0; i < variablesFound.length; i++) {
+                            tempVariable = this.findVariableByAbbreviation(variablesFound[i]);
+                            if (tempVariable) {
+                                tempVariables.push(tempVariable);
+                            } else {
+                                this.errors.flag = true;
+                                this.errors.invalidVariables.push(variablesFound[i]);
+                            }
+                        }
+                    }
+                    return tempVariables;
+                // }, 1000, false)
+            },
+            parseCalculationsFromFormulaString() {
+                // this.debounce(function () {
+                this.errors.flag = false;
+                const regex = /\$\$[A-Z]+/g;
+                let tempCalculation;
+                let tempCalculations = [];
+                let calculationsFound = this.entry.formula.expression.match(regex);
+                if(calculationsFound && calculationsFound.length > 0) {
+                    for (let i = 0; i < calculationsFound.length; i++) {
+                        tempCalculation = this.findCalculationsByAbbreviation(calculationsFound[i]);
+                        if (tempCalculation) {
+                            tempCalculations.push(tempCalculation);
+                        } else {
+                            this.errors.flag = true;
+                            this.errors.invalidVariables.push(calculationsFound[i]);
+                        }
+                    }
+                }
+                return tempCalculations;
+                // }, 1000, false)
+            },
+            addVariablesFromFormulaString(){
+                if(this.entry.formula && this.entry.formula.expression){
+                    this.entry.formula.variables = this.parseVariablesFromFormulaString();
+                    this.entry.formula.calculations = this.parseCalculationsFromFormulaString();
+                }
+            },
+            setDisplayForm(value) {
+                this.entry.displayForm = value;
+                switch (value) {
+                    case 'AMOUNT': this.displayFormLabel = "Cantidad"; break;
+                    case 'PERCENTAGE': this.displayFormLabel = "Porcentaje"; break;
+                    case 'NORMAL': this.displayFormLabel = "Normal"; break;
+                }
+            },
+            displayResult(value) {
+                switch (this.entry.displayForm) {
+                    case 'AMOUNT': return "$" + value;
+                    case 'PERCENTAGE': return value +"%";
+                    case 'NORMAL': return value;
+                }
+            },
+            debounce: function debounce(func, wait, immediate) {
+                var timeout;
+                return function () {
+                    var context = this, args = arguments;
+                    var later = function () {
+                        timeout = null;
+                        if (!immediate) func.apply(context, args);
+                    };
+                    var callNow = immediate && !timeout;
+                    clearTimeout(timeout);
+                    timeout = setTimeout(later, wait);
+                    if (callNow) func.apply(context, args);
+                }
+            },
+            delayTouch($v) {
+                $v.$reset();
+                if (touchMap.has($v)) {
+                    clearTimeout(touchMap.get($v))
+                }
+                touchMap.set($v, setTimeout($v.$touch, 1000))
+            },
+            clearEntry(){
+                this.entry = {
+                    formula:{}
+                };
+                this.$v.$reset();
+            },
+            validateFormula(){
+                this.$store.dispatch(`${storeModule}/validateFormula`, {formula: this.entry.formula, abbreviation : this.entry.abbreviation});
             }
+
         },
         created() {
             bus.$on(storeModule + DELETE_SUCCESS, (data) => {
                 tShow("El calculo fue eliminado correctamente", 'info');
             }),
-            bus.$on(storeModule+DOC_CREATED, ()=>{
-                this.doc.name= "";
-                this.doc.description= "";
-                this.doc.type= "";
-                this.doc.enabled= "";
-                this.doc.notes= "";
+                bus.$on(storeModule + DOC_CREATED, () => {
+                this.entry.name = "";
+                this.entry.description= "";
+                this.entry.type= "";
+                this.entry.enabled= "";
+                this.entry.notes= "";
+                this.entry.abbreviation= "";
                 this.$v.$reset();
                 tShow("El proveedor fue creado correctamente", 'info');
+            });
+            bus.$on(storeModule+DOC_START_CREATE, ()=>{
+                this.clearEntry();
+            });
+            bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
+                this.clearEntry();
+                let tempEntry = {};
+                tempEntry._id = entry._id;
+                tempEntry.formula = {};
+                tempEntry.notes = entry.notes;
+                tempEntry.name = entry.name;
+                tempEntry.description = entry.description;
+                tempEntry.type = entry.type;
+                tempEntry.enabled  = entry.enabled;
+
+                tempEntry.formula.expression  = entry.formula.expression;
+                tempEntry.formula.variables  = entry.formula.variables;
+                tempEntry.formula.calculations  = entry.formula.calculations;
+                tempEntry.displayForm = entry.displayForm;
+                tempEntry.notes = entry.notes;
+                tempEntry.abbreviation = entry.abbreviation;
+
+                this.entry = {...tempEntry};
+            });
+            bus.$on(storeModule+DOC_UPDATED, ()=>{
+                this.clearEntry();
             });
         },
         mounted() {
@@ -212,6 +496,30 @@
             requiredErrorMessage(){
                 return 'calculation.validation.required'
             },
-        }
+            abbreviationErrorMessage(){
+                if(!this.$v.entry.abbreviation.required){
+                    return "calculation.validation.required";
+                }
+                if(!this.$v.entry.abbreviation.validAbbreviation){
+                    return "calculations.validation.abbreviation"
+                }
+            },
+            ...mapState({
+                variables: state => state[storeModule].variables,
+                calculations: state => state[storeModule].calculations,
+                formulaValidation: state => state[storeModule].formulaValidation,
+                formulaValidated: state => state[storeModule].formulaValidated
+            }),
+            ...mapGetters(
+                    storeModule , ['variablesObj']
+            ),
+            ...mapGetters(
+                    storeModule , ['calculationsForFormula']
+            )
+        },
+        beforeMount(){
+            this.$store.dispatch(`${storeModule}/fetchVariables`);
+            this.$store.dispatch(`${storeModule}/fetchCalculations`);
+        },
     }
 </script>

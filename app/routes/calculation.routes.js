@@ -11,10 +11,34 @@ var securityController = require('./../controllers/security.controller');
 router.get('/', securityController.validatePermission(Calculation.permission, 'read'), calculationController.index);
 
 /**
+ * GET /
+ * Obtener variables de calculos
+ */
+router.get('/variables', securityController.validatePermission(Calculation.permission, 'read'), calculationController.getVariables);
+
+/**
  * GET /list
  * Consulta de registros
  */
 router.get('/list', securityController.validatePermission(Calculation.permission, 'read'), calculationController.list);
+
+/**
+ * GET /retrieve/calculations
+ * Consulta de registros de cálculos para el uso de la fórmula
+ */
+router.get('/retrieve/calculations', securityController.validatePermission(Calculation.permission, 'read'), calculationController.getCalculationsForFormula);
+
+/**
+ * GET /retrieve/calculations
+ * Consulta de registros de cálculos para el uso de la fórmula
+ */
+router.post('/formula/validate', securityController.validatePermission(Calculation.permission, 'read'), calculationController.validateFormula);
+
+/**
+ * GET /retrieve/calculations
+ * Consulta de registros de cálculos para el uso de la fórmula
+ */
+router.get('/formula/evaluate', securityController.validatePermission(Calculation.permission, 'read'), calculationController.evaluateFormula);
 
 /**
  * POST /save

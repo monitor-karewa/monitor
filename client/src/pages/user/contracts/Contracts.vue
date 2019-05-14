@@ -28,80 +28,18 @@
                         <p class="f-14 c-plain_text principal-font-regular">Aquí podrás encontrar la lista de todos los contratos que han sido firmados por el Municipio de Chihuahua.<br/>
                             Si quieres consultar los detalles de un contraro haz clic en “Ver más”.</p>
 
-                        <div class="filter">
-                            <div class="filter-container">
-                                <input class="input-search" type="text" name="" value="" placeholder="Escribe el nombre del contrato.."/>
-                            </div>
-                            <button class="filter-btn" type="button" name="button">Buscar</button>
-                        </div>
+                        <!--filters-->
+                        <PublicFilter
+                                :store-module="storeModule"
+                                :administrativeUnits="adminstrativeUnitsForFilter"
+                                :fiscalYears="fiscalYears"
+                                :trimonths="trimonths"
+                                :administrationPeriods="administrationPeriods"
+                                :procedureTypes="procedureTypes"
+                        >
 
-                        <div class="m-t-10">
-                            <div class="filter-box">
-                                <div class="filter">
-                                    <div class="filter-container row m-0">
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar administración"
-                                                        title="Por administración">
-                                                    <option>ADMINISTRACIÓN 2016-2018</option>
-                                                    <option>ADMINISTRACIÓN 2013-2015</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar año" title="Por año…">
-                                                    <option>2019</option>
-                                                    <option>2018</option>
-                                                    <option>2017</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar trimestre"
-                                                        title="Por trimestre…">
-                                                    <optgroup label="2018">
-                                                        <option>3º 2018</option>
-                                                        <option>2º 2018</option>
-                                                        <option>1º 2018</option>
-                                                    </optgroup>
-                                                    <optgroup label="2017">
-                                                        <option>3º 2017</option>
-                                                        <option>2º 2017</option>
-                                                        <option>1º 2017</option>
-                                                    </optgroup>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar administrativa"
-                                                        title="Por unidad administrativa…">
-                                                    <option>ATENCIÓN CIUDADANA</option>
-                                                    <option>CENTRO DE ATENCIÓN Y PREVENCIÓN PSICOLÓGICAS</option>
-                                                    <option>COMUNICACIÓN SOCIAL</option>
-                                                    <option>CONSEJO DE URBANIZACIÓN</option>
-                                                    <option>DESARROLLO ECONOMICO Y TURÍSTICO</option>
-                                                    <option>DESARROLLO HUMANO Y EDUCACIÓN</option>
-                                                    <option>DESARROLLO INTEGRAL DE LA FAMILIA</option>
-                                                    <option>DESARROLLO RURAL</option>
-                                                    <option>DESARROLLO URBANO Y ECOLOGÍA</option>
-                                                    <option>DESPACHO DE LA PRESIDENCIA</option>
-                                                    <option>DIRECCIÓN DE OBRAS PUBLICAS MUNICIPALES</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button class="filter-btn" type="button" name="button">Filtrar</button>
-                                </div>
+                        </PublicFilter>
 
-                            </div>
-                        </div>
                     </div>
                 </div>
 
@@ -109,25 +47,25 @@
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color accent">
-                            <span>$2,302,860,488.81</span>
+                            <span>{{totals.totalAmount | currency}}</span>
                             <label>MONTO TOTAL</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color red">
-                            <span>$1,055,177,509.74</span>
+                            <span>{{totals.PUBLIC | currency}}</span>
                             <label>Monto total de contratos por Licitación pública</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color yellow">
-                            <span>$149,337,687.59</span>
+                            <span>{{totals.INVITATION | currency}}</span>
                             <label>Monto total de contratos por Invitación</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color green">
-                            <span>$1,098,345,291.46</span>
+                            <span>{{totals.NO_BID | currency}}</span>
                             <label>Monto total de contratos por Adjudicación Directa</label>
                         </div>
                     </div>
@@ -143,27 +81,49 @@
                                     <tr>
                                         <th class="" style="min-width:0px;">Opciones</th>
                                         <th class="text-align-l">Id. proceso</th>
+                                        <th class="text-align-l">Id. Contrato</th>
                                         <th class="text-align-l">Descripción de la obra</th>
                                         <th class="text-align-l">Monto total</th>
-                                        <th class="text-align-l">Fecha del contrato<i
-                                                class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>
+                                        <th class="text-align-l">Fecha del contrato<i class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>
                                         <th class="text-align-l">Tipo de procedimiento</th>
+                                        <th class="text-align-l">Estdo del procedimiento</th>
+                                        <th class="text-align-l">Unidad Administrativa Solicitante</th>
+                                        <th class="text-align-l">Materia</th>
+                                        <th class="text-align-l">Tipo de contrato</th>
+                                        <th class="text-align-l">Notas</th>
+                                        <th class="text-align-l">Hipervínculo a la convocatoria</th>
+                                        <th class="text-align-l">Hipervínculo al documento del contrato</th>
+                                        <th class="text-align-l">Hipervínculo al documento de la Presentación de Propuestas</th>
+                                        <th class="text-align-l">Fecha de obtención de los datos</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <tr v-for="contract in contracts">
                                         <td class="" style="min-width:0px;">
-                                            <router-link to="/contract" class="btn-stroke button-primary table-btn-stroke">
+                                            <router-link :to="'/contracts/'+ contract._id" class="btn-stroke button-primary table-btn-stroke">
                                                 Ver más
                                             </router-link>
                                         </td>
-                                        <td class="text-align-l">{{contract.id}}</td>
-                                        <td class="text-align-l">{{contract.descripcionObra}}</td>
-                                        <td class="text-align-l c-accent">{{contract.montoTotal}}</td>
-                                        <td class="text-align-l" style="text-transform: uppercase">{{contract.FechaDelContrato}}</td>
+                                        <TableTdFormat :fieldName="'contractId'"    :value="contract.contractId"  class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :fieldName="'contractNumber'"    :value="contract.contractNumber"  class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :fieldName="'servicesDescription'"    :value="contract.servicesDescription"  class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :format="'currency'" :fieldName="'totalAmount'"    :value="contract.totalAmount"  :currency="true" class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :format="'date'"     :fieldName="'contractDate'"    :value="contract.contractDate" class="text-align-l c-accent"></TableTdFormat>
+
                                         <td class="text-align-l">
-                                            <div class="badge" :class="{ 'badge-green' : contract.tipoProcedimiento == 'Licitación Pùblica', 'badge-red' : contract.tipoProcedimiento == 'Adjudicación directa'}">{{contract.tipoProcedimiento}}</div>
+                                            <div class="badge" :class="{ 'badge-yellow' : contract.procedureType == 'INVITATION', 'badge-green' : contract.procedureType == 'PUBLIC', 'badge-red' : contract.procedureType == 'NO_BID'}">{{$t(contract.procedureType)}}</div>
                                         </td>
+
+                                        <TableTdFormat :fieldName="'procedureState'"    :value="contract.procedureState"  :i18n="true" class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :fieldName="'applicantAdministrativeUnit'"    :value="contract.applicantAdministrativeUnit ? contract.applicantAdministrativeUnit.name : ''"  class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :fieldName="'category'"    :value="contract.category"  :i18n="true" class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :fieldName="'contractType'"    :value="contract.contractType"  :i18n="true" class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :fieldName="'notes'"    :value="contract.notes"  class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :format="'url'" :fieldName="'announcementUrl'"    :value="contract.announcementUrl"  class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :format="'url'" :fieldName="'contractUrl'"    :value="contract.contractUrl"  class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :format="'url'" :fieldName="'presentationProposalsDocUrl'"    :value="contract.presentationProposalsDocUrl"  class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :format="'date'" :fieldName="'informationDate'"    :value="contract.informationDate"  classda="text-align-l c-accent"> </TableTdFormat>
+                                        <TableTdFormat :format="'date'" :fieldName="'contractDate'"    :value="contract.contractDate"  class="text-align-l" style="text-transform: uppercase"> </TableTdFormat>
                                     </tr>
                                     <!--<tr class="bgm-cards">-->
                                         <!--<td class="p-t-15 p-b-10 f-bold">TOTAL</td>-->
@@ -179,6 +139,7 @@
                         </div>
                     </div>
                 </div>
+                <Pagination  :store-module="storeModule"/>
 
                 <!-- ADITIONAL INFO ONLY -->
                 <p class="f-12 c-plain_text principal-font-regular">
@@ -206,85 +167,66 @@
 <script>
 
     import MoreInfo from '@/components/general/MoreInfo';
+    const storeModule = 'publicContracts';
+    const docName = 'contracts.doc-name';
+    import Pagination from '@/components/catalogs/Pagination';
+    import { mapState, mapGetters } from 'vuex';
+    import moment from 'moment';
+    import TableTdFormat from '@/components/tables/tds/TableTdFormat';
+    import PublicFilter from '@/components/filters/PublicFilter.vue';
+
 
     export default {
         data() {
             return {
-                contracts: [
-                    {
-                        id: "IMPELP02/2017",
-                        descripcionObra: "contratación de servicio de farmacia subrogada",
-                        montoTotal: "$81,400,000.00",
-                        FechaDelContrato: "19/diciembre/2017",
-                        tipoProcedimiento: "Licitación Pùblica"
-                    },
-                    {
-                        id: "IMPELP04/2016",
-                        descripcionObra: "Prestación del servicio de farmacia subrogada",
-                        montoTotal: "$72,208,045.00",
-                        FechaDelContrato: "01/diciembre/2016",
-                        tipoProcedimiento: "Licitación Pùblica"
-                    },
-                    {
-                        id: "AD020/17",
-                        descripcionObra: "Servicio para el suministro de combustible (gasolina y diesel) para el parque vehicular propiedad del Municipio de Chihuahua",
-                        montoTotal: "$70,300,000.00",
-                        FechaDelContrato: "07/diciembre/2016",
-                        tipoProcedimiento: "Adjudicación directa"
-                    },
-                    {
-                        id: "MET0411185E7",
-                        descripcionObra: "CONSTRUCCIÓN DE GAZA EN EL PERIFERICO DE LA JUVENTUD Y AV. LA CANTERA",
-                        montoTotal: "$69,770,177.00",
-                        FechaDelContrato: "19/mayo/2017",
-                        tipoProcedimiento: "Licitación Pùblica"
-                    },
-                    {
-                        id: "AD128/17",
-                        descripcionObra: "CONTRATACION DEL SERVICIO DE SUMINISTRO DE COMBUSTIBLE DE GASOLINA Y DIESEL PARA LOS VEHICULOS Y EDIFICIOS",
-                        montoTotal: "$60,311,399.00",
-                        FechaDelContrato: "01/julio/2017",
-                        tipoProcedimiento: "Adjudicación directa"
-                    },
-                    {
-                        id: "AD131/18",
-                        descripcionObra: "SERVICIO PARA EL SUMINISTRO DE COMBUSTIBLE DE GASOLINA Y DIESEL PARA EL PARQUE VEHICULAR Y EDIFICIOS PROPIEDAD DEL MUNICIPIO DE CHIHUAHUA",
-                        montoTotal: "$60,152,282.00",
-                        FechaDelContrato: "01/marzo/2018",
-                        tipoProcedimiento: "Adjudicación directa"
-                    },
-                    {
-                        id: "DOPM0673/16",
-                        descripcionObra: "CONSTRUCCIÓN DE COLECTOR EN VARIAS COLONIAS AL SUR DE LA CIUDAD (1A ETAPA)",
-                        montoTotal: "$52,381,951.00",
-                        FechaDelContrato: "08/diciembre/2017",
-                        tipoProcedimiento: "Licitación Pùblica"
-                    },
-                    {
-                        id: "CUM01/17",
-                        descripcionObra: "Licitación Pública para adquisición de concreto hidráulico y material triturado",
-                        montoTotal: "$40,720,828.00",
-                        FechaDelContrato: "10/febrero/2017",
-                        tipoProcedimiento: "Licitación Pùblica"
-                    },
-                    {
-                        id: "CUM01/2018",
-                        descripcionObra: "Suministro de concreto hidráulico y material base",
-                        montoTotal: "$35,389,809.00",
-                        FechaDelContrato: "02/marzo/2018",
-                        tipoProcedimiento: "Licitación Pùblica"
-                    },
-                ]
+                storeModule : storeModule,
             }
         },
+        computed  : {
+            ...mapState({
+                contracts: state => state[storeModule].contracts,
+                adminstrativeUnitsForFilter: state => state[storeModule].adminstrativeUnitsForFilter,
+                fiscalYears: state => state[storeModule].fiscalYears,
+                trimonths: state => state[storeModule].trimonths,
+                administrationPeriods: state => state[storeModule].administrationPeriods,
+                procedureTypes: state => state[storeModule].procedureTypes,
+                totals: state => state[storeModule].totals, //I like totals
+            }),
+        },
         components: {
-            MoreInfo
+            MoreInfo,
+            TableTdFormat,
+            Pagination,
+            PublicFilter
         },
         created() {
             window.$(document).ready(function () {
                 window.$('.selectpicker').selectpicker();
                 $('.selectpicker').selectpicker();
             });
+        },
+        beforeMount() {
+            this.$store.dispatch(`${storeModule}/getTotals`);
+            this.$store.dispatch(`${storeModule}/list`);
+            this.$store.commit(`${storeModule}/setDocName`,  docName);
+
+            //for the filters
+            this.$store.dispatch(`${storeModule}/getAdministrativeUnitsForFilter`);
+            this.$store.dispatch(`${storeModule}/getFiscalYears`);
+            this.$store.dispatch(`${storeModule}/getTrimonths`);
+            this.$store.dispatch(`${storeModule}/getAdministrationPeriods`);
+            this.$store.dispatch(`${storeModule}/getProcedureTypes`);
+
+        },
+        mounted(){
+            this.$nextTick(function () {
+                $('.selectpicker').selectpicker('refresh');
+            })
+        },
+        filters: {
+            moment: function (date) {
+                return moment(date).format('DD/MM/YYYY');
+            }
         },
     }
 </script>

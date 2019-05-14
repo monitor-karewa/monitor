@@ -1,7 +1,6 @@
 import Vue from 'vue';
 import Router from 'vue-router';
 
-
 //Note: @ is aliased in webpack.config to './src'
 
 //User
@@ -9,6 +8,8 @@ import UserIndex from '@/pages/user/Index';
 import UserHeader from '@/pages/user/Header';
 import UserFooter from '@/pages/user/Footer';
 import UserHome from '@/pages/user/home/Home';
+import UserCover from '@/pages/user/home/Cover';
+import UserSelectOrganization from '@/pages/user/home/SelectOrganization';
 
 import Suppliers from '@/pages/user/suppliers/Suppliers';
 import SupplierDetail from '@/pages/user/suppliers/SupplierDetail';
@@ -34,6 +35,8 @@ import AdminHeader from '@/pages/admin/Header';
 import AdminSidebar from '@/pages/admin/Sidebar';
 import AdminFooter from '@/pages/admin/Footer';
 import DataLoad from '@/pages/admin/dataLoad/DataLoad';
+import DataLoadCurrent from '@/pages/admin/dataLoad/DataLoadCurrent';
+import DataLoadIndex from '@/pages/admin/dataLoad/DataLoadIndex';
 import AdminSettings from '@/pages/admin/settings/Settings';
 import SelectOrganization from '@/pages/admin/settings/SelectOrganization';
 
@@ -52,11 +55,21 @@ import Login from '@/pages/admin/Login';
 // Fallback page
 import NotFound from '@/pages/errors/NotFound';
 
+import routeLogsApi from '@/api/routeLogs.api';
+
 Vue.use(Router);
 
-export default new Router({
+let router = new Router({
     // mode : 'history',
     routes: [
+        {
+            path: '/select-organization',
+            name: 'SelectOrganization',
+            components: {
+                header: UserHeader,
+                default: UserSelectOrganization,
+            }
+        },
         {
             path: '/',
             // name: 'UserIndex',
@@ -77,12 +90,12 @@ export default new Router({
                     component: Suppliers
                 },
                 {
-                    path: 'supplier',
+                    path: 'suppliers/:id',
                     name: 'SupplierDetail',
                     component: SupplierDetail
                 },
                 {
-                    path: 'contract',
+                    path: 'contracts/:id',
                     name: 'ContractDetail',
                     component: ContractDetail
                 },
@@ -187,10 +200,27 @@ export default new Router({
                     name: 'Organizations',
                     component: AdminOrganizations
                 },
+                // {
+                //     path: 'data-load',
+                //     name: 'DataLoad',
+                //     component: DataLoad
+                // },
                 {
                     path: 'data-load',
-                    name: 'DataLoad',
-                    component: DataLoad
+                    // name: 'DataLoad',
+                    component: DataLoadIndex,
+                    children: [
+                        {
+                            path: '',
+                            name: 'DataLoad',
+                            component: DataLoad
+                        },
+                        {
+                            path: 'current',
+                            name: 'DataLoadCurrent',
+                            component: DataLoadCurrent
+                        }
+                    ]
                 },
                 {
                     path: 'settings',
@@ -244,3 +274,14 @@ export default new Router({
         }
     ]
 });
+
+router.afterEach((to, from) => {
+    //After every route is loaded, register a new RouteLog in the database, as long as it does not include the word 'admin'
+    if (!to.path.includes('/admin/')) {
+        routeLogsApi.register({path: to.path}, {}, () => {
+        }, () => {
+        })
+    }
+});
+
+export default router;

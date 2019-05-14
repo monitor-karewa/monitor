@@ -22,10 +22,7 @@
 
 
                     <!-- FOOTER -->
-                    <div class="modal-footer aditional-text">
-                        <button type="button" class="btn-stroke button-info_text" data-dismiss="modal"> Cancelar </button>
-                        <button type="submit"  class="btn-raised button-accent m-l-15"> Guardar </button>
-                    </div>
+                    <slot name="footer"></slot>
 
                 </div>
             </div>
@@ -66,7 +63,9 @@
                         actionName = "save";
                     }
                     this.$store.dispatch(`${this.$props.storeModule}/${actionName}`, this.$props.entry);
-                    $('#ModalEntry').modal('hide');
+                    if(this.$props.storeModule !== 'contracts'){
+                        $('#ModalEntry').modal('hide');
+                    }
                 } else {
                     tShow('El formulario contiene errores', 'info');
                 }

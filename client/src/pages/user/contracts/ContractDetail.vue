@@ -15,13 +15,13 @@
                     <div class="floating-title-panel long-text">
                         <h1>
                             <small>Contrato</small>
-                            OBRA CIVIL PARA LA IMPLEMENTACIÓN DE LA PLATAFORMA ESCUDO CHIHUAHUA EN LA CIUDAD DE CHIHUAHUA, CHIH
+                            <span class="text-upper"> {{contract.servicesDescription}}</span>
                         </h1>
                         <div class="side-right">
                             <a href="" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i class="zmdi zmdi-share"></i> Compartir</a>
                         </div>
                     </div>
-                    <p class="f-14 c-plain_text principal-font-regular">El contrato <strong class="principal-font-semibold">OBRA CIVIL PARA LA IMPLEMENTACIÓN DE LA PLATAFORMA ESCUDO CHIHUAHUA EN LA CIUDAD DE CHIHUAHUA, CHIH</strong>, a cargo del proveedor <strong class="principal-font-semibold">CONSTRUCCIONES MARRO SA DE CV</strong> obtuvo una cantidad de <strong class="c-accent">$26,327,329.17</strong>, celebrado el día <strong>20 de octubre de 2017.</strong></p>
+                    <p class="f-14 c-plain_text principal-font-regular">El contrato <strong class="principal-font-semibold"><span class="text-upper"> {{contract.servicesDescription}}</span></strong>, a cargo del proveedor <strong class="principal-font-semibold">{{contract.supplier ? contract.supplier.name : ""}}</strong> obtuvo una cantidad de <strong class="c-accent">{{contract.totalAmount | currency}}</strong>, celebrado el día <strong>{{contract.contractDate | moment}}</strong></p>
                 </div>
                 <!-- CONTRATO FILES -->
                 <div class="card">
@@ -62,18 +62,23 @@
                         <h1>Información detallada</h1>
                     </div>
                     <div class="non-list">
-                        <span> <small>Identificador de proceso</small> <i>-</i> <strong> DOPM176/2017 </strong></span>
-                        <span> <small>Descripción de las obras, bienes o servicios</small> <i>-</i> <strong> OBRA CIVIL PARA LA IMPLEMENTACIÓN DE LA PLATAFORMA ESCUDO CHIHUAHUA EN LA CIUDAD DE CHIHUAHUA, CHIH </strong></span>
-                        <span> <small>Monto total</small>  <i>-</i> <strong class="c-accent"> $26,327,329.17 </strong></span>
-                        <span> <small>Fecha del contrato</small> <i>-</i> <strong> 20 de octubre de 2017 </strong></span>
-                        <span> <small>Tipo de procedimiento</small> <i>-</i> <div class="badge badge-red"> Adjudicación Directa </div></span>
-                        <span> <small>Estado del procedimiento</small> <i>-</i> <div class="badge"> Concluido </div></span>
-                        <span> <small>Unidad administrativa solicitante</small> <i>-</i> <strong> DIRECCIÓN DE OBRAS PUBLICAS MUNICIPALES </strong></span>
-                        <span> <small>Materia</small> <i>-</i> <strong> Obra pública </strong></span>
-                        <span> <small>Nombre del proveedor</small> <i>-</i> <strong> CONSTRUCCIONES MARRO SA DE CV </strong></span>
-                        <span> <small>RFC</small> <i>-</i> <strong> GMA980529MWO </strong></span>
-                        <span> <small>Notas de Municipio de Chihuahua</small> <i>-</i> <strong> Hipervínculo acta de recepción física de trabajos : ESTA EN PROCESO. </strong></span>
-                        <span> <small>Fecha de obtención de los datos</small> <i>-</i> <strong> 13 de marzo de 2018 </strong></span>
+                        <span> <small>Identificador de proceso</small> <i>-</i> <strong>{{contract.contractId}}</strong></span>
+                        <span> <small>Descripción de las obras, bienes o servicios</small> <i>-</i> <strong>{{contract.servicesDescription}}</strong></span>
+                        <span> <small>Monto total</small>  <i>-</i> <strong class="c-accent"> {{contract.totalAmount | currency}} </strong></span>
+                        <span> <small>Fecha del contrato</small> <i>-</i> <strong>{{contract.contractDate | moment}}</strong></span>
+                        <span> <small>Tipo de procedimiento</small> <i>-</i> <div class="badge" :class="{ 'badge-yellow' : contract.procedureType == 'INVITATION', 'badge-green' : contract.procedureType == 'PUBLIC', 'badge-red' : contract.procedureType == 'NO_BID'}">{{$t(contract.procedureType)}}</div></span>
+
+                        <span> <small>Estado del procedimiento</small> <i>-</i>
+                            <div class="badge" :class="{ 'badge-yellow' : contract.procedureState === 'IN_PROGRESS', 'badge-green' : contract.procedureState === 'COMPLETED', 'badge-red' : contract.procedureState === 'CANCELED' || contract.procedureState === 'DESERTED'}">
+                                {{$t(contract.procedureState)}}
+                            </div>
+                        </span>
+                        <span> <small>Unidad administrativa solicitante</small> <i>-</i> <strong>{{contract.applicantAdministrativeUnit ? contract.applicantAdministrativeUnit.name : ""}}</strong></span>
+                        <span> <small>Materia</small> <i>-</i> <strong>{{$t(contract.category)}}</strong></span>
+                        <span> <small>Nombre del proveedor</small> <i>-</i> <strong>{{contract.supplier ? contract.supplier.name : ""}}</strong></span>
+                        <!--<span> <small>RFC</small> <i>-</i> <strong>{{contract}}</strong></span>-->
+                        <span> <small>Notas de Municipio de Chihuahua</small> <i>-</i> <strong>{{contract.notes}}</strong></span>
+                        <span> <small>Fecha de obtención de los datos</small> <i>-</i> <strong>{{contract.informationDate | moment}}</strong></span>
                     </div>
                 </div>
             </div>
@@ -82,23 +87,55 @@
             <p class="f-12 c-plain_text principal-font-regular">
                 Todos los datos que se presentan en este informe son única y exclusivamente obtenidos de: http://www.municipiochihuahua.gob.mx/Transparencia
                 <br>
-                Última actualización: <strong>27 de noviembre de 2018</strong>
+                Última actualización: <strong>{{contract.updateDate | moment}}</strong>
             </p>
 
             <more-info></more-info>
 
         </div>
+
     </section>
 
 </template>
 
 <script>
     import MoreInfo from '@/components/general/MoreInfo';
+    const storeModule = "publicContracts";
+    import moment from 'moment';
+    import {mapState,vm} from 'vuex';
+
 
     export default {
+        data() {
+            return {};
+        },
         name: "SupplierContract",
         components: {
             MoreInfo
+        },
+        beforeMount(){
+            let contractId = this.$route.params.id;
+            this.$store.dispatch(`${storeModule}/loadContractDetail`, contractId);
+        },
+        mounted(){
+            let contractId = this.$route.params.id;
+            this.$store.dispatch(`${storeModule}/loadContractDetail`, contractId);
+        },
+        methods : {
+
+        },
+        filters: {
+            moment: function (date) {
+                return moment(date).format('MM/DD/YYYY');
+            }
+        },
+        computed : {
+            ...mapState({
+                    contract: function (state) {
+                        return state[storeModule].contractDetail || {};
+                    }
+                }
+            )
         }
     }
 </script>

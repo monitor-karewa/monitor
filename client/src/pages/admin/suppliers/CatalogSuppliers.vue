@@ -53,7 +53,10 @@
                         </label>
                     </div>
                 </div>
-
+            </div>
+            <div class="modal-footer aditional-text" slot="footer">
+                <button type="button" class="btn-stroke button-info_text" data-dismiss="modal"> Cancelar </button>
+                <button type="submit"  class="btn-raised button-accent m-l-15"> Guardar </button>
             </div>
         </ModalEntry>
 
@@ -71,6 +74,7 @@
             </p>
         </ModalDefault>
     </div>
+
 </template>
 
 
@@ -174,7 +178,12 @@
                 touchMap.set($v, setTimeout($v.$touch, 1000))
             },
             clearEntry(){
-                this.entry = {};
+                this.entry = {
+                    _id: "",
+                    name : "",
+                    rfc : "",
+                    notes: ""
+                };
                 this.$v.$reset();
             }
         },

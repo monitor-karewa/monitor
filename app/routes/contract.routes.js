@@ -35,4 +35,17 @@ router.post('/save-updated-docs', securityController.validatePermission(Contract
  */
 router.post('/delete', securityController.validatePermission(Contract.permission, 'delete'), contractController.delete);
 
+
+/**
+ * GET /delete
+ * Obtains the suppliers available for this contract
+ */
+router.get('/retrieve/suppliers', securityController.validatePermission(Contract.permission, 'edit'), contractController.retrieveSuppliers);
+
+/**
+ * GET /delete
+ * Obtains the suppliers available for this contract
+ */
+router.get('/retrieve/administrative-units', securityController.validatePermission(Contract.permission, 'edit'), contractController.retrieveAdministrativeUnits);
+
 module.exports = router;

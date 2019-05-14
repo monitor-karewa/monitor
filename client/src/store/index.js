@@ -10,10 +10,17 @@ import resources from '@/store/modules/resources.store';
 import users from '@/store/modules/users.store';
 import calculations from '@/store/modules/calculations.store';
 import organizations from '@/store/modules/organizations.store';
+import dataLoad from '@/store/modules/dataLoad.store';
+import accounts from '@/store/modules/accounts.store';
+
+//user
+import publicOrganizationsStore from '@/store/modules/publicOrganizations.store';
+import publicContracts from '@/store/modules/publicContracts.store';
+import publicSuppliersStore from '@/store/modules/publicSuppliers.store';
 
 
 import actions from '@/store/actions';
-import store from '@/store/store';
+import state from '@/store/state';
 import mutations from '@/store/mutations';
 
 
@@ -31,9 +38,15 @@ export default new Vuex.Store({
         resources : resources,
         users : users,
         calculations : calculations,
-        organizations : organizations
+        organizations : organizations,
+        dataLoad: dataLoad,
+        accounts: accounts,
+        //public stores (for users)
+        publicOrganizations: publicOrganizationsStore,
+        publicSuppliers: publicSuppliersStore,
+        publicContracts : publicContracts
     },
-    store: store,
+    state: state,
     actions: actions,
     mutations: mutations,
     strict: debug,
