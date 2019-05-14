@@ -35,12 +35,14 @@
 <script>
   import "@/assets/javascripts/vendors.js";
     export default {
-        data () {
+        data () { //info fija
             return {
             }
         },
         components: {
-        },
+        }, //compontentes hijos
+        //computed -> valor calculado aggregate style
+        // methods -> metodos
         mounted () {
             $(document).ready(function () {
                 $('.selectpicker').selectpicker();
