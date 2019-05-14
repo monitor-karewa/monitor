@@ -7,6 +7,10 @@ const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const { validationResult } = require('express-validator/check');
 
+const http = require('http');
+const fs = require('fs');
+const mongoose = require('mongoose');
+
 /**
  * Renderiza la vista principal de consulta de Resource.
  * @param req
@@ -137,6 +141,8 @@ exports.save = (req, res, next) => {
                 });
             }
 
+            // downloadFile(savedResource.url, savedResource._id+'.pdf');
+
             return res.json({
                 "error": false,
                 "message": req.__('general.success.created'),
@@ -265,4 +271,21 @@ exports.delete = (req, res, next) => {
 
 
         });
+};
+
+function downloadFile (url, fileName, callback) {
+
+    var file = fs.createWriteStream(fileName);
+
+    http.get(url, function(response) {
+        response.pipe(file);
+        file.on('finish', function() {
+            file.close(callback);  // close() is async, call callback after close completes.
+            //TODO: create a field in the model
+        });
+    }).on('error', function(err) { // Handle errors
+        fs.unlink(dest); // Delete the file async. (But we don't check the result)
+        if (callback) callback(err.message);
+    });
+
 };

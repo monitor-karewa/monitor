@@ -8,9 +8,8 @@ const mongoosePagination = require('mongoose-paginate');
 const mongooseAggregatePaginate = require('mongoose-aggregate-paginate');
 
 const utils = require('../components/utils');
-
-
 const permissions = require('./../components/permissions');
+const logger = require('./../components/logger').instance;
 
 
 const procedureTypesEnumDict = {
@@ -331,6 +330,11 @@ let ContractSchema = new Schema({
         ref: 'Organization',
         required: true
     },
+    backedUp: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     /* Tipo de procedimiento */
     procedureType: {
         type: String,
@@ -421,6 +425,10 @@ let ContractSchema = new Schema({
         type:String,
         match: [new RegExp("(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"), 'El campo Hipervínculo a la convocatoria o invitaciones no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
     },
+    announcementUrlBackup:{
+        type: Schema.Types.ObjectId,
+        ref: 'File'
+    },
     /* Fecha de la convocatoria o invitación */
     announcementDate:{
         //TODO: required?
@@ -441,10 +449,18 @@ let ContractSchema = new Schema({
         type:String,
         match: [new RegExp("(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"), 'El campo Hipervínculo al fallo de Junta de Aclaraciones no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
     },
+    clarificationMeetingJudgmentUrlBackup:{
+        type: Schema.Types.ObjectId,
+        ref: 'File'
+    },
     /* Hipervínculo al documento de la Presentación de Propuestas */
     presentationProposalsDocUrl:{
         type:String,
         match: [new RegExp("(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"), 'El campo Hipervínculo al documento de la Presentación de Propuestas no cumple con el formato esperado . Ejemplo: www.ejemplo.com']
+    },
+    presentationProposalsDocUrlBackup:{
+        type: Schema.Types.ObjectId,
+        ref: 'File'
     },
     /* Proveedor */
     supplier: {
@@ -548,6 +564,10 @@ let ContractSchema = new Schema({
         match: [new RegExp("(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"), 'El campo Hipervínculo al documento del contrato y anexos no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
         // required:true
     },
+    contractUrlBackup:{
+        type: Schema.Types.ObjectId,
+        ref: 'File'
+    },
     /*Área responsable de la información*/
     areaInCharge: {
         type: Schema.Types.ObjectId,
@@ -650,6 +670,32 @@ ContractSchema.statics.expressValidator = function () {
     ]
 };
 
+
+let postInsertMany = function(docs) {
+
+    jobManager.runTask(jobManager.TASKS.BACKUP_CONTRACT_URLS, {contracts: docs})
+        .then((job) => {
+            logger.info(null, null, 'contract.model#post-insertMany', 'Task creation finished [%s]', jobManager.TASKS.BACKUP_CONTRACT_URLS);
+        })
+        .catch((err) => {
+            logger.error(err, null, 'contract.model#post-insertMany', 'Error trying to create task [%s]', jobManager.TASKS.BACKUP_CONTRACT_URLS);
+        })
+};
+
+let postSave = function(doc) {
+
+    jobManager.runTask(jobManager.TASKS.BACKUP_CONTRACT_URLS, {contracts: [doc]})
+        .then((job) => {
+            logger.info(null, null, 'contract.model#post-postSave', 'Task creation finished [%s]', jobManager.TASKS.BACKUP_CONTRACT_URLS);
+        })
+        .catch((err) => {
+            logger.error(err, null, 'contract.model#post-postSave', 'Error trying to create task [%s]', jobManager.TASKS.BACKUP_CONTRACT_URLS);
+        })
+};
+
+ContractSchema.post('insertMany', postInsertMany);
+ContractSchema.post('save', postSave);
+
 ContractSchema.index({contractNumber: 1, deleted: 1}, {unique: true});
 
 
@@ -683,3 +729,5 @@ module.exports = {
     contractTypeEnum,
     getContractTypeEnumObject,
 };
+
+const jobManager = require('./../components/jobManager');
