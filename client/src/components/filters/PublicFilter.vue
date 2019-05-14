@@ -166,12 +166,6 @@
                 type: Array,
                 default: []
             },
-            suppliers() {
-                return {
-                    type: Array,
-                    default: []
-                }
-            },
             actionName : String,
             storeModule : {
                 type: String,
