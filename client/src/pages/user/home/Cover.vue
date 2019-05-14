@@ -15,7 +15,12 @@
                         <p>{{$t('general.app.description')}}</p>
 
                     </div>
-                    <div class="horizontal-center m-t-50">
+
+                    <div v-if="showOrganizationSelect">
+                        <OrganizationSelector :defaultRedirectTo="defaultRedirectTo"/>
+                    </div>
+                    
+                    <div class="horizontal-center m-t-50" v-if="showFilters">
                         <div class="filter-box">
                             <div class="filter">
                                 <div class="filter-container row m-0">
@@ -108,4 +113,28 @@
     </div>
 </template>
 <style></style>
-<script></script>
+<script>
+
+    import OrganizationSelector from '@/components/general/OrganizationSelector';
+    
+    export default {
+        data () {
+            return {
+                defaultRedirectTo: '/'
+            }
+        },
+        components: {
+            OrganizationSelector
+        },
+        props: {
+            showFilters: {
+                type: Boolean,
+                default: true
+            },
+            showOrganizationSelect: {
+                type: Boolean,
+                default: false
+            }
+        }
+    }
+</script>

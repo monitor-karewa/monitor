@@ -1,4 +1,7 @@
 const RouteLog = require('./../models/routeLog.model').RouteLog;
+const Organization = require('./../models/organization.model').Organization;
+
+const logger = require('./../components/logger').instance;
 
 exports.register = (req, res, next) => {
     let path = req.body.path;
@@ -7,6 +10,7 @@ exports.register = (req, res, next) => {
     }
     
     let routeLog = new RouteLog({
+        organization: Organization.currentOrganizationId(req),
         path: path
     });
 

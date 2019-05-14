@@ -8,6 +8,8 @@ import UserIndex from '@/pages/user/Index';
 import UserHeader from '@/pages/user/Header';
 import UserFooter from '@/pages/user/Footer';
 import UserHome from '@/pages/user/home/Home';
+import UserCover from '@/pages/user/home/Cover';
+import UserSelectOrganization from '@/pages/user/home/SelectOrganization';
 
 import Suppliers from '@/pages/user/suppliers/Suppliers';
 import SupplierDetail from '@/pages/user/suppliers/SupplierDetail';
@@ -61,6 +63,14 @@ let router = new Router({
     // mode : 'history',
     routes: [
         {
+            path: '/select-organization',
+            name: 'SelectOrganization',
+            components: {
+                header: UserHeader,
+                default: UserSelectOrganization,
+            }
+        },
+        {
             path: '/',
             // name: 'UserIndex',
             components: {
@@ -85,7 +95,7 @@ let router = new Router({
                     component: SupplierDetail
                 },
                 {
-                    path: 'contract',
+                    path: 'contracts/:id',
                     name: 'ContractDetail',
                     component: ContractDetail
                 },

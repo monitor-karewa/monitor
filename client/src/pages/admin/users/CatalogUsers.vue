@@ -13,7 +13,7 @@
         </AdminMainSection>
 
         <ModalEntry v-bind:storeModule="storeModule" :validator="$v"
-                       :data="doc">
+                       :entry="doc">
 
             <div>
                 <div class="form-group fg-float subtitle">
@@ -104,6 +104,11 @@
                             <span>{{$t('users.new.admin-type.radio-button.custom.suppliers')}}</span>
                         </div>
                         <div class="checkbox m-b-20">
+                            <input type="checkbox" value="ORGANIZATIONS" v-model="$v.doc.permissions.$model">
+                            <i class="input-helper"></i>
+                            <span>{{$t('users.new.admin-type.radio-button.custom.organizations')}}</span>
+                        </div>
+                        <div class="checkbox m-b-20">
                             <input type="checkbox" value="ADMINISTRATIVE_UNITS" v-model="$v.doc.permissions.$model">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.admin-type.radio-button.custom.administrative-units')}}</span>
@@ -112,6 +117,11 @@
                             <input type="checkbox" value="CONTRACTS" v-model="$v.doc.permissions.$model">
                             <i class="input-helper"></i>
                             <span>{{$t('users.new.admin-type.radio-button.custom.contracts')}}</span>
+                        </div>
+                        <div class="checkbox m-b-20">
+                            <input type="checkbox" value="RESOURCES" v-model="$v.doc.permissions.$model">
+                            <i class="input-helper"></i>
+                            <span>{{$t('users.new.admin-type.radio-button.custom.resources')}}</span>
                         </div>
                         <div class="checkbox m-b-20">
                             <input type="checkbox" value="CALCULATIONS" v-model="$v.doc.permissions.$model">
@@ -172,7 +182,7 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
-    import { DELETE_SUCCESS, DOC_CREATED } from "@/store/events";
+    import { DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT, DOC_UPDATED } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
     import  ModalDefault from "@/components/modals/ModalDefault";
     import { required, email, minLength, requiredIf } from 'vuelidate/lib/validators';
@@ -207,6 +217,7 @@
                     action:"saveDocsUpdated"
                 },
                 doc:{
+                    _id:null,
                     name:"",
                     lastName:"",
                     email:"",
@@ -263,6 +274,10 @@
                 }
                 touchMap.set($v, setTimeout($v.$touch, 1000));
 
+            },
+            clearEntry(){
+                this.entry = {};
+                this.$v.$reset();
             }
         },
         created(){
@@ -275,10 +290,41 @@
                 this.doc.email = "";
                 this.doc.active = true;
                 this.doc.permissions  =  [];
-                this.doc.administratorType  =  "CUSTOM";
+                this.doc.administratorType  =  "GENERAL";
                 this.doc.notes = "";
                 this.$v.$reset();
-                tShow("El usuario fue creado correctamente", 'info');
+                tShow("El usuario fue creado correctamente", 'success');
+            });
+            bus.$on(storeModule+DOC_UPDATED, ()=>{
+                this.clearEntry();
+                tShow("El usuario fue actualizado correctamente", 'success');
+            });
+            bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
+                this.clearEntry();
+
+                this.doc._id = entry._id;
+                
+                this.doc.name = entry.name;
+                this.$v.doc.name.$touch();
+
+                this.doc.lastName = entry.lastName;
+                this.$v.doc.lastName.$touch();
+
+                this.doc.email = entry.email;
+                this.$v.doc.email.$touch();
+
+                this.doc.active = entry.active;
+                this.$v.doc.active.$touch();
+
+                this.doc.permissions  =  entry.permissions || [];
+                this.$v.doc.permissions.$touch();
+
+                this.doc.administratorType  =  entry.administratorType || "GENERAL";
+                this.$v.doc.administratorType.$touch();
+
+                this.doc.notes = entry.notes || "";
+//                this.$v.doc.notes.$touch();
+                
             });
         },
         mounted(){

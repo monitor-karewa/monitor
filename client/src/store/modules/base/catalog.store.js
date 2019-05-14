@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import { bus } from '@/main';
 import * as events from "../../events";
+import i18n from '@/plugins/i18n';
 
 export default function (api, storeName) {
     const state = {

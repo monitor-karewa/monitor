@@ -6,6 +6,6 @@ const securityController = require('./../controllers/security.controller');
  * POST /security/login
  * Attempt user login
  */
-router.post('/login', securityController.doLogin);
+// router.post('/login', securityController.doLogin);
 
 module.exports = router;

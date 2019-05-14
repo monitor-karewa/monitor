@@ -34,19 +34,35 @@
 
 <script>
   import "@/assets/javascripts/vendors.js";
-    export default {
-        data () { //info fija
-            return {
-            }
-        },
-        components: {
-        }, //compontentes hijos
-        //computed -> valor calculado aggregate style
-        // methods -> metodos
-        mounted () {
-            $(document).ready(function () {
-                $('.selectpicker').selectpicker();
-            });
-        }
-    }
+
+  import axios from 'axios';
+
+  export default {
+      data () {
+          return {}
+      },
+      components: {},
+      mounted () {
+          $(document).ready(function () {
+              $('.selectpicker').selectpicker();
+          });
+      },
+      created (){
+          let sessionExists = this.$session.exists();
+          if (sessionExists) {
+              let token = this.$session.get('jwt');
+              axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+
+              let currentOrganizationId = this.$session.get('currentOrganizationId');
+              axios.defaults.headers.common['X-CURRENT-ORGANIZATION-ID'] = currentOrganizationId;
+
+              let currentOrganizationName = this.$session.get('currentOrganizationName');
+              let currentOrganizationShortName = this.$session.get('currentOrganizationShortName');
+
+              this.$store.commit('currentOrganizationName', currentOrganizationName);
+              this.$store.commit('currentOrganizationShortName', currentOrganizationShortName);
+          }
+
+      }
+  }
 </script>

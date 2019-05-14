@@ -242,12 +242,13 @@
                 storeModule: storeModule,
                 tableHeaders: ['Nombre', 'Descripción', 'Tipo','Habilitado','Notas','general.created-at'],
                 tableColumns: [
-                    {label: 'calculations.name', field: 'name', visible:true},
-                    {label: 'calculations.description', field: 'description', visible:true},
-                    {label: 'calculations.type', field: 'type', visible:true},
-                    {label: 'calculations.enabled', field: 'enabled', visible:true},
-                    {label: 'calculations.notes', field: 'notes', visible:true},
-                    {label: 'general.created-at', field: 'createdAt', type: 'Date', visible:true}
+                    {label: 'calculations.name', field: 'name', visible: true},
+                    {label: 'calculations.description', field: 'description', visible: true},
+                    {label: 'calculations.type', field: 'type', visible: true, type:"i18n" },
+                    {label: 'calculations.formula.expression', field: 'formula.expression', visible: true, type:"highlight" },
+                    {label: 'calculations.enabled', field: 'enabled', type:"boolean", visible: true},
+                    {label: 'calculations.notes', field: 'notes', visible: true},
+                    {label: 'general.created-at', field: 'createdAt', type: 'Date', visible: true}
                 ],
                 variableSelected : undefined,
                 displayFormLabel : "Normal",

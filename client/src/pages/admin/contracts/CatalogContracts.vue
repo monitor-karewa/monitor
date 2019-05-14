@@ -158,8 +158,6 @@
                         </select>
                         <label class="fg-label">{{$t('contracts.new.procedure-state.label')}}</label>
                     </div>
-                    <span v-if="$v.entry.procedureState.$invalid  && $v.entry.procedureState.$dirty && !$v.entry.procedureState.required"
-                          class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.procedure-state.label')})}}</span>
                 </div>
 
 
@@ -379,6 +377,21 @@
                           class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.contract-type.label')})}}</span>
                 </div>
 
+                <!--totalAmount-->
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input"
+                               :placeholder="$t('contracts.new.min-amount.placeholder')"
+                               v-model="entry.totalAmount">
+                        <label class="fg-label">{{$t('contracts.new.total-amount.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('contracts.new.total-amount.sub-label')}}</strong>
+                        </label>
+                    </div>
+                    <!--<span v-if="$v.entry.contractId.$invalid && $v.entry.contractId.$dirty"
+                          class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.min-amount.label'})}}</span> -->
+                </div>
 
 
                 <!--minAmount-->
@@ -600,7 +613,7 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import {bus} from '@/main';
-    import {DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT} from "@/store/events";
+    import {DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT, DOC_UPDATED} from "@/store/events";
     import ModalDanger from "@/components/modals/ModalDanger";
     import ModalDefault from "@/components/modals/ModalDefault";
     import { required, minLength, maxLength } from 'vuelidate/lib/validators';
@@ -776,9 +789,7 @@
                         return urlRegExp.test(value)
                     }
                 },
-                procedureState:{
-                    required
-                },
+
                 servicesDescription:{
                     required
                 },
@@ -978,7 +989,7 @@
                 touchMap.set($v, setTimeout($v.$touch, 1000))
             },
             clearEntry() {
-                this.$store.dispatch (`${storeModule}/clearSelectedEntry`);
+//                this.$store.dispatch (`${storeModule}/clearSelectedEntry`);
                 this.$v.$reset();
             }
         },
@@ -993,11 +1004,17 @@
                 this.$v.$reset();
                 tShow("Elemento Creado!", 'info');
             });
+            bus.$on(storeModule + DOC_UPDATED, () => {
+                $('#ModalEntry').modal('hide');
+                this.$store.dispatch (`${storeModule}/clearFormErrors`);
+                this.$v.$reset();
+                tShow("Elemento Actualizado!", 'info');
+            });
             bus.$on(storeModule + DOC_START_EDIT, (entry) => {
                     this.clearEntry();
                     this.entry._id = entry._id;
-                    this.entry.supplier._id = entry.supplier._id;
-                    this.entry.supplier.name = entry.supplier.name;
+                    this.entry.supplier = entry.supplier;
+//                    this.entry.supplier.name = entry.supplier.name;
                     this.entry.administrativeUnit = entry.administrativeUnit;
                     this.entry.procedureType = entry.procedureType;
                     this.entry.category = entry.category;

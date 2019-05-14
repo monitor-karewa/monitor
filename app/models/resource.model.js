@@ -13,6 +13,11 @@ const permissions = require('./../components/permissions');
  * @type {mongoose.Schema}
  */
 let ResourceSchema = new Schema({
+    organization: {
+        type: Schema.Types.ObjectId,
+        ref: 'Organization',
+        required: true
+    },
     title: {
         type: String,
         required: true

@@ -8,9 +8,8 @@ const mongoosePagination = require('mongoose-paginate');
 const mongooseAggregatePaginate = require('mongoose-aggregate-paginate');
 
 const utils = require('../components/utils');
-
-
 const permissions = require('./../components/permissions');
+const logger = require('./../components/logger').instance;
 
 
 const procedureTypesEnumDict = {
@@ -62,7 +61,7 @@ const procedureTypesEnum = Object.keys(procedureTypesEnumDict);
 const categoryEnumDict = {
     'EXTENSION': [
         {
-            regexStr: utils.toAccentsRegex('extencion', null, true),
+            regexStr: utils.toAccentsRegex('extension', null, true),
             flags: 'gi'
         },
         {
@@ -326,6 +325,16 @@ getContractTypeEnumObject = function (contractType) {
 
 
 let ContractSchema = new Schema({
+    organization: {
+        type: Schema.Types.ObjectId,
+        ref: 'Organization',
+        required: true
+    },
+    backedUp: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     /* Tipo de procedimiento */
     procedureType: {
         type: String,
@@ -337,10 +346,10 @@ let ContractSchema = new Schema({
     category: {
         type: String,
         enum: categoryEnum,
-        required: function () {
+        required: [function () {
             let descriptionRegExp = utils.toAccentsRegex(this.servicesDescription.toUpperCase(), 'i');
             return descriptionRegExp.test(this.category);
-        },
+        }, "El campo Materia es un campo requerido"],
         uppercase: true
     },
     /* Administracion */
@@ -376,9 +385,38 @@ let ContractSchema = new Schema({
         type: String,
         enum: procedureStateEnum,
         // required:true,
-        required: function () {
-            let descriptionRegExp = utils.toAccentsRegex(this.notes.toUpperCase(), 'i');
-            return descriptionRegExp.test(this.procedureType);
+        required: [ function () {
+            let values = Object.values(procedureStateEnumDict);
+            let valuesFlat = [];
+            values.forEach((value) => {
+                let innerValues = [...value];
+                innerValues.forEach((item)=>{
+                    valuesFlat.push(item.regexStr);
+                });
+            });
+            for (let i = 0; i < valuesFlat.length; i++){
+                let isIncluded = new RegExp(valuesFlat[i]).test(this.notes);
+                if(isIncluded){
+                    return true;
+                }
+            }
+            return false;
+
+        }, "Este campo es requerido debido a que se indicó un estado de procedimiento en las notas del contrato."],
+        validate: {
+            validator:function(v){
+                for(let item in procedureStateEnumDict){
+                    for(let i=0; i < procedureStateEnumDict[item].length; i++){
+                        let isIncluded = new RegExp(procedureStateEnumDict[item][i].regexStr).test(this.notes);
+                        if(isIncluded){
+                            return item == v;
+                        }
+                    }
+                }
+                return true;
+            },
+            message: props => `El valor de este campo no coincide con el estado de procedimiento indicado en las notas del contrato.`
+
         },
         uppercase: true
     },
@@ -386,6 +424,10 @@ let ContractSchema = new Schema({
     announcementUrl:{
         type:String,
         match: [new RegExp("(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"), 'El campo Hipervínculo a la convocatoria o invitaciones no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
+    },
+    announcementUrlBackup:{
+        type: Schema.Types.ObjectId,
+        ref: 'File'
     },
     /* Fecha de la convocatoria o invitación */
     announcementDate:{
@@ -407,10 +449,18 @@ let ContractSchema = new Schema({
         type:String,
         match: [new RegExp("(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"), 'El campo Hipervínculo al fallo de Junta de Aclaraciones no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
     },
+    clarificationMeetingJudgmentUrlBackup:{
+        type: Schema.Types.ObjectId,
+        ref: 'File'
+    },
     /* Hipervínculo al documento de la Presentación de Propuestas */
     presentationProposalsDocUrl:{
         type:String,
         match: [new RegExp("(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"), 'El campo Hipervínculo al documento de la Presentación de Propuestas no cumple con el formato esperado . Ejemplo: www.ejemplo.com']
+    },
+    presentationProposalsDocUrlBackup:{
+        type: Schema.Types.ObjectId,
+        ref: 'File'
     },
     /* Proveedor */
     supplier: {
@@ -423,8 +473,11 @@ let ContractSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'AdministrativeUnit',
         required: [true, "El campo U. administrativa convocante es requerido"],
-        validator: function () {
-            return this.administrativeUnitType === 'DESCENTRALIZADA' ? this.organizerAdministrativeUnit == this.applicantAdministrativeUnit : true
+        validate :{
+            validator: function () {
+                return this.administrativeUnitType === 'DESCENTRALIZED' ? String(this.organizerAdministrativeUnit) === String(this.applicantAdministrativeUnit) : true
+            },
+            message: props => "Si el Tipo de U. Administrativa es DESCENTRALIZADA la U. administrativa solicitante y convocante deben ser la misma"
         }
     },
     /* Unidad administrativa solicitante */
@@ -450,10 +503,12 @@ let ContractSchema = new Schema({
     contractDate: {
         type: Date,
         required: [true, "El campo Fecha del contrato es requerido"],
-        validator: function () {
-            let yearContractDate = new Date(this.contractDate).getFullYear();
-            let fiscalYear = Number(this.fiscalYear);
-            return yearContractDate === fiscalYear;
+        validate: {
+            validator: function () {
+                let yearContractDate = new Date(this.contractDate).getFullYear();
+                return this.period.includes(String(yearContractDate));
+            },
+            message: props => "La Fecha del contrato no corresponde con el Periodo"
         }
     },
     /* Tipo de Contrato */
@@ -464,21 +519,42 @@ let ContractSchema = new Schema({
     },
     /* Monto total del contrato con impuestos incluidos */
     totalAmount: {
-        type: Number
+        type: Number,
+        required:[ function () {
+            return this.contractType == 'NORMAL';
+        }, "El campo Monto mínimo es requerido al ser un contrato normal"]
     },
     /* Monto mínimo, en su caso */
     minAmount: {
-        type: Number
+        type: Number,
+        required:[ function () {
+             return this.contractType == 'OPEN';
+        }, "El campo Monto mínimo es requerido al ser un contrato abierto"]
     },
     /* Monto máximo, en su caso */
     maxAmount: {
         type: Number,
+        required:[ function () {
+            return this.contractType == 'OPEN';
+        }, "El campo Monto máximo es requerido al ser un contrato abierto"]
     },
 
     /* Monto total o Monto máximo, en su caso */
     totalOrMaxAmount: {
         type: Number,
         required: [true, "El campo Monto total o Máximo es requerido"],
+        validate:{
+            validator: function(v) {
+                if(this.contractType == 'OPEN'){
+                    console.log("Entro aqúi");
+                    return this.maxAmount ?  this.maxAmount == v : true;
+                } else if (this.contractType == 'NORMAL'){
+                    return this.totalAmount ? this.totalAmount == v : true;
+                }
+                return true;
+            },
+            message: props => `El valor del campo Monto total es incorrrecto. Por favor, verifica los montos y el tipo de contrato`
+        }
         // Si es NORMAL - es el monto total
         // Si es ABIERTO - es el monto máximo
     },
@@ -487,6 +563,10 @@ let ContractSchema = new Schema({
         type : String,
         match: [new RegExp("(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"), 'El campo Hipervínculo al documento del contrato y anexos no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
         // required:true
+    },
+    contractUrlBackup:{
+        type: Schema.Types.ObjectId,
+        ref: 'File'
     },
     /*Área responsable de la información*/
     areaInCharge: {
@@ -590,6 +670,32 @@ ContractSchema.statics.expressValidator = function () {
     ]
 };
 
+
+let postInsertMany = function(docs) {
+
+    jobManager.runTask(jobManager.TASKS.BACKUP_CONTRACT_URLS, {contracts: docs})
+        .then((job) => {
+            logger.info(null, null, 'contract.model#post-insertMany', 'Task creation finished [%s]', jobManager.TASKS.BACKUP_CONTRACT_URLS);
+        })
+        .catch((err) => {
+            logger.error(err, null, 'contract.model#post-insertMany', 'Error trying to create task [%s]', jobManager.TASKS.BACKUP_CONTRACT_URLS);
+        })
+};
+
+let postSave = function(doc) {
+
+    jobManager.runTask(jobManager.TASKS.BACKUP_CONTRACT_URLS, {contracts: [doc]})
+        .then((job) => {
+            logger.info(null, null, 'contract.model#post-postSave', 'Task creation finished [%s]', jobManager.TASKS.BACKUP_CONTRACT_URLS);
+        })
+        .catch((err) => {
+            logger.error(err, null, 'contract.model#post-postSave', 'Error trying to create task [%s]', jobManager.TASKS.BACKUP_CONTRACT_URLS);
+        })
+};
+
+ContractSchema.post('insertMany', postInsertMany);
+ContractSchema.post('save', postSave);
+
 ContractSchema.index({contractNumber: 1, deleted: 1}, {unique: true});
 
 
@@ -623,3 +729,5 @@ module.exports = {
     contractTypeEnum,
     getContractTypeEnumObject,
 };
+
+const jobManager = require('./../components/jobManager');
