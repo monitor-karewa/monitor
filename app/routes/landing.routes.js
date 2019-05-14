@@ -7,6 +7,10 @@ var landingController = require('./../controllers/landing.controller');
  * Load the total amount by year and period from every contract in the system
  */
 router.get('/amountByPeriod', landingController.amountByPeriods);
+/**
+ * GET /amountByProcedure
+ * Load the total amount type of procedure from every contract in the system
+ */
 router.get('/amountByProcedure', landingController.amountByProcedure);
 
 

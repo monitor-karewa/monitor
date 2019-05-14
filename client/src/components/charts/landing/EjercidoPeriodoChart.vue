@@ -127,20 +127,5 @@
 </script>
 
 <style>
-    /*.small {*/
-
-        /*max-height: 700px;*/
-        /*margin:  10px auto;*/
-        /*!*width: 80% !important;*!*/
-    /*}*/
-    /*.small #bar-chart {*/
-        /*height: 500px !important;*/
-        /*width: 100% !important;*/
-    /*}*/
-    /*.small #doughnut-chart {*/
-        /*max-height: 240px !important;*/
-        /*max-width: 240px !important;*/
-        /*margin: auto;*/
-    /*}*/
 </style>
 

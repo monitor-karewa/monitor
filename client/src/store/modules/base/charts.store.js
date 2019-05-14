@@ -1,8 +1,7 @@
 import Vue from 'vue';
 import { bus } from '@/main';
-import * as events from "../../events";
 
-export default function (api, storeName) {
+export default function (api) {
     const state = {
         customChartData: [],
         data:{}
@@ -13,7 +12,7 @@ export default function (api, storeName) {
     };
 
     const actions = {
-        getInfoForChart({commit,getters}, searchString ) {
+        getInfoForChart({commit}) {
 
             api.dataForChart(
                 {},

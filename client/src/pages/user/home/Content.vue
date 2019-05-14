@@ -14,8 +14,6 @@
                             <div class="floating-title-panel small">
                                 <h1> Millones de pesos por trimestre </h1>
                             </div>
-
-                            <!--<img src="@/assets/images/Illustrations/dummy-graph-one.png" style="object-fit: contain;">-->
                             <MillonesTrimestreChart></MillonesTrimestreChart>
                         </div>
                     </div>
@@ -24,8 +22,6 @@
                             <div class="floating-title-panel small">
                                 <h1> Presupuesto ejercido por tipo de procedimiento </h1>
                             </div>
-
-                            <!--<img src="@/assets/images/Illustrations/dummy-graph-two.png" style="object-fit: contain;">-->
                             <EjercidoPeriodoChart></EjercidoPeriodoChart>
                         </div>
                     </div>

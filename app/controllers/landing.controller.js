@@ -116,14 +116,13 @@ exports.amountByPeriods = (req, res, next) => {
 exports.amountByProcedure = (req, res, next) => {
     _aggregateAmountByProcedure(req, res, (err, amounts) => {
         if (err) {
-            logger.error(err, req, 'landing.controller#amountByPeriods', 'Error trying to query amounts by period');
+            logger.error(err, req, 'landing.controller#amountByProcedure', 'Error trying to query amounts by period');
             return res.json({
                 error: true
             });
         }
         let labels = ["Lic. pública", "Por invitación"," Adj. Directa"];
-
-        logger.info(err, req, 'landing.controller#amountByPeriods', amounts[0]);
+        
         let datasets= [];
         if(amounts.length>0){
             datasets= [
@@ -146,7 +145,6 @@ exports.amountByProcedure = (req, res, next) => {
                 labels: labels,
                 datasets: datasets
             }};
-        logger.info(err, req, 'landing.controller#amountByPeriods', datasets);
         return res.json({
             error: false,
             data: tempData
