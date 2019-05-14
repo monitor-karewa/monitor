@@ -177,7 +177,7 @@ exports.list = (req, res, next) => {
             totals.invitationCount += supplierInfo.invitationCount;
             totals.noBidCount += supplierInfo.noBidCount;
 
-            totals.total += supplierInfo.publicCount;
+            totals.total += supplierInfo.total;
             totals.public += supplierInfo.public;
             totals.invitation += supplierInfo.invitation;
             totals.noBid += supplierInfo.noBid;

@@ -69,7 +69,6 @@
         },
         methods:{
             selectOrganization(organization){
-                console.log('organization', organization);
                 this.$session.set('currentOrganizationId', organization._id);
                 this.$session.set('currentOrganizationName', organization.name);
                 this.$session.set('currentOrganizationShortName', organization.shortName);

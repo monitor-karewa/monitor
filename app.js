@@ -159,6 +159,12 @@ if (!isProd) {
     }));
 }
 
+app.use((req, res, next) => {
+    //Read X-CURRENT-ORGANIZATION-ID header
+    req.currentOrganizationId = req.headers['x-current-organization-id'];
+    next();
+});
+
 // ======================
 // Routes without session
 // ======================
@@ -181,12 +187,6 @@ app.use(flash(app));
 // app.use(passport.session());
 
 app.use(securityController.loadUserSession);
-
-app.use((req, res, next) => {
-    //Read X-CURRENT-ORGANIZATION-ID header
-    req.currentOrganizationId = req.headers['x-current-organization-id'];
-    next();
-});
 
 // ======================
 // Routes with session
