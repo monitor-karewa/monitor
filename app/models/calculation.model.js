@@ -48,6 +48,11 @@ const FormulaSchema = new Schema({
 });
 
 CalculationSchema.add({
+        organization: {
+            type: Schema.Types.ObjectId,
+            ref: 'Organization',
+            required: true
+        },
         name: {
             type: String,
             required: true

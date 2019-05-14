@@ -52,14 +52,15 @@ const contractRoutes = require('./app/routes/contract.routes');
 const userRoutes = require('./app/routes/users.routes');
 const organizationRoutes = require('./app/routes/organization.routes');
 
-//public api
-const publicContractRoutes = require('./app/routes/publicContract.routes');
 
 const dataLoadRoutes = require('./app/routes/dataLoad.routes');
 const routeLogRoutes = require('./app/routes/routeLog.routes');
 
 
+//public api
+const publicOrganizationsRoutes = require('./app/routes/publicOrganization.routes');
 const publicSupplierRoutes = require('./app/routes/publicSupplier.routes');
+const publicContractRoutes = require('./app/routes/publicContract.routes');
 
 // Controllers
 const securityController = require('./app/controllers/security.controller');
@@ -164,6 +165,7 @@ if (!isProd) {
 app.use('/', indexRoutes);
 ///public-api/suppliers/list 
 app.use('/public-api/accounts', accountRoutes);
+app.use('/public-api/organizations', publicOrganizationsRoutes);
 app.use('/public-api/suppliers', publicSupplierRoutes);
 app.use('/public-api/contracts', publicContractRoutes);
 
@@ -197,7 +199,7 @@ app.use('/api/calculos', securityController.checkLogin, securityController.check
 app.use('/api/suppliers', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.SUPPLIERS), supplierRoutes);
 app.use('/api/users', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.USERS), userRoutes);
 //Note: Organizations can be loaded (/list) without permission, to be used in /select-organization
-app.use('/api/organizations', securityController.checkLogin/*, securityController.checkPermission(USER_PERMISSIONS_DICT.ORGANIZATIONS)*/, organizationRoutes);
+app.use('/api/organizations', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.ORGANIZATIONS), organizationRoutes);
 //TODO Leave just one
 app.use('/api/administrative-units', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.ADMINISTRATIVE_UNITS), administrativeUnitRoutes);
 app.use('/api/administrativeUnits', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.ADMINISTRATIVE_UNITS), administrativeUnitRoutes);

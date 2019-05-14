@@ -182,7 +182,7 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
-    import { DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT } from "@/store/events";
+    import { DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT, DOC_UPDATED } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
     import  ModalDefault from "@/components/modals/ModalDefault";
     import { required, email, minLength, requiredIf } from 'vuelidate/lib/validators';
@@ -293,7 +293,11 @@
                 this.doc.administratorType  =  "GENERAL";
                 this.doc.notes = "";
                 this.$v.$reset();
-                tShow("El usuario fue creado correctamente", 'info');
+                tShow("El usuario fue creado correctamente", 'success');
+            });
+            bus.$on(storeModule+DOC_UPDATED, ()=>{
+                this.clearEntry();
+                tShow("El usuario fue actualizado correctamente", 'success');
             });
             bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
                 this.clearEntry();

@@ -115,7 +115,7 @@
                                         </td>
 
                                         <TableTdFormat :fieldName="'procedureState'"    :value="contract.procedureState"  :i18n="true" class="text-align-l"> </TableTdFormat>
-                                        <TableTdFormat :fieldName="'applicantAdministrativeUnit'"    :value="contract.applicantAdministrativeUnit.name"  class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :fieldName="'applicantAdministrativeUnit'"    :value="contract.applicantAdministrativeUnit ? contract.applicantAdministrativeUnit.name : ''"  class="text-align-l"> </TableTdFormat>
                                         <TableTdFormat :fieldName="'category'"    :value="contract.category"  :i18n="true" class="text-align-l"> </TableTdFormat>
                                         <TableTdFormat :fieldName="'contractType'"    :value="contract.contractType"  :i18n="true" class="text-align-l"> </TableTdFormat>
                                         <TableTdFormat :fieldName="'notes'"    :value="contract.notes"  class="text-align-l"> </TableTdFormat>

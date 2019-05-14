@@ -5,6 +5,7 @@ const mongoose = require('mongoose');
 const Contract = require('./../models/contract.model').Contract;
 const Supplier = require('./../models/supplier.model').Supplier;
 const AdministrativeUnit = require('./../models/administrativeUnit.model').AdministrativeUnit;
+const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const { validationResult } = require('express-validator/check');
@@ -32,12 +33,9 @@ exports.list = (req, res, next) => {
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
     paginationOptions.lean = false;
 
-    let query = {};
-    
-    //query["field"] = value;
-    
     let qNotDeleted = deletedSchema.qNotDeleted();
-    query = {...query, ...qNotDeleted};
+    let qByOrganization = Organization.qByOrganization(req);
+    let query = {...query, ...qNotDeleted, ...qByOrganization};
 
     Contract
         .paginate(
@@ -82,13 +80,9 @@ exports.list = (req, res, next) => {
 exports.retrieveSuppliers = (req, res, next) => {
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
 
-    //Filter everything by organization
-    let query = {};
-
-    //query["field"] = value;
-
-    //let qNotDeleted = deletedSchema.qNotDeleted();
-    //query = {...query, ...qNotDeleted};
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    let qByOrganization = Organization.qByOrganization(req);
+    let query = {...qNotDeleted, ...qByOrganization};
 
     Supplier
         .find(
@@ -120,13 +114,9 @@ exports.retrieveSuppliers = (req, res, next) => {
 exports.retrieveAdministrativeUnits = (req, res, next) => {
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
 
-    //Filter everything by organization
-    let query = {};
-
-    //query["field"] = value;
-
-    //let qNotDeleted = deletedSchema.qNotDeleted();
-    //query = {...query, ...qNotDeleted};
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    let qByOrganization = Organization.qByOrganization(req);
+    let query = {...qNotDeleted, ...qByOrganization};
 
     AdministrativeUnit
         .find(
@@ -168,9 +158,11 @@ exports.save = (req, res, next) => {
     if (id) {
         //Update
         let qById = {_id: id};
+        let qByOrganization = Organization.qByOrganization(req);
+        let query = {...qById, ...qByOrganization};
 
         Contract
-            .findOne(qById)
+            .findOne(query)
             .exec((err, contract) => {
                 if (err || !contract) {
                     logger.error(err, req, 'contract.controller#save', 'Error al consultar Contract');
@@ -246,6 +238,7 @@ exports.save = (req, res, next) => {
                         //Create
 
                         let contract = new Contract({
+                            organization: Organization.currentOrganizationId(req),
                             amount : req.body.amount,
                             procedureType : req.body.procedureType,
                             category : req.body.category,
@@ -328,8 +321,11 @@ exports.saveUpdatedDocs = (req, res, next) => {
     if(docsUpdated){
         try{
             docsUpdated.forEach((doc) => {
+                let qById = {_id: doc._id};
+                let qByOrganization = Organization.qByOrganization(req);
+                let query = {...qById, ...qByOrganization};
                 Contract
-                    .findOne({_id: doc._id})
+                    .findOne(query)
                     .exec((err, contract) => {
                         contract.supplier = doc.supplier;
                         contract.administrativeUnit = doc.administrativeUnit;
@@ -375,7 +371,8 @@ exports.delete = (req, res, next) => {
     query["_id"] = req.body._id;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    query = {...query, ...qNotDeleted};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...qNotDeleted, ...qByOrganization};
     
     Contract
         .find(query)
