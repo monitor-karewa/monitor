@@ -114,6 +114,7 @@ exports.hasPermission = hasPermission;
  * @param permission {string} clave del permiso
  * @param kind {string} tipo del permiso
  * @returns {function(*, *, *)} middleware para validar el permiso
+ * @deprecated use #checkPermission instead
  */
 exports.validatePermission = (permission, kind) => {
     //permission: 

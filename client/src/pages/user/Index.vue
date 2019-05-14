@@ -8,6 +8,8 @@
 </style>
 
 <script>
+    import i18n from '@/plugins/i18n';
+    
     export default {
         data () {
             return {
@@ -19,6 +21,7 @@
             let hasOrganizationSelected = this.$session.has('currentOrganizationId');
 
             if (headingToViewThatRequiresOrganization && !hasOrganizationSelected) {
+                tShow(i18n.t('accounts.organization.info.redirecting'), 'info');
                 return this.$router.push(`/select-organization?redirectTo=${this.$route.path}`);
             }
 

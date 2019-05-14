@@ -199,7 +199,7 @@ app.use('/api/calculos', securityController.checkLogin, securityController.check
 app.use('/api/suppliers', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.SUPPLIERS), supplierRoutes);
 app.use('/api/users', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.USERS), userRoutes);
 //Note: Organizations can be loaded (/list) without permission, to be used in /select-organization
-app.use('/api/organizations'/*, securityController.checkLogin*//*, securityController.checkPermission(USER_PERMISSIONS_DICT.ORGANIZATIONS)*/, organizationRoutes);
+app.use('/api/organizations', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.ORGANIZATIONS), organizationRoutes);
 //TODO Leave just one
 app.use('/api/administrative-units', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.ADMINISTRATIVE_UNITS), administrativeUnitRoutes);
 app.use('/api/administrativeUnits', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.ADMINISTRATIVE_UNITS), administrativeUnitRoutes);
