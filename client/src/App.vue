@@ -34,7 +34,7 @@
 
 <script>
   import "@/assets/javascripts/vendors.js";
-  
+
   import axios from 'axios';
 
   export default {
@@ -58,11 +58,11 @@
 
               let currentOrganizationName = this.$session.get('currentOrganizationName');
               let currentOrganizationShortName = this.$session.get('currentOrganizationShortName');
-              
+
               this.$store.commit('currentOrganizationName', currentOrganizationName);
               this.$store.commit('currentOrganizationShortName', currentOrganizationShortName);
           }
-          
+
       }
   }
 </script>
