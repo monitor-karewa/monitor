@@ -8,6 +8,7 @@
   },
   "dependencies": {
     "acorn-dynamic-import": "^4.0.0",
+    "agenda": "^2.0.2",
     "async": "^2.6.2",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.18.2",

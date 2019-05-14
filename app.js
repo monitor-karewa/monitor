@@ -55,12 +55,13 @@ const organizationRoutes = require('./app/routes/organization.routes');
 
 const dataLoadRoutes = require('./app/routes/dataLoad.routes');
 const routeLogRoutes = require('./app/routes/routeLog.routes');
-
+const fileRoutes = require('./app/routes/file.routes');
 
 //public api
 const publicOrganizationsRoutes = require('./app/routes/publicOrganization.routes');
 const publicSupplierRoutes = require('./app/routes/publicSupplier.routes');
 const publicContractRoutes = require('./app/routes/publicContract.routes');
+const landingRoutes = require('./app/routes/landing.routes');
 
 // Controllers
 const securityController = require('./app/controllers/security.controller');
@@ -176,6 +177,8 @@ app.use('/public-api/suppliers', publicSupplierRoutes);
 app.use('/public-api/contracts', publicContractRoutes);
 
 app.use('/public-api/route-logs', routeLogRoutes);
+app.use('/public-api/files', fileRoutes);
+app.use('/public-api/landing', landingRoutes);
 
 // ======================
 // Session initialization

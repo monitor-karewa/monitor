@@ -1235,7 +1235,7 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell, 'contractNumber', String, {
                         //TODO: required?
                         // required: true,
-                        unique: true
+                        // unique: true
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_DATE:

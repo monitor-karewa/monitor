@@ -122,7 +122,9 @@ DataLoadSchema.statics.getSummary = function (dataLoad) {
         if (rowInfo.summary.skipRow) {
             skippedContractsCount++;
         } else {
-            newContractsCount++;
+            if (!rowInfo.summary.hasErrors) {
+                newContractsCount++;
+            }
             
             if (rowInfo.supplierName.shouldCreateDoc) {
                 if (!addedSuppliers[rowInfo.supplierName.value]) {
