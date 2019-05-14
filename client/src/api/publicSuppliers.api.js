@@ -14,6 +14,11 @@ export default {
             .then(onSuccess)
             .catch(onError);
     },
+    detailFiltered: (params = {}, onSuccess, onError) => {
+        return axios.post(`${base.baseUrl}/public-api/${namespace}/detail${params.query || ''}`, params)
+            .then(onSuccess)
+            .catch(onError);
+    },
     filteredList: (params = {}, onSuccess, onError) => {
         return axios.post(`${base.baseUrl}/public-api/${namespace}/filtered-list${params.query || ''}`, params)
             .then(onSuccess)

@@ -22,6 +22,12 @@ router.post('/filtered-list', publicSupplierController.list);
 router.get('/detail', publicSupplierController.detail);
 
 /**
+ * GET /detail
+ * Load Supplier detail
+ */
+router.post('/detail', publicSupplierController.detail);
+
+/**
  * GET /download/:format
  * Export/download Suppliers
  */

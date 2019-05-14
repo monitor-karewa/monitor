@@ -27,27 +27,27 @@ export default {
             .catch(onError);
     },
     retrieveAdministrativeUnitsForFilter: (params = {}, onSuccess, onError) => {
-        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/administrative-units`, params)
+        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/administrative-units${params.query || ''}`, params)
             .then(onSuccess)
             .catch(onError);
     },
     retrieveFiscalYears: (params = {}, onSuccess, onError) => {
-        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/fiscal-years`, params)
+        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/fiscal-years${params.query || ''}`, params)
             .then(onSuccess)
             .catch(onError);
     },
     retrieveAdministrationPeriods: (params = {}, onSuccess, onError) => {
-        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/administration-periods`, params)
+        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/administration-periods${params.query || ''}`, params)
             .then(onSuccess)
             .catch(onError);
     },
     retrieveTrimonths: (params = {}, onSuccess, onError) => {
-        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/trimonths`, params)
+        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/trimonths${params.query || ''}`, params)
             .then(onSuccess)
             .catch(onError);
     },
     retrieveProceudureTypes : (params = {}, onSuccess, onError) => {
-        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/procedure-types`, params)
+        return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve/procedure-types${params.query || ''}`, params)
             .then(onSuccess)
             .catch(onError);
     },

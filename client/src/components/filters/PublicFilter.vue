@@ -170,7 +170,10 @@
             storeModule : {
                 type: String,
                 required : true
-            }
+            },
+            additionalParams : {
+                type: Object
+            },
         },
         mounted() {
             this.$nextTick(function () {
@@ -183,10 +186,18 @@
         },
         methods: {
             filter() {
-                if(this.$props.actionName && this.$props.actionName.length){
-                    this.$store.dispatch(`${this.$props.storeModule}/${this.$props.actionName}`);
+
+                let params = this.query;
+
+                if(this.$props.additionalParams){
+                    params = {filters : this.query, ...this.$props.additionalParams}
                 }
-                this.$store.dispatch(`${this.$props.storeModule}/filter`,this.query);
+
+                if(this.$props.actionName && this.$props.actionName.length){
+                    this.$store.dispatch(`${this.$props.storeModule}/${this.$props.actionName}`, params);
+                } else {
+                    this.$store.dispatch(`${this.$props.storeModule}/filter`, params);
+                }
             },
             refreshSelects(){
                     window.$('.selectpicker').selectpicker();

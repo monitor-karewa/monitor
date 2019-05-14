@@ -69,7 +69,6 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
                 orBuilder.push({areaInCharge: new mongoose.Types.ObjectId(req.body.filters.administrativeUnits[i]._id)})
             }
             andBuilder.push({$or: orBuilder});
-            console.log("administrativeUnits", orBuilder);
             orBuilder = [];
         }
 
@@ -268,16 +267,83 @@ exports.list = (req, res, next) => {
 
 exports.detail = (req, res, next) => {
     let supplierId = req.query.id;
-    
+
     if (supplierId) {
         supplierId = mongoose.Types.ObjectId(supplierId);
     }
-    
+
+    let query = {supplier : supplierId};
+
+    let matchContracts = {};
+    let orBuilder = [];
+    let andBuilder = [];
+
+
+    if (req.body && req.body.filters) {
+
+        if (req.body.filters.search && req.body.filters.search.length) {
+            orBuilder.push({contractId: utils.toAccentsRegex(req.body.filters.search)});
+            orBuilder.push({contractNumber: utils.toAccentsRegex(req.body.filters.search)});
+            orBuilder.push({servicesDescription: utils.toAccentsRegex(req.body.filters.search)});
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if (req.body.filters.administrationPeriods && req.body.filters.administrationPeriods.length) {
+            for (let i = 0; i < req.body.filters.administrationPeriods.length; i++) {
+                orBuilder.push({administrationPeriod: req.body.filters.administrationPeriods[i].administrationPeriod})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if (req.body.filters.fiscalYears && req.body.filters.fiscalYears.length) {
+            for (let i = 0; i < req.body.filters.fiscalYears.length; i++) {
+                orBuilder.push({fiscalYear: req.body.filters.fiscalYears[i].fiscalYear})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if (req.body.filters.trimonths && req.body.filters.trimonths.length) {
+            for (let i = 0; i < req.body.filters.trimonths.length; i++) {
+                orBuilder.push({period: req.body.filters.trimonths[i].period})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if (req.body.filters.procedureTypes && req.body.filters.procedureTypes.length) {
+            for (let i = 0; i < req.body.filters.procedureTypes.length; i++) {
+                orBuilder.push({procedureType: req.body.filters.procedureTypes[i]})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if (req.body.filters.administrativeUnits && req.body.filters.administrativeUnits.length) {
+            for (let i = 0; i < req.body.filters.administrativeUnits.length; i++) {
+                orBuilder.push({applicantAdministrativeUnit: new mongoose.Types.ObjectId(req.body.filters.administrativeUnits[i]._id)})
+                orBuilder.push({organizerAdministrativeUnit: new mongoose.Types.ObjectId(req.body.filters.administrativeUnits[i]._id)})
+                orBuilder.push({areaInCharge: new mongoose.Types.ObjectId(req.body.filters.administrativeUnits[i]._id)})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if(andBuilder.length){
+            matchContracts = {$and : andBuilder};
+            query = {
+                "supplier": supplierId,
+                ...matchContracts
+            };
+        }
+    }
+
+
     Contract.aggregate([
         {
-            $match: {
-                "supplier": supplierId 
-            }
+            $match: query
         },
         {
             $project: {
@@ -425,7 +491,7 @@ exports.detail = (req, res, next) => {
         //         informationDate: Date()
         //     }]
         // }
-        console.log('supplierDetails[0]', supplierDetails[0]);
+        // console.log('supplierDetails[0]', supplierDetails[0]);
 
         if (err) {
             return res.json({

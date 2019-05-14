@@ -40,14 +40,24 @@ const actions = {
             commit('SET_SUPPLIERS', {}); 
         })
     },
-    LOAD_SUPPLIER_DETAIL ({commit}, id) {
+    LOAD_SUPPLIER_DETAIL ({commit}, {filters, id}) {
         let query = `?id=${id}`;
-        apiPublicSuppliers.detail({query}, (result) => {
-            commit('SET_SUPPLIER_DETAIL', result.data.data); 
-        }, (err) => {
-            tShow(i18n.t('suppliers.public.load.error'), 'danger');
-            commit('SET_SUPPLIER_DETAIL', {}); 
-        })
+
+        if(filters){
+            apiPublicSuppliers.detailFiltered({query, filters}, (result) => {
+                commit('SET_SUPPLIER_DETAIL_CONTRACTS', result.data.data);
+            }, (err) => {
+                tShow(i18n.t('suppliers.public.load.error'), 'danger');
+                commit('SET_SUPPLIER_DETAIL', {});
+            })
+        } else {
+            apiPublicSuppliers.detail({query}, (result) => {
+                commit('SET_SUPPLIER_DETAIL', result.data.data);
+            }, (err) => {
+                tShow(i18n.t('suppliers.public.load.error'), 'danger');
+                commit('SET_SUPPLIER_DETAIL', {});
+            })
+        }
     },
     changePage ({commit, getters, state, dispatch}, page) {
         let oldPage = state.pagination.page;
@@ -63,32 +73,52 @@ const actions = {
             commit('SET_CONTRACT_DETAIL', {});
         })
     },
-    getAdministrativeUnitsForFilter({commit}){
-        contractsApi.retrieveAdministrativeUnitsForFilter({},
+    getAdministrativeUnitsForFilter({commit}, supplierId){
+        let query;
+        if(supplierId){
+            query = "?supplierId=" + supplierId;
+        }
+        contractsApi.retrieveAdministrativeUnitsForFilter({query: query},
             (result)=>{
                 commit('SET_ADMINISTRATIVE_UNITS_FILTER', result.data);
             })
     },
-    getFiscalYears({commit}){
-        contractsApi.retrieveFiscalYears({},
+    getFiscalYears({commit}, supplierId){
+        let query;
+        if(supplierId){
+            query = "?supplierId=" + supplierId;
+        }
+            contractsApi.retrieveFiscalYears({query : query},
             (result)=>{
                 commit('SET_FISCAL_YEARS', result.data);
             })
     },
-    getTrimonths({commit}){
-        contractsApi.retrieveTrimonths({},
+    getTrimonths({commit}, supplierId){
+        let query;
+        if(supplierId){
+            query = "?supplierId=" + supplierId;
+        }
+        contractsApi.retrieveTrimonths({query : query},
             (result)=>{
                 commit('SET_TRIMONTHS', result.data);
             })
     },
-    getAdministrationPeriods({commit}){
-        contractsApi.retrieveAdministrationPeriods({},
+    getAdministrationPeriods({commit}, supplierId){
+        let query;
+        if(supplierId){
+            query = "?supplierId=" + supplierId;
+        }
+        contractsApi.retrieveAdministrationPeriods({query : query},
             (result)=>{
                 commit('SET_ADMINISTRATION_PERIODS', result.data);
             })
     },
-    getProcedureTypes({commit}){
-        contractsApi.retrieveProceudureTypes({},
+    getProcedureTypes({commit}, supplierId){
+        let query;
+        if(supplierId){
+            query = "?supplierId=" + supplierId;
+        }
+        contractsApi.retrieveProceudureTypes({query : query},
             (result)=>{
                 if(result && result.data && result.data.length){
                     let procedureTypes = result.data.map(function (item) {
@@ -134,6 +164,16 @@ const mutations = {
     },
     SET_SUPPLIER_DETAIL (state, detail) {
         state.detail = detail;
+    },
+    SET_SUPPLIER_DETAIL_CONTRACTS(state, detail) {
+        if(detail){
+            state.detail = detail;
+        } else {
+            state.detail.totals = 0;
+            state.detail.public = [];
+            state.detail.invitation = [];
+            state.detail.noBid = [];
+        }
     },
     SET_ADMINISTRATIVE_UNITS_FILTER (state, administrativeUnits) {
         state.adminstrativeUnitsForFilter = administrativeUnits;
