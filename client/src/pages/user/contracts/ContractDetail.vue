@@ -30,30 +30,34 @@
                     </div>
                     <p class="f-14 c-plain_text principal-font-regular m-b-30">Aquí puedes consultar los documentos de la convocatoria, de aclaración y propuesta de este contrato.</p>
                     <div class="row m-b--30">
-                        <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
-                            <div class="panel-button">
-                                <label>Contrato</label>
-                                <button class="btn-raised xs button-accent"><i class="zmdi zmdi-download"></i>Descargar documento</button>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
-                            <div class="panel-button">
-                                <label>Convocatoria / Invitación</label>
-                                <small>Documento no disponible</small>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
-                            <div class="panel-button">
-                                <label>Fallo de Junta de Aclaraciones</label>
-                                <button class="btn-raised xs button-accent"><i class="zmdi zmdi-download"></i>Descargar documento</button>
-                            </div>
-                        </div>
-                        <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
-                            <div class="panel-button">
-                                <label>Presentación de Propuesta</label>
-                                <button class="btn-raised xs button-accent"><i class="zmdi zmdi-download"></i>Descargar documento</button>
-                            </div>
-                        </div>
+                        <FileWithBackup title="Contrato" :url="contract.contractUrl" :urlBackup="contract.contractUrlBackup"/>
+                        <FileWithBackup title="Convocatoria / Invitación" :url="contract.announcementUrl" :urlBackup="contract.announcementUrlBackup"/>
+                        <FileWithBackup title="Fallo de Junta de Aclaraciones" :url="contract.clarificationMeetingJudgmentUrl" :urlBackup="contract.clarificationMeetingJudgmentUrlBackup"/>
+                        <FileWithBackup title="Presentación de Propuesta" :url="contract.presentationProposalsDocUrl" :urlBackup="contract.presentationProposalsDocUrlBackup"/>
+                        <!--<div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">-->
+                            <!--<div class="panel-button">-->
+                                <!--<label>Contrato</label>-->
+                                <!--<button class="btn-raised xs button-accent"><i class="zmdi zmdi-download"></i>Descargar documento</button>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">-->
+                            <!--<div class="panel-button">-->
+                                <!--<label>Convocatoria / Invitación</label>-->
+                                <!--<small>Documento no disponible</small>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">-->
+                            <!--<div class="panel-button">-->
+                                <!--<label>Fallo de Junta de Aclaraciones</label>-->
+                                <!--<button class="btn-raised xs button-accent"><i class="zmdi zmdi-download"></i>Descargar documento</button>-->
+                            <!--</div>-->
+                        <!--</div>-->
+                        <!--<div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">-->
+                            <!--<div class="panel-button">-->
+                                <!--<label>Presentación de Propuesta</label>-->
+                                <!--<button class="btn-raised xs button-accent"><i class="zmdi zmdi-download"></i>Descargar documento</button>-->
+                            <!--</div>-->
+                        <!--</div>-->
                     </div>
                 </div>
                 <!-- CONTRATO DETAIL INFO -->
@@ -100,6 +104,7 @@
 
 <script>
     import MoreInfo from '@/components/general/MoreInfo';
+    import FileWithBackup from '@/components/files/FileWithBackup';
     const storeModule = "publicContracts";
     import moment from 'moment';
     import {mapState,vm} from 'vuex';
@@ -111,7 +116,8 @@
         },
         name: "SupplierContract",
         components: {
-            MoreInfo
+            MoreInfo,
+            FileWithBackup
         },
         beforeMount(){
             let contractId = this.$route.params.id;

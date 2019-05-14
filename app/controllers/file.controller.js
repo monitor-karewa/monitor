@@ -2,7 +2,6 @@ const mongoose = require('mongoose');
 const logger = require('./../components/logger').instance;
 
 exports.download = (req, res, next) => {
-    console.log('req.params.id', req.params.id);
     File.findOne({_id: mongoose.Types.ObjectId(req.params.id)})
         .lean()
         .exec((err, file) => {
@@ -25,6 +24,7 @@ exports.download = (req, res, next) => {
                 res.writeHead(200, {
                     'Content-Type': file.mimetype,
                     'Content-Length': file.size,
+                    // 'Content-disposition': 'attachment; filename=' + 'filename.png',
                     "Pragma": "public",
                     "Cache-Control": "max-age=8640000",
                     "Expires": new Date(Date.now() + 8640000000).toUTCString(),
