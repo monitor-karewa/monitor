@@ -17,6 +17,7 @@ const logger = require('./../components/logger').instance;
 exports.upload = (req, res, next) => {
 
     let currentOrganizationId = Organization.currentOrganizationId(req);
+
     let currentUserId = req.user._id;
     
     //Optional id, received when reuploading corrections to the data previously uploaded
@@ -62,6 +63,7 @@ exports.upload = (req, res, next) => {
                         // console.log('dataLoad', dataLoad);
                         
                         //Assign filename
+                        dataLoad.organization = currentOrganizationId,
                         dataLoad.filename = req.file.originalname;
                         //Assign current user
                         dataLoad.uploadedBy = currentUserId;

@@ -141,7 +141,7 @@ exports.save = (req, res, next) => {
                 });
             }
 
-            downloadFile(savedResource.url, savedResource._id+'.pdf');
+            // downloadFile(savedResource.url, savedResource._id+'.pdf');
 
             return res.json({
                 "error": false,
