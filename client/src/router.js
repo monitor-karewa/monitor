@@ -17,7 +17,8 @@ import Contracts from '@/pages/user/contracts/Contracts';
 import ContractDetail from '@/pages/user/contracts/ContractDetail';
 import Comparations from '@/pages/user/comparations/Comparations';
 import DetailComparations from '@/pages/user/comparations/DetailComparations';
-import Calculations from '@/pages/user/calculations/Calculations';
+// import Calculations from '@/pages/user/calculations/Calculations';
+import CorruptionIndex from '@/pages/user/calculations/CorruptionIndex';
 import Resources from '@/pages/user/resources/Resources';
 import Privacy from '@/pages/user/Privacy';
 import TheAbout from '@/pages/TheAbout';
@@ -114,10 +115,15 @@ let router = new Router({
                     name: 'detailComparations',
                     component: DetailComparations
                 },
+                // {
+                //     path: 'calculations',
+                //     name: 'Cálculos',
+                //     component: Calculations
+                // },
                 {
-                    path: 'calculations',
-                    name: 'Cálculos',
-                    component: Calculations
+                    path: 'calculations/corruption-index',
+                    name: 'CorruptionIndex',
+                    component: CorruptionIndex
                 },
                 {
                     path: 'resources',
