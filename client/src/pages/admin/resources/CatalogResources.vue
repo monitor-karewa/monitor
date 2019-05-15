@@ -119,9 +119,9 @@
                 tableHeaders : ['título','clasificación','url','general.created-at'],
                 tableColumns: [
                     {label: 'resources.title', visible : true, 'field':'title'},
-                    {label: 'resources.classification', visible : true, 'field':'classification'},
+                    {label: 'resources.classification', visible : true, 'field':'classification', 'type':'i18n'},
                     {label: 'resources.url', visible : true, 'field':'url'},
-                    {label: 'general.created-at', visible : true, 'field':'created_at', 'type':'Date'}
+                    {label: 'general.created-at', visible : true, 'field':'createdAt', 'type':'Date'}
                 ],
                 entry:{
                     title:"",

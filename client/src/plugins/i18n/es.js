@@ -432,6 +432,9 @@ export default {
     "resources.resource-type.marco-legal":"Marco Legal",
     "resources.resource-type.articulo":"Artículo",
     "resources.resource-type.notas":"Nota",
+    "LEGAL_FRAMEWORK":"Marco Legal",
+    "ARTICLE":"Artículo",
+    "NOTES":"Nota",
     "resources.resource-type.label":"Clasificación",
 
 

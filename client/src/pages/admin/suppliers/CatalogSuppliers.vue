@@ -109,7 +109,7 @@
                     { label: 'suppliers.name', field:'name', visible : true},
                     { label: 'suppliers.rfc', field:'rfc', visible : true},
                     { label: 'suppliers.notes' ,field:'notes', visible : true},
-                    { label: 'general.created-at', field:'created_at', type:'Date', visible : true}
+                    { label: 'general.created-at', field:'createdAt', type:'Date', visible : true}
                 ],
                 modalProperties:{
                     title:"general.modal-editable-table.title",

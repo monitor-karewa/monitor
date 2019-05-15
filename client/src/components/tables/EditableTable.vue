@@ -195,9 +195,18 @@
                         tempObject = tempObject[fieldPath[i]]
                     }
                 }
+                console.log("column.type");
+                console.log(column.type);
+                console.log("tempObject");
+                console.log(tempObject);
+                console.log("tempObject && dateFieldNameRegex.test(column.type)");
+                console.log(tempObject && dateFieldNameRegex.test(column.type));
                 if(tempObject && dateFieldNameRegex.test(column.type)){
+                    console.log("tempObject");
+                    console.log(tempObject);
                     return this.formatDate(tempObject);
                 }
+
                 return tempObject;
             },
             formatDate(date){
