@@ -5,7 +5,7 @@
 
                 <!--Titulo-->
                 <div class="col-12 p-0 m-t-20 m-b-20 d-flex">
-                    <router-link to="/" class="btn-outline text-unset">
+                    <router-link to="/calculations" class="btn-outline text-unset">
                         <i class="zmdi zmdi-long-arrow-left"></i>Ir a Índice de corrupción
                     </router-link>
                     <router-link to="/resources" class="btn-outline text-unset m-auto-left">
@@ -22,8 +22,8 @@
                             <div class="side-right">
                                 <a href="" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
                                         class="zmdi zmdi-share"></i> Compartir</a>
-                                <a href="" class="btn-raised button-accent text-capi m-l-10" tabindex=""><i
-                                        class="zmdi zmdi-download"></i> Descargar comparación</a>
+                                <!--<a href="" class="btn-raised button-accent text-capi m-l-10" tabindex=""><i-->
+                                        <!--class="zmdi zmdi-download"></i> Descargar comparación</a>-->
                             </div>
                         </div>
 
@@ -36,7 +36,7 @@
                         <br/>
 
                         <div class="row">
-                            <div class="col-12 col-md-4 col-lg-3" v-for="monitor in monitores">
+                            <div class="col-12 col-md-4 col-lg-3" v-for="organization in filteredOrganizations">
                                 <div class="card-compare">
                                     <img class="img-fluid" src="@/assets/images/Cards/bgm-karewa.png" alt="Karewa"/>
                                     <div class="logo-full">
@@ -44,11 +44,11 @@
                                              alt="Logo"/>
                                         <div>
                                             <small>Monitor</small>
-                                            <label :style="{color:monitor.color}">{{monitor.abrev}}</label>
+                                            <label :style="{color: organization.color}">{{organization.shortName}}</label>
                                         </div>
                                     </div>
-                                    <small>Monitor Karewa {{monitor.name}}</small>
-                                    <router-link to="/detailComparations" class="btn-stroke xs button-primary">
+                                    <small>{{organization.name}}</small>
+                                    <router-link :to="'/comparations/' + organization._id" class="btn-stroke xs button-primary">
                                         Comparar
                                     </router-link>
                                 </div>
@@ -76,7 +76,11 @@
 
 <script>
     import MoreInfo from '@/components/general/MoreInfo';
+    
+    import {mapState} from 'vuex';
 
+    const organizationsStoreModule = 'publicOrganizations';
+    
     export default {
 
         data() {
@@ -147,6 +151,23 @@
         },
         components: {
             MoreInfo
+        },
+        computed: {
+            ...mapState({
+                organizations: state => state[organizationsStoreModule].organizations,
+                currentOrganization: state => state.currentOrganization
+            }),
+            filteredOrganizations() {
+                if (!this.organizations) {
+                    return [];
+                }
+                return this.organizations.filter((organization) => {
+                    return organization._id.toString() !== this.currentOrganization._id.toString();
+                });
+            }
+        },
+        mounted() {
+            this.$store.dispatch(`${organizationsStoreModule}/LOAD_ORGANIZATIONS`);
         }
     }
 </script>

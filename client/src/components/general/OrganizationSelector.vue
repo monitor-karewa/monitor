@@ -19,7 +19,7 @@
                                      alt="Logo"/>
                                 <div>
                                     <small>Monitor</small>
-                                    <label>{{organization.shortName}}</label>
+                                    <label :style="{color: organization.color}">{{organization.shortName}}</label>
                                 </div>
                             </div>
                             <small>{{organization.name}}</small>
@@ -69,13 +69,16 @@
         },
         methods:{
             selectOrganization(organization){
-                this.$session.set('currentOrganizationId', organization._id);
+                this.$session.set('currentOrganizationId', organization._id.toString());
                 this.$session.set('currentOrganizationName', organization.name);
                 this.$session.set('currentOrganizationShortName', organization.shortName);
+                this.$session.set('currentOrganizationColor', organization.color);
                 axios.defaults.headers.common['X-CURRENT-ORGANIZATION-ID'] = organization._id;
 
+                this.$store.commit('currentOrganizationId', organization._id.toString());
                 this.$store.commit('currentOrganizationName', organization.name);
                 this.$store.commit('currentOrganizationShortName', organization.shortName);
+                this.$store.commit('currentOrganizationColor', organization.color);
 
                 let redirectTo = this.$router.currentRoute.query.redirectTo || this.defaultRedirectTo;
 

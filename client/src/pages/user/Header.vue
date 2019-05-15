@@ -7,7 +7,7 @@
                         <img class="img-fluid" src="@/assets/images/Logos/logo-karewa-xs.png" alt="Logo"/>
                         <div>
                             <small>Monitor</small>
-                            <label class="f-14">{{currentOrganizationShortName}}</label>
+                            <label class="f-14" :style="{color: currentOrganization.color}">{{currentOrganization.shortName}}</label>
                         </div>
                     </div>
                     <!--<img class="img-fluid" src="@/assets/images/Logos/logo-karewa.png" alt="Logo" />-->
@@ -65,12 +65,12 @@
                         to: '/contracts'
                     },
                     {
-                        name: 'Comparar',
-                        to: '/comparations'
-                    },
-                    {
                         name: 'Cálculos',
                         to: '/calculations'
+                    },
+                    {
+                        name: 'Comparar',
+                        to: '/comparations'
                     },
                     {
                         name: 'Recursos',
@@ -85,8 +85,7 @@
         },
         computed: {
             ...mapState({
-                currentOrganizationName: state => state.currentOrganizationName,
-                currentOrganizationShortName: state => state.currentOrganizationShortName
+                currentOrganization: state => state.currentOrganization,
             })
         },
         mounted() {

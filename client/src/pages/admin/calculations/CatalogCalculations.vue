@@ -433,7 +433,7 @@
         },
         created() {
             bus.$on(storeModule + DELETE_SUCCESS, (data) => {
-                tShow("El calculo fue eliminado correctamente", 'info');
+                tShow("El cálculo fue eliminado correctamente", 'info');
             }),
                 bus.$on(storeModule + DOC_CREATED, () => {
                 this.entry.name = "";
@@ -443,7 +443,7 @@
                 this.entry.notes= "";
                 this.entry.abbreviation= "";
                 this.$v.$reset();
-                tShow("El proveedor fue creado correctamente", 'info');
+                tShow("El cálculo fue creado correctamente", 'info');
             });
             bus.$on(storeModule+DOC_START_CREATE, ()=>{
                 this.clearEntry();

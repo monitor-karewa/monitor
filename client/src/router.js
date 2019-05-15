@@ -110,7 +110,7 @@ let router = new Router({
                     component: Comparations
                 },
                 {
-                    path: 'detailComparations',
+                    path: 'comparations/:id',
                     name: 'detailComparations',
                     component: DetailComparations
                 },

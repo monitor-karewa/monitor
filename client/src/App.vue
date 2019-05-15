@@ -58,9 +58,12 @@
 
               let currentOrganizationName = this.$session.get('currentOrganizationName');
               let currentOrganizationShortName = this.$session.get('currentOrganizationShortName');
+              let currentOrganizationColor = this.$session.get('currentOrganizationColor');
               
+              this.$store.commit('currentOrganizationId', currentOrganizationId);
               this.$store.commit('currentOrganizationName', currentOrganizationName);
               this.$store.commit('currentOrganizationShortName', currentOrganizationShortName);
+              this.$store.commit('currentOrganizationColor', currentOrganizationColor);
           }
           
       }

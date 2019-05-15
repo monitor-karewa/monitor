@@ -50,11 +50,12 @@ exports.loadUserSession = (req, res, next) => {
         token = token.slice(tokenPrefix.length, token.length);
     }
 
-    if (token) {
+    if (token && token !== 'undefined') {
         jwt.verify(token, config.session.options.secret, function(err, decoded) {
 
-            if (err) {
+            if (err || !decoded) {
                 console.log('Error trying to verify jwt', err);
+                return next();
             }
 
             User.findOne({_id: decoded.userId, active: true}).exec((err, user) => {
@@ -74,13 +75,8 @@ exports.loadUserSession = (req, res, next) => {
             });
         });
     } else {
-        //403 Not allowed
-        // let error = new Error('Acceso denegado');
-        // error.status = 403;
-        // return next(error);
-
+        //Continue to next middleware without session
         return next();
-        // return next();
     }
 
 };

@@ -21,6 +21,11 @@ organizationSchema = mongoose.Schema({
         min: 2,
         max: 12
     },
+    color: {
+        type: String,
+        required: true,
+        default: "#2cbcb6"
+    },
     deleted: require("./schemas/deleted.schema").Deleted
 });
 
