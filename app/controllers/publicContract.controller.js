@@ -2,10 +2,10 @@ const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 const mongoose = require('mongoose');
 
+const {Organization} = require('./../models/organization.model');
 const Contract = require('./../models/contract.model').Contract;
 const Supplier = require('./../models/supplier.model').Supplier;
 const AdministrativeUnit = require('./../models/administrativeUnit.model').AdministrativeUnit;
-const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const utils = require('./../components/utils.js');
@@ -32,9 +32,6 @@ exports.index = (req, res, next) => {
  * @param next
  */
 exports.list = (req, res, next) => {
-
-
-
 
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
     paginationOptions.lean = false;
@@ -72,7 +69,7 @@ exports.list = (req, res, next) => {
 
         if (req.body.filters.trimonths && req.body.filters.trimonths.length) {
             for (let i = 0; i < req.body.filters.trimonths.length; i++) {
-                orBuilder.push({period: req.body.filters.trimonths[i].trimonth})
+                orBuilder.push({period: req.body.filters.trimonths[i].period})
             }
             andBuilder.push({$or: orBuilder});
             orBuilder = [];
@@ -104,7 +101,7 @@ exports.list = (req, res, next) => {
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     let qByOrganization = Organization.qByOrganization(req);
-    query = {...query, ...qNotDeleted, ...qByOrganization};
+    query = {...query, ...deletedSchema.qNotDeleted(), ...qByOrganization};
 
     Contract
         .paginate(
@@ -160,7 +157,7 @@ exports.detail = (req, res, next) => {
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     let qByOrganization = Organization.qByOrganization(req);
-    query = {...query, ...qNotDeleted, ...qByOrganization};
+    query = {...query, ...deletedSchema.qNotDeleted(), ...qByOrganization};
 
     Contract
         .findOne(
@@ -198,7 +195,7 @@ exports.getTotals = (req, res, next) => {
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     let qByOrganization = Organization.qByOrganization(req);
-    query = {...query, ...qNotDeleted, ...qByOrganization};
+    query = {...query, ...deletedSchema.qNotDeleted(), ...qByOrganization};
     Contract.aggregate([
             {
                 $match : query
@@ -266,14 +263,10 @@ exports.getTotals = (req, res, next) => {
 exports.retrieveSuppliers = (req, res, next) => {
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
 
-    //Filter everything by organization
-    //Filter all the things by the current things
     let query = {};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...deletedSchema.qNotDeleted(), ...qByOrganization};
 
-    //query["field"] = value;
-
-    //let qNotDeleted = deletedSchema.qNotDeleted();
-    //query = {...query, ...qNotDeleted};
 
     Supplier
         .find(
@@ -303,15 +296,22 @@ exports.retrieveSuppliers = (req, res, next) => {
  * Queries the possible suppliers fot this contract
  */
 exports.retrieveAdministrativeUnits = (req, res, next) => {
-    //Filter everything by organization
     let query = {};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...deletedSchema.qNotDeleted(), ...qByOrganization};
 
     //query["field"] = value;
 
     //let qNotDeleted = deletedSchema.qNotDeleted();
     //query = {...query, ...qNotDeleted};
+    if(req.query && req.query.supplierId){
+        query.supplier = new mongoose.Types.ObjectId(req.query.supplierId);
+    }
 
     Contract.aggregate([
+        {
+            $match: query
+        },
         {
             $group : {
                 _id : "AdministrativeUnit",
@@ -357,13 +357,21 @@ exports.retrieveAdministrativeUnits = (req, res, next) => {
 exports.retrieveTrimonths = (req, res, next) => {
     //Filter everything by organization
     let query = {};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...deletedSchema.qNotDeleted(), ...qByOrganization};
 
     //query["field"] = value;
 
     //let qNotDeleted = deletedSchema.qNotDeleted();
     //query = {...query, ...qNotDeleted};
+    if(req.query && req.query.supplierId){
+        query.supplier = new mongoose.Types.ObjectId(req.query.supplierId);
+    }
 
     Contract.aggregate([
+        {
+            $match: query
+        },
         {
             $group : {
                 _id:"$period",
@@ -382,6 +390,7 @@ exports.retrieveTrimonths = (req, res, next) => {
 
 
 
+
 /**
  * Gets the fiscal years of the current contracts
  */
@@ -390,6 +399,12 @@ exports.retrieveFiscalYears = (req, res, next) => {
 
     //Filter everything by organization
     let query = {};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...deletedSchema.qNotDeleted(), ...qByOrganization};
+
+    if(req.query && req.query.supplierId){
+        query.supplier = new mongoose.Types.ObjectId(req.query.supplierId);
+    }
 
     //query["field"] = value;
 
@@ -398,37 +413,8 @@ exports.retrieveFiscalYears = (req, res, next) => {
 
     Contract.aggregate([
         {
-            $group : {
-                _id:"$fiscalYear",
-                fiscalYear : {$first : "$fiscalYear"}
-            }
-        }
-    ]).exec(function (err, result) {
-            return res.json(
-                result
-            )
+            $match: query
         },
-        function (error) {
-            console.log("error", error);
-        })
-};
-
-
-/**
- * Gets the fiscal years of the current contracts
- */
-exports.retrieveFiscalYears = (req, res, next) => {
-    let paginationOptions = pagination.getDefaultPaginationOptions(req);
-
-    //Filter everything by organization
-    let query = {};
-
-    //query["field"] = value;
-
-    //let qNotDeleted = deletedSchema.qNotDeleted();
-    //query = {...query, ...qNotDeleted};
-
-    Contract.aggregate([
         {
             $group : {
                 _id:"$fiscalYear",
@@ -453,13 +439,21 @@ exports.retrieveAdministrationPeriods = (req, res, next) => {
 
     //Filter everything by organization
     let query = {};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...deletedSchema.qNotDeleted(), ...qByOrganization};
 
     //query["field"] = value;
 
     //let qNotDeleted = deletedSchema.qNotDeleted();
     //query = {...query, ...qNotDeleted};
+    if(req.query && req.query.supplierId){
+        query.supplier = new mongoose.Types.ObjectId(req.query.supplierId);
+    }
 
     Contract.aggregate([
+        {
+            $match: query
+        },
         {
             $group : {
                 _id:"administrationPeriod",
@@ -484,7 +478,12 @@ exports.retrieveProceudureTypes = (req, res, next) => {
 
     //Filter everything by organization
     let query = {};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...deletedSchema.qNotDeleted(), ...qByOrganization};
 
+    if(req.query && req.query.supplierId){
+        query.supplier = new mongoose.Types.ObjectId(req.query.supplierId);
+    }
     //query["field"] = value;
 
     //let qNotDeleted = deletedSchema.qNotDeleted();

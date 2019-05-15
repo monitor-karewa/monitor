@@ -8,11 +8,24 @@ var publicSupplierController = require('./../controllers/publicSupplier.controll
  */
 router.get('/list', publicSupplierController.list);
 
+
+/**
+ * GET /list
+ * Load Suppliers info
+ */
+router.post('/filtered-list', publicSupplierController.list);
+
 /**
  * GET /detail
  * Load Supplier detail
  */
 router.get('/detail', publicSupplierController.detail);
+
+/**
+ * GET /detail
+ * Load Supplier detail
+ */
+router.post('/detail', publicSupplierController.detail);
 
 /**
  * GET /download/:format
