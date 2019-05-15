@@ -89,6 +89,68 @@
                 </div>
 
                 <div class="floating-text-form">
+                    <h1>Activar escala al calculo</h1>
+                </div>
+                <div class="form-group fg-float dropdown-inside m-t-10 p-t-0">
+                    <div class="fg-line basic-input">
+                        <div class="toggle-switch col-12">
+                            <div class="switch-border"></div>
+                            <input id="ts1" type="checkbox" hidden="hidden" v-model="entry.hasPercentScale" @change="assignPercentScale($event)">
+                            <label for="ts1" class="ts-helper"></label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group fg-float subtitle p-t-0" v-if="entry.hasPercentScale">
+                    <div class="row m-b-30">
+                        <div class="col-md-6">
+                            <div class="floating-text-form">
+                                <h1>Escala de porcentajes</h1>
+                                <p>Establece la escala para determinar la calificación del indicador</p>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="col-12 col-md-12 m-b-30">
+                                <a href="" class="btn-circle-icon" @click.prevent="addRowToScale()"><i class="zmdi zmdi-plus"></i></a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row col-md-12 col-lg-12" v-for="(scale, index ) in entry.scale">
+                        <div class="fg-line basic-input col-md-2">
+                            <input type="number" class="form-control fg-input" step="0.01" placeholder="0.0%"
+                                   v-model="scale.min">
+                            <label class="fg-label m-t-10" v-if="index === 0">
+                                <small></small>
+                                <strong>Min(%)</strong>
+                            </label>
+                        </div>
+                        <span class="w-10 m-r-10"><strong class="c-accent f-12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</strong></span>
+                        <div class="fg-line basic-input col-md-2">
+                            <input type="number" class="form-control fg-input" step="0.01" placeholder="0.0%"
+                                   v-model="scale.max">
+                            <label class="fg-label m-t-10" v-if="index === 0">
+                                <small></small>
+                                <strong>Max(%)</strong>
+                            </label>
+                        </div>
+                        <span class="w-10 m-r-10"><strong class="c-accent f-12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=</strong></span>
+                        <div class="fg-line basic-input col-md-2">
+                            <input type="number" class="form-control fg-input" step="0.01" placeholder="0.0"
+                                   v-model="scale.value">
+                            <label class="fg-label m-t-10" v-if="index === 0">
+                                <small></small>
+                                <strong>Calificación</strong>
+                            </label>
+                        </div>
+                        <div class="col-md-2">
+                            <a href="" class="btn-circle-icon" @click.prevent="removeRowFromScale(index)"><i class="zmdi zmdi-minus"></i></a>
+                        </div>
+
+                    </div>
+                </div>
+
+
+
+                <div class="floating-text-form">
                     <h1>Fórmula</h1>
                     <p>Formula para obtener el resultado del cálculo</p>
                 </div>
@@ -177,6 +239,7 @@
                     </div>
                 </div>
 
+
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input" placeholder="Introduce las notas adicionales"
@@ -191,6 +254,9 @@
             </div>
 
             <div class="modal-footer aditional-text" slot="footer">
+                <div v-if="formErrors && formErrors.length">
+                    <p class="c-error" v-for="error in formErrors">{{error.message}}</p>
+                </div>
                 <div class="total-footer">
                     <span v-if="formulaValidated && !formulaValidation.error" > RESULTADO: <strong>{{displayResult(formulaValidation.results.value)}}</strong></span>
                     <p>La vista previa del resultado del cálculo solo está disponible en cálculos
@@ -265,7 +331,14 @@
                     },
                     displayForm : "NORMAL",
                     notes: "",
+                    hasPercentScale:false,
+                    scale:[]
                 },
+                defaultPercentScale:[
+                    { min:0, max:33, value:2.67 },
+                    { min:34, max:66, value:5.33},
+                    { min:67, max:100, value:8 },
+                ],
                 errors : {
                     flag : false,
                     invalidVariables : []
@@ -427,22 +500,47 @@
                 this.$v.$reset();
             },
             validateFormula(){
-                this.$store.dispatch(`${storeModule}/validateFormula`, {formula: this.entry.formula, abbreviation : this.entry.abbreviation});
+                this.$store.dispatch(`${storeModule}/validateFormula`, {formula: this.entry.formula, abbreviation : this.entry.abbreviation, hasPercentScale:this.entry.hasPercentScale, scale:this.entry.scale});
+            },
+            assignPercentScale(){
+                if(this.entry.hasPercentScale){
+                    this.entry.scale = this.entry.scale && this.entry.scale.length ? this.entry.scale :this.defaultPercentScale;
+                } else {
+                    this.entry.scale = [];
+                }
+            },
+            addRowToScale(){
+                this.entry.scale.push({min:0,max:0, value:0});
+            },
+            removeRowFromScale(index){
+                if(this.entry.scale && this.entry.scale.length){
+                    this.entry.scale.splice(index, 1);
+                }
             }
 
         },
         created() {
+            bus.$on(storeModule + DOC_UPDATED, () => {
+                $('#ModalEntry').modal('hide');
+                this.$store.dispatch (`${storeModule}/clearFormErrors`);
+                this.clearEntry();
+            });
             bus.$on(storeModule + DELETE_SUCCESS, (data) => {
                 tShow("El cálculo fue eliminado correctamente", 'info');
             }),
-                bus.$on(storeModule + DOC_CREATED, () => {
+            bus.$on(storeModule + DOC_CREATED, () => {
                 this.entry.name = "";
                 this.entry.description= "";
                 this.entry.type= "";
                 this.entry.enabled= "";
                 this.entry.notes= "";
                 this.entry.abbreviation= "";
+                this.entry.hasPercentScale = false;
+                this.entry.scale = [];
+                $('#ModalEntry').modal('hide');
+                this.$store.dispatch (`${storeModule}/clearFormErrors`);
                 this.$v.$reset();
+
                 tShow("El cálculo fue creado correctamente", 'info');
             });
             bus.$on(storeModule+DOC_START_CREATE, ()=>{
@@ -465,11 +563,10 @@
                 tempEntry.displayForm = entry.displayForm;
                 tempEntry.notes = entry.notes;
                 tempEntry.abbreviation = entry.abbreviation;
+                tempEntry.hasPercentScale = entry.hasPercentScale;
+                tempEntry.scale = entry.scale;
 
                 this.entry = {...tempEntry};
-            });
-            bus.$on(storeModule+DOC_UPDATED, ()=>{
-                this.clearEntry();
             });
         },
         mounted() {
@@ -511,10 +608,7 @@
                 formulaValidated: state => state[storeModule].formulaValidated
             }),
             ...mapGetters(
-                    storeModule , ['variablesObj']
-            ),
-            ...mapGetters(
-                    storeModule , ['calculationsForFormula']
+                    storeModule , ['variablesObj','calculationsForFormula','formErrors']
             )
         },
         beforeMount(){

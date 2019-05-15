@@ -234,7 +234,9 @@ exports.validateFormula = (req, res, next) => {
 
     let calculation = {
         formula: req.body.formula,
-        abbreviation : abbreviation
+        abbreviation : abbreviation,
+        hasPercentScale : req.body.hasPercentScale,
+        scale : req.body.scale || []
     };
 
     //restarts value for validating tree
@@ -342,10 +344,13 @@ exports.save = (req, res, next) => {
                 calculation.notes = req.body.notes;
                 //  Formula stuff
                 calculation.formula = req.body.formula;
+                calculation.scale = req.body.scale;
+                calculation.hasPercentScale = req.body.hasPercentScale;
                 let calculationObjectIds = [];
                 for (let i = 0; i < calculation.formula.calculations.length; i++) {
                     calculationObjectIds.push(mongoose.Types.ObjectId(calculation.formula.calculations[i]._id));
                 }
+
                 let formulaValidation = validateFormula(cache, calculation.formula);
 
                     if(formulaValidation.error){
@@ -353,15 +358,47 @@ exports.save = (req, res, next) => {
                     }
                     calculation.save((err, savedCalculation) => {
                         if (err) {
+                            let errors = [];
+                            if(err.code == 11000){
+                                errors.push({message:"El campo Número de contrato debe ser único, se encontro otro registro con el mismo valor."})
+                            }
+                            for(let item in err.errors){
+                                errors.push(err.errors[item]);
+                            }
                             logger.error(err, req, 'calculation.controller#save', 'Error al guardar Calculation');
                             return res.json({
-                                errors: true,
-                                message: req.__('general.error.save')
+                                error: true,
+                                message: req.__('general.error.save'),
+                                errors:errors
                             });
+                        }
+                        if(calculation.hasPercentScale) {
+                            calculation.scale = calculation.scale.sort(function(a, b) {
+                                if(a.max > b.max){
+                                    return 1;
+                                }
+                                if(a.max < b.max){
+                                    return -1;
+                                }
+                                return 0;
+                            });
+                            for(let i = 0; i < calculation.scale.length; i++){
+                                let maxValue = calculation.scale[i].max;
+                                let nextIndex = i + 1;
+                                if( nextIndex < calculation.scale.length){
+                                    if(maxValue > calculation.scale[nextIndex].max || maxValue > calculation.scale[nextIndex].min){
+                                        return res.json({
+                                            error:true,
+                                            message:req.__('general.error.save'),
+                                            errors:[{ message: "Algunos de los rangos en la escala se traslapan, favor de verificarlo" }]
+                                        })
+                                    }
+                                }
+                            }
                         }
 
                         return res.json({
-                            errors: false,
+                            error: false,
                             message: req.__('general.success.updated'),
                             data: savedCalculation
                         });
@@ -380,7 +417,9 @@ exports.save = (req, res, next) => {
             enabled : req.body.enabled,
             displayForm : req.body.displayForm,
             abbreviation : req.body.abbreviation,
-            notes : req.body.notes
+            notes : req.body.notes,
+            scale : req.body.scale,
+            hasPercentScale : req.body.hasPercentScale,
         });
 
 
@@ -397,11 +436,43 @@ exports.save = (req, res, next) => {
 
         calculation.save((err, savedCalculation) => {
             if (err) {
+                let errors = [];
+                if(err.code == 11000){
+                    errors.push({message:"El campo Número de contrato debe ser único, se encontro otro registro con el mismo valor."})
+                }
+                for(let item in err.errors){
+                    errors.push(err.errors[item]);
+                }
                 logger.error(err, req, 'calculation.controller#save', 'Error al guardar Calculation');
                 return res.json({
                     "error": true,
-                    "message": req.__('general.error.save')
+                    "message": req.__('general.error.save'),
+                    "errors":errors
                 });
+            }
+            if(calculation.hasPercentScale) {
+                calculation.scale = calculation.scale.sort(function(a, b) {
+                    if(a.max > b.max){
+                        return 1;
+                    }
+                    if(a.max < b.max){
+                        return -1;
+                    }
+                    return 0;
+                });
+                for(let i = 0; i < calculation.scale.length; i++){
+                    let maxValue = calculation.scale[i].max;
+                    let nextIndex = i + 1;
+                    if( nextIndex < calculation.scale.length){
+                        if(maxValue > calculation.scale[nextIndex].max || maxValue > calculation.scale[nextIndex].min){
+                            return res.json({
+                                error:true,
+                                message:req.__('general.error.save'),
+                                errors:[{ message: "Algunos de los rangos en la escala se traslapan, favor de verificarlo" }]
+                            })
+                        }
+                    }
+                }
             }
 
             return res.json({
@@ -464,9 +535,23 @@ let calculateAndValidateFormula = function(cache, calculation, callback){
 
 exports.calculateAndValidateFormula = calculateAndValidateFormula;
 
+let convertResultAccordingToScale = function(calculation, result = 0){
+    let convertedResult = 0;
+    if (calculation.hasPercentScale) {
+        calculation.scale.forEach((item) => {
+            if (item.min <= result  && item.max >= result) {
+                convertedResult = item.value;
+            }
+        });
+        result = convertedResult;
+    }
+
+    return result
+};
+
 let  processCalculation = function(cache, calculation, mainCallback){
     let {done, calls, i, resultsMap} = cache;
-    
+
     // console.log("calculation", calculation);
     if(resultsMap[calculation.abbreviation] != undefined){
         let result = {
@@ -536,6 +621,7 @@ let  processCalculation = function(cache, calculation, mainCallback){
                                 });
 
                                 finalValue = math.eval(calculation.formula.expression);
+                                finalValue = convertResultAccordingToScale(calculation, finalValue);
 
                                 let result = {
                                     abbreviation: calculation.abbreviation,
@@ -551,6 +637,7 @@ let  processCalculation = function(cache, calculation, mainCallback){
             } else {
                 try {
                     finalValue = math.eval(calculation.formula.expression);
+                    finalValue = convertResultAccordingToScale(calculation, finalValue);
                     let result = {
                         abbreviation: calculation.abbreviation,
                         value : finalValue

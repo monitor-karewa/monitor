@@ -9,54 +9,23 @@
                 </div>
 
                 <div class="row">
-                    <div class="col-12 col-md-8 di-flex">
+                    <div class="col-12 col-sm-12 col-md-8 d-grid">
                         <div class="card w-100">
                             <div class="floating-title-panel small">
                                 <h1> Millones de pesos por trimestre </h1>
                             </div>
-
-                            <img src="@/assets/images/Illustrations/dummy-graph-one.png" style="object-fit: contain;">
-
+                            <MillonesTrimestreChart></MillonesTrimestreChart>
                         </div>
                     </div>
-                    <div class="col-12 col-md-4">
+                    <div class="col-12 col-sm-12 col-md-4 d-grid">
                         <div class="card">
                             <div class="floating-title-panel small">
                                 <h1> Presupuesto ejercido por tipo de procedimiento </h1>
                             </div>
-
-                            <img src="@/assets/images/Illustrations/dummy-graph-two.png" style="object-fit: contain;">
-
-                            <div class="graph-info">
-                                <div class="info">
-                                    <span class="green">
-                                        <label>7%</label>
-                                        <p>Lic. pública</p>
-                                    </span>
-                                    <span class="yellow">
-                                        <label>43%</label>
-                                        <p>Por invitación</p>
-                                    </span>
-                                    <span class="red">
-                                        <label>48%</label>
-                                        <p>Adj. directa</p>
-                                    </span>
-                                </div>
-                                <div class="divider-dash"></div>
-                                <div class="total">
-                                    <label>$2,115,000.00 MXN</label>
-                                    <small>MONTO TOTAL</small>
-                                </div>
-                            </div>
+                            <EjercidoPeriodoChart></EjercidoPeriodoChart>
                         </div>
                     </div>
                 </div>
-
-                <!-- FLOATING BUTTONS FOR LINKS -->
-                <!--<div class="col-12 p-0 m-t-20 m-b-20 d-flex">
-                    <a href="" class="btn-outline text-unset"><i class="zmdi zmdi-long-arrow-left"></i> Ir a Inicio </a>
-                    <a href="" class="btn-outline text-unset m-auto-left"> Ir a Contratos <i class="zmdi zmdi-long-arrow-right m-r-0 m-l-15"></i></a>
-                </div>-->
 
                 <MoreInfo></MoreInfo>
             </div>
@@ -66,6 +35,8 @@
 <style></style>
 <script>
     import MoreInfo from '@/components/general/MoreInfo';
+    import MillonesTrimestreChart from '@/components/charts/landing/MillonesTrimestreChart';
+    import EjercidoPeriodoChart from "../../../components/charts/landing/EjercidoPeriodoChart";
 
     export default {
         data () {
@@ -74,7 +45,9 @@
             }
         },
         components: {
-            MoreInfo
+            EjercidoPeriodoChart,
+            MoreInfo,
+            MillonesTrimestreChart
         }
     }
 </script>

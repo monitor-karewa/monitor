@@ -34,7 +34,7 @@
 
 <script>
   import "@/assets/javascripts/vendors.js";
-  
+
   import axios from 'axios';
 
   export default {

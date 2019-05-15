@@ -30,7 +30,7 @@
 
                         <!--filters-->
                         <PublicFilter
-                                :store-module="storeModule"
+                                :storeModule="storeModule"
                                 :administrativeUnits="adminstrativeUnitsForFilter"
                                 :fiscalYears="fiscalYears"
                                 :trimonths="trimonths"

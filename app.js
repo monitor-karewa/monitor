@@ -62,6 +62,7 @@ const publicOrganizationsRoutes = require('./app/routes/publicOrganization.route
 const publicSupplierRoutes = require('./app/routes/publicSupplier.routes');
 const publicContractRoutes = require('./app/routes/publicContract.routes');
 const publicComparationRoutes = require('./app/routes/publicComparation.routes');
+const landingRoutes = require('./app/routes/landing.routes');
 
 // Controllers
 const securityController = require('./app/controllers/security.controller');
@@ -179,6 +180,7 @@ app.use('/public-api/contracts', publicContractRoutes);
 app.use('/public-api/route-logs', routeLogRoutes);
 app.use('/public-api/files', fileRoutes);
 app.use('/public-api/comparations', publicComparationRoutes);
+app.use('/public-api/landing', landingRoutes);
 
 // ======================
 // Session initialization

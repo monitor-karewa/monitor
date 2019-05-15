@@ -83,111 +83,21 @@
                         <p class="f-14 c-plain_text principal-font-regular">Aquí podrás encontrar la lista de todos los
                             proveedores que han sido contratados por el
                             <strong class="principal-font-semibold">Municipio de Chihuahua</strong></p>
-                        <div class="m-t-50 row">
-                            <div class="filter col-md-4">
-                                <div class="filter-container">
-                                    <input class="input-search" type="text" name="" value=""
-                                           placeholder="Escribe el nombre del proveedor"/>
-                                </div>
-                                <button class="filter-btn" type="button" name="button">Buscar</button>
-                            </div>
-                            <div class="filter-box col-md-8">
-                                <div class="filter">
-                                    <div class="filter-container row m-0">
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar administración"
-                                                        title="Por administración">
-                                                    <option>ADMINISTRACIÓN 2016-2018</option>
-                                                    <option>ADMINISTRACIÓN 2013-2015</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar año" title="Por año…">
-                                                    <option>2019</option>
-                                                    <option>2018</option>
-                                                    <option>2017</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar trimestre"
-                                                        title="Por trimestre…">
-                                                    <optgroup label="2018">
-                                                        <option>3º 2018</option>
-                                                        <option>2º 2018</option>
-                                                        <option>1º 2018</option>
-                                                    </optgroup>
-                                                    <optgroup label="2017">
-                                                        <option>3º 2017</option>
-                                                        <option>2º 2017</option>
-                                                        <option>1º 2017</option>
-                                                    </optgroup>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar administrativa"
-                                                        title="Por unidad administrativa…">
-                                                    <option>ATENCIÓN CIUDADANA</option>
-                                                    <option>CENTRO DE ATENCIÓN Y PREVENCIÓN PSICOLÓGICAS</option>
-                                                    <option>COMUNICACIÓN SOCIAL</option>
-                                                    <option>CONSEJO DE URBANIZACIÓN</option>
-                                                    <option>DESARROLLO ECONOMICO Y TURÍSTICO</option>
-                                                    <option>DESARROLLO HUMANO Y EDUCACIÓN</option>
-                                                    <option>DESARROLLO INTEGRAL DE LA FAMILIA</option>
-                                                    <option>DESARROLLO RURAL</option>
-                                                    <option>DESARROLLO URBANO Y ECOLOGÍA</option>
-                                                    <option>DESPACHO DE LA PRESIDENCIA</option>
-                                                    <option>DIRECCIÓN DE OBRAS PUBLICAS MUNICIPALES</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <button class="filter-btn" type="button" name="button">Filtrar</button>
-                                </div>
 
-                            </div>
-                        </div>
+                        <!--filters-->
+                        <PublicFilter
+                                :storeModule="storeModule"
+                                :administrativeUnits="adminstrativeUnitsForFilter"
+                                :fiscalYears="fiscalYears"
+                                :trimonths="trimonths"
+                                :administrationPeriods="administrationPeriods"
+                                :procedureTypes="procedureTypes"
+                        >
 
-                        <div class="row">
-                            <div class="m-t-20 float-left col-md-12">
-                                <span class="tag-title">Filtros:</span>
-                                <div class="tag">
-                      <span class="">
-                        DIRECCIÓN DE OBRAS PÚBLICAS MUNICIPALES
-                      </span>
-                                    <button>
-                                        <i class="zmdi zmdi-close"></i>
-                                    </button>
-                                </div>
-                                <div class="tag">
-                      <span class="">
-                        Béisbol
-                      </span>
-                                    <button>
-                                        <i class="zmdi zmdi-close"></i>
-                                    </button>
-                                </div>
-                                <div class="tag">
-                      <span class="">
-                        Béisbol
-                      </span>
-                                    <button>
-                                        <i class="zmdi zmdi-close"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        </PublicFilter>
+
+
                     </div>
                 </div>
 
@@ -291,6 +201,7 @@
     import {mapState} from 'vuex';
     
     import baseApi from '@/api/base.api';
+    import PublicFilter from '@/components/filters/PublicFilter.vue';
     
     
     const storeModule = 'publicSuppliers';
@@ -306,12 +217,18 @@
         },
         components: {
             MoreInfo,
-            Pagination
+            Pagination,
+            PublicFilter
         },
         computed: {
             ...mapState({
                 suppliers: state => state[storeModule].suppliers,
-                totals: state => state[storeModule].totals
+                totals: state => state[storeModule].totals,
+                adminstrativeUnitsForFilter: state => state[storeModule].adminstrativeUnitsForFilter,
+                fiscalYears: state => state[storeModule].fiscalYears,
+                trimonths: state => state[storeModule].trimonths,
+                administrationPeriods: state => state[storeModule].administrationPeriods,
+                procedureTypes: state => state[storeModule].procedureTypes,
             }),
             downloadPdfUrl () {
                 return `${baseApi.baseUrl}/public-api/${apiNamespace}/download/pdf`;
@@ -329,7 +246,16 @@
             }
         },
         mounted() {
+
+        },
+        beforeMount() {
             this.$store.dispatch('publicSuppliers/LOAD_SUPPLIERS');
+            //for the filters
+            this.$store.dispatch(`${storeModule}/getAdministrativeUnitsForFilter`);
+            this.$store.dispatch(`${storeModule}/getFiscalYears`);
+            this.$store.dispatch(`${storeModule}/getTrimonths`);
+            this.$store.dispatch(`${storeModule}/getAdministrationPeriods`);
+            this.$store.dispatch(`${storeModule}/getProcedureTypes`);
         },
         created() {
             window.$(document).ready(function () {
