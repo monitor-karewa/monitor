@@ -58,6 +58,11 @@ const ScaleSchema = new Schema({
 });
 
 const FormulaSchema = new Schema({
+    locked: {
+        type: Boolean,
+        required: true,
+        default: false
+    },
     expression: {
         type: String,
         required: true
