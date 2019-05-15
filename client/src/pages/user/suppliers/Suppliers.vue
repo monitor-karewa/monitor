@@ -33,15 +33,15 @@
                                          aria-labelledby="dropdownDownloadOptions">
                                         <span>Descargar datos con formato:</span>
                                         <div class="container-dropdown">
-                                            <a class="dropdown-item" href="downloadPdfUrl" target="_blank">
+                                            <a class="dropdown-item" @click.prevent="downloadFile('pdf')" target="_blank">
                                                 <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-pdf.svg"
                                                      alt="Empty"/>
                                             </a>
-                                            <a class="dropdown-item" :href="downloadXlsUrl" target="_blank">
+                                            <a class="dropdown-item" @click.prevent="downloadFile('xls')">
                                                 <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-xls.svg"
                                                      alt="Empty"/>
                                             </a>
-                                            <a class="dropdown-item" href="downloadJsonUrl" target="_blank">
+                                            <a class="dropdown-item" @click.prevent="downloadFile('json')">
                                                 <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-json.svg"
                                                      alt="Empty"/>
                                             </a>
@@ -229,20 +229,12 @@
                 trimonths: state => state[storeModule].trimonths,
                 administrationPeriods: state => state[storeModule].administrationPeriods,
                 procedureTypes: state => state[storeModule].procedureTypes,
-            }),
-            downloadPdfUrl () {
-                return `${baseApi.baseUrl}/public-api/${apiNamespace}/download/pdf`;
-            },
-            downloadXlsUrl () {
-                return `${baseApi.baseUrl}/public-api/${apiNamespace}/download/xls`;
-            },
-            downloadJsonUrl () {
-                return `${baseApi.baseUrl}/public-api/${apiNamespace}/download/xls`;
-            }
+            })
         },
         methods: {
-            download (format) {
-                this.$store.dispatch('publicSuppliers/DOWNLOAD', format);
+            downloadFile (format) {
+                console.log("format", format);
+                this.$store.dispatch('publicSuppliers/downloadFile', {format});
             }
         },
         mounted() {

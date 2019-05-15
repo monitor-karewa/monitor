@@ -515,37 +515,52 @@ exports.download = (req, res, next) => {
     }
 
     _aggregateSuppliersFromContracts(req, res, {paginate: false}, (err, suppliers) => {
-        new ExcelExporter()
-            .setPropInfoArray([
-                {
-                    header: 'NOMBRE DEL PROVEEDOR',
-                    propName: 'name'
-                },
-                {
-                    header: 'LICITACIÓN PÚBLICA',
-                    propName: 'public',
-                    format: 'currency'
-                },
-                {
-                    header: 'POR INVITACIÓN',
-                    propName: 'invitation',
-                    format: 'currency'
-                },
-                {
-                    header: 'ADJ. DIRECTA',
-                    propName: 'noBid',
-                    format: 'currency'
-                },
-                {
-                    header: 'MONTO TOTAL',
-                    propName: 'total',
-                    format: 'currency'
-                },
-            ])
-            .setDocs(suppliers)
-            .setTitle('Proveedores')
-            .setFileName('proveedores')
-            .exportToFile(req, res);
+        switch(format){
+            case 'xls':
+                downloadXls(req, res, suppliers);
+                break;
+            case 'pdf':
+                break;
+            case 'json':
+                return res.json(suppliers);
+                break;
+            default:
+                break;
+        }
     });
-    
+};
+
+
+let downloadXls = (req,res, suppliers) => {
+    new ExcelExporter()
+        .setPropInfoArray([
+            {
+                header: 'NOMBRE DEL PROVEEDOR',
+                propName: 'name'
+            },
+            {
+                header: 'LICITACIÓN PÚBLICA',
+                propName: 'public',
+                format: 'currency'
+            },
+            {
+                header: 'POR INVITACIÓN',
+                propName: 'invitation',
+                format: 'currency'
+            },
+            {
+                header: 'ADJ. DIRECTA',
+                propName: 'noBid',
+                format: 'currency'
+            },
+            {
+                header: 'MONTO TOTAL',
+                propName: 'total',
+                format: 'currency'
+            },
+        ])
+        .setDocs(suppliers)
+        .setTitle('Proveedores')
+        .setFileName('proveedores')
+        .exportToFile(req, res);
 };

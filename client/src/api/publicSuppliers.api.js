@@ -24,6 +24,17 @@ export default {
             .then(onSuccess)
             .catch(onError);
     },
+    download: (params = {}, onSuccess, onError) => {
+
+        return axios({
+            url: `${base.baseUrl}/public-api/${namespace}/download/${params.format}${params.query || ''}`,
+            method: 'GET',
+            responseType: 'blob'
+        }, params)
+            .then(onSuccess)
+            .catch(onError);
+    },
+
 
 
     /*,
