@@ -31,6 +31,11 @@ let ResourceSchema = new Schema({
         type:String,
         required: true
     },
+    img: { data: Buffer, contentType: String },
+    fechaCreacion:{
+      type:Date,
+      required:true
+    },
     deleted: require("./schemas/deleted.schema").Deleted
 });
 

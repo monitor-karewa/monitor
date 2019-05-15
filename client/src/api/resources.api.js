@@ -10,8 +10,14 @@ export default {
             .then(onSuccess)
             .catch(onError);
     },
-    save: (params = {}, onSuccess, onError) => {
-        return axios.post(`${base.baseUrl}/api/${namespace}/save`, params)
+    save: (params = {}, onSuccess, onError, ...args) => {
+        let formData = new FormData();
+        formData.append('file', params.dataField);
+        formData.append('_id', params._id != undefined ? params._id : "");
+        formData.append('title', params.title);
+        formData.append('url', params.url);
+        formData.append('classification', params.classification);
+        return axios.post(`${base.baseUrl}/api/${namespace}/save`, formData, params.requestConfig)
             .then(onSuccess)
             .catch(onError);
     },

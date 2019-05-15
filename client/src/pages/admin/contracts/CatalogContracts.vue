@@ -1048,9 +1048,9 @@
                     this.entry.informationDate = entry.informationDate;
                     this.entry.limitExceeded = entry.limitExceeded;
                     this.entry.amountExceeded = entry.amountExceeded;
-                    this.$nextTick(function () {
-                        $('.selectpicker').selectpicker('refresh');
-                    })
+                    // this.$nextTick(function () {
+                    //     $('.selectpicker').selectpicker('refresh');
+                    // })
 
             });
         },

@@ -6,7 +6,7 @@
                     <div class="card-header">
                         <TableHeaderSearch :store-module="storeModule"/>
                         <TableHeaderButtonsWrapper>
-                            <TableHeaderButton :store-module="storeModule"/>
+                            <TableHeaderButton :store-module="storeModule" :hideEditButton="hideEditButtonResult"/>
                             <TableHeaderFilters :columns="tableColumns"/>
                         </TableHeaderButtonsWrapper>
                     </div>
@@ -158,12 +158,16 @@
                 },
                 isEditingTable: function(state){
                     return state[this.$props.storeModule].isEditingTable;
+                },
+                hideEditButtonResult:function () {
+                    return this.$props.hideEditButton;
                 }
             })
         },
         props: {
             'docs': Array,
             'storeModule': String,
+            'hideEditButton': Boolean,
             'tableColumns': {
                 type: Array,
                 required: true

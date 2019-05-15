@@ -122,7 +122,6 @@ export default function (api, storeName) {
             if(!data){
                 //scold user #(>__<!!)
             }
-
             //TODO: Add other pagination options and centralize all options
             api.save(
                 data,
@@ -147,13 +146,14 @@ export default function (api, storeName) {
                     }
                 },
                 (error) => {
-                    var errorsStr = "";
+                    let errorsStr = "";
                     error.response.data.errors.some(e=>{
                         errorsStr += e.msg + "\n";
                     });
                     Vue.$log.error('Response error', error);
                     tShow(`Hubo un error al guardar un registro: ${errorsStr}`);
-                }
+                },
+                data.requestConfig
             )
         },
         saveDocsUpdated({state, dispatch, commit}){

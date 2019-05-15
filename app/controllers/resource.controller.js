@@ -24,6 +24,11 @@ exports.index = (req, res, next) => {
     res.render('resource', renderParams);
 };
 
+let multer  = require('multer');
+let upload = multer();
+
+exports.beforeUpload = upload.single('file');
+
 /**
  * Consulta los registros de Resource disponibles.
  * @param req
@@ -83,7 +88,7 @@ exports.save = (req, res, next) => {
 
     let id = req.body._id;
 
-    if (id) {
+    if (id != undefined && id != "") {
         //Update
         let qById = {_id: id};
         let qByOrganization = Organization.qByOrganization(req);
@@ -123,14 +128,32 @@ exports.save = (req, res, next) => {
             });
 
     } else {
-        //Create
+        //Create\
 
-        let resource = new Resource({
-            organization: Organization.currentOrganizationId(req),
-            title : req.body.title,
-            classification : req.body.classification,
-            url: req.body.url
-        });
+        let resource = null;
+        if(req.file){
+            let type = req.file.mimetype;
+            resource = new Resource({
+                organization: Organization.currentOrganizationId(req),
+                title : req.body.title,
+                classification : req.body.classification,
+                url: req.body.url,
+                fechaCreacion: new Date(),
+                img: {
+                    data: req.file.buffer,
+                    contentType: type
+                }
+            });
+        } else {
+            resource = new Resource({
+                organization: Organization.currentOrganizationId(req),
+                title : req.body.title,
+                classification : req.body.classification,
+                url: req.body.url,
+                fechaCreacion: new Date()
+            });
+        }
+
 
         resource.save((err, savedResource) => {
             if (err) {

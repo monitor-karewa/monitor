@@ -428,6 +428,11 @@ export default {
     "resources.validation.required":"El campo {field} del Recurso es requerido",
     "resources.validation.url":"La Url no tiene el formato correcto",
     "resources.validation.classification":"El valor para la Clasificación del Recurso no es válido",
+    "resources.placeholder.classification":"Selecciona clasificación",
+    "resources.resource-type.marco-legal":"Marco Legal",
+    "resources.resource-type.articulo":"Artículo",
+    "resources.resource-type.notas":"Nota",
+    "resources.resource-type.label":"Clasificación",
 
 
     //Calculations
