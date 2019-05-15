@@ -109,6 +109,13 @@ exports.save = (req, res, next) => {
                 resource.title = req.body.title ;
                 resource.classification = req.body.classification ;
                 resource.url= req.body.url;
+                if(req.file){
+                    let type = req.file.mimetype;
+                    resource.img = {
+                            data: req.file.buffer,
+                            contentType: type
+                        }
+                }
 
                 resource.save((err, savedResource) => {
                     if (err) {
@@ -137,7 +144,7 @@ exports.save = (req, res, next) => {
                 organization: Organization.currentOrganizationId(req),
                 title : req.body.title,
                 classification : req.body.classification,
-                url: req.body.url
+                url: req.body.url,
                 img: {
                     data: req.file.buffer,
                     contentType: type
