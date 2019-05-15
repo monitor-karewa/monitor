@@ -8,4 +8,11 @@ var publicComparationController = require('./../controllers/publicComparation.co
  */
 router.get('/detail', publicComparationController.detail);
 
+
+/**
+ * GET /corruption-index
+ * Load Corruption Index detail
+ */
+router.get('/corruption-index', publicComparationController.corruptionIndex);
+
 module.exports = router;

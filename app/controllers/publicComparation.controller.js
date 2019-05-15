@@ -7,7 +7,67 @@ const Calculation = require('./../models/calculation.model').Calculation;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const {calculateAndValidateFormula} = require('./../controllers/calculation.controller');
+const logger = require('./../components/logger').instance;
 
+exports.corruptionIndex = (req, res, next) => {
+    let id = req.query.id;
+
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    let qByOrganization = {"organization": mongoose.Types.ObjectId(id)};
+
+    let query = {...qNotDeleted, ...qByOrganization, locked: true};
+    Calculation
+        .findOne(query)
+        .lean()
+        .exec((err, corruptionIndex) => {
+        
+            if (err) {
+                //Error
+                logger.error(err, req, 'publicComparation.controller#corruptionIndex', 'Error trying to find Corruption index');
+                return res.json({
+                    error: true,
+                    data: {}
+                });
+            } else if (!corruptionIndex) {
+                //Not found
+                logger.error(null, req, 'publicComparation.controller#corruptionIndex', 'Corruption index not found');
+                // return res.json({
+                //     error: true,
+                //     data: {}
+                // });
+            }
+
+            corruptionIndex = corruptionIndex || {};
+
+            corruptionIndex.result = 0;
+
+            if (!corruptionIndex._id) {
+                return res.json({
+                    error: true,
+                    data: corruptionIndex
+                });
+            }
+
+            let cache = {
+                done: [],
+                calls: [],
+                i: 0,
+                resultsMap: {},
+            };
+
+            calculateAndValidateFormula(cache, corruptionIndex._id, (err, result) => {
+                if (result && result.value) {
+                    corruptionIndex.result = result.value;
+                }
+
+                return res.json({
+                    error: true,
+                    data: corruptionIndex
+                });
+            });
+
+        });
+};
 
 exports.detail = (req, res, next) => {
     
@@ -103,7 +163,7 @@ exports.detail = (req, res, next) => {
         
         async.parallel({
             corruptionIndex: (callback) => {
-                let query = {...qByOrganization, locked: true};
+                let query = {...qNotDeleted, ...qByOrganization, locked: true};
                 Calculation
                     .findOne(query)
                     .lean()

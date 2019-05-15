@@ -214,7 +214,7 @@ app.use('/api/data-load', securityController.checkLogin, securityController.chec
 
 
 app.get('*', function(req, res){
-    console.log("no se encontro la pagina");
+    console.log("404 - Route not found");
     res.status(404).send('NOT FOUND!');
 });
 
