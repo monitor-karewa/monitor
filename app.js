@@ -61,6 +61,7 @@ const fileRoutes = require('./app/routes/file.routes');
 const publicOrganizationsRoutes = require('./app/routes/publicOrganization.routes');
 const publicSupplierRoutes = require('./app/routes/publicSupplier.routes');
 const publicContractRoutes = require('./app/routes/publicContract.routes');
+const publicComparationRoutes = require('./app/routes/publicComparation.routes');
 const landingRoutes = require('./app/routes/landing.routes');
 
 // Controllers
@@ -178,6 +179,7 @@ app.use('/public-api/contracts', publicContractRoutes);
 
 app.use('/public-api/route-logs', routeLogRoutes);
 app.use('/public-api/files', fileRoutes);
+app.use('/public-api/comparations', publicComparationRoutes);
 app.use('/public-api/landing', landingRoutes);
 
 // ======================
@@ -212,7 +214,7 @@ app.use('/api/data-load', securityController.checkLogin, securityController.chec
 
 
 app.get('*', function(req, res){
-    console.log("no se encontro la pagina");
+    console.log("404 - Route not found");
     res.status(404).send('NOT FOUND!');
 });
 

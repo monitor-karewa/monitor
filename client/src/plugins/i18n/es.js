@@ -510,8 +510,13 @@ export default {
     "NOT_EXCEEDED" : "Excedido",
     "LIMIT_EXCEEDED" : "No excedido",
     "OPEN" : "Abierto",
-    "NORMAL" :  "Normal"
+    "NORMAL" :  "Normal",
 
+    
+    //Comparations
+
+    "comparations.public.load.error": "La información de Comparativas no se encuentra disponible en este momento.",
+    "comparations.public.load.corruption-index.error": "La información del Índice de Riesgo de Corrupción no se encuentra disponible en este momento.",
 
 
 }

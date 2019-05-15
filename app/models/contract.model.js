@@ -362,13 +362,27 @@ let ContractSchema = new Schema({
     fiscalYear: {
         type: String,
         required: [true, "El campo Ejercicio es requerido"],
-        match: [new RegExp("^[12][0-9]{3}$"), 'El campo Ejercicio no cumple con el formato esperado. Ejemplo: 2019']
+        match: [new RegExp("^[12][0-9]{3}$"), 'El campo Ejercicio no cumple con el formato esperado. Ejemplo: 2019'],
+        validate: {
+            validator: function () {
+                let yearContractDate = new Date(this.contractDate).getFullYear();
+                return Number(this.fiscalYear) == yearContractDate
+            },
+            message: props => "La Fecha del contrato no corresponde con el Ejercicio"
+        }
     },
     /* Periodo que se reporta */
     period: {
         type: String,
         required: [true, "El campo Periodo es requerido"],
-        match: [new RegExp("^[1234]o\\s2[0-9]{3}$"), 'El campo Periodo no cumple con el formato esperado. Ejemplo: 1o 2019']
+        match: [new RegExp("^[1234]o\\s2[0-9]{3}$"), 'El campo Periodo no cumple con el formato esperado. Ejemplo: 1o 2019'],
+        validate: {
+            validator: function () {
+                let yearContractDate = new Date(this.contractDate).getFullYear();
+                return this.period.includes(String(yearContractDate));
+            },
+            message: props => "La Fecha del contrato no corresponde con el Periodo"
+        }
     },
     /* ID / Número de Folio o Nomenclatura / Identificador */
     contractId: {
@@ -502,14 +516,7 @@ let ContractSchema = new Schema({
     /* Fecha del contrato */
     contractDate: {
         type: Date,
-        required: [true, "El campo Fecha del contrato es requerido"],
-        validate: {
-            validator: function () {
-                let yearContractDate = new Date(this.contractDate).getFullYear();
-                return this.period.includes(String(yearContractDate));
-            },
-            message: props => "La Fecha del contrato no corresponde con el Periodo"
-        }
+        required: [true, "El campo Fecha del contrato es requerido"]
     },
     /* Tipo de Contrato */
     contractType:{

@@ -66,7 +66,7 @@
                         this.$props.entry.requestConfig =  this.$props.requestConfig;
                     }
                     this.$store.dispatch(`${this.$props.storeModule}/${actionName}`, this.$props.entry);
-                    if(this.$props.storeModule !== 'contracts'){
+                    if(this.$props.storeModule !== 'contracts' && this.$props.storeModule !== 'calculations'){
                         $('#ModalEntry').modal('hide');
                     }
                 } else {

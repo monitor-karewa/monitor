@@ -16,9 +16,8 @@
             }
         },
         beforeMount() {
-            let isLoggedIn = this.$session.has('jwt');
             let headingToViewThatRequiresOrganization = this.$route.path.match(new RegExp('^/(suppliers|contracts|comparations|detailComparations|calculations|resources)?$'));
-            let hasOrganizationSelected = this.$session.has('currentOrganizationId');
+            let hasOrganizationSelected = this.$session.has('currentOrganizationId') && this.$session.get('currentOrganizationId').length;
 
             if (headingToViewThatRequiresOrganization && !hasOrganizationSelected) {
                 tShow(i18n.t('accounts.organization.info.redirecting'), 'info');

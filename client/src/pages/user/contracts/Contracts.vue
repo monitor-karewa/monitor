@@ -4,10 +4,12 @@
         <section class="client-content">
             <div class="neutral-width">
 
-                <!--Titulo-->
                 <div class="col-12 p-0 m-t-20 m-b-20 d-flex">
                     <router-link to="/suppliers" class="btn-outline text-unset">
-                        <i class="zmdi zmdi-long-arrow-left"></i> Ir a Proveedores
+                        <i class="zmdi zmdi-long-arrow-left"></i>Ir a Proveedores
+                    </router-link>
+                    <router-link to="/calculations/corruption-index" class="btn-outline text-unset m-auto-left">
+                        Ir a Índice de Corrupción <i class="zmdi zmdi-long-arrow-right m-r-0 m-l-15"></i>
                     </router-link>
                 </div>
 
@@ -30,7 +32,7 @@
 
                         <!--filters-->
                         <PublicFilter
-                                :store-module="storeModule"
+                                :storeModule="storeModule"
                                 :administrativeUnits="adminstrativeUnitsForFilter"
                                 :fiscalYears="fiscalYears"
                                 :trimonths="trimonths"

@@ -13,7 +13,31 @@ export default {
         return axios.get(`${base.baseUrl}/public-api/${namespace}/detail${params.query || ''}`, params)
             .then(onSuccess)
             .catch(onError);
-    }/*,
+    },
+    detailFiltered: (params = {}, onSuccess, onError) => {
+        return axios.post(`${base.baseUrl}/public-api/${namespace}/detail${params.query || ''}`, params)
+            .then(onSuccess)
+            .catch(onError);
+    },
+    filteredList: (params = {}, onSuccess, onError) => {
+        return axios.post(`${base.baseUrl}/public-api/${namespace}/filtered-list${params.query || ''}`, params)
+            .then(onSuccess)
+            .catch(onError);
+    },
+    download: (params = {}, onSuccess, onError) => {
+
+        return axios({
+            url: `${base.baseUrl}/public-api/${namespace}/download/${params.format}${params.query || ''}`,
+            method: 'GET',
+            responseType: 'blob'
+        }, params)
+            .then(onSuccess)
+            .catch(onError);
+    },
+
+
+
+    /*,
     delete: (params = {}, onSuccess, onError) => {
         return axios.post(`${base.baseUrl}/api/${namespace}/delete`, { "_id" : params.id })
             .then(onSuccess)

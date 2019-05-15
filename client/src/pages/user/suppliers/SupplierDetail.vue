@@ -32,7 +32,6 @@
 
         <section class="client-content">
             <div class="neutral-width">
-
                 <!--Titulo-->
                 <div class="col-12 p-0 m-t-20 m-b-20 d-flex">
                     <router-link to="/suppliers" class="">
@@ -59,99 +58,20 @@
                         <p class="f-14 c-plain_text principal-font-regular">Aquí podrás encontrar la lista de todos los
                             contratos del proveedor
                             <strong class="principal-font-semibold">CONSTRUCCIONES MARRO SA DE CV</strong></p>
-                        <div class="m-t-50">
-                            <div class="filter-box">
-                                <div class="filter">
-                                    <div class="filter-container row m-0">
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar administración"
-                                                        title="Por administración">
-                                                    <option>ADMINISTRACIÓN 2016-2018</option>
-                                                    <option>ADMINISTRACIÓN 2013-2015</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar año" title="Por año…">
-                                                    <option>2019</option>
-                                                    <option>2018</option>
-                                                    <option>2017</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar trimestre"
-                                                        title="Por trimestre…">
-                                                    <optgroup label="2018">
-                                                        <option>3º 2018</option>
-                                                        <option>2º 2018</option>
-                                                        <option>1º 2018</option>
-                                                    </optgroup>
-                                                    <optgroup label="2017">
-                                                        <option>3º 2017</option>
-                                                        <option>2º 2017</option>
-                                                        <option>1º 2017</option>
-                                                    </optgroup>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar administrativa"
-                                                        title="Por unidad administrativa…">
-                                                    <option>ATENCIÓN CIUDADANA</option>
-                                                    <option>CENTRO DE ATENCIÓN Y PREVENCIÓN PSICOLÓGICAS</option>
-                                                    <option>COMUNICACIÓN SOCIAL</option>
-                                                    <option>CONSEJO DE URBANIZACIÓN</option>
-                                                    <option>DESARROLLO ECONOMICO Y TURÍSTICO</option>
-                                                    <option>DESARROLLO HUMANO Y EDUCACIÓN</option>
-                                                    <option>DESARROLLO INTEGRAL DE LA FAMILIA</option>
-                                                    <option>DESARROLLO RURAL</option>
-                                                    <option>DESARROLLO URBANO Y ECOLOGÍA</option>
-                                                    <option>DESPACHO DE LA PRESIDENCIA</option>
-                                                    <option>DIRECCIÓN DE OBRAS PUBLICAS MUNICIPALES</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <button class="filter-btn" type="button" name="button">Filtrar</button>
-                                </div>
-                                <div class="m-t-20 float-left">
-                                    <span class="tag-title">Filtros:</span>
-                                    <div class="tag">
-                      <span class="">
-                        DIRECCIÓN DE OBRAS PÚBLICAS MUNICIPALES
-                      </span>
-                                        <button>
-                                            <i class="zmdi zmdi-close"></i>
-                                        </button>
-                                    </div>
-                                    <div class="tag">
-                      <span class="">
-                        Béisbol
-                      </span>
-                                        <button>
-                                            <i class="zmdi zmdi-close"></i>
-                                        </button>
-                                    </div>
-                                    <div class="tag">
-                      <span class="">
-                        Béisbol
-                      </span>
-                                        <button>
-                                            <i class="zmdi zmdi-close"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
+                        //one Filter here please
+                        <PublicFilter
+                                :storeModule="storeModule"
+                                :administrativeUnits="adminstrativeUnitsForFilter"
+                                :fiscalYears="fiscalYears"
+                                :trimonths="trimonths"
+                                :administrationPeriods="administrationPeriods"
+                                :procedureTypes="procedureTypes"
+                                :actionName="'LOAD_SUPPLIER_DETAIL'"
+                                :additionalParams="{id: supplierId}"
+                        >
+                        </PublicFilter>
+
                     </div>
                 </div>
 
@@ -376,6 +296,7 @@
     import {mapState} from 'vuex';
     
     const storeModule = 'publicSuppliers';
+    import PublicFilter from '@/components/filters/PublicFilter.vue';
     
     export default {
         data() {
@@ -416,15 +337,23 @@
                         cantidad: "$202,222.64",
                         fecha: "25 de junio de 2017"
                     }
-                ]
+                ],
+                storeModule : storeModule,
+                supplierId : undefined,
             }
         },
         components: {
-            MoreInfo
+            MoreInfo,
+            PublicFilter
         },
         computed: {
             ...mapState({
-                detail: state => state[storeModule].detail
+                detail: state => state[storeModule].detail,
+                adminstrativeUnitsForFilter: state => state[storeModule].adminstrativeUnitsForFilter,
+                fiscalYears: state => state[storeModule].fiscalYears,
+                trimonths: state => state[storeModule].trimonths,
+                administrationPeriods: state => state[storeModule].administrationPeriods,
+                procedureTypes: state => state[storeModule].procedureTypes
             }),
             supplier() {
                 return this.detail.supplier || {};
@@ -445,10 +374,16 @@
         methods: {},
         created() {
         },
-        mounted() {
-            let supplierId = this.$route.params.id;
-            console.log('this.$route.params.id', supplierId);
-            this.$store.dispatch('publicSuppliers/LOAD_SUPPLIER_DETAIL', supplierId);
+        beforeMount() {
+            this.supplierId = this.$route.params.id;
+            console.log('this.$route.params.id', this.supplierId);
+            this.$store.dispatch('publicSuppliers/LOAD_SUPPLIER_DETAIL', {id: this.supplierId});
+
+            this.$store.dispatch(`${storeModule}/getAdministrativeUnitsForFilter`,this.supplierId);
+            this.$store.dispatch(`${storeModule}/getFiscalYears`,this.supplierId);
+            this.$store.dispatch(`${storeModule}/getTrimonths`,this.supplierId);
+            this.$store.dispatch(`${storeModule}/getAdministrationPeriods`,this.supplierId);
+            this.$store.dispatch(`${storeModule}/getProcedureTypes`,this.supplierId);
         }
     }
 </script>

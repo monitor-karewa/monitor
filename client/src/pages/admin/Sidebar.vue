@@ -8,7 +8,7 @@
                         <img class="img-fluid" src="@/assets/images/Logos/logo-karewa-xs.png" alt="Logo" />
                         <div>
                             <small>Monitor</small>
-                            <label>{{currentOrganizationShortName}}</label>
+                            <label :style="{color: currentOrganization.color}">{{currentOrganization.shortName}}</label>
                         </div>
                     </div>
                     <div id="hideMenu" class="btn-close-resp"><a><i class="zmdi zmdi-close"></i></a></div>
@@ -165,8 +165,7 @@
         },
         computed: {
             ...mapState({
-                currentOrganizationName: state => state.currentOrganizationName,
-                currentOrganizationShortName: state => state.currentOrganizationShortName
+                currentOrganization: state => state.currentOrganization,
             }),
             permissions () {
                 return this.$session.get('permissions') || [];

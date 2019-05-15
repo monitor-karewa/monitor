@@ -130,11 +130,13 @@ exports.getCalculationsForFormula = (req, res, next) => {
 };
 
 
-var done = [];
-var calls = [];
-var i = 0;
-var exploreCalculationTree = function (calculation, mainCallback) {
-
+// var done = [];
+// var calls = [];
+// var i = 0;
+var exploreCalculationTree = function (cache, calculation, mainCallback) {
+    
+    let {done, calls, i, resultsMap} = cache;
+    
     if (typeof calculation === 'string' || calculation instanceof mongoose.Types.ObjectId) {
         Calculation.findOne(
             {_id: mongoose.Types.ObjectId(calculation)}
@@ -156,7 +158,7 @@ var exploreCalculationTree = function (calculation, mainCallback) {
                     calls.push(res.abbreviation);
 
                     async.map(res.formula.calculations, (calc, calcCallback) => {
-                        exploreCalculationTree(calc, function (valid) {
+                        exploreCalculationTree(cache, calc, function (valid) {
                             if (valid) {
                                 done.push(calc.abbreviation);
                                 return calcCallback(null, true);
@@ -196,7 +198,7 @@ var exploreCalculationTree = function (calculation, mainCallback) {
             calls.push(calculation.abbreviation);
 
             async.map(calculation.formula.calculations, (calc, calcCallback) => {
-                exploreCalculationTree(calc, function (valid) {
+                exploreCalculationTree(cache, calc, function (valid) {
                     if (valid) {
                         done.push(calc.abbreviation);
                         return calcCallback(null, true);
@@ -221,7 +223,7 @@ var exploreCalculationTree = function (calculation, mainCallback) {
 };
 
 
-var resultsMap = {};
+// var resultsMap = {};
 
 exports.validateFormula = (req, res, next) => {
 
@@ -232,19 +234,28 @@ exports.validateFormula = (req, res, next) => {
 
     let calculation = {
         formula: req.body.formula,
-        abbreviation : abbreviation
+        abbreviation : abbreviation,
+        hasPercentScale : req.body.hasPercentScale,
+        scale : req.body.scale || []
     };
 
     //restarts value for validating tree
-    done = [];
-    calls = [];
-    i = 0;
-    resultsMap = {};
+    // done = [];
+    // calls = [];
+    // i = 0;
+    // resultsMap = {};
+    
+    let cache = {
+        done: [],
+        calls: [],
+        i: 0,
+        resultsMap: {},
+    };
 
 
-    exploreCalculationTree(calculation, function (validTree) {
+    exploreCalculationTree(cache, calculation, function (validTree) {
         if (validTree) {
-            calculateAndValidateFormula(calculation, (err, results) => {
+            calculateAndValidateFormula(cache, calculation, (err, results) => {
                 if(results && (isNaN(results.value) || results.value == Number.Infinity)){
                     return res.json({error:true, message:req.__('calculations.formula.infinity.error'), err:err });
                 }
@@ -300,6 +311,13 @@ exports.save = (req, res, next) => {
     
     let id = req.body._id;
 
+    let cache = {
+        done: [],
+        calls: [],
+        i: 0,
+        resultsMap: {},
+    };
+
     if (id) {
         //Update
         let qById = {_id: id};
@@ -326,26 +344,61 @@ exports.save = (req, res, next) => {
                 calculation.notes = req.body.notes;
                 //  Formula stuff
                 calculation.formula = req.body.formula;
+                calculation.scale = req.body.scale;
+                calculation.hasPercentScale = req.body.hasPercentScale;
                 let calculationObjectIds = [];
                 for (let i = 0; i < calculation.formula.calculations.length; i++) {
                     calculationObjectIds.push(mongoose.Types.ObjectId(calculation.formula.calculations[i]._id));
                 }
-                let formulaValidation = validateFormula(calculation.formula);
+
+                let formulaValidation = validateFormula(cache, calculation.formula);
 
                     if(formulaValidation.error){
                         return res.json({error: true, message: req.__('calculations.formula.syntax.error'), err:formulaValidation.err})
                     }
                     calculation.save((err, savedCalculation) => {
                         if (err) {
+                            let errors = [];
+                            if(err.code == 11000){
+                                errors.push({message:"El campo Número de contrato debe ser único, se encontro otro registro con el mismo valor."})
+                            }
+                            for(let item in err.errors){
+                                errors.push(err.errors[item]);
+                            }
                             logger.error(err, req, 'calculation.controller#save', 'Error al guardar Calculation');
                             return res.json({
-                                errors: true,
-                                message: req.__('general.error.save')
+                                error: true,
+                                message: req.__('general.error.save'),
+                                errors:errors
                             });
+                        }
+                        if(calculation.hasPercentScale) {
+                            calculation.scale = calculation.scale.sort(function(a, b) {
+                                if(a.max > b.max){
+                                    return 1;
+                                }
+                                if(a.max < b.max){
+                                    return -1;
+                                }
+                                return 0;
+                            });
+                            for(let i = 0; i < calculation.scale.length; i++){
+                                let maxValue = calculation.scale[i].max;
+                                let nextIndex = i + 1;
+                                if( nextIndex < calculation.scale.length){
+                                    if(maxValue > calculation.scale[nextIndex].max || maxValue > calculation.scale[nextIndex].min){
+                                        return res.json({
+                                            error:true,
+                                            message:req.__('general.error.save'),
+                                            errors:[{ message: "Algunos de los rangos en la escala se traslapan, favor de verificarlo" }]
+                                        })
+                                    }
+                                }
+                            }
                         }
 
                         return res.json({
-                            errors: false,
+                            error: false,
                             message: req.__('general.success.updated'),
                             data: savedCalculation
                         });
@@ -364,7 +417,9 @@ exports.save = (req, res, next) => {
             enabled : req.body.enabled,
             displayForm : req.body.displayForm,
             abbreviation : req.body.abbreviation,
-            notes : req.body.notes
+            notes : req.body.notes,
+            scale : req.body.scale,
+            hasPercentScale : req.body.hasPercentScale,
         });
 
 
@@ -381,11 +436,43 @@ exports.save = (req, res, next) => {
 
         calculation.save((err, savedCalculation) => {
             if (err) {
+                let errors = [];
+                if(err.code == 11000){
+                    errors.push({message:"El campo Número de contrato debe ser único, se encontro otro registro con el mismo valor."})
+                }
+                for(let item in err.errors){
+                    errors.push(err.errors[item]);
+                }
                 logger.error(err, req, 'calculation.controller#save', 'Error al guardar Calculation');
                 return res.json({
                     "error": true,
-                    "message": req.__('general.error.save')
+                    "message": req.__('general.error.save'),
+                    "errors":errors
                 });
+            }
+            if(calculation.hasPercentScale) {
+                calculation.scale = calculation.scale.sort(function(a, b) {
+                    if(a.max > b.max){
+                        return 1;
+                    }
+                    if(a.max < b.max){
+                        return -1;
+                    }
+                    return 0;
+                });
+                for(let i = 0; i < calculation.scale.length; i++){
+                    let maxValue = calculation.scale[i].max;
+                    let nextIndex = i + 1;
+                    if( nextIndex < calculation.scale.length){
+                        if(maxValue > calculation.scale[nextIndex].max || maxValue > calculation.scale[nextIndex].min){
+                            return res.json({
+                                error:true,
+                                message:req.__('general.error.save'),
+                                errors:[{ message: "Algunos de los rangos en la escala se traslapan, favor de verificarlo" }]
+                            })
+                        }
+                    }
+                }
             }
 
             return res.json({
@@ -399,7 +486,9 @@ exports.save = (req, res, next) => {
     }
 };
 
-let validateFormula = function(formula) {
+let validateFormula = function(cache, formula) {
+    let {done, calls, i, resultsMap} = cache;
+    
     try {
         if (formula && formula.expression) {
             let regex = "\\${1,2}[A-Z0-9]+";
@@ -423,7 +512,9 @@ let replaceVariableForValue = function(regex, expression, value = 0){
 
 
 
-let calculateAndValidateFormula = function(calculation, callback){
+let calculateAndValidateFormula = function(cache, calculation, callback){
+
+    let {done, calls, i, resultsMap} = cache;
 
     if (typeof calculation === 'string' || calculation instanceof mongoose.Types.ObjectId) {
         Calculation.findOne(
@@ -434,15 +525,33 @@ let calculateAndValidateFormula = function(calculation, callback){
                 console.log("Error Finding calculation");
             } else {
                 calculation = res;
-                processCalculation(calculation, callback)
+                processCalculation(cache, calculation, callback)
             }
         });
     } else {
-        processCalculation(calculation, callback)
+        processCalculation(cache, calculation, callback)
     }
 };
 
-let  processCalculation = function(calculation, mainCallback){
+exports.calculateAndValidateFormula = calculateAndValidateFormula;
+
+let convertResultAccordingToScale = function(calculation, result = 0){
+    let convertedResult = 0;
+    if (calculation.hasPercentScale) {
+        calculation.scale.forEach((item) => {
+            if (item.min <= result  && item.max >= result) {
+                convertedResult = item.value;
+            }
+        });
+        result = convertedResult;
+    }
+
+    return result
+};
+
+let  processCalculation = function(cache, calculation, mainCallback){
+    let {done, calls, i, resultsMap} = cache;
+
     // console.log("calculation", calculation);
     if(resultsMap[calculation.abbreviation] != undefined){
         let result = {
@@ -453,7 +562,7 @@ let  processCalculation = function(calculation, mainCallback){
     }
 
     try {
-        let formulaValidation = validateFormula(calculation.formula);
+        let formulaValidation = validateFormula(cache, calculation.formula);
         if (formulaValidation.error) {
             return mainCallback({error:true, message:'calculations.formula.syntax.error', err:formulaValidation.err});
         }
@@ -491,7 +600,7 @@ let  processCalculation = function(calculation, mainCallback){
                 let variablesToReplace = [];
                 async.each(innerCalculations,
                     function (calculation, AsyncEachCallback) {
-                        calculateAndValidateFormula(calculation, function (err, res) {
+                        calculateAndValidateFormula(cache, calculation, function (err, res) {
                             if (err) {
                                 AsyncEachCallback(err);
                             } else {
@@ -512,6 +621,7 @@ let  processCalculation = function(calculation, mainCallback){
                                 });
 
                                 finalValue = math.eval(calculation.formula.expression);
+                                finalValue = convertResultAccordingToScale(calculation, finalValue);
 
                                 let result = {
                                     abbreviation: calculation.abbreviation,
@@ -527,6 +637,7 @@ let  processCalculation = function(calculation, mainCallback){
             } else {
                 try {
                     finalValue = math.eval(calculation.formula.expression);
+                    finalValue = convertResultAccordingToScale(calculation, finalValue);
                     let result = {
                         abbreviation: calculation.abbreviation,
                         value : finalValue

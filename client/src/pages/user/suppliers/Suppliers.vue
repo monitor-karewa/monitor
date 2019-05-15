@@ -19,8 +19,9 @@
                                 Proveedores
                             </h1>
                             <div class="side-right d-flex">
-                                <a href="" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
-                                        class="zmdi zmdi-share"></i> Compartir</a>
+                                <a type="button" @click="copyUrlToClipBoard()" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
+                                        class="zmdi zmdi-share"></i> Compartir </i>
+                                </a>
                                 <!--<a href="" class="btn-raised button-accent text-capi m-l-10" tabindex=""><i-->
                                         <!--class="zmdi zmdi-download"></i> DESCARGAR DATOS DE PROVEEDORES</a>-->
 
@@ -33,15 +34,15 @@
                                          aria-labelledby="dropdownDownloadOptions">
                                         <span>Descargar datos con formato:</span>
                                         <div class="container-dropdown">
-                                            <a class="dropdown-item" href="downloadPdfUrl" target="_blank">
+                                            <a class="dropdown-item" @click.prevent="downloadFile('pdf')" target="_blank">
                                                 <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-pdf.svg"
                                                      alt="Empty"/>
                                             </a>
-                                            <a class="dropdown-item" :href="downloadXlsUrl" target="_blank">
+                                            <a class="dropdown-item" @click.prevent="downloadFile('xls')">
                                                 <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-xls.svg"
                                                      alt="Empty"/>
                                             </a>
-                                            <a class="dropdown-item" href="downloadJsonUrl" target="_blank">
+                                            <a class="dropdown-item" @click.prevent="downloadFile('json')">
                                                 <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-json.svg"
                                                      alt="Empty"/>
                                             </a>
@@ -83,111 +84,21 @@
                         <p class="f-14 c-plain_text principal-font-regular">Aquí podrás encontrar la lista de todos los
                             proveedores que han sido contratados por el
                             <strong class="principal-font-semibold">Municipio de Chihuahua</strong></p>
-                        <div class="m-t-50 row">
-                            <div class="filter col-md-4">
-                                <div class="filter-container">
-                                    <input class="input-search" type="text" name="" value=""
-                                           placeholder="Escribe el nombre del proveedor"/>
-                                </div>
-                                <button class="filter-btn" type="button" name="button">Buscar</button>
-                            </div>
-                            <div class="filter-box col-md-8">
-                                <div class="filter">
-                                    <div class="filter-container row m-0">
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar administración"
-                                                        title="Por administración">
-                                                    <option>ADMINISTRACIÓN 2016-2018</option>
-                                                    <option>ADMINISTRACIÓN 2013-2015</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar año" title="Por año…">
-                                                    <option>2019</option>
-                                                    <option>2018</option>
-                                                    <option>2017</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar trimestre"
-                                                        title="Por trimestre…">
-                                                    <optgroup label="2018">
-                                                        <option>3º 2018</option>
-                                                        <option>2º 2018</option>
-                                                        <option>1º 2018</option>
-                                                    </optgroup>
-                                                    <optgroup label="2017">
-                                                        <option>3º 2017</option>
-                                                        <option>2º 2017</option>
-                                                        <option>1º 2017</option>
-                                                    </optgroup>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
-                                            <div class="fg-line m-0">
-                                                <select class="form-control select selectpicker" data-live-search="true"
-                                                        data-live-search-placeholder="Buscar administrativa"
-                                                        title="Por unidad administrativa…">
-                                                    <option>ATENCIÓN CIUDADANA</option>
-                                                    <option>CENTRO DE ATENCIÓN Y PREVENCIÓN PSICOLÓGICAS</option>
-                                                    <option>COMUNICACIÓN SOCIAL</option>
-                                                    <option>CONSEJO DE URBANIZACIÓN</option>
-                                                    <option>DESARROLLO ECONOMICO Y TURÍSTICO</option>
-                                                    <option>DESARROLLO HUMANO Y EDUCACIÓN</option>
-                                                    <option>DESARROLLO INTEGRAL DE LA FAMILIA</option>
-                                                    <option>DESARROLLO RURAL</option>
-                                                    <option>DESARROLLO URBANO Y ECOLOGÍA</option>
-                                                    <option>DESPACHO DE LA PRESIDENCIA</option>
-                                                    <option>DIRECCIÓN DE OBRAS PUBLICAS MUNICIPALES</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
 
-                                    <button class="filter-btn" type="button" name="button">Filtrar</button>
-                                </div>
 
-                            </div>
-                        </div>
+                        <!--filters-->
+                        <PublicFilter
+                                :storeModule="storeModule"
+                                :administrativeUnits="adminstrativeUnitsForFilter"
+                                :fiscalYears="fiscalYears"
+                                :trimonths="trimonths"
+                                :administrationPeriods="administrationPeriods"
+                                :procedureTypes="procedureTypes"
+                        >
 
-                        <div class="row">
-                            <div class="m-t-20 float-left col-md-12">
-                                <span class="tag-title">Filtros:</span>
-                                <div class="tag">
-                      <span class="">
-                        DIRECCIÓN DE OBRAS PÚBLICAS MUNICIPALES
-                      </span>
-                                    <button>
-                                        <i class="zmdi zmdi-close"></i>
-                                    </button>
-                                </div>
-                                <div class="tag">
-                      <span class="">
-                        Béisbol
-                      </span>
-                                    <button>
-                                        <i class="zmdi zmdi-close"></i>
-                                    </button>
-                                </div>
-                                <div class="tag">
-                      <span class="">
-                        Béisbol
-                      </span>
-                                    <button>
-                                        <i class="zmdi zmdi-close"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
+                        </PublicFilter>
+
+
                     </div>
                 </div>
 
@@ -291,6 +202,7 @@
     import {mapState} from 'vuex';
     
     import baseApi from '@/api/base.api';
+    import PublicFilter from '@/components/filters/PublicFilter.vue';
     
     
     const storeModule = 'publicSuppliers';
@@ -306,30 +218,48 @@
         },
         components: {
             MoreInfo,
-            Pagination
+            Pagination,
+            PublicFilter
         },
         computed: {
             ...mapState({
                 suppliers: state => state[storeModule].suppliers,
-                totals: state => state[storeModule].totals
-            }),
-            downloadPdfUrl () {
-                return `${baseApi.baseUrl}/public-api/${apiNamespace}/download/pdf`;
-            },
-            downloadXlsUrl () {
-                return `${baseApi.baseUrl}/public-api/${apiNamespace}/download/xls`;
-            },
-            downloadJsonUrl () {
-                return `${baseApi.baseUrl}/public-api/${apiNamespace}/download/xls`;
-            }
+                totals: state => state[storeModule].totals,
+                adminstrativeUnitsForFilter: state => state[storeModule].adminstrativeUnitsForFilter,
+                fiscalYears: state => state[storeModule].fiscalYears,
+                trimonths: state => state[storeModule].trimonths,
+                administrationPeriods: state => state[storeModule].administrationPeriods,
+                procedureTypes: state => state[storeModule].procedureTypes,
+            })
         },
         methods: {
-            download (format) {
-                this.$store.dispatch('publicSuppliers/DOWNLOAD', format);
+
+            downloadFile (format) {
+                console.log("format", format);
+                this.$store.dispatch('publicSuppliers/downloadFile', {format});
+            },
+            copyUrlToClipBoard(){
+                const tempTextArea = document.createElement('textarea');
+                tempTextArea.value =  window.location.href;
+                document.body.appendChild(tempTextArea);
+                tempTextArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempTextArea);
+                tShow('Se ha copiado el enlace correctamente', 'info');
+
             }
         },
         mounted() {
+
+        },
+        beforeMount() {
             this.$store.dispatch('publicSuppliers/LOAD_SUPPLIERS');
+            //for the filters
+            this.$store.dispatch(`${storeModule}/getAdministrativeUnitsForFilter`);
+            this.$store.dispatch(`${storeModule}/getFiscalYears`);
+            this.$store.dispatch(`${storeModule}/getTrimonths`);
+            this.$store.dispatch(`${storeModule}/getAdministrationPeriods`);
+            this.$store.dispatch(`${storeModule}/getProcedureTypes`);
         },
         created() {
             window.$(document).ready(function () {

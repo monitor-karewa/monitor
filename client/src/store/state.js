@@ -1,4 +1,8 @@
 export default {
-    currentOrganizationName: '',
-    currentOrganizationShortName: '',
+    currentOrganization: {
+        _id: '',   
+        name: '',   
+        shortName: '',   
+        color: '',   
+    }
 }

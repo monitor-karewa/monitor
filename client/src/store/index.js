@@ -15,10 +15,11 @@ import accounts from '@/store/modules/accounts.store';
 
 //user
 import publicOrganizationsStore from '@/store/modules/publicOrganizations.store';
-import publicContracts from '@/store/modules/publicContracts.store';
+import publicContractsStore from '@/store/modules/publicContracts.store';
 import publicSuppliersStore from '@/store/modules/publicSuppliers.store';
 import millonesTrimestreChart from '@/store/modules/landingCharts/millonesTrimestreChart.store';
 import ejercidoProcedimientoChart from '@/store/modules/landingCharts/ejercidoProcedimientoChart.store';
+import publicComparationsStore from '@/store/modules/publicComparations.store';
 
 
 import actions from '@/store/actions';
@@ -48,7 +49,8 @@ export default new Vuex.Store({
         //public stores (for users)
         publicOrganizations: publicOrganizationsStore,
         publicSuppliers: publicSuppliersStore,
-        publicContracts : publicContracts
+        publicContracts : publicContractsStore,
+        publicComparations : publicComparationsStore,
     },
     state: state,
     actions: actions,
