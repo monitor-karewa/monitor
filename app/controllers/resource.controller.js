@@ -137,8 +137,7 @@ exports.save = (req, res, next) => {
                 organization: Organization.currentOrganizationId(req),
                 title : req.body.title,
                 classification : req.body.classification,
-                url: req.body.url,
-                fechaCreacion: new Date(),
+                url: req.body.url
                 img: {
                     data: req.file.buffer,
                     contentType: type
@@ -149,8 +148,7 @@ exports.save = (req, res, next) => {
                 organization: Organization.currentOrganizationId(req),
                 title : req.body.title,
                 classification : req.body.classification,
-                url: req.body.url,
-                fechaCreacion: new Date()
+                url: req.body.url
             });
         }
 
