@@ -168,8 +168,10 @@
             },
             actionName : String,
             storeModule : {
-                type: String,
-                required : true
+                type: String
+            },
+            storeModules : {
+                type: Array
             },
             additionalParams : {
                 type: Object
@@ -186,20 +188,34 @@
         },
         methods: {
             filter() {
-
                 let params = this.query;
+                let modulesToDispatch = [];
+                let actionName = "filter";
 
-                if(this.$props.additionalParams){
-                    params = {filters : this.query, ...this.$props.additionalParams}
+                if(this.$props.actionName && this.$props.actionName.length) {
+                    actionName = this.$props.actionName;
                 }
 
-                if(this.$props.actionName && this.$props.actionName.length){
-                    this.$store.dispatch(`${this.$props.storeModule}/${this.$props.actionName}`, params);
-                } else {
-                    this.$store.dispatch(`${this.$props.storeModule}/filter`, params);
+                if (this.$props.storeModule) {
+                    modulesToDispatch.push(this.$props.storeModule)
+                }
+
+
+                if (this.$props.storeModules) {
+                    for(let index in this.$props.storeModules){
+                        modulesToDispatch.push(this.$props.storeModules[index]);
+                    }
+                }
+
+                if (this.$props.additionalParams) {
+                    params = {filters: this.query, ...this.$props.additionalParams}
+                }
+
+                for (let i = 0; i < modulesToDispatch.length; i++) {
+                    this.$store.dispatch(`${modulesToDispatch[i]}/${actionName}`, params);
                 }
             },
-            refreshSelects(){
+            refreshSelects() {
                     window.$('.selectpicker').selectpicker();
                     window.$('.selectpicker').selectpicker('refresh');
                     $('.selectpicker').selectpicker();
