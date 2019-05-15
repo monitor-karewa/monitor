@@ -208,7 +208,7 @@
                     {label:'users.name', field : 'name', visible : true},
                     {label:'users.lastName', field : 'lastName', visible : true},
                     {label:'users.email', field : 'email', visible : true} ,
-                    {label:'general.created-at', field : 'created_at', visible : true, type:'Date'}
+                    {label:'general.created-at', field : 'createdAt', visible : true, type:'Date'}
                 ],
                 modalProperties:{
                     title:"general.modal-editable-table.title",
