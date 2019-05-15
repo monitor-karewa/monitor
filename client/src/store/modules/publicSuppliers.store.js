@@ -28,6 +28,16 @@ const getters = {
 };
 
 const actions = {
+    downloadFile({commit},{filters,format}) {
+        apiPublicSuppliers.download({filters,format}, (result) => {
+            const url = window.URL.createObjectURL(new Blob([result.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `monitor-karewa-proveedores.${format}`); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+        });
+    },
     LOAD_SUPPLIERS ({commit}, page) {
         let query = '';
         if (page) {
