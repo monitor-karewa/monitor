@@ -6,7 +6,7 @@
             <h1>PÁGINA NO ENCONTRADA</h1>
             <p>Lo sentimos, pero parece que la página que buscas no existe, es posible que hayas escrito mal la dirección.</p>
             <div>
-                <a href="#" class="btn-stroke button-accent"> Regresar </a>
+                <a @click="goBack" class="btn-stroke button-accent"> Regresar </a>
                 <a href="" class="btn-raised button-accent m-l-15"> Ir al Inicio </a>
             </div>
         </div>
@@ -26,4 +26,15 @@
 </style>
 
 <script>
+    export default {
+        data () {
+            return {
+            }
+        },
+        methods: {
+            goBack: function () {
+                this.$router.back();
+            }
+        }
+    }
 </script>
