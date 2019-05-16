@@ -210,7 +210,7 @@ app.use('/api/administrative-units', securityController.checkLogin, securityCont
 app.use('/api/administrativeUnits', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.ADMINISTRATIVE_UNITS), administrativeUnitRoutes);
 app.use('/api/calculations', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CALCULATIONS), calculationRoutes);
 app.use('/api/contracts', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CONTRACTS), contractRoutes);
-app.use('/api/data-load', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CONTRACTS), dataLoadRoutes);
+app.use('/api/data-load', dataLoadRoutes);
 
 
 app.get('*', function(req, res){

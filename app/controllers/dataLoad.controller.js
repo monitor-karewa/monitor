@@ -407,3 +407,8 @@ exports.confirmCurrent = (req, res, next) => {
 
         });
 };
+
+exports.downloadPlantilla = (req, res, next) => {
+    let file = __dirname + '/public/sources/plantilla.xlsx';
+    res.download(file);
+};
