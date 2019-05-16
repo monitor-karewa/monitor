@@ -65,6 +65,7 @@
             
             clearSearch () {
                 this.searchString = "";
+                this.doSearch();
             }
 
         },
