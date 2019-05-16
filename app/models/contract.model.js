@@ -703,7 +703,8 @@ let postSave = function(doc) {
 ContractSchema.post('insertMany', postInsertMany);
 ContractSchema.post('save', postSave);
 
-ContractSchema.index({contractNumber: 1, deleted: 1}, {unique: true});
+ContractSchema.index({contractNumber: 1, organization: 1, deleted: 1}, {unique: true});
+ContractSchema.index({contractId: 1, organization: 1, deleted: 1}, {unique: true});
 
 
 const Contract = mongoose.model('Contract', ContractSchema);

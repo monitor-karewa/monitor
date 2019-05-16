@@ -169,6 +169,10 @@ class CalculationClass {
 //Cargar class en Schema
 CalculationSchema.loadClass(CalculationClass);
 
+//Indexes
+CalculationSchema.index({name: 1, organization: 1, deleted: 1}, {unique: true});
+CalculationSchema.index({abbreviation: 1, organization: 1, deleted: 1}, {unique: true});
+
 CalculationSchema.statics.permission = permissions.getDefault("Calculation");
 
 CalculationSchema.statics.expressValidator = function() {

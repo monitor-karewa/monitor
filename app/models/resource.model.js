@@ -51,6 +51,9 @@ class ResourceClass {
 //Cargar class en Schema
 ResourceSchema.loadClass(ResourceClass);
 
+//Indexes
+ResourceSchema.index({title: 1, classification: 1, organization: 1, deleted: 1}, {unique: true});
+
 ResourceSchema.statics.permission = permissions.getDefault("Resource");
 
 ResourceSchema.statics.expressValidator = function() {
