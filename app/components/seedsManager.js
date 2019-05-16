@@ -7,10 +7,10 @@ const User = require('./../models/user.model').User;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 exports.init = () => {
-    async.waterfall(
-        [
+    async.series(
+        {
             //Task 2 - If no organizations available, create default
-            (callback) => {
+            initOrganizations: (callback) => {
                 Organization.find(deletedSchema.qNotDeleted())
                     .countDocuments({}, (err, organizationCount) => {
                         if (organizationCount > 0) {
@@ -26,12 +26,12 @@ exports.init = () => {
                             } else {
                                 console.log('[seedsManager] Default Organization successfully created');
                             }
-                            return callback(err, organization._id);
+                            return callback(err);
                         });
                     });
             },
             //Task 1 - If no users available, create default
-            (organizationId, callback) => {
+            initUsers: (callback) => {
                 User.find(deletedSchema.qNotDeleted())
                     .countDocuments({}, (err, userCount) => {
                         if (userCount > 0) {
@@ -52,7 +52,7 @@ exports.init = () => {
                         });
                     });
             }
-    ],
+        },
         (err, results) => {
             //TODO: Logger
             if (err) {
