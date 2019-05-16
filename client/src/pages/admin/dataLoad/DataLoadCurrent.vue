@@ -192,7 +192,7 @@
                         <!--<button class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR-->
                             <!--VALIDACIONES-->
                         <!--</button>-->
-                        <a href="http://localhost:3000/api/data-load/download" target="_blank" class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR
+                        <a @click.prevent="downloadValidations()" target="_blank" class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR
                             VALIDACIONES
                         </a>
                     </div>
@@ -281,6 +281,7 @@
     import ModalDefault from '@/components/modals/ModalDefault';
 
     import api from '@/api/dataLoad.api';
+    import baseApi from '@/api/base.api';
 
     import Vue from 'vue';
     import {mapState} from 'vuex';
@@ -292,6 +293,7 @@
         
         data () {
             return {
+                baseUrl: baseApi.baseUrl,
                 storeModule: 'dataLoad',
                 showDetails: false,
                 filterActionName: 'FILTER_CURRENT_DATA_LOAD',
@@ -489,7 +491,10 @@
             },
             cancelUpload() {
                 //noop
-            }
+            },
+            downloadValidations() {
+                this.$store.dispatch('dataLoad/DOWNLOAD_VALIDATIONS');
+            },
         },
         created() {
         },
