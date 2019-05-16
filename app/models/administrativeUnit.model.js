@@ -44,6 +44,9 @@ class AdministrativeUnitClass {
 //Cargar class en Schema
 AdministrativeUnitSchema.loadClass(AdministrativeUnitClass);
 
+//Indexes
+AdministrativeUnitSchema.index({name: 1, organization: 1, deleted: 1}, {unique: true});
+
 AdministrativeUnitSchema.statics.permission = permissions.getDefault("AdministrativeUnit");
 
 AdministrativeUnitSchema.statics.expressValidator = function() {

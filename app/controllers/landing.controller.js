@@ -2,6 +2,7 @@ const {Contract} = require('./../models/contract.model');
 const {Organization} = require('./../models/organization.model');
 
 const logger = require('./../components/logger').instance;
+const utils = require('./../components/utils');
 const mongoose = require('mongoose');
 
 
@@ -17,9 +18,9 @@ function _aggregateAmountByPeriods(req, res, callback) {
     if (filters) {
 
         if (filters.search && filters.search.length) {
-            orBuilder.push({contractId: utils.toAccentsRegex(filters.search)});
-            orBuilder.push({contractNumber: utils.toAccentsRegex(filters.search)});
-            orBuilder.push({servicesDescription: utils.toAccentsRegex(filters.search)});
+            orBuilder.push({contractId: utils.toAccentsRegex(filters.search, "gi")});
+            orBuilder.push({contractNumber: utils.toAccentsRegex(filters.search, "gi")});
+            orBuilder.push({servicesDescription: utils.toAccentsRegex(filters.search, "gi")});
             andBuilder.push({$or: orBuilder});
             orBuilder = [];
         }
