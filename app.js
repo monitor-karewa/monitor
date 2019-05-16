@@ -152,11 +152,11 @@ if (!isProd) {
     app.use(cors({
         origin: function (origin, callback) {
             //Allow cors for hosts that include 'karewa'
-            if (origin.indexOf('karewa') !== -1) {
+            //if (origin.indexOf('karewa') !== -1) {
                 callback(null, true)
-            } else {
-                callback(new Error('Not allowed by CORS'))
-            }
+            //} else {
+            //    callback(new Error('Not allowed by CORS'))
+            //}
         }
     }));
 }
