@@ -34,11 +34,12 @@ exports.list = (req, res, next) => {
 
     let search = req.query.search;
     if (search) {
+        let queryAsRegex = utils.toAccentsRegex(search, "i" );
         query = {
             $or: [
-                {name: utils.toAccentsRegex(search, "gi")},
-                {lastName: utils.toAccentsRegex(search, "gi")},
-                {email: utils.toAccentsRegex(search, "gi")}
+                {name: queryAsRegex},
+                {lastName: queryAsRegex},
+                {email: queryAsRegex}
             ]
         }
     }
