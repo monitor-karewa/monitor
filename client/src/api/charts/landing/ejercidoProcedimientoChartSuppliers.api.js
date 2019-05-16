@@ -5,7 +5,7 @@ const namespace = 'landing';
 
 export default {
     dataForChart: (params = {}, onSuccess, onError) => {
-        return axios.get(`${base.baseUrl}/public-api/${namespace}/amountByProcedure`, params)
+        return axios.post(`${base.baseUrl}/public-api/${namespace}/amountByProcedure`, params)
             .then(onSuccess)
             .catch(onError);
     },

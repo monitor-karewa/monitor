@@ -19,93 +19,24 @@
                     <div v-if="showOrganizationSelect">
                         <OrganizationSelector :defaultRedirectTo="defaultRedirectTo"/>
                     </div>
-                    
-                    <div class="horizontal-center m-t-50" v-if="showFilters">
-                        <div class="filter-box">
-                            <div class="filter">
-                                <div class="filter-container row m-0">
-                                    <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
-                                        <div class="fg-line m-0">
-                                            <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Buscar administración" title="Por administración">
-                                                <option>ADMINISTRACIÓN 2016-2018</option>
-                                                <option>ADMINISTRACIÓN 2013-2015</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
-                                        <div class="fg-line m-0">
-                                            <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Buscar año" title="Por año…">
-                                                <option>2019</option>
-                                                <option>2018</option>
-                                                <option>2017</option>
-                                            </select>
 
-                                        </div>
-                                    </div>
-                                    <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
-                                        <div class="fg-line m-0">
-                                            <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Buscar trimestre" title="Por trimestre…">
-                                                <optgroup label="2018">
-                                                    <option>3º 2018</option>
-                                                    <option>2º 2018</option>
-                                                    <option>1º 2018</option>
-                                                </optgroup>
-                                                <optgroup label="2017">
-                                                    <option>3º 2017</option>
-                                                    <option>2º 2017</option>
-                                                    <option>1º 2017</option>
-                                                </optgroup>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
-                                        <div class="fg-line m-0">
-                                            <select class="form-control select selectpicker" data-live-search="true" data-live-search-placeholder="Buscar administrativa" title="Por unidad administrativa…">
-                                                <option>ATENCIÓN CIUDADANA</option>
-                                                <option>CENTRO DE ATENCIÓN Y PREVENCIÓN PSICOLÓGICAS</option>
-                                                <option>COMUNICACIÓN SOCIAL</option>
-                                                <option>CONSEJO DE URBANIZACIÓN</option>
-                                                <option>DESARROLLO ECONOMICO Y TURÍSTICO</option>
-                                                <option>DESARROLLO HUMANO Y EDUCACIÓN</option>
-                                                <option>DESARROLLO INTEGRAL DE LA FAMILIA</option>
-                                                <option>DESARROLLO RURAL</option>
-                                                <option>DESARROLLO URBANO Y ECOLOGÍA</option>
-                                                <option>DESPACHO DE LA PRESIDENCIA</option>
-                                                <option>DIRECCIÓN DE OBRAS PUBLICAS MUNICIPALES</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <button class="filter-btn" type="button" name="button">Filtrar</button>
-                            </div>
-                            <div class="m-t-20 float-left">
-                                <span class="tag-title">Filtros:</span>
-                                <div class="tag">
-                      <span class="">
-                        DIRECCIÓN DE OBRAS PÚBLICAS MUNICIPALES
-                      </span>
-                                    <button>
-                                        <i class="zmdi zmdi-close"></i>
-                                    </button>
-                                </div>
-                                <div class="tag">
-                      <span class="">
-                        Béisbol
-                      </span>
-                                    <button>
-                                        <i class="zmdi zmdi-close"></i>
-                                    </button>
-                                </div>
-                                <div class="tag">
-                      <span class="">
-                        Béisbol
-                      </span>
-                                    <button>
-                                        <i class="zmdi zmdi-close"></i>
-                                    </button>
-                                </div>
-                            </div>
+                    <div class="horizontal-center m-t-50" v-if="showFilters">
+
+                        <div class="filter-box">
+                            <!--filters-->
+                            <PublicFilter
+                                    :storeModules="chartsModules"
+                                    :administrativeUnits="adminstrativeUnitsForFilter"
+                                    :fiscalYears="fiscalYears"
+                                    :trimonths="trimonths"
+                                    :administrationPeriods="administrationPeriods"
+                                    :procedureTypes="procedureTypes"
+                                    :actionName = "'getInfoForChart'"
+                            >
+                            </PublicFilter>
+
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -116,15 +47,23 @@
 <script>
 
     import OrganizationSelector from '@/components/general/OrganizationSelector';
-    
+    import PublicFilter from '@/components/filters/PublicFilter.vue';
+    import { mapState} from 'vuex';
+
+    const storeModule = "userHome";
+    const chartsModules = ["millonesTrimestreChart","ejercidoProcedimientoChart"];
+
     export default {
         data () {
             return {
+                storeModule : storeModule,
+                chartsModules : chartsModules,
                 defaultRedirectTo: '/'
             }
         },
         components: {
-            OrganizationSelector
+            OrganizationSelector,
+            PublicFilter
         },
         props: {
             showFilters: {
@@ -135,6 +74,26 @@
                 type: Boolean,
                 default: false
             }
-        }
+        },
+        computed : {
+        ...mapState({
+                contracts: state => state[storeModule].contracts,
+                adminstrativeUnitsForFilter: state => state[storeModule].adminstrativeUnitsForFilter,
+                fiscalYears: state => state[storeModule].fiscalYears,
+                trimonths: state => state[storeModule].trimonths,
+                administrationPeriods: state => state[storeModule].administrationPeriods,
+                procedureTypes: state => state[storeModule].procedureTypes,
+            })
+        },
+        beforeMount() {
+            //for the filters
+            this.$store.dispatch(`${storeModule}/getAdministrativeUnitsForFilter`);
+            this.$store.dispatch(`${storeModule}/getFiscalYears`);
+            this.$store.dispatch(`${storeModule}/getTrimonths`);
+            this.$store.dispatch(`${storeModule}/getAdministrationPeriods`);
+            this.$store.dispatch(`${storeModule}/getProcedureTypes`);
+
+        },
+
     }
 </script>

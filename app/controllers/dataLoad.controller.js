@@ -135,7 +135,7 @@ exports.upload = (req, res, next) => {
  * @param res
  * @param next
  */
-exports.download = (req, res, next) => {
+exports.downloadValidations = (req, res, next) => {
 
     let currentOrganizationId = Organization.currentOrganizationId(req);
     
