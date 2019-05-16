@@ -1,5 +1,6 @@
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
+const utils = require('./../components/utils');
 
 const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
@@ -35,10 +36,12 @@ exports.list = (req, res, next) => {
     let qNotDeleted = deletedSchema.qNotDeleted();
     query = {...query, ...qNotDeleted};
 
-    if(req.query.search){
+    let search = req.query.search;
+    if(search){
         query = {
             $or : [
-                {name : new RegExp(req.query.search,"i")},
+                {name : utils.toAccentsRegex(search, "gi")},
+                {shortName : utils.toAccentsRegex(search, "gi")},
             ]
         }
     }
