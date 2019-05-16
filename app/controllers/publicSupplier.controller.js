@@ -3,6 +3,8 @@ const {Contract} = require('./../models/contract.model');
 const {Organization} = require('./../models/organization.model');
 const deletedSchema = require('./../models/schemas/deleted.schema');
 const utils = require('./../components/utils.js');
+const moment = require('moment');
+const { PDFTable, PDFExporter } = require('./../components/pdfExporter');
 
 const logger = require('./../components/logger').instance;
 const mongoose = require('mongoose');
@@ -515,14 +517,43 @@ exports.download = (req, res, next) => {
     }
 
     _aggregateSuppliersFromContracts(req, res, {paginate: false}, (err, suppliers) => {
+        let totals = {
+            totalCount: 0,
+            publicCount: 0,
+            invitationCount: 0,
+            noBidCount: 0,
+
+            total: 0,
+            public: 0,
+            invitation: 0,
+            noBid: 0,
+        };
+
+        suppliers.forEach((supplierInfo) => {
+            totals.totalCount += supplierInfo.contractsCount;
+            totals.publicCount += supplierInfo.publicCount;
+            totals.invitationCount += supplierInfo.invitationCount;
+            totals.noBidCount += supplierInfo.noBidCount;
+
+            totals.total += supplierInfo.total;
+            totals.public += supplierInfo.public;
+            totals.invitation += supplierInfo.invitation;
+            totals.noBid += supplierInfo.noBid;
+        });
+
+
+
+
+        console.log("suppliers", suppliers);
         switch(format){
             case 'xls':
                 downloadXls(req, res, suppliers);
                 break;
             case 'pdf':
+                downloadPDF(req, res,{totals, suppliers});
                 break;
             case 'json':
-                return res.json(suppliers);
+                return res.json({totals, suppliers});
                 break;
             default:
                 break;
@@ -563,4 +594,35 @@ let downloadXls = (req,res, suppliers) => {
         .setTitle('Proveedores')
         .setFileName('proveedores')
         .exportToFile(req, res);
+};
+
+let downloadPDF = (req, res, {totals, suppliers}) => {
+    let resultsTable = {
+        style:'tableExample',
+        layout: 'lightHorizontalLines',
+        table: new PDFTable({headerRows:1,docs:totals})
+                    .setHeaders(['Contratos en Total','Contratos por Licitación Pública', 'Contratos por invitación', 'Contratos por adjudicación directa'])
+                    .setWidths(null,"auto", 4)
+                    .transformDocs(["totalCount","publicCount","invitationCount","noBidCount"])
+    };
+    let suppliersTable = {
+        style:'tableExample',
+        layout: 'lightHorizontalLines',
+        table:new PDFTable({headerRows:1,docs:suppliers})
+            .setHeaders(['Nombre del Proveedor', 'Licitación Pública', 'Por Invitación', 'Adj. Directa', 'Monto Total'])
+            .setWidths(null,"auto", 5)
+            .transformDocs(['name','public','invitation','noBid','total'])
+    };
+
+    let headers = [{ text:"Monitor Karewa", style:'header'},
+                    {text : moment(new Date()).format('MM/DD/YYYY'), style:'header'}];
+
+    new PDFExporter()
+        .setFileName('monitor-karewa-proveedores.pdf')
+        .addHeadersToPDF(headers)
+        .addTitleToPDF({text:"Información general de Proveedores", style:'title'})
+        .addContentToPDF(resultsTable)
+        .addContentToPDF(suppliersTable)
+        .addFooterToPDF()
+        .exportToFile(req, res)
 };
