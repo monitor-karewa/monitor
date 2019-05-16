@@ -42,6 +42,15 @@ export default {
         }, params)
             .then(onSuccess)
             .catch(onError);
+    },
+    downloadPlantilla: (params = {}, onSuccess, onError) => {
+        return axios({
+            url: `${baseApi.baseUrl}/api/${namespace}/download-plantilla`,
+            method: 'GET',
+            responseType: 'blob'
+        }, params)
+            .then(onSuccess)
+            .catch(onError);
     }
     // delete: (params = {}, onSuccess, onError) => {
     //     return axios.post(`${base.baseUrl}/api/${namespace}/delete`, { "_id" : params.id })

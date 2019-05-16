@@ -407,3 +407,10 @@ exports.confirmCurrent = (req, res, next) => {
 
         });
 };
+
+let appRoot = require('app-root-path');
+
+exports.downloadPlantilla = (req, res, next) => {
+    let file = appRoot.path + '/app/public/sources/plantilla.xlsx';
+    res.download(file);
+};
