@@ -1,7 +1,7 @@
 <template>
     <div class="search-container">
         <div class="form-search">
-            <input class="input-search" type="text" v-model="searchString"  @input="doSearch" :placeholder="`Buscar ${$tc(docName, 0)}`" />
+            <input class="input-search" type="text" v-model.trim="searchString"  @input="doSearch" :placeholder="`Buscar ${$tc(docName, 0)}`" />
             <i class="icon zmdi zmdi-search"></i>
             <i class="icon zmdi zmdi-close" @click="clearSearch()"></i>
         </div>

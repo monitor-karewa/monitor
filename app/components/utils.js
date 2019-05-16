@@ -227,6 +227,56 @@ const utils =  {
         }
         
         return enumQueryAsRegex;
+    },
+    
+    
+    addLookupRefToAggregatePipeline(aggregate, model, localField, options = {}) {
+        let asField = localField;
+        if (options.asField) {
+            asField = options.asField;
+        }
+        let _idFieldName = `${asField}Id`;
+        let _idFieldNamePipelineRef = `$$${_idFieldName}`;
+        let pipeline = [
+            {
+                "$match": {
+                    "$expr": {
+                        "$eq": [ "$_id", _idFieldNamePipelineRef ] }
+                }
+            },
+            // {
+            //     "$project": {
+            //         "name": 1
+            //     }
+            // }
+        ];
+        
+        if (options.project) {
+            pipeline.push({
+                "$project": options.project
+            })
+        }
+        
+        
+        aggregate.append(
+            {
+                $lookup: {
+                    from: model.collection.name,
+                    let: { [_idFieldName]: `$${localField}` },
+                    pipeline: pipeline,
+                    as: asField
+                }
+            }
+        );
+
+        aggregate.append(
+            {
+                $unwind: {
+                    path: `$${asField}`,
+                    preserveNullAndEmptyArrays: true
+                },
+            },
+        );
     }
 
 };

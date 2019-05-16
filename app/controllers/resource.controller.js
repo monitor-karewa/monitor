@@ -67,7 +67,6 @@ exports.list = (req, res, next) => {
     }
 
 
-
     let qNotDeleted = deletedSchema.qNotDeleted();
     let qByOrganization = Organization.qByOrganization(req);
     query = {...query, ...qNotDeleted, ...qByOrganization};
