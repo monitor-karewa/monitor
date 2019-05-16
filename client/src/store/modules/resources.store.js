@@ -4,7 +4,7 @@ import catalog from '@/store/modules/base/catalog.store';
 const resourcesCatalog = catalog(resourcesApi, 'resources');
 
 const state = {
-    classificationTypes:['LEGAL_FRAMEWORK', 'ARTICLE', 'NOTES']
+    classificationTypes:['LEGAL_FRAMEWORK', 'ARTICLE', 'NOTES', 'WEBSITE']
 };
 
 const getters = {

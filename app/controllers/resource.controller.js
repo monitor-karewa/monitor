@@ -1,7 +1,8 @@
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
+const utils = require('./../components/utils');
 
-const Resource = require('./../models/resource.model').Resource;
+const {Resource, classificationEnumDict, classificationEnum} = require('./../models/resource.model');
 const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
@@ -41,6 +42,31 @@ exports.list = (req, res, next) => {
     let query = {};
 
     //query["field"] = value;
+
+    let search = req.query.search;
+    if (search) {
+        let queryAsRegex = utils.toAccentsRegex(search, "gi");
+        
+        let orArray = [
+            {title: queryAsRegex},
+            {url: queryAsRegex}
+        ];
+        
+        
+        let enumQueryAsRegexStr = utils.enumSearchRegexString(search, classificationEnum, classificationEnumDict);
+
+        if (enumQueryAsRegexStr && enumQueryAsRegexStr.length) {
+            orArray.push(
+                {classification: new RegExp(enumQueryAsRegexStr)}
+            );
+        }
+            
+        query = {
+            $or: orArray
+        }
+    }
+
+
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     let qByOrganization = Organization.qByOrganization(req);

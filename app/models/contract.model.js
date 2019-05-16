@@ -347,7 +347,7 @@ let ContractSchema = new Schema({
         type: String,
         enum: categoryEnum,
         required: [function () {
-            let descriptionRegExp = utils.toAccentsRegex(this.servicesDescription.toUpperCase(), 'i');
+            let descriptionRegExp = utils.toAccentsRegex(this.servicesDescription.toUpperCase(), 'gi');
             return descriptionRegExp.test(this.category);
         }, "El campo Materia es un campo requerido"],
         uppercase: true

@@ -423,7 +423,7 @@ export default {
     //Resources
     "resources.resource": "Recurso | Recursos",
     "resources.title": "Título",
-    "resources.classification": "Casificación",
+    "resources.classification": "Clasificación",
     "resources.url": "URL",
     "resources.validation.required":"El campo {field} del Recurso es requerido",
     "resources.validation.url":"La Url no tiene el formato correcto",
@@ -432,9 +432,11 @@ export default {
     "resources.resource-type.marco-legal":"Marco Legal",
     "resources.resource-type.articulo":"Artículo",
     "resources.resource-type.notas":"Nota",
+    "resources.resource-type.website":"Sitio Web",
     "LEGAL_FRAMEWORK":"Marco Legal",
     "ARTICLE":"Artículo",
     "NOTES":"Nota",
+    "WEBSITE":"Sitio Web",
     "resources.resource-type.label":"Clasificación",
 
 

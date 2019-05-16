@@ -36,7 +36,7 @@ exports.list = (req, res, next) => {
     //query["field"] = value;
     let search = req.query.search;
     if(search){
-        let queryAsRegex = utils.toAccentsRegex(search, "i" );
+        let queryAsRegex = utils.toAccentsRegex(search, "gi" );
         query = {
             $or : [
                 {name : queryAsRegex},

@@ -128,7 +128,7 @@ const actions = {
             dataToFilter.forEach((rowInfo) => {
                 let keys = Object.keys(rowInfo);
                 for (let key of keys) {
-                    if (rowInfo[key].value && rowInfo[key].value.toString().match(utils.toAccentsRegex(search, 'i'))) {
+                    if (rowInfo[key].value && rowInfo[key].value.toString().match(utils.toAccentsRegex(search, 'gi'))) {
                         filteredData.push(rowInfo);
                         break;
                     }

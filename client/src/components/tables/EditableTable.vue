@@ -89,7 +89,7 @@
                                             <strong class="d-block">Por el momento no hay {{plural}}. </strong> Haz clic en el botón de "Nuevo(a)" para comenzar.
                                         </p>
                                         <button type="button" class="btn-raised button-accent" data-toggle="modal"
-                                                data-target="#newEntry"><i class="zmdi zmdi-plus"></i>Nuevo(a)
+                                                data-target="#ModalEntry"><i class="zmdi zmdi-plus"></i>Nuevo(a)
                                             {{singular}}
                                         </button>
                                     </div>
