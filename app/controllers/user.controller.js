@@ -1,5 +1,6 @@
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
+const utils = require('./../components/utils');
 
 const User = require('./../models/user.model').User;
 const Organization = require('./../models/organization.model').Organization;
@@ -31,13 +32,13 @@ exports.list = (req, res, next) => {
 
     let query = {};
 
-    if (req.query.search) {
+    let search = req.query.search;
+    if (search) {
         query = {
             $or: [
-                {name: new RegExp(req.query.search, "i")},
-                {lastName: new RegExp(req.query.search, "i")},
-                {email: new RegExp(req.query.search, "i")}
-
+                {name: utils.toAccentsRegex(search, "gi")},
+                {lastName: utils.toAccentsRegex(search, "gi")},
+                {email: utils.toAccentsRegex(search, "gi")}
             ]
         }
     }
@@ -45,8 +46,10 @@ exports.list = (req, res, next) => {
     //query["field"] = value;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    let qByOrganization = Organization.qByOrganization(req);
-    query = {...query, ...qNotDeleted, ...qByOrganization};
+    
+    //Users are not bound by organization
+    // let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...qNotDeleted/*, ...qByOrganization*/};
 
     User
         .paginate(

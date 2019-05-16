@@ -77,7 +77,7 @@
                                              alt="Empty"/>
                                         <p>
                                             <strong class="d-block">No se han encontrado {{plural}} que coincidan con tu búsqueda</strong>
-                                            <span>Pro favor intenta nuevamente</span>
+                                            <span>Por favor intenta nuevamente</span>
                                         </p>
 
                                     </div>
