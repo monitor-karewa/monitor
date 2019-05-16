@@ -16,7 +16,7 @@ exports.checkLogin = (req, res, next) => {
         return next();
     } else {
         //403 Not allowed
-        let error = new Error('Acceso denegado');
+        let error = new Error('Access denied');
         error.status = 403;
         return next(error);
         // return res.redirect('/login');
@@ -33,7 +33,7 @@ exports.checkPermission = (permission) => {
             return next();
         } else {
             //403 Not allowed
-            let error = new Error('Acceso denegado');
+            let error = new Error('Access denied');
             error.status = 403;
             return next(error);
             // return res.redirect('/login');

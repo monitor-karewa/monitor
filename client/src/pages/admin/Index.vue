@@ -31,7 +31,64 @@
                     return this.$router.push(`/admin/select-organization?redirectTo=${this.$route.path}`);
                 }
             }
+            
+            
+            let routeAccessValidations = [
+                {
+                    path: '/admin/users',
+                    permission: 'USERS'
+                },
+                {
+                    path: "/admin/suppliers",
+                    permission: "SUPPLIERS"
+                },
+                {
+                    path: "/admin/organizations",
+                    permission: "ORGANIZATIONS"
+                },
+                {
+                    path: "/admin/administrative-units",
+                    permission: "ADMINISTRATIVE_UNITS"
+                },
+                {
+                    path: "/admin/contracts",
+                    permission: "CONTRACTS"
+                },
+                {
+                    path: "/admin/resources",
+                    permission: "RESOURCES"
+                },
+                {
+                    path: "/admin/calculations",
+                    permission: "CALCULATIONS"
+                },
+                {
+                    path: "/admin/settings",
+                    permission: "SETTINGS"
+                }
+            ];
 
+            
+            for (let validation of routeAccessValidations) {
+                if (this.$route.path.includes(validation.path) && !this.hasAccess(validation.permission)) {
+                    return this.$router.push(`/access-denied`);
+                }
+            }
+
+        },
+        computed: {
+            permissions () {
+                return this.$session.get('permissions') || [];
+            }
+        },
+        methods: {
+            hasAccess (permission) {
+                if (!permission) {
+                    return true;
+                }
+
+                return this.permissions && this.permissions.includes(permission);
+            }
         },
         created() {
 //            bus.$on('LOGOUT', () => {
