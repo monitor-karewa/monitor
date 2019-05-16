@@ -20,7 +20,7 @@
                         <!--</div>-->
                         <div class="floating-text">
                             <h1>{{$t('data-load.download-template')}}</h1>
-                            <a href="http://localhost:3000/api/data-load/downloadPlantilla" target="_blank"><p><strong class="c-accent">{{$t('data-load.download-template.link')}}</strong></p></a>
+                            <a @click.prevent="downloadPlantilla()" href="" target="_blank"><p><strong class="c-accent">{{$t('data-load.download-template.link')}}</strong></p></a>
                         </div>
                         <img class="img-fluid img-card-corner" src="@/assets/images/Cards/corner-file-table.svg" alt="" />
                     </div>
@@ -189,6 +189,9 @@
             
             redirectToCurrent() {
                 router.push('/admin/data-load/current');
+            },
+            downloadPlantilla() {
+                this.$store.dispatch('dataLoad/DOWNLOAD_PLANTILLA');
             }
         },
         created(){

@@ -13,7 +13,7 @@ var securityController = require('./../controllers/security.controller');
 router.post('/upload', dataLoadController.beforeUpload, dataLoadController.upload);
 router.get('/download-validations', dataLoadController.downloadValidations);
 
-router.get('/downloadPlantilla', dataLoadController.downloadPlantilla);
+router.get('/download-plantilla', dataLoadController.downloadPlantilla);
 
 router.get('/current', dataLoadController.current);
 router.get('/current-info', dataLoadController.currentInfo);

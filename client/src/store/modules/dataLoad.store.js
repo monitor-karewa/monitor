@@ -181,6 +181,16 @@ const actions = {
             document.body.appendChild(link);
             link.click();
         });
+    },
+    DOWNLOAD_PLANTILLA: () => {
+        dataLoadApi.downloadPlantilla({}, (result) => {
+            const url = window.URL.createObjectURL(new Blob([result.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `monitor-karewa-plantilla-contratos.xlsx`);
+            document.body.appendChild(link);
+            link.click();
+        });
     }
 };
 
