@@ -33,13 +33,13 @@
 </template>
 
 <script>
-    import BackButton from '@/components/general/BackButton';
-    import AdminMainSection from '@/components/admin/AdminMainSection';
+//    import BackButton from '@/components/general/BackButton';
+//    import AdminMainSection from '@/components/admin/AdminMainSection';
     const storeModule = 'publicOrganizations';
     import {mapState} from 'vuex';
     import axios from 'axios';
 
-    import i18n from '@/plugins/i18n';
+//    import i18n from '@/plugins/i18n';
 
     export default {
         name: "SelectOrganization",
@@ -49,8 +49,8 @@
             }
         },
         components: {
-            BackButton,
-            AdminMainSection
+//            BackButton,
+//            AdminMainSection
         },
 //        mounted() {
         //Check if user was redirected

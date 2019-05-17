@@ -8,6 +8,11 @@ export default {
             .then(onSuccess)
             .catch(onError);
     },
+    changeCover: (params = {}, config = {}, onSuccess, onError) => {
+        return axios.post(`${base.baseUrl}/api/${namespace}/change-cover`, params, config)
+            .then(onSuccess)
+            .catch(onError);
+    },
     changeSettings: (params = {}, onSuccess, onError) => {
         return axios.post(`${base.baseUrl}/api/${namespace}/change-settings`, params)
             .then(onSuccess)

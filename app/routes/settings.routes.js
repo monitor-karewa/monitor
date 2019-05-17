@@ -10,6 +10,12 @@ var publicOrganizationController = require('./../controllers/publicOrganization.
 router.get('/load-settings', publicOrganizationController.loadOrganizationSettings);
 
 /**
+ * POST /change-cover
+ * Change the current Organization's cover
+ */
+router.post('/change-cover', settingsController.beforeChangeCover, settingsController.changeCover);
+
+/**
  * POST /change-settings
  * Change the current Organization's settings
  */

@@ -25,6 +25,26 @@ const actions = {
             tShow(i18n.t('settings.load-settings.error'), 'danger');
         })
     },
+
+    CHANGE_COVER ({commit}, {session, formData}) {
+        settingsApi.changeCover(formData, {
+            headers: {
+                'Content-Type': 'multipart/form-data'
+            }
+        }, (result) => {
+            console.log('result', result);
+            if (result.data && !result.data.error && result.data.data) {
+                tShow(i18n.t('settings.change-cover.update.success'), 'danger');
+                session.set('currentOrganizationCover', result.data.data.cover);
+                commit('CURRENT_ORGANIZATION', result.data.data, {root: true});
+            } else {
+                tShow(i18n.t('settings.change-cover.update.error'), 'danger');
+            }
+        }, (error) => {
+            console.log('error', error);
+            tShow(i18n.t('settings.change-cover.update.error'), 'danger');
+        });
+    },
     
     CHANGE_SETTINGS ({commit}, {session, title, description, contactLocation, contactEmail}) {
         settingsApi.changeSettings({title, description, contactLocation, contactEmail}, (result) => {

@@ -1,6 +1,58 @@
 const logger = require('./../components/logger').instance;
 
 const Organization = require('./../models/organization.model').Organization;
+const File = require('./../models/file.model').File;
+
+var multer  = require('multer');
+var upload = multer();
+
+exports.beforeChangeCover = upload.single('cover');
+
+exports.changeCover = (req, res, next) => {
+    //req.file.buffer
+    //req.file.filename
+    let currentOrganizationId = Organization.currentOrganizationId(req);
+
+    
+    let coverFileInfo = req.file;
+
+    if (!coverFileInfo) {
+        return res.json({
+            error: true
+        });
+    }
+
+    let cover = new File({
+        mimetype: coverFileInfo.mimetype,
+        size: coverFileInfo.size,
+        filename: coverFileInfo.originalname,
+        data: coverFileInfo.buffer
+    });
+    
+    cover.save((err) => {
+        if (err) {
+            logger.error(err, null, 'settings.controller#changeCover', 'Error trying to save cover File for Organization [%s]', currentOrganizationId);
+        }
+
+        let update = {
+            cover: cover._id
+        };
+
+        let query = {_id: currentOrganizationId};
+        Organization.updateOne(query, {$set: update}, {}, (err) => {
+            if (err) {
+                logger.error(err, null, 'settings.controller#changeCover', 'Error trying to change cover for Organization [%s]', currentOrganizationId);
+            }
+    
+            return res.json({
+                error: !!err,
+                data: update
+            });
+        });
+    });
+    
+    
+};
 
 exports.changeSettings = (req, res, next) => {
     let title = req.body.title;

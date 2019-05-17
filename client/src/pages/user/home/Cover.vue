@@ -3,7 +3,11 @@
         <section id="cover" class="client-cover">
             <div class="cover-container">
                 <div class="img-container">
-                    <img src="@/assets/images/Backgrounds/test-cover-page.svg" alt="">
+                    <img v-if="!hasCover" src="@/assets/images/Backgrounds/test-cover-page.svg" alt="Cover">
+                    <img v-if="hasCover"
+                         :src="coverSrc"
+                         alt="Cover"/>
+                    <!--<img src="@/assets/images/Backgrounds/test-cover-page.svg" alt="">-->
                 </div>
                 <div class="neutral-width">
                     <div class=" info">
@@ -18,7 +22,7 @@
                         <h1 v-html="currentOrganization.title || defaultTitle"></h1>
                         <div class="divider"></div>
                         <!--<p>Aquí podrás obtener información sobre los procedimientos de licitaciones para consultar la compra, renta y contratación de servicios que se realizan en el Municipio de Chihuahua.</p>-->
-                        <p>{{currentOrganization.description || defaultDescription}}</p>
+                        <p v-html="currentOrganization.description || defaultDescription"></p>
 
                     </div>
 
@@ -58,6 +62,7 @@
 
     const storeModule = "userHome";
     const chartsModules = ["millonesTrimestreChart","ejercidoProcedimientoChart"];
+    import baseApi from '@/api/base.api';
 
     export default {
         data () {
@@ -84,7 +89,7 @@
             }
         },
         computed : {
-        ...mapState({
+            ...mapState({
                 currentOrganization: state => state.currentOrganization,
                 contracts: state => state[storeModule].contracts,
                 adminstrativeUnitsForFilter: state => state[storeModule].adminstrativeUnitsForFilter,
@@ -92,7 +97,17 @@
                 trimonths: state => state[storeModule].trimonths,
                 administrationPeriods: state => state[storeModule].administrationPeriods,
                 procedureTypes: state => state[storeModule].procedureTypes,
-            })
+            }),
+            hasCover() {
+                return !!this.currentOrganization.cover;
+            },
+            coverSrc() {
+                if (this.currentOrganization.cover) {
+                    return `${baseApi.baseUrl}/public-api/files/image/${this.currentOrganization.cover}`;
+                } else {
+                    return '';
+                }
+            }
         },
         beforeMount() {
             //for the filters

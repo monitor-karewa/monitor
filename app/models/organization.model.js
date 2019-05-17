@@ -48,6 +48,11 @@ organizationSchema = mongoose.Schema({
         enum: themes,
         default: "default"
     },
+    cover: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'File',
+        required: false
+    },
     title: {
         type: String,
         required: true,

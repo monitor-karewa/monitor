@@ -31,7 +31,7 @@
                                             <a v-show="!editEnabled" class="btn-stroke button-accent b-shadow-none p-t-5 p-b-5">
                                                 <!--<i class="zmdi zmdi-plus"></i>-->
                                                 Cambiar Imagen
-                                                <input type="file"/>
+                                                <input type="file" id="file" :ref="coverFileRef" v-on:change="handleCoverFileUpload()" :accept="fileAcceptCover"/>
                                             </a>
                                             <a v-show="!editEnabled" @click.prevent="setEditEnabled(true)"
                                                class="btn-raised button-accent b-shadow-none p-t-5 p-b-5 m-l-15">
@@ -55,18 +55,19 @@
                                         <label>Tamaño de imagen recomendado: <strong class="primary">1280 x
                                             500</strong> </label>
                                         <div class="container-cover">
-                                            <img class="img-fluid"
-                                                 src="https://hpmedia.bloomsbury.com/rep/g/page-background-shell%20-%202.png"
+                                            <img v-if="!hasCover" class="img-fluid" src="@/assets/images/Backgrounds/test-cover-page.svg" alt="Cover">
+                                            <img v-if="hasCover" class="img-fluid"
+                                                 :src="coverSrc"
                                                  alt="Cover"/>
                                             <div class="info" v-show="!editEnabled">
                                                 <small>Bienvenido a</small>
-                                                <label><strong>{{settings.title}}</strong></label>
-                                                <p>{{settings.description}}</p>
+                                                <label v-html="settings.title || defaultTitle"></label>
+                                                <p v-html="settings.description || defaultDescription"></p>
                                             </div>
                                             <div class="info" v-show="editEnabled">
                                                 <small>Bienvenido a</small>
-                                                <label><strong>{{localSettings.title}}</strong></label>
-                                                <p>{{localSettings.description}}</p>
+                                                <label v-html="localSettings.title || defaultTitle"></label>
+                                                <p v-html="localSettings.description || defaultDescription"></p>
                                             </div>
                                         </div>
                                     </div>
@@ -234,6 +235,7 @@
 <script>
     import AdminMainSection from '@/components/admin/AdminMainSection';
     import BackButton from '@/components/general/BackButton';
+    import baseApi from '@/api/base.api';
 
     import {mapState} from 'vuex';
     
@@ -249,7 +251,17 @@
                     description: '',
                     contactLocation: '',
                     contactEmail: '',
-                }
+                },
+                coverFileRef: 'coverFile',
+                coverFile: null,
+                allowedImageMimeTypes: [
+                    'image/png',
+                    'image/jpeg',
+                    'image/svg+xml',
+                    'image/gif',
+                ],
+                defaultTitle: 'Monitor <strong>Karewa</strong>',
+                defaultDescription: 'Aquí podras obtener información sobre los procedimientos de contrataciones públicas, incluyendo la compra, renta y contratación de servicios que se realizan en el Municipio de Chihuahua',
             }
         },
         components: {
@@ -311,6 +323,19 @@
             blueDarkClass() {
                 return this.theme === 'blueDark' ? 'active' : '';
             },
+            fileAcceptCover() {
+                return this.allowedImageMimeTypes.join(',');
+            },
+            hasCover() {
+                return !!this.currentOrganization.cover;
+            },
+            coverSrc() {
+                if (this.currentOrganization.cover) {
+                    return `${baseApi.baseUrl}/public-api/files/image/${this.currentOrganization.cover}`;
+                } else {
+                    return '';
+                }
+            }
         },
         methods:{
             setTheme(theme) {
@@ -339,11 +364,38 @@
                 this.setEditEnabled(false);
             },
             setLocalSettings(val) {
-                this.localSettings.title = val.title;
-                this.localSettings.description = val.description;
-                this.localSettings.contactLocation = val.contactLocation;
-                this.localSettings.contactEmail = val.contactEmail;  
-            }
+                this.localSettings.title = val.title || '';
+                this.localSettings.description = val.description || '';
+                this.localSettings.contactLocation = val.contactLocation || '';
+                this.localSettings.contactEmail = val.contactEmail || '';  
+            },
+            handleCoverFileUpload() {
+
+                this.coverFile = null;
+
+                if (this.$refs[this.coverFileRef].files && this.$refs[this.coverFileRef].files.length) {
+                    this.coverFile = this.$refs[this.coverFileRef].files[0];
+                }
+
+                if (!this.coverFile || !this.coverFile.size || !this.coverFile.type) {
+                    //TODO: toast i18n
+                    tShow(`Por favor selecciona un archivo para la imagen`, 'danger');
+                    return;
+                }
+
+                if (!this.allowedImageMimeTypes.includes(this.coverFile.type)) {
+                    //TODO: toast i18n
+                    tShow(`Por favor selecciona una imagen con extensión .jpeg, .png, .gif o .svg`, 'danger');
+                    return;
+                }
+
+                let formData = new FormData();
+                formData.append('cover', this.coverFile);
+                
+                let session = this.$session;
+
+                this.$store.dispatch(`${storeModule}/CHANGE_COVER`, {session, formData});
+            },
         },
         created(){
         },

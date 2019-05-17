@@ -41,15 +41,16 @@ let actions = {
                 commit('CURRENT_USER', user, {root: true});
             }
         }, (err) => {
-            console.log('err', err);
             tShow(i18n.t('accounts.login.error'), 'danger');
         });
     },
-    LOGOUT ({}, {_session}) {
+    LOGOUT ({commit}, {_session}) {
         
         tShow(i18n.t('accounts.logout.success'), 'success');
 
         _session.destroy();
+        commit('SET_CURRENT_ORGANIZATION_DEFAULTS', {}, {root: true});
+        
         router.push('/');
     }
 };

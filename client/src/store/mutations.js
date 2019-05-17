@@ -22,17 +22,32 @@ export default {
         if (cover) {
             state.currentOrganization.cover = cover;
         }
-        state.currentOrganization.title = title;
-        // if (title) {
-        // }
-        state.currentOrganization.description = description;
-        // if (description) {
-        // }
+        if (title) {
+            state.currentOrganization.title = title;
+        }
+        if (description) {
+            state.currentOrganization.description = description;
+        }
         // state.currentOrganization.contactLocation = contactLocation;
         // if (contactLocation) {
         // }
         // state.currentOrganization.contactEmail = contactEmail;
         // if (contactEmail) {
         // }
+    },
+
+    SET_CURRENT_ORGANIZATION_DEFAULTS(state) {
+        state.currentOrganization = {
+            _id: '',
+            name: '',
+            shortName: '',
+            color: '',
+            theme: '',
+            cover: null,
+            title: null,
+            description: null,
+            contactLocation: null,
+            contactEmail: null,
+        };
     }
 }
