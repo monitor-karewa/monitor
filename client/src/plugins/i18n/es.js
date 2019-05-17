@@ -519,6 +519,11 @@ export default {
 
     "comparations.public.load.error": "La información de Comparativas no se encuentra disponible en este momento.",
     "comparations.public.load.corruption-index.error": "La información del Índice de Riesgo de Corrupción no se encuentra disponible en este momento.",
+    
+    //Settings
+
+    "settings.change-theme.update.success": "Se ha actualizado el tema correctamente",
+    "settings.change-theme.update.error": "No fue posible actualizar el tema. Por favor intenta de nuevo más tarde",
 
 
 }

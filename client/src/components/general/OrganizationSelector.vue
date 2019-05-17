@@ -73,12 +73,10 @@
                 this.$session.set('currentOrganizationName', organization.name);
                 this.$session.set('currentOrganizationShortName', organization.shortName);
                 this.$session.set('currentOrganizationColor', organization.color);
+                this.$session.set('currentOrganizationTheme', organization.theme);
                 axios.defaults.headers.common['X-CURRENT-ORGANIZATION-ID'] = organization._id;
 
-                this.$store.commit('currentOrganizationId', organization._id.toString());
-                this.$store.commit('currentOrganizationName', organization.name);
-                this.$store.commit('currentOrganizationShortName', organization.shortName);
-                this.$store.commit('currentOrganizationColor', organization.color);
+                this.$store.commit('CURRENT_ORGANIZATION', organization);
 
                 let redirectTo = this.$router.currentRoute.query.redirectTo || this.defaultRedirectTo;
 

@@ -1,14 +1,19 @@
 export default {
-    currentOrganizationId(state, currentOrganizationId) {
-        state.currentOrganization._id = currentOrganizationId;
-    },
-    currentOrganizationName(state, currentOrganizationName) {
-        state.currentOrganization.name = currentOrganizationName;
-    },
-    currentOrganizationShortName(state, currentOrganizationShortName) {
-        state.currentOrganization.shortName = currentOrganizationShortName;
-    },
-    currentOrganizationColor(state, currentOrganizationColor) {
-        state.currentOrganization.color = currentOrganizationColor;
+    CURRENT_ORGANIZATION(state, {_id, name, shortName, color, theme}) {
+        if (_id) {
+            state.currentOrganization._id = _id;
+        }
+        if (name) {
+            state.currentOrganization.name = name;
+        }
+        if (shortName) {
+            state.currentOrganization.shortName = shortName;
+        }
+        if (color) {
+            state.currentOrganization.color = color;
+        }
+        if (color) {
+            state.currentOrganization.theme = theme;
+        }
     }
 }

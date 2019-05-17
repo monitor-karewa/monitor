@@ -6,6 +6,22 @@ const pluginCreatedUpdated = require('mongoose-createdat-updatedat');
 
 const regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+const themes = [
+    'default',
+    'dark',
+    'orange',
+    'yellow',
+    'greenBlue',
+    'green',
+    'sky',
+    'blue',
+    'red',
+    'pink',
+    'gray',
+    'lilac',
+    'blueDark',
+];
+
 /**
  * Mongoose Schema for Organization.
  * @type {mongoose.Schema}
@@ -25,6 +41,12 @@ organizationSchema = mongoose.Schema({
         type: String,
         required: true,
         default: "#2cbcb6"
+    },
+    theme: {
+        type: String,
+        required: true,
+        enum: themes,
+        default: "default"
     },
     deleted: require("./schemas/deleted.schema").Deleted
 });

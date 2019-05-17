@@ -56,6 +56,7 @@ const organizationRoutes = require('./app/routes/organization.routes');
 const dataLoadRoutes = require('./app/routes/dataLoad.routes');
 const routeLogRoutes = require('./app/routes/routeLog.routes');
 const fileRoutes = require('./app/routes/file.routes');
+const settingsRoutes = require('./app/routes/settings.routes');
 
 //public api
 const publicOrganizationsRoutes = require('./app/routes/publicOrganization.routes');
@@ -211,6 +212,7 @@ app.use('/api/administrativeUnits', securityController.checkLogin, securityContr
 app.use('/api/calculations', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CALCULATIONS), calculationRoutes);
 app.use('/api/contracts', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CONTRACTS), contractRoutes);
 app.use('/api/data-load', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CONTRACTS), dataLoadRoutes);
+app.use('/api/settings', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.SETTINGS), settingsRoutes);
 
 
 app.get('*', function(req, res){

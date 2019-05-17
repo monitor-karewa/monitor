@@ -12,6 +12,7 @@ import calculations from '@/store/modules/calculations.store';
 import organizations from '@/store/modules/organizations.store';
 import dataLoad from '@/store/modules/dataLoad.store';
 import accounts from '@/store/modules/accounts.store';
+import settings from '@/store/modules/settings.store';
 
 //user
 import userHomeStore from '@/store/modules/userHomeStore.store';
@@ -49,6 +50,7 @@ export default new Vuex.Store({
         organizations : organizations,
         dataLoad: dataLoad,
         accounts: accounts,
+        settings: settings,
         //public stores (for users)
         publicOrganizations: publicOrganizationsStore,
         publicSuppliers: publicSuppliersStore,
