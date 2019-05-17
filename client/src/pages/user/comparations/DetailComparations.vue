@@ -416,6 +416,9 @@
         },
         mounted() {
             let otherOrganizationId = this.$route.params.id;
+            let url = this.$route.query.baseRemoteUrl;
+            console.log('url --> ' + url);
+
             this.$store.dispatch(`${storeModule}/LOAD_DETAIL`, {
                 id: this.currentOrganization._id,
                 right: false,
@@ -424,7 +427,7 @@
             this.$store.dispatch(`${storeModule}/LOAD_DETAIL`, {
                 id: otherOrganizationId,
                 right: true,
-                url: null,//TODO: implement comparations to other urls
+                url: url,//TODO: implement comparations to other urls
             });
         }
     }

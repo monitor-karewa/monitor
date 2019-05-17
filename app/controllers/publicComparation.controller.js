@@ -1,5 +1,6 @@
 const async = require('async');
 const mongoose = require('mongoose');
+const axios = require('axios');
 
 const Contract = require('./../models/contract.model').Contract;
 const Organization = require('./../models/organization.model').Organization;
@@ -70,9 +71,25 @@ exports.corruptionIndex = (req, res, next) => {
 };
 
 exports.detail = (req, res, next) => {
-    
+    const URL_DETAIL_SUFFIX = "/public-api/comparations/detail/?id=";
     let id = req.query.id;
     let url = req.query.url;
+
+    if(url && url.length){
+        url += URL_DETAIL_SUFFIX + id;
+        console.log('publicComparation.controller#detail URL  ---> ' + url);
+        axios.get(url)
+            .then(function (response){
+                console.log("response.data", response.data);
+                return res.json(response.data)
+            })
+            .catch(error => {
+                console.log(error);
+                return res.json({error: true, message : "Ocurrió un error consultando la organización remota"})
+            });
+    }
+
+
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     let qByOrganization = {"organization": mongoose.Types.ObjectId(id)};
