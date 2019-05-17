@@ -23,6 +23,7 @@ import publicSuppliersStore from '@/store/modules/publicSuppliers.store';
 import millonesTrimestreChart from '@/store/modules/landingCharts/millonesTrimestreChart.store';
 import ejercidoProcedimientoChart from '@/store/modules/landingCharts/ejercidoProcedimientoChart.store';
 import publicComparationsStore from '@/store/modules/publicComparations.store';
+import publicResourcesStore from '@/store/modules/publicResources.store';
 
 
 import actions from '@/store/actions';
@@ -56,6 +57,7 @@ export default new Vuex.Store({
         publicSuppliers: publicSuppliersStore,
         publicContracts : publicContractsStore,
         publicComparations : publicComparationsStore,
+        publicResources: publicResourcesStore,
     },
     state: state,
     actions: actions,

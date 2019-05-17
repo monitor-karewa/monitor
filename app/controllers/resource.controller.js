@@ -4,6 +4,7 @@ const utils = require('./../components/utils');
 
 const {Resource, classificationEnumDict, classificationEnum} = require('./../models/resource.model');
 const Organization = require('./../models/organization.model').Organization;
+const File = require('./../models/file.model').File;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const { validationResult } = require('express-validator/check');
@@ -11,6 +12,7 @@ const { validationResult } = require('express-validator/check');
 const http = require('http');
 const fs = require('fs');
 const mongoose = require('mongoose');
+const async = require('async');
 
 /**
  * Renderiza la vista principal de consulta de Resource.
@@ -113,7 +115,7 @@ exports.save = (req, res, next) => {
 
     let id = req.body._id;
 
-    if (id != undefined && id != "") {
+    if (id !== undefined && id !== "") {
         //Update
         let qById = {_id: id};
         let qByOrganization = Organization.qByOrganization(req);
@@ -130,31 +132,51 @@ exports.save = (req, res, next) => {
                     });
                 }
 
-                //Update doc fields
-                resource.title = req.body.title ;
-                resource.classification = req.body.classification ;
-                resource.url= req.body.url;
-                if(req.file){
-                    let type = req.file.mimetype;
-                    resource.img = {
-                            data: req.file.buffer,
-                            contentType: type
+                async.waterfall([
+                    (callback) => {
+                        if (!req.file) {
+                            return callback();
                         }
-                }
 
-                resource.save((err, savedResource) => {
-                    if (err) {
-                        logger.error(req, err, 'resource.controller#save', 'Error al guardar Resource');
-                        return res.json({
-                            errors: true,
-                            message: req.__('general.error.save')
+                        let file = new File({
+                            mimetype: req.file.mimetype,
+                            size: req.file.size,
+                            filename: req.file.originalname,
+                            data: req.file.buffer
                         });
-                    }
 
-                    return res.json({
-                        errors: false,
-                        message: req.__('general.success.updated'),
-                        data: savedResource
+                        file.save((err) => {
+                            if (err) {
+                                logger.error(err, req, 'resource.controller#save', 'Error trying to save Resource image File');
+                                return callback();
+                            }
+
+                            return callback(null, file);
+                        });
+                    },
+                ], (err, file) => {
+                    //Update doc fields
+                    resource.title = req.body.title ;
+                    resource.classification = req.body.classification ;
+                    resource.url= req.body.url;
+                    if(file){
+                        resource.image = file._id
+                    }
+    
+                    resource.save((err, savedResource) => {
+                        if (err) {
+                            logger.error(req, err, 'resource.controller#save', 'Error al guardar Resource');
+                            return res.json({
+                                errors: true,
+                                message: req.__('general.error.save')
+                            });
+                        }
+    
+                        return res.json({
+                            errors: false,
+                            message: req.__('general.success.updated'),
+                            data: savedResource
+                        });
                     });
                 });
             });
@@ -162,44 +184,70 @@ exports.save = (req, res, next) => {
     } else {
         //Create\
 
-        let resource = null;
-        if(req.file){
-            let type = req.file.mimetype;
-            resource = new Resource({
-                organization: Organization.currentOrganizationId(req),
-                title : req.body.title,
-                classification : req.body.classification,
-                url: req.body.url,
-                img: {
-                    data: req.file.buffer,
-                    contentType: type
+
+        // img: {
+        //     data: req.file.buffer,
+        //         contentType: type
+        // }
+        
+        async.waterfall([
+            (callback) => {
+                if (!req.file) {
+                    return callback();
                 }
-            });
-        } else {
-            resource = new Resource({
-                organization: Organization.currentOrganizationId(req),
-                title : req.body.title,
-                classification : req.body.classification,
-                url: req.body.url
-            });
-        }
+                
+                let file = new File({
+                    mimetype: req.file.mimetype,
+                    size: req.file.size,
+                    filename: req.file.originalname,
+                    data: req.file.buffer
+                });
 
-
-        resource.save((err, savedResource) => {
-            if (err) {
-                logger.error(req, err, 'resource.controller#save', 'Error al guardar Resource');
-                return res.json({
-                    "error": true,
-                    "message": req.__('general.error.save')
+                file.save((err) => {
+                    if (err) {
+                        logger.error(err, req, 'resource.controller#save', 'Error trying to save Resource image File');
+                        return callback();
+                    }
+                    
+                    return callback(null, file);
+                });
+            },
+        ], (err, file) => {
+            let resource = null;
+            if(file){
+                resource = new Resource({
+                    organization: Organization.currentOrganizationId(req),
+                    title : req.body.title,
+                    classification : req.body.classification,
+                    url: req.body.url,
+                    image: file._id
+                });
+            } else {
+                resource = new Resource({
+                    organization: Organization.currentOrganizationId(req),
+                    title : req.body.title,
+                    classification : req.body.classification,
+                    url: req.body.url
                 });
             }
 
-            // downloadFile(savedResource.url, savedResource._id+'.pdf');
 
-            return res.json({
-                "error": false,
-                "message": req.__('general.success.created'),
-                "data": savedResource
+            resource.save((err, savedResource) => {
+                if (err) {
+                    logger.error(req, err, 'resource.controller#save', 'Error al guardar Resource');
+                    return res.json({
+                        "error": true,
+                        "message": req.__('general.error.save')
+                    });
+                }
+
+                // downloadFile(savedResource.url, savedResource._id+'.pdf');
+
+                return res.json({
+                    "error": false,
+                    "message": req.__('general.success.created'),
+                    "data": savedResource
+                });
             });
         });
     }

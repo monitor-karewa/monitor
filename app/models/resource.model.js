@@ -80,9 +80,13 @@ let ResourceSchema = new Schema({
     },
     url: {
         type:String,
-        required: true
+        required: false
     },
-    img: { data: Buffer, contentType: String },
+    image: {
+        type: Schema.Types.ObjectId,
+        ref: 'File',
+        required: false
+    },
     deleted: require("./schemas/deleted.schema").Deleted
 });
 
