@@ -8,4 +8,17 @@ var publicOrganizationController = require('./../controllers/publicOrganization.
  */
 router.get('/list', publicOrganizationController.list);
 
+/**
+ * Sets the service for other servers to load our organizations
+ */
+router.get('/local/list', publicOrganizationController.giveOrganizations);
+
+
+/**
+ * GET /outer/organizations
+ * Loads organizations from a given server url
+ */
+router.get('/remote/list', publicOrganizationController.getOrganizationsFromOuterServer);
+
+
 module.exports = router;

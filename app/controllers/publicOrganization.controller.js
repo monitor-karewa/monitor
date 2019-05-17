@@ -1,5 +1,8 @@
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
+const axios = require('axios');
+
+const utils = require('../components/utils');
 
 const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
@@ -31,7 +34,6 @@ exports.list = (req, res, next) => {
         }
     }
 
-
     Organization
         .paginate(
             query,
@@ -57,4 +59,94 @@ exports.list = (req, res, next) => {
                 });
             }
         );
+};
+
+
+exports.giveOrganizations = function(req, res, next) {
+
+    Organization.find({}).exec(
+        function (err,result){
+            res.json(result)
+        }
+    )
+};
+
+
+let toggleHttpPrefix = function(url){
+    let HTTP_PREFIX = "http://";
+    let HTTPS_PREFIX = "https://";
+    let httpsRegex = new RegExp('https://','i');
+    let httpRegex = new RegExp('http://','i');
+
+    if(httpRegex.test(url)){
+        return url.replace(httpRegex,HTTPS_PREFIX);
+    } else {
+        return url.replace(httpsRegex,HTTP_PREFIX);
+    }
+};
+
+exports.getOrganizationsFromOuterServer = function (req, res, next) {
+    let ROUTE_SUFFIX = "/public-api/organizations/local/list";
+    let HTTP_PREFIX = "http://";
+    let normalSearchRegex = /^[a-z0-9\s]+$/i
+
+    let search = req.query.search;
+    let anyHttpRegex = new RegExp('https?://');
+    let urlregex = new RegExp('(https?|ftp)://(-\\.)?([^\\s/?\\.#-]+\\.?)+(/[^\\s]*)?$', "is");
+    let url = "", baseRemoteUrl;
+    let index;
+
+    if (search) {
+        let match = search.match(anyHttpRegex);
+        if (match && match[0]) {
+            url = search.replace(match[0], "");
+        } else {
+            url = search;
+        }
+
+        if (url.indexOf("/") >= 0) {
+            url = url.substr(0, url.indexOf("/"))
+        }
+
+        baseRemoteUrl =  ""+url;//Scared of assigned relation
+
+        if (match && match[0]) {
+            url = match[0] + url;
+        } else {
+            url = HTTP_PREFIX + url;
+        }
+        url += ROUTE_SUFFIX;
+
+        if (urlregex.test(url) && !normalSearchRegex.test(search)) {
+            axios.get(url)
+                .then(response => {
+                    console.log("response.data", response.data);
+                    res.json({docs : response.data, baseRemoteUrl:baseRemoteUrl})
+                })
+                .catch(error => {
+                    axios.get(toggleHttpPrefix(url))
+                        .then(response => {
+                            res.json({docs : response.data.data, baseRemoteUrl:baseRemoteUrl})
+                        })
+                        .catch(error => {
+                            console.log(error);
+                            res.json({error: true, message : "Verifique la url"})
+                        });
+                });
+        } else {
+            Organization.find({
+                name: utils.toAccentsRegex(req.query.search, "i", false)
+            }).exec(
+                function (err, result) {
+                    res.json(result)
+                }
+            )
+        }
+    } else {
+        Organization.find({}).exec(
+            function (err, result) {
+                res.json(result)
+            }
+        )
+    }
 };
