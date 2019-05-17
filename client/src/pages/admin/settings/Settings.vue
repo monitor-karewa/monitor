@@ -119,14 +119,17 @@
                                                 plataforma.</p>
                                         </div>
                                         <div class="buttons-right w-50">
-                                            <a href=""
+                                            <a @click="editTheme()" v-show="!editThemeEnabled"
                                                class="btn-raised button-accent b-shadow-none p-t-5 p-b-5">
-                                                Editar/Guardar </a>
+                                                Editar </a>
+                                            <a @click="cancelEditTheme()" v-show="editThemeEnabled"
+                                               class="btn-raised button-accent b-shadow-none p-t-5 p-b-5">
+                                                Cancelar </a>
                                         </div>
                                     </div>
                                     <!-- AL DAR CLICK EN EDITAR, SE DEBE ELIMINAR LA CLASE "disabled".
                                     CUANDO SE DE GUARDAR, SE AGREGA LA CLASE "disabled". -->
-                                    <ul class="colors-list controls">
+                                    <ul class="colors-list controls" :class="{disabled: !editThemeEnabled}">
                                         <li>
                                             <button class="controls" data-theme="default" @click="setTheme('default')"></button>
                                             <!-- SE AGREGA LA CLASE "active" CUANDO SE DA CLICK EN RECUADRO -->
@@ -215,6 +218,7 @@
     export default {
         data () {
             return {
+                editThemeEnabled: false
             }
         },
         components: {
@@ -223,8 +227,11 @@
         },
         computed: {
             ...mapState({
-                theme: state => state[storeModule].theme
+                currentOrganization: state => state.currentOrganization
             }),
+            theme () {
+                return this.currentOrganization.theme || 'default';
+            },
             defaultClass() {
                 return this.theme === 'default' ? 'active' : '';
             },
@@ -270,8 +277,17 @@
         },
         methods:{
             setTheme(theme) {
-                let session = this.$session;
-                this.$store.dispatch(`${storeModule}/CHANGE_THEME`, {theme, session});
+                if (this.editThemeEnabled) {
+                    let session = this.$session;
+                    this.$store.dispatch(`${storeModule}/CHANGE_THEME`, {theme, session});
+                    this.editThemeEnabled = false;
+                }
+            },
+            editTheme() {
+                this.editThemeEnabled = true;
+            },
+            cancelEditTheme() {
+                this.editThemeEnabled = false;
             }
         },
         created(){

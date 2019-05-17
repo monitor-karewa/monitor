@@ -53,19 +53,19 @@
               let token = this.$session.get('jwt');
               axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
 
-              let currentOrganizationId = this.$session.get('currentOrganizationId');
-              axios.defaults.headers.common['X-CURRENT-ORGANIZATION-ID'] = currentOrganizationId;
+              let _id = this.$session.get('currentOrganizationId');
+              axios.defaults.headers.common['X-CURRENT-ORGANIZATION-ID'] = _id;
 
-              let currentOrganizationName = this.$session.get('currentOrganizationName');
-              let currentOrganizationShortName = this.$session.get('currentOrganizationShortName');
-              let currentOrganizationColor = this.$session.get('currentOrganizationColor');
-              let currentOrganizationTheme = this.$session.get('currentOrganizationTheme');
-              
-              this.$store.commit('currentOrganizationId', currentOrganizationId);
-              this.$store.commit('currentOrganizationName', currentOrganizationName);
-              this.$store.commit('currentOrganizationShortName', currentOrganizationShortName);
-              this.$store.commit('currentOrganizationColor', currentOrganizationColor);
-              this.$store.commit('currentOrganizationTheme', currentOrganizationTheme);
+              let name = this.$session.get('currentOrganizationName');
+              let shortName = this.$session.get('currentOrganizationShortName');
+              let color = this.$session.get('currentOrganizationColor');
+              let theme = this.$session.get('currentOrganizationTheme') || 'default';
+
+              console.log('passing root: true');
+              this.$store.commit('CURRENT_ORGANIZATION', {_id, name, shortName, color, theme}, {root: true});
+
+              let body = document.getElementById('body');
+              body.className = `theme-body ${theme}`;
           }
           
       }

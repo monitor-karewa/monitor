@@ -12,13 +12,6 @@ exports.changeTheme = (req, res, next) => {
         });
     }
     
-    // Organization.findOne({
-    //     _id: currentOrganizationId
-    // }).exec((err, organization) => {
-    //    
-    // });
-    
-    
     let color = '#19babd';
     
     switch(theme) {
@@ -27,6 +20,9 @@ exports.changeTheme = (req, res, next) => {
             break;
         case 'dark':
             color = '#2e3854';
+            break;
+        case 'purple':
+            color = '#981beb';
             break;
         case 'orange':
             color = '#ff691e';
