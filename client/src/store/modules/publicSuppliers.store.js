@@ -44,10 +44,10 @@ const actions = {
             query += `?page=${page}`;
         }
         apiPublicSuppliers.list({query}, (result) => {
-            commit('SET_SUPPLIERS', result.data.data); 
+            commit('SET_SUPPLIERS', result.data.data);
         }, (err) => {
             tShow(i18n.t('suppliers.public.load.error'), 'danger');
-            commit('SET_SUPPLIERS', {}); 
+            commit('SET_SUPPLIERS', {});
         })
     },
     LOAD_SUPPLIER_DETAIL ({commit}, {filters, id}) {

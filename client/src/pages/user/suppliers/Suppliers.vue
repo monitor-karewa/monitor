@@ -233,9 +233,7 @@
             })
         },
         methods: {
-
             downloadFile (format) {
-                console.log("format", format);
                 this.$store.dispatch('publicSuppliers/downloadFile', {format});
             },
             copyUrlToClipBoard(){

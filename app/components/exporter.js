@@ -133,5 +133,6 @@ class ExcelExporter extends Exporter {
 }
 
 module.exports = {
-    ExcelExporter
+    ExcelExporter,
+    Exporter
 };
