@@ -456,7 +456,7 @@ exports.retrieveAdministrationPeriods = (req, res, next) => {
         },
         {
             $group : {
-                _id:"administrationPeriod",
+                _id:"$administrationPeriod",
                 administrationPeriod : {$first : "$administrationPeriod"}
             }
         }

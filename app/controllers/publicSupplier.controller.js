@@ -23,7 +23,6 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
     let andBuilder = [];
 
     if (req.body && req.body.filters) {
-
         if (req.body.filters.search && req.body.filters.search.length) {
             orBuilder.push({contractId: utils.toAccentsRegex(req.body.filters.search, "gi")});
             orBuilder.push({contractNumber: utils.toAccentsRegex(req.body.filters.search, "gi")});
@@ -510,6 +509,7 @@ exports.detail = (req, res, next) => {
 
 exports.download = (req, res, next) => {
     let format = req.params.format;
+    req.body.filters = JSON.parse(req.query.filters);
     
     if (!['xls', 'pdf', 'json'].includes(format)) {
         res.status(404);
@@ -544,16 +544,41 @@ exports.download = (req, res, next) => {
 
 
 
-        
+        let filters = req.body.filters;
+        let formatedFilter = [];
+        for(let item in filters){
+            let row = {
+                key : req.__('suppliers.filters.'+item),
+                values:''
+            }
+            if(Array.isArray(filters[item])){
+                filters[item].forEach((filter) => {
+                    if(typeof filter == "string"){
+                       row.values += `${req.__(filter)}. `;
+
+                    } else if(filter.hasOwnProperty('_id') && filter.hasOwnProperty('name')){
+                       row.values += `${filter.name}. `;
+                    } else {
+                       row.values += `${filter._id}. `
+                    }
+                   // formatedFilter[item] = { value:filter._id};
+                });
+            } else if(typeof filters[item] == "string" || typeof filters[item] == "number"){
+                row.values += filters[item];
+                // formatedFilter[item] = filters[item]._id;
+            }
+            formatedFilter.push(row);
+        }
+
         switch(format){
             case 'xls':
-                downloadXls(req, res, suppliers);
+                downloadXls(req, res, suppliers, formatedFilter);
                 break;
             case 'pdf':
-                downloadPDF(req, res,{totals, suppliers});
+                downloadPDF(req, res,{totals, suppliers,filters: formatedFilter});
                 break;
             case 'json':
-                return res.json({totals, suppliers});
+                return res.json({ totals, suppliers, filters: formatedFilter });
                 break;
             default:
                 break;
@@ -562,7 +587,7 @@ exports.download = (req, res, next) => {
 };
 
 
-let downloadXls = (req,res, suppliers) => {
+let downloadXls = (req,res, suppliers, filters) => {
     new ExcelExporter()
         .setPropInfoArray([
             {
@@ -591,12 +616,23 @@ let downloadXls = (req,res, suppliers) => {
             },
         ])
         .setDocs(suppliers)
+        .setFilters(filters)
         .setTitle('Proveedores')
         .setFileName('proveedores')
         .exportToFile(req, res);
 };
 
-let downloadPDF = (req, res, {totals, suppliers}) => {
+let downloadPDF = (req, res, { totals, suppliers, filters }) => {
+
+    filters = filters.map((filter)=>{
+        if(filter.key && filter.values!==""){
+            return { text:`   ${filter.key} : ${filter.values}`,style:'headerFilters' }
+        }
+    });
+
+    if(filters && filters.length){
+        filters.unshift({text:'Filtrado por:', style:'headerFilters'});
+    }
     let resultsTable = {
         style:'statsExample',
         layout: 'lightHorizontalLines',
@@ -687,6 +723,7 @@ let downloadPDF = (req, res, {totals, suppliers}) => {
         .setFileName('monitor-karewa-proveedores.pdf')
         .addHeadersToPDF(headers)
         .addTitleToPDF({text:"Información general de Proveedores", style:'title'})
+        .addContentToPDF(filters)
         .addContentToPDF(resultsTable)
         .addContentToPDF(suppliersTable)
         .addFooterToPDF()

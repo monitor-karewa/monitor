@@ -49,6 +49,12 @@ let defaultStyles = {
         font:'Courier',
         margin:[0,10,10,0]
     },
+    headerFilters:{
+        fontSize:10,
+        alignment:"left",
+        font:'Courier',
+        margin:[0,10,10,0]
+    },
     headerTable:{
         fontSize:12,
         alignment:'center',
