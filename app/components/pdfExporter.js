@@ -41,24 +41,13 @@ let defaultStyles = {
         bold:true,
         font:'Times',
         alignment:"center",
-        margin:[0,10,0,0]
+        margin:[0,40,0,0]
     },
     header:{
         fontSize:14,
         alignment:"center",
-        font:'Courier'
-    },
-    cardTitle:{
-        fontSize:18,
-        alignment:"left",
-        bold:true,
-        font:'Helvetica'
-    },
-    cardNumberTitle:{
-        fontSize:18,
-        alignment:"left",
-        bold:true,
-        font:'Helvetica'
+        font:'Courier',
+        margin:[0,10,10,0]
     },
     headerTable:{
         fontSize:12,
@@ -72,15 +61,46 @@ let defaultStyles = {
         font:'Courier'
     },
     tableExample: {
+        alignment:'center',
         margin: [0, 30, 0, 30]
+    },
+    statsExample: {
+        alignment:'center',
+        margin: [50, 30, 0, 30]
     },
     headerExample:{
         margin: [15, 5]
 
     },
     pagination:{
+        fontSize:'12',
         alignment:'right',
         margin: [0, 0, 30, 30]
+    },
+    headerStyle:{
+        fontSize:12,
+        bold:true,
+        alignment:'center',
+        font:'Times',
+        margin:5
+    },
+    rowStyle:{
+        fontSize:10,
+        alignment:'center',
+        font:'Courier',
+        margin:[0,10,0,10]
+    },
+    rowCurrencyStyle:{
+        fontSize:9,
+        alignment:'left',
+        font:'Courier',
+        margin:[0,10,0,10]
+    },
+    rowNumberStyle:{
+        fontSize:12,
+        alignment:'center',
+        font:'Courier',
+        margin:[0,10,0,10]
     },
     defaultStyle:{
         fontSize:15,
@@ -98,7 +118,7 @@ class PDFExporter extends Exporter {
             footer:[],
             styles:defaultStyles,
             defaultStyle:defaultStyles.defaultStyle,
-            pageMargins:[20,80,20,40],
+            pageMargins:[40,120,40,40],
             pageOrientation: 'portrait',
 
             // by default we use portrait, you can change it to landscape if you wish
@@ -119,14 +139,17 @@ class PDFExporter extends Exporter {
 
     setStyle(...styleObj){
         this.docDefinition.styles = styleObj;
+        return this;
     }
 
     setPageMargins(margins){
         this.docDefinition.pageMargins = margins;
+        return this;
     }
 
     setPageOrientation(orientation){
         this.docDefinition.pageOrientation = orientation;
+        return this;
     }
 
     setOptions(options) {
@@ -135,7 +158,6 @@ class PDFExporter extends Exporter {
     }
 
     addHeadersToPDF(headers){
-        console.log("headers", headers);
         this.docDefinition.header = headers;
         return this;
     }
@@ -174,28 +196,13 @@ class PDFExporter extends Exporter {
     exportToFile(req, res){
         try {
             let printer = new PdfPrinter(fonts);
-            console.log("this.docDefinition", this.docDefinition);
             let pdfDoc = printer.createPdfKitDocument(this.docDefinition,this.options);
-            // let chunks = [];
-            // let result;
-            // pdfDoc.on('data', function (chunk) {
-            //     chunks.push(chunk);
-            // });
-            // pdfDoc.on('end', function () {
-            //     result = Buffer.concat(chunks);
-            //     res.send('data:application/pdf;base64,' + result.toString('base64'));
-            // });
-            // pdfDoc.end();
-
-
-            // res.setHeader('Content-Length', stat.size);
-            console.log("pdfDoc.keys", pdfDoc.keys);
             res.setHeader('Content-Type', 'application/pdf');
             res.setHeader('Content-Disposition', 'attachment; filename=quote.pdf');
             pdfDoc.pipe(res);
             pdfDoc.end();
         } catch(err){
-            console.log("err", err);
+            return res.json({error:true, message:req.__('download.report.pdf')});
         }
     }
 
@@ -207,10 +214,23 @@ class PDFTable {
         this.widths = params.widths || [];
         this.body = params.body || [];
         this.docs = params.docs || [];
-        this.headers = params.headers || [];
+        this.tableMetadata = params.tableMetadata || [];
     }
 
-    setHeaders(headers){
+    setTableMetadata(metadata){
+        this.tableMetadata = metadata;
+        return this;
+    }
+
+    setHeaders(){
+        let headers = [];
+        this.tableMetadata.forEach((meta) => {
+            let newEntry = { text: meta.header, style:'defaultStyle' };
+            if(meta.headerStyle){
+                newEntry.style = meta.headerStyle
+            }
+            headers.push(newEntry);
+        });
         this.body.unshift(headers);
         return this
     }
@@ -220,33 +240,41 @@ class PDFTable {
         } else {
             let array = new Array(noColumns);
             array.fill(fillValue, 0, noColumns);
-            console.log("array", array);
             this.widths = array;
         }
         return this;
     }
 
-    transformDocs(props){
-        console.log("this.docs", this.docs);
+    transformDocs(){
         let values = [];
         if(Array.isArray(this.docs)){
-            this.docs.forEach((item, index)=>{
+            this.docs.forEach((item)=>{
                 values = [];
-                props.forEach((prop)=>{
-                    values.push(item[prop]);
+                this.tableMetadata.forEach((meta)=>{
+                    let value = item[meta.propName];
+                    values.push({text:this._formatValue(value, meta.format), style:meta.rowStyle});
                 });
                 this.body.push(values);
             });
         } else {
-            props.forEach((prop)=>{
-                values.push(this.docs[prop]);
+            this.tableMetadata.forEach((meta)=>{
+                let value = this.docs[meta.propName];
+                values.push({text:this._formatValue(value, meta.format), style:meta.rowStyle});
             });
             this.body.push(values);
         }
 
-        console.log("values", values);
-
         return this;
+    }
+
+    _formatValue(value, format){
+        switch(format){
+            case 'currency':
+                return Number(value).toLocaleString('es-MX', { style: 'currency', currency:'MXN'});
+                break;
+            default:
+                return value;
+        }
     }
 }
 

@@ -544,7 +544,7 @@ exports.download = (req, res, next) => {
 
 
 
-        console.log("suppliers", suppliers);
+        
         switch(format){
             case 'xls':
                 downloadXls(req, res, suppliers);
@@ -598,20 +598,86 @@ let downloadXls = (req,res, suppliers) => {
 
 let downloadPDF = (req, res, {totals, suppliers}) => {
     let resultsTable = {
-        style:'tableExample',
+        style:'statsExample',
         layout: 'lightHorizontalLines',
         table: new PDFTable({headerRows:1,docs:totals})
-                    .setHeaders(['Contratos en Total','Contratos por Licitación Pública', 'Contratos por invitación', 'Contratos por adjudicación directa'])
+                    .setTableMetadata([
+                        {
+                            header: 'Contratos en Total',
+                            headerStyle:'headerStyle',
+                            rowStyle:'rowNumberStyle',
+                            propName:'totalCount',
+                            format:'number'
+                        },
+                        {
+                            header: 'Contratos por Licitación Pública',
+                            headerStyle:'headerStyle',
+                            rowStyle:'rowNumberStyle',
+                            propName:'publicCount',
+                            format:'number'
+                        },
+                        {
+                            header: 'Contratos por invitación',
+                            headerStyle:'headerStyle',
+                            rowStyle:'rowNumberStyle',
+                            propName:'invitationCount',
+                            format:'number'
+                        },
+                        {
+                            header: 'Contratos por adjudicación directa',
+                            headerStyle:'headerStyle',
+                            rowStyle:'rowNumberStyle',
+                            propName:'noBidCount',
+                            format:'number'
+                        }
+                    ])
+                    .setHeaders()
                     .setWidths(null,"auto", 4)
-                    .transformDocs(["totalCount","publicCount","invitationCount","noBidCount"])
+                    .transformDocs()
     };
     let suppliersTable = {
         style:'tableExample',
-        layout: 'lightHorizontalLines',
+        // layout: 'lightHorizontalLines',
         table:new PDFTable({headerRows:1,docs:suppliers})
-            .setHeaders(['Nombre del Proveedor', 'Licitación Pública', 'Por Invitación', 'Adj. Directa', 'Monto Total'])
-            .setWidths(null,"auto", 5)
-            .transformDocs(['name','public','invitation','noBid','total'])
+            .setTableMetadata([
+                {
+                    header: 'Nombre del Proveedor',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowStyle',
+                    propName:'name'
+                },
+                {
+                    header: 'Licitación Pública',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'public',
+                    format:'currency'
+                },
+                {
+                    header: 'Por Invitación',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'invitation',
+                    format:'currency'
+                },
+                {
+                    header: 'Adj. Directa',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'noBid',
+                    format:'currency'
+                },
+                {
+                    header: 'Monto Total',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'total',
+                    format:'currency'
+                },
+            ])
+            .setHeaders()
+            .setWidths([145,145,145,145,145],"auto", 5)
+            .transformDocs()
     };
 
     let headers = [{ text:"Monitor Karewa", style:'header'},
@@ -624,5 +690,6 @@ let downloadPDF = (req, res, {totals, suppliers}) => {
         .addContentToPDF(resultsTable)
         .addContentToPDF(suppliersTable)
         .addFooterToPDF()
+        .setPageOrientation('landscape')
         .exportToFile(req, res)
 };
