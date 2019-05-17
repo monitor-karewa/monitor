@@ -423,11 +423,21 @@ export default {
     //Resources
     "resources.resource": "Recurso | Recursos",
     "resources.title": "Título",
-    "resources.classification": "Casificación",
+    "resources.classification": "Clasificación",
     "resources.url": "URL",
     "resources.validation.required":"El campo {field} del Recurso es requerido",
     "resources.validation.url":"La Url no tiene el formato correcto",
     "resources.validation.classification":"El valor para la Clasificación del Recurso no es válido",
+    "resources.placeholder.classification":"Selecciona clasificación",
+    "resources.resource-type.marco-legal":"Marco Legal",
+    "resources.resource-type.articulo":"Artículo",
+    "resources.resource-type.notas":"Nota",
+    "resources.resource-type.website":"Sitio Web",
+    "LEGAL_FRAMEWORK":"Marco Legal",
+    "ARTICLE":"Artículo",
+    "NOTES":"Nota",
+    "WEBSITE":"Sitio Web",
+    "resources.resource-type.label":"Clasificación",
 
 
     //Calculations
@@ -508,6 +518,7 @@ export default {
     //Comparations
 
     "comparations.public.load.error": "La información de Comparativas no se encuentra disponible en este momento.",
+    "comparations.public.load.corruption-index.error": "La información del Índice de Riesgo de Corrupción no se encuentra disponible en este momento.",
 
 
 }

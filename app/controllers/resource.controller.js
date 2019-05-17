@@ -1,7 +1,8 @@
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
+const utils = require('./../components/utils');
 
-const Resource = require('./../models/resource.model').Resource;
+const {Resource, classificationEnumDict, classificationEnum} = require('./../models/resource.model');
 const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
@@ -24,6 +25,11 @@ exports.index = (req, res, next) => {
     res.render('resource', renderParams);
 };
 
+let multer  = require('multer');
+let upload = multer();
+
+exports.beforeUpload = upload.single('file');
+
 /**
  * Consulta los registros de Resource disponibles.
  * @param req
@@ -36,6 +42,30 @@ exports.list = (req, res, next) => {
     let query = {};
 
     //query["field"] = value;
+
+    let search = req.query.search;
+    if (search) {
+        let queryAsRegex = utils.toAccentsRegex(search, "gi");
+        
+        let orArray = [
+            {title: queryAsRegex},
+            {url: queryAsRegex}
+        ];
+        
+        
+        let enumQueryAsRegexStr = utils.enumSearchRegexString(search, classificationEnum, classificationEnumDict);
+
+        if (enumQueryAsRegexStr && enumQueryAsRegexStr.length) {
+            orArray.push(
+                {classification: new RegExp(enumQueryAsRegexStr)}
+            );
+        }
+            
+        query = {
+            $or: orArray
+        }
+    }
+
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     let qByOrganization = Organization.qByOrganization(req);
@@ -83,7 +113,7 @@ exports.save = (req, res, next) => {
 
     let id = req.body._id;
 
-    if (id) {
+    if (id != undefined && id != "") {
         //Update
         let qById = {_id: id};
         let qByOrganization = Organization.qByOrganization(req);
@@ -104,6 +134,13 @@ exports.save = (req, res, next) => {
                 resource.title = req.body.title ;
                 resource.classification = req.body.classification ;
                 resource.url= req.body.url;
+                if(req.file){
+                    let type = req.file.mimetype;
+                    resource.img = {
+                            data: req.file.buffer,
+                            contentType: type
+                        }
+                }
 
                 resource.save((err, savedResource) => {
                     if (err) {
@@ -123,14 +160,30 @@ exports.save = (req, res, next) => {
             });
 
     } else {
-        //Create
+        //Create\
 
-        let resource = new Resource({
-            organization: Organization.currentOrganizationId(req),
-            title : req.body.title,
-            classification : req.body.classification,
-            url: req.body.url
-        });
+        let resource = null;
+        if(req.file){
+            let type = req.file.mimetype;
+            resource = new Resource({
+                organization: Organization.currentOrganizationId(req),
+                title : req.body.title,
+                classification : req.body.classification,
+                url: req.body.url,
+                img: {
+                    data: req.file.buffer,
+                    contentType: type
+                }
+            });
+        } else {
+            resource = new Resource({
+                organization: Organization.currentOrganizationId(req),
+                title : req.body.title,
+                classification : req.body.classification,
+                url: req.body.url
+            });
+        }
+
 
         resource.save((err, savedResource) => {
             if (err) {

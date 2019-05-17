@@ -11,7 +11,9 @@
                 <img class="img-fluid" src="@/assets/images/Cards/home-vector.svg" alt=""/>
                 <div>
                     <p>Consulta la lista de todos los proveedores.</p>
-                    <a href="" class="link-to" tabindex="">Ver Proveedores <i class="zmdi zmdi-chevron-right"></i></a>
+                    <router-link to="/suppliers" class="link-to" tabindex="">
+                        Ver Proveedores <i class="zmdi zmdi-chevron-right"></i>
+                    </router-link>
                 </div>
             </div>
         </div>
@@ -20,7 +22,9 @@
                 <img class="img-fluid" src="@/assets/images/Cards/contracts-vector.svg" alt=""/>
                 <div>
                     <p>Consulta la lista de todos los contratos.</p>
-                    <a href="" class="link-to" tabindex="">Ver Contratos <i class="zmdi zmdi-chevron-right"></i></a>
+                    <router-link to="/contracts" class="link-to" tabindex="">
+                        Ver Contratos <i class="zmdi zmdi-chevron-right"></i>
+                    </router-link>
                 </div>
             </div>
         </div>
@@ -29,7 +33,9 @@
                 <img class="img-fluid" src="@/assets/images/Cards/providers-vector.svg" alt=""/>
                 <div>
                     <p>Conoce el índice de corrupción del monitor.</p>
-                    <a href="" class="link-to" tabindex="">Ver Índice <i class="zmdi zmdi-chevron-right"></i></a>
+                    <router-link to="/calculations/corruption-index" class="link-to" tabindex="">
+                        Ver Índice de Riesgo de Corrupción <i class="zmdi zmdi-chevron-right"></i>
+                    </router-link>
                 </div>
             </div>
         </div>
@@ -38,7 +44,9 @@
                 <img class="img-fluid" src="@/assets/images/Cards/compare-vector.svg" alt=""/>
                 <div>
                     <p>Compara los datos escenciales con otro monitor.</p>
-                    <a href="" class="link-to" tabindex="">Comparar <i class="zmdi zmdi-chevron-right"></i></a>
+                    <router-link to="/comparations" class="link-to" tabindex="">
+                        Comparar <i class="zmdi zmdi-chevron-right"></i>
+                    </router-link>
                 </div>
             </div>
         </div>

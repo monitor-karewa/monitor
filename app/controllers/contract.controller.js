@@ -1,8 +1,35 @@
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
+const utils = require('./../components/utils');
 const mongoose = require('mongoose');
 
-const Contract = require('./../models/contract.model').Contract;
+const {
+    Contract,
+    
+    procedureTypesEnumDict,
+    procedureTypesEnum,
+    getProcedureTypesEnumObject,
+
+    categoryEnumDict,
+    categoryEnum,
+    getCategoryEnumObject,
+
+    procedureStateEnumDict,
+    procedureStateEnum,
+    getProcedureStateEnumObject,
+
+    administrativeUnitTypeEnumDict,
+    administrativeUnitTypeEnum,
+    getAdministrativeUnitTypeEnumObject,
+
+    limitExceededEnumDict,
+    limitExceededEnum,
+    getLimitExceededEnumObject,
+
+    contractTypeEnumDict,
+    contractTypeEnum,
+    getContractTypeEnumObject,
+} = require('./../models/contract.model');
 const Supplier = require('./../models/supplier.model').Supplier;
 const AdministrativeUnit = require('./../models/administrativeUnit.model').AdministrativeUnit;
 const Organization = require('./../models/organization.model').Organization;
@@ -33,44 +60,177 @@ exports.list = (req, res, next) => {
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
     paginationOptions.lean = false;
 
+
+    let query = {};
+
+    let search = req.query.search;
+    if (search) {
+        let queryAsRegex = utils.toAccentsRegex(search, "gi");
+
+        let orArray = [
+            {administrationPeriod: queryAsRegex},
+            {fiscalYear: queryAsRegex},
+            {period: queryAsRegex},
+            {contractId: queryAsRegex},
+            {partida: queryAsRegex},
+            {announcementUrl: search}, //non-regex for urls
+            {servicesDescription: queryAsRegex},
+            {clarificationMeetingJudgmentUrl: search}, //non-regex for urls
+            {presentationProposalsDocUrl: search}, //non-regex for urls
+            {'supplier.name': queryAsRegex},
+            {'organizerAdministrativeUnit.name': queryAsRegex},
+            {'applicantAdministrativeUnit.name': queryAsRegex},
+            {contractNumber: queryAsRegex},
+            {contractUrl: search}, //non-regex for urls
+            {'areaInCharge.name': queryAsRegex},
+            {notes: queryAsRegex},
+            {karewaNotes: queryAsRegex},
+        ];
+
+
+        let procedureTypeEnumQueryAsRegexStr = utils.enumSearchRegexString(search, procedureTypesEnum, procedureTypesEnumDict);
+        if (procedureTypeEnumQueryAsRegexStr && procedureTypeEnumQueryAsRegexStr.length) {
+            orArray.push(
+                {procedureType: new RegExp(procedureTypeEnumQueryAsRegexStr)}
+            );
+        }
+
+        let categoryEnumQueryAsRegexStr = utils.enumSearchRegexString(search, categoryEnum, categoryEnumDict);
+        if (categoryEnumQueryAsRegexStr && categoryEnumQueryAsRegexStr.length) {
+            orArray.push(
+                {procedureType: new RegExp(categoryEnumQueryAsRegexStr)}
+            );
+        }
+
+        let procedureStateEnumQueryAsRegexStr = utils.enumSearchRegexString(search, procedureStateEnum, procedureStateEnumDict);
+        if (procedureStateEnumQueryAsRegexStr && procedureStateEnumQueryAsRegexStr.length) {
+            orArray.push(
+                {procedureState: new RegExp(procedureStateEnumQueryAsRegexStr)}
+            );
+        }
+
+        let administrativeUnitTypeEnumQueryAsRegexStr = utils.enumSearchRegexString(search, administrativeUnitTypeEnum, administrativeUnitTypeEnumDict);
+        if (administrativeUnitTypeEnumQueryAsRegexStr && administrativeUnitTypeEnumQueryAsRegexStr.length) {
+            orArray.push(
+                {administrativeUnitType: new RegExp(administrativeUnitTypeEnumQueryAsRegexStr)}
+            );
+        }
+
+        let contractTypeTypeEnumQueryAsRegexStr = utils.enumSearchRegexString(search, contractTypeEnum, contractTypeEnumDict);
+        if (contractTypeTypeEnumQueryAsRegexStr && contractTypeTypeEnumQueryAsRegexStr.length) {
+            orArray.push(
+                {administrativeUnitType: new RegExp(contractTypeTypeEnumQueryAsRegexStr)}
+            );
+        }
+
+        query = {
+            $or: orArray
+        }
+    }
+
+
+
     let qNotDeleted = deletedSchema.qNotDeleted();
     let qByOrganization = Organization.qByOrganization(req);
-    let query = {...qNotDeleted, ...qByOrganization};
+    query = {...query, ...qNotDeleted, ...qByOrganization};
+    
+    let aggregate = Contract.aggregate([]);
 
-    Contract
-        .paginate(
-            query,
-            {
-                ...paginationOptions,
-                populate : [
-                    'supplier',
-                    'administrativeUnit ',
-                    'organizerAdministrativeUnit ',
-                    'areaInCharge ',
-                    'applicantAdministrativeUnit '
-                ]
-            },
-            (err, result) => {
-                if (err) {
-                    logger.error(err, req, 'contract.controller#list', 'Error al consultar lista de Contract');
-                    return res.json({
-                        errors: true,
-                        message: res.__('general.error.unexpected-error')
-                    });
-                }
+    utils.addLookupRefToAggregatePipeline(aggregate, Supplier, 'supplier');
+    utils.addLookupRefToAggregatePipeline(aggregate, AdministrativeUnit, 'administrativeUnit');
+    utils.addLookupRefToAggregatePipeline(aggregate, AdministrativeUnit, 'organizerAdministrativeUnit');
+    utils.addLookupRefToAggregatePipeline(aggregate, AdministrativeUnit, 'areaInCharge');
+    utils.addLookupRefToAggregatePipeline(aggregate, AdministrativeUnit, 'applicantAdministrativeUnitUnit');
+    
+    aggregate.append({
+        "$match": query
+    });
 
-                return res.json({
-                    errors: false,
-                    message: "",
-                    data: {
-                        docs: result.docs,
-                        page: result.page,
-                        pages: result.pages,
-                        total: result.total
-                    }
-                });
+
+    let page = Number(req.query.page) || 1;
+    let paginateOptions = {
+        page: page,
+        limit: 10,
+        sortBy: {
+            createdAt: -1
+        }
+    };
+
+    Contract.aggregatePaginate(aggregate, paginateOptions, (err, docs, pageCount, itemCount) => {
+        if (err) {
+            logger.error(err, req, 'contract.controller#list', 'Error al consultar lista de Contract');
+            return res.json({
+                errors: true,
+                message: res.__('general.error.unexpected-error')
+            });
+        }
+        
+        //To correctly show each enum's value to the user, virtual fields are used
+        //To use virtuals, we must transform each doc to a model "instance", but we keep the populated refs
+        
+        let docsWithVirtualsAndRefs = [];
+        
+        for (let doc of docs) {
+            //Pass through the model to obtain the value for virtual fields
+            let docAsObjWithVirtuals = (new Contract(doc)).toObject();
+
+            //Keep the populated refs
+            docAsObjWithVirtuals.supplier = doc.supplier;
+            docAsObjWithVirtuals.administrativeUnit = doc.administrativeUnit;
+            docAsObjWithVirtuals.organizerAdministrativeUnit = doc.organizerAdministrativeUnit;
+            docAsObjWithVirtuals.areaInCharge = doc.areaInCharge;
+            docAsObjWithVirtuals.applicantAdministrativeUnitUnit = doc.applicantAdministrativeUnitUnit;
+            
+            docsWithVirtualsAndRefs.push(docAsObjWithVirtuals);
+        }
+
+        return res.json({
+            errors: false,
+            message: "",
+            data: {
+                docs: docsWithVirtualsAndRefs,
+                page: page,
+                pages: pageCount,
+                total: itemCount
             }
-        );
+        });
+    });
+    
+    //Deprecated query without aggregate (unable to search in populated fields)
+    // Contract
+    //     .paginate(
+    //         query,
+    //         {
+    //             ...paginationOptions,
+    //             populate : [
+    //                 'supplier',
+    //                 'administrativeUnit ',
+    //                 'organizerAdministrativeUnit ',
+    //                 'areaInCharge ',
+    //                 'applicantAdministrativeUnit '
+    //             ]
+    //         },
+    //         (err, result) => {
+    //             if (err) {
+    //                 logger.error(err, req, 'contract.controller#list', 'Error al consultar lista de Contract');
+    //                 return res.json({
+    //                     errors: true,
+    //                     message: res.__('general.error.unexpected-error')
+    //                 });
+    //             }
+    //
+    //             return res.json({
+    //                 errors: false,
+    //                 message: "",
+    //                 data: {
+    //                     docs: result.docs,
+    //                     page: result.page,
+    //                     pages: result.pages,
+    //                     total: result.total
+    //                 }
+    //             });
+    //         }
+    //     );
 };
 
 

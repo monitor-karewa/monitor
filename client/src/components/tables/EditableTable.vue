@@ -6,7 +6,7 @@
                     <div class="card-header">
                         <TableHeaderSearch :store-module="storeModule"/>
                         <TableHeaderButtonsWrapper>
-                            <TableHeaderButton :store-module="storeModule"/>
+                            <TableHeaderButton :store-module="storeModule" :hideEditButton="hideEditButtonResult"/>
                             <TableHeaderFilters :columns="tableColumns"/>
                         </TableHeaderButtonsWrapper>
                     </div>
@@ -77,7 +77,7 @@
                                              alt="Empty"/>
                                         <p>
                                             <strong class="d-block">No se han encontrado {{plural}} que coincidan con tu búsqueda</strong>
-                                            <span>Pro favor intenta nuevamente</span>
+                                            <span>Por favor intenta nuevamente</span>
                                         </p>
 
                                     </div>
@@ -89,7 +89,7 @@
                                             <strong class="d-block">Por el momento no hay {{plural}}. </strong> Haz clic en el botón de "Nuevo(a)" para comenzar.
                                         </p>
                                         <button type="button" class="btn-raised button-accent" data-toggle="modal"
-                                                data-target="#newEntry"><i class="zmdi zmdi-plus"></i>Nuevo(a)
+                                                data-target="#ModalEntry"><i class="zmdi zmdi-plus"></i>Nuevo(a)
                                             {{singular}}
                                         </button>
                                     </div>
@@ -158,12 +158,16 @@
                 },
                 isEditingTable: function(state){
                     return state[this.$props.storeModule].isEditingTable;
+                },
+                hideEditButtonResult:function () {
+                    return this.$props.hideEditButton;
                 }
             })
         },
         props: {
             'docs': Array,
             'storeModule': String,
+            'hideEditButton': Boolean,
             'tableColumns': {
                 type: Array,
                 required: true
@@ -191,9 +195,11 @@
                         tempObject = tempObject[fieldPath[i]]
                     }
                 }
+
                 if(tempObject && dateFieldNameRegex.test(column.type)){
                     return this.formatDate(tempObject);
                 }
+
                 return tempObject;
             },
             formatDate(date){

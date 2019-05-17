@@ -1,6 +1,6 @@
 <template>
     <div>
-        <button class="btn-stroke button-accent" v-show="!isEditingTable" @click.prevent="editTable(true)">Editar</button>
+        <button class="btn-stroke button-accent" v-show="!isEditingTable && !hideEditButtonResult" @click.prevent="editTable(true)">Editar</button>
         <button class="btn-stroke button-accent" v-show="isEditingTable" data-toggle="modal" data-target="#modalAlertDefault">Guardar</button>
         <button class="btn-stroke button-accent" v-show="isEditingTable" @click.prevent="editTable(false)">Volver</button>
     </div>
@@ -20,6 +20,9 @@
             ...mapState({
                 isEditingTable: function(state){
                     return state[this.$props.storeModule].isEditingTable;
+                },
+                hideEditButtonResult: function(){
+                    return this.$props.hideEditButton != undefined ? this.$props.hideEditButton : true;
                 }
             })
         },
@@ -31,7 +34,8 @@
         components: {
         },
         props:{
-            'storeModule': String
+            'storeModule': String,
+            'hideEditButton': Boolean
         }
     }
 </script>

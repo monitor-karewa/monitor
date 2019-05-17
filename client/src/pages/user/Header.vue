@@ -65,8 +65,8 @@
                         to: '/contracts'
                     },
                     {
-                        name: 'Cálculos',
-                        to: '/calculations'
+                        name: 'Índice de Corrupción',
+                        to: '/calculations/corruption-index'
                     },
                     {
                         name: 'Comparar',

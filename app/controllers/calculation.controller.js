@@ -1,8 +1,17 @@
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
+const utils = require('./../components/utils');
 const mongoose = require('mongoose');
 
-const Calculation = require('./../models/calculation.model').Calculation;
+const {
+    Calculation,
+
+    typeEnum,
+    typeEnumDict,
+
+    displayFormEnum,
+    displayFormEnumDict
+} = require('./../models/calculation.model');
 const Contracts = require('./../models/contract.model').Contract;
 const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
@@ -47,9 +56,44 @@ exports.list = (req, res, next) => {
     
     // query["field"] = value;
     
+    let search = req.query.search;
+    if (search) {
+
+        search = search.replace(/\$/g, '\\$');
+
+        let queryAsRegex = utils.toAccentsRegex(search, "gi");
+
+        let orArray = [
+            {name: queryAsRegex},
+            {description: queryAsRegex},
+            {abbreviation: queryAsRegex},
+            {notes: queryAsRegex},
+            {'formula.expression': queryAsRegex},
+        ];
+
+        let typeEnumQueryAsRegexStr = utils.enumSearchRegexString(search, typeEnum, typeEnumDict);
+
+        if (typeEnumQueryAsRegexStr && typeEnumQueryAsRegexStr.length) {
+            orArray.push(
+                {type: new RegExp(typeEnumQueryAsRegexStr)}
+            );
+        }
+
+        let displayFormEnumQueryAsRegexStr = utils.enumSearchRegexString(search, displayFormEnum, displayFormEnumDict);
+
+        if (displayFormEnumQueryAsRegexStr && displayFormEnumQueryAsRegexStr.length) {
+            orArray.push(
+                {displayForm: new RegExp(displayFormEnumQueryAsRegexStr)}
+            );
+        }
+
+        query = {
+            $or: orArray
+        }
+    }
+
     let qNotDeleted = deletedSchema.qNotDeleted();
     let qByOrganization = Organization.qByOrganization(req);
-
     query = {...query, ...qNotDeleted, ...qByOrganization};
 
 

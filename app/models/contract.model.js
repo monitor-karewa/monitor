@@ -347,7 +347,7 @@ let ContractSchema = new Schema({
         type: String,
         enum: categoryEnum,
         required: [function () {
-            let descriptionRegExp = utils.toAccentsRegex(this.servicesDescription.toUpperCase(), 'i');
+            let descriptionRegExp = utils.toAccentsRegex(this.servicesDescription.toUpperCase(), 'gi');
             return descriptionRegExp.test(this.category);
         }, "El campo Materia es un campo requerido"],
         uppercase: true
@@ -510,8 +510,8 @@ let ContractSchema = new Schema({
     /* Número que identifique al contrato */
     contractNumber:{
         //TODO: Required?
-       type:String,
-        unique:true
+       type:String/*,
+        unique:true*/
     },
     /* Fecha del contrato */
     contractDate: {
@@ -703,7 +703,8 @@ let postSave = function(doc) {
 ContractSchema.post('insertMany', postInsertMany);
 ContractSchema.post('save', postSave);
 
-ContractSchema.index({contractNumber: 1, deleted: 1}, {unique: true});
+ContractSchema.index({contractNumber: 1, organization: 1, deleted: 1}, {unique: true});
+ContractSchema.index({contractId: 1, organization: 1, deleted: 1}, {unique: true});
 
 
 const Contract = mongoose.model('Contract', ContractSchema);

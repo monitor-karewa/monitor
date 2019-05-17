@@ -66,7 +66,7 @@ class OrganizationClass {
 organizationSchema.loadClass(OrganizationClass);
 
 //Indexes
-organizationSchema.index({name: 1}, {unique: true});
+organizationSchema.index({name: 1, deleted: 1}, {unique: true});
 
 organizationSchema.statics.qByOrganization = function (req) {
     let currentOrganizationId = this.currentOrganizationId(req);

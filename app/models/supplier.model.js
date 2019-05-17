@@ -50,6 +50,9 @@ class SupplierClass {
 //Cargar class en Schema
 SupplierSchema.loadClass(SupplierClass);
 
+//Indexes
+SupplierSchema.index({name: 1, organization: 1, deleted: 1}, {unique: true});
+
 SupplierSchema.statics.permission = permissions.getDefault("Supplier");
 
 SupplierSchema.statics.expressValidator = function() {

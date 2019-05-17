@@ -135,7 +135,7 @@ exports.upload = (req, res, next) => {
  * @param res
  * @param next
  */
-exports.download = (req, res, next) => {
+exports.downloadValidations = (req, res, next) => {
 
     let currentOrganizationId = Organization.currentOrganizationId(req);
     
@@ -406,4 +406,11 @@ exports.confirmCurrent = (req, res, next) => {
             });
 
         });
+};
+
+let appRoot = require('app-root-path');
+
+exports.downloadPlantilla = (req, res, next) => {
+    let file = appRoot.path + '/app/public/sources/plantilla.xlsx';
+    res.download(file);
 };

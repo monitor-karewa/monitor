@@ -192,6 +192,93 @@ const utils =  {
         return parsedNumber;
     },
 
+    /**
+     * Search by enum requires transforming the user input to a matching enum value
+     * To do this, we use a dict:
+     * key -> actual enum value
+     * value -> matching regexes (array) for user input
+     * 
+     * @param search string to search
+     * @param valuesEnum array with allowed values
+     * @param valuesEnumDict object that maps each allowed value to an array of regex info objects of possibilities
+     * @returns {*}
+     */
+    enumSearchRegexString(search, valuesEnum, valuesEnumDict) {
+        let enumQueryNomineesArray = [];
+
+        for (let enumValue of valuesEnum) {
+            let userInputRegexObjArray = valuesEnumDict[enumValue];
+
+            for (let userInputRegexObj of userInputRegexObjArray) {
+
+                let userInputRegex = new RegExp(userInputRegexObj.regexStr, userInputRegexObj.flags);
+
+                if (userInputRegex.test(search) && !enumQueryNomineesArray.includes(enumValue)) {
+                    enumQueryNomineesArray.push(enumValue);
+                }
+            }
+        }
+
+        let enumQueryAsRegex = null;
+
+        if (enumQueryNomineesArray.length) {
+            //Join matching enum values with an "OR"
+            enumQueryAsRegex = enumQueryNomineesArray.join('|');
+        }
+        
+        return enumQueryAsRegex;
+    },
+    
+    
+    addLookupRefToAggregatePipeline(aggregate, model, localField, options = {}) {
+        let asField = localField;
+        if (options.asField) {
+            asField = options.asField;
+        }
+        let _idFieldName = `${asField}Id`;
+        let _idFieldNamePipelineRef = `$$${_idFieldName}`;
+        let pipeline = [
+            {
+                "$match": {
+                    "$expr": {
+                        "$eq": [ "$_id", _idFieldNamePipelineRef ] }
+                }
+            },
+            // {
+            //     "$project": {
+            //         "name": 1
+            //     }
+            // }
+        ];
+        
+        if (options.project) {
+            pipeline.push({
+                "$project": options.project
+            })
+        }
+        
+        
+        aggregate.append(
+            {
+                $lookup: {
+                    from: model.collection.name,
+                    let: { [_idFieldName]: `$${localField}` },
+                    pipeline: pipeline,
+                    as: asField
+                }
+            }
+        );
+
+        aggregate.append(
+            {
+                $unwind: {
+                    path: `$${asField}`,
+                    preserveNullAndEmptyArrays: true
+                },
+            },
+        );
+    }
+
 };
 
 

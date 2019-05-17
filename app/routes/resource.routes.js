@@ -3,7 +3,7 @@ var router = express.Router();
 var resourceController = require('./../controllers/resource.controller');
 var Resource = require('./../models/resource.model').Resource;
 var securityController = require('./../controllers/security.controller');
-
+var resourceController = require('./../controllers/resource.controller');
 /**
  * GET /
  * Renderizar vista principal
@@ -20,7 +20,7 @@ router.get('/list', securityController.validatePermission(Resource.permission, '
  * POST /save
  * Guardar un registro
  */
-router.post('/save', securityController.validatePermission(Resource.permission, 'edit'), Resource.expressValidator(), resourceController.save);
+router.post('/save', resourceController.beforeUpload, securityController.validatePermission(Resource.permission, 'edit'), Resource.expressValidator(), resourceController.save);
 
 /**
  * POST /save-updated-docs

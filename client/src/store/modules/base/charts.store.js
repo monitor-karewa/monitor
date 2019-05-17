@@ -12,10 +12,11 @@ export default function (api) {
     };
 
     const actions = {
-        getInfoForChart({commit}) {
+
+        getInfoForChart({commit}, query = {}) {
 
             api.dataForChart(
-                {},
+                query,
                 (result) => {
                     Vue.$log.info('Response', result.data.data);
                     let aggregationData = result.data.data;

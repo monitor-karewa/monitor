@@ -94,7 +94,7 @@
                 tableColumns: [
                     {label : "administrativeUnits.name", visible : true , field:'name'},
                     {label : "administrativeUnits.notes", visible : true , field:'notes'},
-                    {label : "general.created-at", visible : true , field:'created_at', type:'Date'}
+                    {label : "general.created-at", visible : true , field:'createdAt', type:'Date'}
                 ],
                 entry:{
                     name:"",

@@ -1,5 +1,4 @@
 import contractsApi from '@/api/publicContracts.api';
-import catalog from '@/store/modules/base/catalog.store';
 import Vue from "vue";
 
 

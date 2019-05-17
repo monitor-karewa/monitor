@@ -14,6 +14,8 @@ import dataLoad from '@/store/modules/dataLoad.store';
 import accounts from '@/store/modules/accounts.store';
 
 //user
+import userHomeStore from '@/store/modules/userHomeStore.store';
+
 import publicOrganizationsStore from '@/store/modules/publicOrganizations.store';
 import publicContractsStore from '@/store/modules/publicContracts.store';
 import publicSuppliersStore from '@/store/modules/publicSuppliers.store';
@@ -34,6 +36,7 @@ const debug = process.env.NODE_ENV !== 'production';
 
 export default new Vuex.Store({
     modules: {
+        userHome : userHomeStore,
         session: sessionStore,
         suppliers: suppliersStore,
         administrativeUnits : administrativeUnits,

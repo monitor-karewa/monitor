@@ -197,8 +197,6 @@ DataLoadSchema.statics.dataLoadInfo = function (currentOrganizationId, callback)
                 logger.error(err, req, 'dataLoad.model#dataLoadInfo', 'Error trying to fetch current DataLoad info');
             }
 
-            console.log('dataLoad', currentDataLoad);
-
             this
                 .findOne({
                     organization: currentOrganizationId,
@@ -220,19 +218,23 @@ DataLoadSchema.statics.dataLoadInfo = function (currentOrganizationId, callback)
                 .exec((err, recentDataLoad) => {
 
                     let dataLoadInfo = {};
+                    
+                    let currentUploadedBy = currentDataLoad.uploadedBy || {};
 
                     if (currentDataLoad) {
                         dataLoadInfo.current = {
                             _id: currentDataLoad._id,
                             summary: currentDataLoad.summary,
-                            uploadedBy: `${currentDataLoad.uploadedBy.name} ${currentDataLoad.uploadedBy.lastName}`,
+                            uploadedBy: `${currentUploadedBy.name} ${currentUploadedBy.lastName}`,
                             createdAt: currentDataLoad.createdAt
                         };
                     }
+                    
+                    let recentUploadedBy = recentDataLoad.uploadedBy || {};
 
                     if (recentDataLoad) {
                         dataLoadInfo.recent = {
-                            recentUploadedBy: `${recentDataLoad.uploadedBy.name} ${recentDataLoad.uploadedBy.lastName}`,
+                            recentUploadedBy: `${recentUploadedBy.name} ${recentUploadedBy.lastName}`,
                             recentConfirmedAt: recentDataLoad.confirmedAt
                         };
                     }

@@ -128,7 +128,7 @@ const actions = {
             dataToFilter.forEach((rowInfo) => {
                 let keys = Object.keys(rowInfo);
                 for (let key of keys) {
-                    if (rowInfo[key].value && rowInfo[key].value.toString().match(utils.toAccentsRegex(search, 'i'))) {
+                    if (rowInfo[key].value && rowInfo[key].value.toString().match(utils.toAccentsRegex(search, 'gi'))) {
                         filteredData.push(rowInfo);
                         break;
                     }
@@ -170,6 +170,26 @@ const actions = {
             }
         }, (err) => {
             tShow(i18n.t('data-load.confirm.error.unexpected'), 'danger');
+        });
+    },
+    DOWNLOAD_VALIDATIONS: () => {
+        dataLoadApi.downloadValidations({}, (result) => {
+            const url = window.URL.createObjectURL(new Blob([result.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `monitor-karewa-validaciones-contratos.xlsx`);
+            document.body.appendChild(link);
+            link.click();
+        });
+    },
+    DOWNLOAD_PLANTILLA: () => {
+        dataLoadApi.downloadPlantilla({}, (result) => {
+            const url = window.URL.createObjectURL(new Blob([result.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `monitor-karewa-plantilla-contratos.xlsx`);
+            document.body.appendChild(link);
+            link.click();
         });
     }
 };

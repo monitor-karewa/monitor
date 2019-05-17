@@ -9,7 +9,47 @@ const mongoosePagination = require('mongoose-paginate');
 const math = require('mathjs');
 
 const permissions = require('./../components/permissions');
+const utils = require('./../components/utils');
 
+const typeEnumDict = {
+    'GENERAL': [
+        {
+            regexStr: utils.toAccentsRegex('general(es)?', null, true),
+            flags: 'gi'
+        },
+    ],
+    'CONTRACT': [
+        {
+            regexStr: utils.toAccentsRegex('contrat(os|o)', null, true),
+            flags: 'gi'
+        },
+    ],
+};
+
+const typeEnum = Object.keys(typeEnumDict);
+
+const displayFormEnumDict = {
+    'NORMAL': [
+        {
+            regexStr: utils.toAccentsRegex('normal(es)?', null, true),
+            flags: 'gi'
+        },
+    ],
+    'PERCENTAGE': [
+        {
+            regexStr: utils.toAccentsRegex('(porcentaje|porcentual)', null, true),
+            flags: 'gi'
+        },
+    ],
+    'AMOUNT': [
+        {
+            regexStr: utils.toAccentsRegex('(cantidad|numero)', null, true),
+            flags: 'gi'
+        },
+    ],
+};
+
+const displayFormEnum = Object.keys(displayFormEnumDict);
 
 
 const variableSchema = new Schema({
@@ -98,7 +138,7 @@ CalculationSchema.add({
 
             type: String,
             required: true,
-            enum: ['GENERAL', 'CONTRACT']
+            enum: typeEnum
         },
         enabled :  {
 
@@ -108,7 +148,7 @@ CalculationSchema.add({
         displayForm :  {
             type: String,
             required: true,
-            enum: ['NORMAL', 'PERCENTAGE', 'AMOUNT']
+            enum: displayFormEnum
         },
         notes : {
             type: String,
@@ -169,6 +209,10 @@ class CalculationClass {
 //Cargar class en Schema
 CalculationSchema.loadClass(CalculationClass);
 
+//Indexes
+CalculationSchema.index({name: 1, organization: 1, deleted: 1}, {unique: true});
+CalculationSchema.index({abbreviation: 1, organization: 1, deleted: 1}, {unique: true});
+
 CalculationSchema.statics.permission = permissions.getDefault("Calculation");
 
 CalculationSchema.statics.expressValidator = function() {
@@ -190,5 +234,11 @@ CalculationSchema.statics.expressValidator = function() {
 const Calculation = mongoose.model('Calculation', CalculationSchema);
 
 module.exports = {
-    Calculation
+    Calculation,
+
+    typeEnum,
+    typeEnumDict,
+
+    displayFormEnum,
+    displayFormEnumDict
 };
