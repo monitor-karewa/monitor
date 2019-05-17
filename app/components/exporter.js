@@ -41,6 +41,7 @@ class ExcelExporter extends Exporter {
         
         this.propInfoArray = [];
         this.docs = [];
+        this.filters = [];
         
         this.rowIndexes = {
             INFO: 1,
@@ -62,6 +63,12 @@ class ExcelExporter extends Exporter {
         this.propInfoArray = propInfoArray;
         return this;
     }
+
+    setFilters(filters){
+        console.log("Estableciendo los filtros", filters);
+        this.filters = filters;
+        return this;
+    }
     
     setDocs(docs) {
         this.docs = docs;
@@ -79,6 +86,14 @@ class ExcelExporter extends Exporter {
         sheet.getRow(this.rowIndexes.INFO).getCell(1).value = params.title;
         sheet.getRow(this.rowIndexes.INFO).getCell(2).value = `Fecha de consulta: ${formattedDate}`;
         sheet.getRow(this.rowIndexes.INFO).getCell(3).value = `Consultado en Monitor Karewa`;
+        if(this.filters && this.filters.length){
+            sheet.getRow(this.rowIndexes.INFO).getCell(4).value = this.filters.reduce(function(value,item){
+                if(item.key && item.values){
+                    value += `${item.key} : ${item.values}`
+                }
+                return value
+            },"Filtrado por :");
+        }
         
         let cellIndexByHeader = {};
         let cellIndexByPropName = {};

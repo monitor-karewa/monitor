@@ -29,8 +29,11 @@ export default {
         return axios({
             url: `${base.baseUrl}/public-api/${namespace}/download/${params.format}${params.query || ''}`,
             method: 'GET',
-            responseType: 'blob'
-        }, params)
+            responseType: 'blob',
+            // data:params,
+            // query:params,
+            params
+        })
             .then(onSuccess)
             .catch(onError);
     },
