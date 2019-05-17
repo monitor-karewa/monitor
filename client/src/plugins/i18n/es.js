@@ -438,6 +438,7 @@ export default {
     "NOTES":"Nota",
     "WEBSITE":"Sitio Web",
     "resources.resource-type.label":"Clasificación",
+    "resources.public.load.error":"La información de Recursos no se encuentra disponible en este momento",
 
 
     //Calculations
