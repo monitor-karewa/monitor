@@ -438,6 +438,7 @@ export default {
     "NOTES":"Nota",
     "WEBSITE":"Sitio Web",
     "resources.resource-type.label":"Clasificación",
+    "resources.public.load.error":"La información de Recursos no se encuentra disponible en este momento",
 
 
     //Calculations
@@ -519,6 +520,16 @@ export default {
 
     "comparations.public.load.error": "La información de Comparativas no se encuentra disponible en este momento.",
     "comparations.public.load.corruption-index.error": "La información del Índice de Riesgo de Corrupción no se encuentra disponible en este momento.",
+    
+    //Settings
+
+    "settings.load-settings.error": "La información general no se encuentra disponible en este momento.",
+    "settings.change-cover.update.success": "Se ha actualizado la imagen correctamente.",
+    "settings.change-cover.update.error": "No fue posible actualizar la imágen. Por favor intenta de nuevo más tarde",
+    "settings.change-settings.update.success": "Se ha actualizado la información general correctamente",
+    "settings.change-settings.update.error": "No fue posible actualizar la información general. Por favor intenta de nuevo más tarde",
+    "settings.change-theme.update.success": "Se ha actualizado el tema correctamente",
+    "settings.change-theme.update.error": "No fue posible actualizar el tema. Por favor intenta de nuevo más tarde",
 
 
 }

@@ -17,13 +17,14 @@
                 </router-link>
                 <!--<a href="" class="btn-circle-icon hideresp m-l-30"><i class="zmdi zmdi-notifications-none"></i></a>-->
                 <!--<a href="" class="btn-circle-icon hideresp m-r-30"><i class="zmdi zmdi-settings"></i></a>-->
-                <div class="topMenuDropdown dropdown">
+                <div class="p-l-20 topMenuDropdown dropdown">
                     <button class="dropdown-toggle" type="button" id="dropdownUserMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div>
-                            <label>Jorge Alejandro Hermosillo Salcido</label>
+                            <!--<label>Jorge Alejandro Hermosillo Salcido</label>-->
+                            <label>{{currentUser.fullName}}</label>
                             <span>Admin</span>
                         </div>
-                        <img class="img-fluid" src="@/assets/images/Demo/user-test.jpg" alt="User" />
+                        <!--<img class="img-fluid" src="@/assets/images/Demo/user-test.jpg" alt="User" />-->
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownUserMenu">
                         <form>
@@ -51,6 +52,9 @@
             }
         },
         computed: {
+            ...mapState({
+                currentUser: state => state.currentUser
+            }),
             permissions () {
                 return this.$session.get('permissions') || [];
             },

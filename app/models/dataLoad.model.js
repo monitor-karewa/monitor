@@ -87,11 +87,12 @@ class DataLoadClass {
 }
 
 DataLoadSchema.statics.toJson = function (dataLoad) {
+    let uploadedBy = dataLoad.uploadedBy || {};
     return {
         _id: dataLoad._id,
         filename: dataLoad.filename,
         details: dataLoad.details,
-        uploadedBy: `${dataLoad.uploadedBy.name} ${dataLoad.uploadedBy.lastName}`,
+        uploadedBy: `${uploadedBy.name} ${uploadedBy.lastName}`,
         createdAt: dataLoad.createdAt
     };
 };
@@ -219,9 +220,9 @@ DataLoadSchema.statics.dataLoadInfo = function (currentOrganizationId, callback)
 
                     let dataLoadInfo = {};
                     
-                    let currentUploadedBy = currentDataLoad.uploadedBy || {};
 
                     if (currentDataLoad) {
+                        let currentUploadedBy = currentDataLoad.uploadedBy || {};
                         dataLoadInfo.current = {
                             _id: currentDataLoad._id,
                             summary: currentDataLoad.summary,
@@ -230,9 +231,9 @@ DataLoadSchema.statics.dataLoadInfo = function (currentOrganizationId, callback)
                         };
                     }
                     
-                    let recentUploadedBy = recentDataLoad.uploadedBy || {};
 
                     if (recentDataLoad) {
+                        let recentUploadedBy = recentDataLoad.uploadedBy || {};
                         dataLoadInfo.recent = {
                             recentUploadedBy: `${recentUploadedBy.name} ${recentUploadedBy.lastName}`,
                             recentConfirmedAt: recentDataLoad.confirmedAt

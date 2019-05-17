@@ -56,12 +56,14 @@ const organizationRoutes = require('./app/routes/organization.routes');
 const dataLoadRoutes = require('./app/routes/dataLoad.routes');
 const routeLogRoutes = require('./app/routes/routeLog.routes');
 const fileRoutes = require('./app/routes/file.routes');
+const settingsRoutes = require('./app/routes/settings.routes');
 
 //public api
 const publicOrganizationsRoutes = require('./app/routes/publicOrganization.routes');
 const publicSupplierRoutes = require('./app/routes/publicSupplier.routes');
 const publicContractRoutes = require('./app/routes/publicContract.routes');
 const publicComparationRoutes = require('./app/routes/publicComparation.routes');
+const publicResourceRoutes = require('./app/routes/publicResource.routes');
 const landingRoutes = require('./app/routes/landing.routes');
 
 // Controllers
@@ -180,6 +182,7 @@ app.use('/public-api/contracts', publicContractRoutes);
 app.use('/public-api/route-logs', routeLogRoutes);
 app.use('/public-api/files', fileRoutes);
 app.use('/public-api/comparations', publicComparationRoutes);
+app.use('/public-api/resources', publicResourceRoutes);
 app.use('/public-api/landing', landingRoutes);
 
 // ======================
@@ -211,6 +214,7 @@ app.use('/api/administrativeUnits', securityController.checkLogin, securityContr
 app.use('/api/calculations', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CALCULATIONS), calculationRoutes);
 app.use('/api/contracts', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CONTRACTS), contractRoutes);
 app.use('/api/data-load', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CONTRACTS), dataLoadRoutes);
+app.use('/api/settings', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.SETTINGS), settingsRoutes);
 
 
 app.get('*', function(req, res){
