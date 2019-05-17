@@ -74,6 +74,16 @@
                 this.$session.set('currentOrganizationShortName', organization.shortName);
                 this.$session.set('currentOrganizationColor', organization.color);
                 this.$session.set('currentOrganizationTheme', organization.theme);
+
+                let body = document.getElementById('body');
+                body.className = `theme-body ${organization.theme}`;
+                
+                this.$session.set('currentOrganizationCover', organization.cover);
+                this.$session.set('currentOrganizationTitle', organization.title);
+                this.$session.set('currentOrganizationDescription', organization.description);
+//                this.$session.set('currentOrganizationContactLocation', organization.contactLocation);
+//                this.$session.set('currentOrganizationContactEmail', organization.contactEmail);
+                
                 axios.defaults.headers.common['X-CURRENT-ORGANIZATION-ID'] = organization._id;
 
                 this.$store.commit('CURRENT_ORGANIZATION', organization);

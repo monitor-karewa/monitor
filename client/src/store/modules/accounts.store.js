@@ -20,7 +20,7 @@ let actions = {
                 tShow(i18n.t('accounts.login.error'), 'danger');
             } else {
 
-                let {token, permissions} = result.data.data;
+                let {token, permissions, user} = result.data.data;
 
                 if (token) {
 
@@ -34,6 +34,11 @@ let actions = {
                     let redirectTo = router.currentRoute.query.redirectTo || '/admin';
                     router.push(redirectTo);
                 }
+
+                console.log('user.fullName', user.fullName);
+                
+                _session.set('userFullName', user.fullName);
+                commit('CURRENT_USER', user, {root: true});
             }
         }, (err) => {
             console.log('err', err);

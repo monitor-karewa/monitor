@@ -1,10 +1,32 @@
+const logger = require('./../components/logger').instance;
+
 const Organization = require('./../models/organization.model').Organization;
+
+exports.changeSettings = (req, res, next) => {
+    let title = req.body.title;
+    let description = req.body.description;
+    let contactLocation = req.body.contactLocation;
+    let contactEmail = req.body.contactEmail;
+
+    let currentOrganizationId = Organization.currentOrganizationId(req);
+    
+    let update = {title, description, contactLocation, contactEmail};
+
+    Organization.updateOne({_id: currentOrganizationId}, {$set: update}, {}, (err) => {
+        if (err) {
+            logger.error(err, null, 'settings.controller#changeSettings', 'Error trying to change settings for Organization [%s]', currentOrganizationId);
+        }
+
+        return res.json({
+            error: !!err,
+            data: update
+        });
+    });
+};
 
 exports.changeTheme = (req, res, next) => {
     let theme = req.body.theme;
     let currentOrganizationId = Organization.currentOrganizationId(req);
-    console.log('theme', theme);
-    console.log('currentOrganizationId', currentOrganizationId);
 
     if (!theme || !currentOrganizationId) {
         return res.json({

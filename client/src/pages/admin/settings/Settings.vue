@@ -28,15 +28,24 @@
                                                 del monitor</p>
                                         </div>
                                         <div class="buttons-right w-50">
-                                            <a href=""
-                                               class="btn-stroke button-accent b-shadow-none p-t-5 p-b-5"><i
-                                                    class="zmdi zmdi-plus"></i>
+                                            <a v-show="!editEnabled" class="btn-stroke button-accent b-shadow-none p-t-5 p-b-5">
+                                                <!--<i class="zmdi zmdi-plus"></i>-->
                                                 Cambiar Imagen
                                                 <input type="file"/>
                                             </a>
-                                            <a href=""
-                                               class="btn-raised button-accent b-shadow-none p-t-5 p-b-5 m-l-15"><i
-                                                    class="zmdi zmdi-plus"></i>
+                                            <a v-show="!editEnabled" @click.prevent="setEditEnabled(true)"
+                                               class="btn-raised button-accent b-shadow-none p-t-5 p-b-5 m-l-15">
+                                                <!--<i class="zmdi zmdi-plus"></i>-->
+                                                Editar
+                                            </a>
+                                            <a v-show="editEnabled" @click.prevent="setEditEnabled(false)"
+                                               class="btn-stroke button-accent b-shadow-none p-t-5 p-b-5">
+                                                <!--<i class="zmdi zmdi-plus"></i>-->
+                                                Cancelar
+                                            </a>
+                                            <a v-show="editEnabled" @click.prevent="saveChanges()"
+                                               class="btn-raised button-accent b-shadow-none p-t-5 p-b-5 m-l-15">
+                                                <!--<i class="zmdi zmdi-plus"></i>-->
                                                 Guardar
                                             </a>
                                         </div>
@@ -49,15 +58,15 @@
                                             <img class="img-fluid"
                                                  src="https://hpmedia.bloomsbury.com/rep/g/page-background-shell%20-%202.png"
                                                  alt="Cover"/>
-                                            <div class="info">
+                                            <div class="info" v-show="!editEnabled">
                                                 <small>Bienvenido a</small>
-                                                <label>Monitor <strong>Karewa</strong></label>
-                                                <p>
-                                                    Aquí podrás obtener información sobre los procedimientos
-                                                    de licitaciones para comparar la compra, renta y
-                                                    contratación de serviciosque se realizan en el <strong>Monitor
-                                                    Karewa.</strong>
-                                                </p>
+                                                <label><strong>{{settings.title}}</strong></label>
+                                                <p>{{settings.description}}</p>
+                                            </div>
+                                            <div class="info" v-show="editEnabled">
+                                                <small>Bienvenido a</small>
+                                                <label><strong>{{localSettings.title}}</strong></label>
+                                                <p>{{localSettings.description}}</p>
                                             </div>
                                         </div>
                                     </div>
@@ -65,8 +74,12 @@
                                     <div class="row">
                                         <div class="col-12 col-md-6">
                                             <div class="form-group fg-float">
-                                                <div class="fg-line basic-input">
-                                                    <input type="text" class="form-control fg-input"
+                                                <div v-show="!editEnabled" class="fg-line basic-input">
+                                                    <p>{{settings.title}}</p>
+                                                    <label class="fg-label">Titulo</label>
+                                                </div>
+                                                <div v-show="editEnabled" class="fg-line basic-input">
+                                                    <input v-model.trim="localSettings.title" type="text" class="form-control fg-input"
                                                            placeholder="Titulo">
                                                     <label class="fg-label">Titulo</label>
                                                 </div>
@@ -74,29 +87,40 @@
                                         </div>
                                         <div class="col-12 col-md-6">
                                             <div class="form-group fg-float">
-                                                <div class="fg-line basic-input">
-                                                                <textarea type="text" class="form-control fg-input"
-                                                                          placeholder="Aquí podrás obtener información sobre los procedimientos de licitaciones para comparar la compra, renta y contratación de serviciosque se realizan en el Monitor Karewa."></textarea>
+                                                <div v-show="!editEnabled" class="fg-line basic-input">
+                                                    <p>{{settings.contactLocation}}</p>
+                                                    <label class="fg-label">Descripción de formulario de contacto</label>
+                                                </div>
+                                                <div v-show="editEnabled" class="fg-line basic-input">
+                                                    <textarea v-model.trim="localSettings.contactLocation" type="text" class="form-control fg-input"
+                                                              placeholder="Edita la dirección de correo de donde recibirás la información  de la gente que te contacte."></textarea>
+                                                    <label class="fg-label">Descripción de formulario contacto</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group fg-float">
+                                                <div v-show="!editEnabled" class="fg-line basic-input">
+                                                    <p>{{settings.description}}</p>
+                                                    <label class="fg-label">Descripción</label>
+                                                </div>
+                                                <div v-show="editEnabled" class="fg-line basic-input">
+                                                    <textarea v-model.trim="localSettings.description" type="text" class="form-control fg-input"
+                                                              placeholder="Aquí podrás obtener información sobre los procedimientos de licitaciones para comparar la compra, renta y contratación de serviciosque se realizan en el Monitor Karewa."></textarea>
                                                     <label class="fg-label">Descripción</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-6">
                                             <div class="form-group fg-float">
-                                                <div class="fg-line basic-input">
-                                                                <textarea type="text" class="form-control fg-input"
-                                                                          placeholder="Edita la dirección de correo de donde recibirás la información  de la gente que te contacte."></textarea>
-                                                    <label class="fg-label">Formulario de contacto</label>
+                                                <div v-show="!editEnabled" class="fg-line basic-input">
+                                                    <p>{{settings.contactEmail}}</p>
+                                                    <label class="fg-label">Correo de contacto</label>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-6">
-                                            <div class="form-group fg-float">
-                                                <div class="fg-line basic-input">
-                                                    <input type="text" class="form-control fg-input"
+                                                <div v-show="editEnabled" class="fg-line basic-input">
+                                                    <input v-model.trim="localSettings.contactEmail" type="text" class="form-control fg-input"
                                                            placeholder="Ingresa el correo de contacto">
-                                                    <label class="fg-label">Ingresa el correo de
-                                                        contacto</label>
+                                                    <label class="fg-label">Correo de contacto</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -218,16 +242,29 @@
     export default {
         data () {
             return {
-                editThemeEnabled: false
+                editEnabled: false,
+                editThemeEnabled: false,
+                localSettings: {
+                    title: '',
+                    description: '',
+                    contactLocation: '',
+                    contactEmail: '',
+                }
             }
         },
         components: {
             AdminMainSection,
             BackButton
         },
+        watch: {
+            settings(val) {
+                this.setLocalSettings(val);
+            }
+        },
         computed: {
             ...mapState({
-                currentOrganization: state => state.currentOrganization
+                currentOrganization: state => state.currentOrganization,
+                settings: state => state[storeModule].settings,
             }),
             theme () {
                 return this.currentOrganization.theme || 'default';
@@ -288,11 +325,35 @@
             },
             cancelEditTheme() {
                 this.editThemeEnabled = false;
+            },
+            setEditEnabled (setTo) {
+                if (setTo) {
+                    this.setLocalSettings(this.settings);
+                }
+                this.editEnabled = setTo;
+            },
+            saveChanges() {
+                //TODO: Save
+                let session = this.$session;
+                this.$store.dispatch(`${storeModule}/CHANGE_SETTINGS`, {session, ...this.localSettings});
+                this.setEditEnabled(false);
+            },
+            setLocalSettings(val) {
+                this.localSettings.title = val.title;
+                this.localSettings.description = val.description;
+                this.localSettings.contactLocation = val.contactLocation;
+                this.localSettings.contactEmail = val.contactEmail;  
             }
         },
         created(){
         },
-        mounted(){
+        beforeMount(){
+            this.$store.dispatch(`${storeModule}/LOAD_SETTINGS`);
+        },
+        mounted() {
+            if (this.settings) {
+                this.setLocalSettings(this.settings);
+            }
         }
     }
 </script>
