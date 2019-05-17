@@ -8,4 +8,10 @@ var publicOrganizationController = require('./../controllers/publicOrganization.
  */
 router.get('/list', publicOrganizationController.list);
 
+/**
+ * GET /load-settings
+ * Load the current Organization's settings
+ */
+router.get('/load-settings', publicOrganizationController.loadOrganizationSettings);
+
 module.exports = router;

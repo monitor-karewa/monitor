@@ -522,6 +522,11 @@ export default {
     
     //Settings
 
+    "settings.load-settings.error": "La información general no se encuentra disponible en este momento.",
+    "settings.change-cover.update.success": "Se ha actualizado la imagen correctamente.",
+    "settings.change-cover.update.error": "No fue posible actualizar la imágen. Por favor intenta de nuevo más tarde",
+    "settings.change-settings.update.success": "Se ha actualizado la información general correctamente",
+    "settings.change-settings.update.error": "No fue posible actualizar la información general. Por favor intenta de nuevo más tarde",
     "settings.change-theme.update.success": "Se ha actualizado el tema correctamente",
     "settings.change-theme.update.error": "No fue posible actualizar el tema. Por favor intenta de nuevo más tarde",
 

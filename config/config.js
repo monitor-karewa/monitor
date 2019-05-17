@@ -12,7 +12,7 @@ let DEFAULT_ORGANIZATION = {
 };
 
 let DEFAULT_USER = {
-    name: "Admin",
+    name: "Monitor",
     lastName: "Admin",
     email: "admin@app.admin",
     password: "admin",

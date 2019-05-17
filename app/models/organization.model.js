@@ -48,6 +48,28 @@ organizationSchema = mongoose.Schema({
         enum: themes,
         default: "default"
     },
+    cover: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'File',
+        required: false
+    },
+    title: {
+        type: String,
+        required: true,
+        default: "Monitor Karewa"
+    },
+    description: {
+        type: String,
+        default: "Aquí podras obtener información sobre los procedimientos de contrataciones públicas, incluyendo la compra, renta y contratación de servicios que se realizan en el Municipio de Chihuahua"
+    },
+    contactLocation: {
+        type: String,
+        default: ""
+    },
+    contactEmail: {
+        type: String,
+        default: ""
+    },
     deleted: require("./schemas/deleted.schema").Deleted
 });
 
@@ -99,8 +121,14 @@ organizationSchema.statics.qByOrganization = function (req) {
 
 organizationSchema.statics.currentOrganizationId = function (req) {
     let currentOrganizationId = req.currentOrganizationId;
+    if (currentOrganizationId === 'undefined' || currentOrganizationId === 'null') {
+        currentOrganizationId = null;
+    }
     if (currentOrganizationId) {
-        currentOrganizationId = mongoose.Types.ObjectId(currentOrganizationId);
+        try {
+            currentOrganizationId = mongoose.Types.ObjectId(currentOrganizationId);
+        } catch(err) {
+        }
     }
     return currentOrganizationId;
 };

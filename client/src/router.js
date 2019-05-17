@@ -163,7 +163,7 @@ let router = new Router({
             children: [
                 {
                     path: 'select-organization',
-                    name: 'SelectOrganization',
+                    name: 'AdminSelectOrganization',
                     component: SelectOrganization
                 },
                 {
