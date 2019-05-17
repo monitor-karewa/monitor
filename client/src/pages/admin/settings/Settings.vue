@@ -128,61 +128,61 @@
                                     CUANDO SE DE GUARDAR, SE AGREGA LA CLASE "disabled". -->
                                     <ul class="colors-list controls">
                                         <li>
-                                            <button class="controls" data-theme="default"></button>
+                                            <button class="controls" data-theme="default" @click="setTheme('default')"></button>
                                             <!-- SE AGREGA LA CLASE "active" CUANDO SE DA CLICK EN RECUADRO -->
-                                            <span class="active"></span> Default
+                                            <span :class="defaultClass"></span> Default
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="dark"></button>
-                                            <span></span> Oscuro
+                                            <button class="controls" data-theme="dark" @click="setTheme('dark')"></button>
+                                            <span :class="darkClass"></span> Oscuro
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="purple"></button>
-                                            <span></span> Morado
+                                            <button class="controls" data-theme="purple" @click="setTheme('purple')"></button>
+                                            <span :class="purpleClass"></span> Morado
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="orange"></button>
-                                            <span></span> Naranja
+                                            <button class="controls" data-theme="orange" @click="setTheme('orange')"></button>
+                                            <span :class="orangeClass"></span> Naranja
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="yellow"></button>
-                                            <span></span> Amarillo
+                                            <button class="controls" data-theme="yellow" @click="setTheme('yellow')"></button>
+                                            <span :class="yellowClass"></span> Amarillo
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="greenBlue"></button>
-                                            <span></span> Azul Verde
+                                            <button class="controls" data-theme="greenBlue" @click="setTheme('greenBlue')"></button>
+                                            <span :class="greenBlueClass"></span> Azul Verde
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="green"></button>
-                                            <span></span> Verde
+                                            <button class="controls" data-theme="green" @click="setTheme('green')"></button>
+                                            <span :class="greenClass"></span> Verde
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="sky"></button>
-                                            <span></span> Cielo
+                                            <button class="controls" data-theme="sky" @click="setTheme('sky')"></button>
+                                            <span :class="skyClass"></span> Cielo
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="blue"></button>
-                                            <span></span> Azul
+                                            <button class="controls" data-theme="blue" @click="setTheme('blue')"></button>
+                                            <span :class="blueClass"></span> Azul
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="red"></button>
-                                            <span></span> Rojo
+                                            <button class="controls" data-theme="red" @click="setTheme('red')"></button>
+                                            <span :class="redClass"></span> Rojo
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="pink"></button>
-                                            <span></span> Rosa
+                                            <button class="controls" data-theme="pink" @click="setTheme('pink')"></button>
+                                            <span :class="pinkClass"></span> Rosa
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="gray"></button>
-                                            <span></span> Gris
+                                            <button class="controls" data-theme="gray" @click="setTheme('gray')"></button>
+                                            <span :class="grayClass"></span> Gris
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="lilac"></button>
-                                            <span></span> Lila
+                                            <button class="controls" data-theme="lilac" @click="setTheme('lilac')"></button>
+                                            <span :class="lilacClass"></span> Lila
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="blueDark"></button>
-                                            <span></span> Azul Oscuro
+                                            <button class="controls" data-theme="blueDark" @click="setTheme('blueDark')"></button>
+                                            <span :class="blueDarkClass"></span> Azul Oscuro
                                         </li>
                                     </ul>
                                 </div>
@@ -205,27 +205,74 @@
 </style>
 
 <script>
-    import catalog from '@/mixins/catalog.mixin';
-    import { bus } from '@/main';
-    import { DELETE_SUCCESS } from "@/store/events";
-    import  ModalDanger from "@/components/modals/ModalDanger";
-    const storeModule = 'users';
-    const docName = 'users.user';
+    import AdminMainSection from '@/components/admin/AdminMainSection';
+    import BackButton from '@/components/general/BackButton';
 
-    let baseCatalog = catalog.configure({
-        storeModule: storeModule,
-        docName: docName
-    });
+    import {mapState} from 'vuex';
+    
+    const storeModule = 'settings';
 
     export default {
-        mixins: [baseCatalog],
         data () {
             return {
             }
         },
         components: {
+            AdminMainSection,
+            BackButton
+        },
+        computed: {
+            ...mapState({
+                theme: state => state[storeModule].theme
+            }),
+            defaultClass() {
+                return this.theme === 'default' ? 'active' : '';
+            },
+            darkClass() {
+                return this.theme === 'dark' ? 'active' : '';
+            },
+            purpleClass() {
+                return this.theme === 'purple' ? 'active' : '';
+            },
+            orangeClass() {
+                return this.theme === 'orange' ? 'active' : '';
+            },
+            yellowClass() {
+                return this.theme === 'yellow' ? 'active' : '';
+            },
+            greenBlueClass() {
+                return this.theme === 'greenBlue' ? 'active' : '';
+            },
+            greenClass() {
+                return this.theme === 'green' ? 'active' : '';
+            },
+            skyClass() {
+                return this.theme === 'sky' ? 'active' : '';
+            },
+            blueClass() {
+                return this.theme === 'blue' ? 'active' : '';
+            },
+            redClass() {
+                return this.theme === 'red' ? 'active' : '';
+            },
+            pinkClass() {
+                return this.theme === 'pink' ? 'active' : '';
+            },
+            grayClass() {
+                return this.theme === 'gray' ? 'active' : '';
+            },
+            lilacClass() {
+                return this.theme === 'lilac' ? 'active' : '';
+            },
+            blueDarkClass() {
+                return this.theme === 'blueDark' ? 'active' : '';
+            },
         },
         methods:{
+            setTheme(theme) {
+                let session = this.$session;
+                this.$store.dispatch(`${storeModule}/CHANGE_THEME`, {theme, session});
+            }
         },
         created(){
         },

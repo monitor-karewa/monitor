@@ -10,5 +10,8 @@ export default {
     },
     currentOrganizationColor(state, currentOrganizationColor) {
         state.currentOrganization.color = currentOrganizationColor;
+    },
+    currentOrganizationTheme(state, currentOrganizationTheme) {
+        state.currentOrganization.theme = currentOrganizationTheme;
     }
 }
