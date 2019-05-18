@@ -39,8 +39,12 @@ exports.login = (req, res, next) => {
         let token = jwt.sign(payload, config.session.options.secret);
         
         let permissions = user.getPermissions();
+        
+        let resultUser = {
+            fullName: user.fullName
+        };
 
-        let result = {token, permissions};
+        let result = {token, permissions, user: resultUser};
         
         return res.json({
             error: false,

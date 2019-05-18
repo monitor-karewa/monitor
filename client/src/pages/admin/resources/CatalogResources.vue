@@ -34,7 +34,7 @@
                         <label class="fg-label">URL
                             <small></small>
                             <br>
-                            <strong>Introduce la url del recurso</strong>
+                            <strong>Introduce la url del recurso (debe incluir http:// o https://)</strong>
                         </label>
                     </div>
                     <span v-if="$v.entry.url.$invalid && $v.entry.url.$dirty" class="c-error">{{$t(urlErrorMessage, {field:'Url'})}}</span>
@@ -48,6 +48,7 @@
                             <option value="LEGAL_FRAMEWORK"> {{$t('resources.resource-type.marco-legal')}}</option>
                             <option value="ARTICLE"> {{$t('resources.resource-type.articulo')}}</option>
                             <option value="NOTES"> {{$t('resources.resource-type.notas')}}</option>
+                            <option value="WEBSITE"> {{$t('resources.resource-type.website')}}</option>
                         </select>
                         <label class="fg-label">{{$t('resources.resource-type.label')}}</label>
                     </div>
@@ -168,6 +169,7 @@
             },
             urlErrorMessage(){
                 if(!this.$v.entry.url.url){
+                    console.log('this.$v.entry.url', this.$v.entry.url);
                     return 'resources.validation.url';
                 }
                 if(!this.$v.entry.url.required){

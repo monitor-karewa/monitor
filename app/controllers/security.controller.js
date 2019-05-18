@@ -16,7 +16,7 @@ exports.checkLogin = (req, res, next) => {
         return next();
     } else {
         //403 Not allowed
-        let error = new Error('Acceso denegado');
+        let error = new Error('Access denied');
         error.status = 403;
         return next(error);
         // return res.redirect('/login');
@@ -33,7 +33,7 @@ exports.checkPermission = (permission) => {
             return next();
         } else {
             //403 Not allowed
-            let error = new Error('Acceso denegado');
+            let error = new Error('Access denied');
             error.status = 403;
             return next(error);
             // return res.redirect('/login');
@@ -97,6 +97,7 @@ exports.login = (req, res, next) => {
  * @param user {User} usuario a validar
  * @param permission {string} clave del permiso
  * @param kind {string} tipo del permiso
+ * @deprecated use #checkPermission instead
  */
 const hasPermission = (user, permission, kind) => {
     logger.warn(null, null, 'security.controller#hasPermission', 'All permissions are currently allowed.');
@@ -113,14 +114,17 @@ exports.hasPermission = hasPermission;
  * @deprecated use #checkPermission instead
  */
 exports.validatePermission = (permission, kind) => {
-    //permission: 
     return (req, res, next) => {
-        if (hasPermission(req.user, permission, kind)) {
-            return next();
-        } else {
-            let error = new Error(res.__('access.error.denied'));
-            error.status = 403;
-            return next(error);
-        }
-    }
+        return next();
+    };
+    //permission: 
+    // return (req, res, next) => {
+    //     if (hasPermission(req.user, permission, kind)) {
+    //         return next();
+    //     } else {
+    //         let error = new Error(res.__('access.error.denied'));
+    //         error.status = 403;
+    //         return next(error);
+    //     }
+    // }
 };

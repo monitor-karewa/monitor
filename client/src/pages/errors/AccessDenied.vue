@@ -2,9 +2,9 @@
     <!-- ERROR 404 -->
     <div class="page-error">
         <div class="container-error">
-            <img class="img-fluid" src="@/assets/images/Errors/404.svg" alt="Error" />
-            <h1>PÁGINA NO ENCONTRADA</h1>
-            <p>Lo sentimos, pero parece que la página que buscas no existe, es posible que hayas escrito mal la dirección.</p>
+            <img class="img-fluid" src="@/assets/images/Errors/403.svg" alt="Error" />
+            <h1>ACCESO DENEGADO</h1>
+            <p>Lo sentimos, pero parece que no tienes permisos para acceder a esta página.</p>
             <div>
                 <a @click="goBack" class="btn-stroke button-accent"> Regresar </a>
                 <router-link to="/" class="btn-raised button-accent m-l-15">

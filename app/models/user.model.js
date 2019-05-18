@@ -118,6 +118,10 @@ class UserClass {
     }
 }
 
+userSchema.virtual("fullName").get(function() {
+    return `${this.name} ${this.lastName}`;
+});
+
 //Load class
 userSchema.loadClass(UserClass);
 

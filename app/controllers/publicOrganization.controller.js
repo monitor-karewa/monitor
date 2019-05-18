@@ -16,7 +16,7 @@ const deletedSchema = require('./../models/schemas/deleted.schema');
 exports.list = (req, res, next) => {
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
 
-    paginationOptions.select = 'name shortName color';
+    paginationOptions.select = 'name shortName color theme cover title description';
     paginationOptions.limit = 999999;//no limit per page
 
     let query = {};
@@ -153,4 +153,23 @@ exports.getOrganizationsFromOuterServer = function (req, res, next) {
             }
         )
     }
+};
+
+
+exports.loadOrganizationSettings = (req, res, next) => {
+    let currentOrganizationId = Organization.currentOrganizationId(req);
+
+    Organization.findOne({_id: currentOrganizationId})
+        .select('title description contactLocation contactEmail')
+        .lean()
+        .exec((err, organization) => {
+            if (err) {
+                logger.error(err, null, 'settings.controller#changeSettings', 'Error trying to load settings for Organization [%s]', currentOrganizationId);
+            }
+
+            return res.json({
+                error: !!err,
+                data: organization
+            });
+        });
 };

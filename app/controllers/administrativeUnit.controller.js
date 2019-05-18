@@ -1,5 +1,6 @@
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
+const utils = require('./../components/utils');
 
 const AdministrativeUnit = require('./../models/administrativeUnit.model').AdministrativeUnit;
 const Organization = require('./../models/organization.model').Organization;
@@ -22,7 +23,7 @@ exports.index = (req, res, next) => {
 
 /**
  * Consulta los registros de AdministrativeUnit disponibles.
- * @param req
+ * @param req\
  * @param res
  * @param next
  */
@@ -32,6 +33,17 @@ exports.list = (req, res, next) => {
     let query = {};
 
     //query["field"] = value;
+
+    let search = req.query.search;
+    if (search) {
+        let queryAsRegex = utils.toAccentsRegex(search, "gi" );
+        query = {
+            $or: [
+                {name: queryAsRegex},
+                {notes: queryAsRegex}
+            ]
+        }
+    }
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     let qByOrganization = Organization.qByOrganization(req);

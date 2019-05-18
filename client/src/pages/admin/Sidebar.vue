@@ -129,7 +129,7 @@
                             permission: "CONTRACTS"
                         },
                         {
-                            name: "Enlaces de interés",
+                            name: "Recursos",
                             to: "/admin/resources",
                             icon: "zmdi zmdi-link",
                             admin: true,

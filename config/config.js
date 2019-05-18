@@ -5,17 +5,27 @@ const mongoose = require('mongoose');
 
 const nodeEnv = process.env.NODE_ENV;
 
+let DEFAULT_ORGANIZATION = {
+    name: "Monitor Karewa",
+    shortName: "Karewa",
+    color: "#19babd"
+};
+
+let DEFAULT_USER = {
+    name: "Monitor",
+    lastName: "Admin",
+    email: "admin@app.admin",
+    password: "admin",
+    administratorType: 'GENERAL',
+    permissions: []
+};
+
+
 const config = {
     production: {
         defaults: {
-            user: {
-                name: "Admin",
-                lastName: "Admin",
-                email: "admin@app.admin",
-                password: "admin",
-                administratorType: 'GENERAL',
-                permissions: []
-            }
+            user: DEFAULT_USER,
+            organization: DEFAULT_ORGANIZATION
         },
         mongo: {
             url: process.env.MONGODB_URL,
@@ -56,14 +66,8 @@ const config = {
     },
     dev: {
         defaults: {
-            user: {
-                name: "Admin",
-                lastName: "Admin",
-                email: "admin@app.admin",
-                password: "admin",
-                administratorType: 'GENERAL',
-                permissions: []
-            }
+            user: DEFAULT_USER,
+            organization: DEFAULT_ORGANIZATION
         },
         mongo: {
             url: 'mongodb://127.0.0.1:27017/monitor_karewa_web_dev',

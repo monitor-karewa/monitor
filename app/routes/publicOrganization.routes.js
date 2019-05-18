@@ -21,4 +21,10 @@ router.get('/local/list', publicOrganizationController.giveOrganizations);
 router.get('/remote/list', publicOrganizationController.getOrganizationsFromOuterServer);
 
 
+/**
+ * GET /load-settings
+ * Load the current Organization's settings
+ */
+router.get('/load-settings', publicOrganizationController.loadOrganizationSettings);
+
 module.exports = router;

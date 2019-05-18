@@ -7,6 +7,57 @@ const pluginCreatedUpdated = require('mongoose-createdat-updatedat');
 const mongoosePagination = require('mongoose-paginate');
 
 const permissions = require('./../components/permissions');
+const utils = require('./../components/utils');
+
+const classificationEnumDict = {
+    'ARTICLE': [
+        {
+            regexStr: utils.toAccentsRegex('articulo(s)?', null, true),
+            flags: 'gi'
+        },
+    ],
+    'NOTES': [
+        {
+            regexStr: utils.toAccentsRegex('nota(s)?', null, true),
+            flags: 'gi'
+        },
+    ],
+    'LEGAL_FRAMEWORK': [
+        {
+            regexStr: utils.toAccentsRegex('marco( legal)?', null, true),
+            flags: 'gi'
+        },
+        {
+            regexStr: utils.toAccentsRegex('(marco )?legal', null, true),
+            flags: 'gi'
+        },
+        // utils.toAccentsRegex('publico', 'gi')
+    ],
+    'WEBSITE': [
+        {
+            regexStr: utils.toAccentsRegex('sitio( web)?', null, true),
+            flags: 'gi'
+        },
+        {
+            regexStr: utils.toAccentsRegex('pagina( web)?', null, true),
+            flags: 'gi'
+        },
+        {
+            regexStr: utils.toAccentsRegex('web', null, true),
+            flags: 'gi'
+        },
+        {
+            regexStr: utils.toAccentsRegex('url', null, true),
+            flags: 'gi'
+        },
+        {
+            regexStr: utils.toAccentsRegex('enlace', null, true),
+            flags: 'gi'
+        },
+    ],
+};
+
+const classificationEnum = Object.keys(classificationEnumDict);
 
 /**
  * Schema de Mongoose para el modelo Resource.
@@ -24,14 +75,18 @@ let ResourceSchema = new Schema({
     },
     classification: {
         type: String,
-        enum: ['LEGAL_FRAMEWORK', 'ARTICLE', 'NOTES'],
+        enum: classificationEnum,
         required: true
     },
     url: {
         type:String,
-        required: true
+        required: false
     },
-    img: { data: Buffer, contentType: String },
+    image: {
+        type: Schema.Types.ObjectId,
+        ref: 'File',
+        required: false
+    },
     deleted: require("./schemas/deleted.schema").Deleted
 });
 
@@ -50,6 +105,9 @@ class ResourceClass {
 
 //Cargar class en Schema
 ResourceSchema.loadClass(ResourceClass);
+
+//Indexes
+ResourceSchema.index({title: 1, classification: 1, organization: 1, deleted: 1}, {unique: true});
 
 ResourceSchema.statics.permission = permissions.getDefault("Resource");
 
@@ -74,5 +132,7 @@ ResourceSchema.statics.expressValidator = function() {
 const Resource = mongoose.model('Resource', ResourceSchema);
 
 module.exports = {
-    Resource
+    Resource,
+    classificationEnumDict,
+    classificationEnum
 };

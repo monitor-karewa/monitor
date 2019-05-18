@@ -53,6 +53,7 @@ import AdminOrganizations from '@/pages/admin/organizations/CatalogOrganizations
 
 import Login from '@/pages/admin/Login';
 
+import AccessDenied from '@/pages/errors/AccessDenied';
 // Fallback page
 import NotFound from '@/pages/errors/NotFound';
 
@@ -162,7 +163,7 @@ let router = new Router({
             children: [
                 {
                     path: 'select-organization',
-                    name: 'SelectOrganization',
+                    name: 'AdminSelectOrganization',
                     component: SelectOrganization
                 },
                 {
@@ -272,6 +273,11 @@ let router = new Router({
                     component: LoginStyle
                 }
             ]
+        },
+        {
+            path: '/access-denied',
+            name: 'AccessDenied',
+            component: AccessDenied
         },
         {
             path: '**',

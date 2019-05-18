@@ -28,15 +28,24 @@
                                                 del monitor</p>
                                         </div>
                                         <div class="buttons-right w-50">
-                                            <a href=""
-                                               class="btn-stroke button-accent b-shadow-none p-t-5 p-b-5"><i
-                                                    class="zmdi zmdi-plus"></i>
+                                            <a v-show="!editEnabled" class="btn-stroke button-accent b-shadow-none p-t-5 p-b-5">
+                                                <!--<i class="zmdi zmdi-plus"></i>-->
                                                 Cambiar Imagen
-                                                <input type="file"/>
+                                                <input type="file" id="file" :ref="coverFileRef" v-on:change="handleCoverFileUpload()" :accept="fileAcceptCover"/>
                                             </a>
-                                            <a href=""
-                                               class="btn-raised button-accent b-shadow-none p-t-5 p-b-5 m-l-15"><i
-                                                    class="zmdi zmdi-plus"></i>
+                                            <a v-show="!editEnabled" @click.prevent="setEditEnabled(true)"
+                                               class="btn-raised button-accent b-shadow-none p-t-5 p-b-5 m-l-15">
+                                                <!--<i class="zmdi zmdi-plus"></i>-->
+                                                Editar
+                                            </a>
+                                            <a v-show="editEnabled" @click.prevent="setEditEnabled(false)"
+                                               class="btn-stroke button-accent b-shadow-none p-t-5 p-b-5">
+                                                <!--<i class="zmdi zmdi-plus"></i>-->
+                                                Cancelar
+                                            </a>
+                                            <a v-show="editEnabled" @click.prevent="saveChanges()"
+                                               class="btn-raised button-accent b-shadow-none p-t-5 p-b-5 m-l-15">
+                                                <!--<i class="zmdi zmdi-plus"></i>-->
                                                 Guardar
                                             </a>
                                         </div>
@@ -46,18 +55,19 @@
                                         <label>Tamaño de imagen recomendado: <strong class="primary">1280 x
                                             500</strong> </label>
                                         <div class="container-cover">
-                                            <img class="img-fluid"
-                                                 src="https://hpmedia.bloomsbury.com/rep/g/page-background-shell%20-%202.png"
+                                            <img v-if="!hasCover" class="img-fluid" src="@/assets/images/Backgrounds/test-cover-page.svg" alt="Cover">
+                                            <img v-if="hasCover" class="img-fluid"
+                                                 :src="coverSrc"
                                                  alt="Cover"/>
-                                            <div class="info">
+                                            <div class="info" v-show="!editEnabled">
                                                 <small>Bienvenido a</small>
-                                                <label>Monitor <strong>Karewa</strong></label>
-                                                <p>
-                                                    Aquí podrás obtener información sobre los procedimientos
-                                                    de licitaciones para comparar la compra, renta y
-                                                    contratación de serviciosque se realizan en el <strong>Monitor
-                                                    Karewa.</strong>
-                                                </p>
+                                                <label v-html="settings.title || defaultTitle"></label>
+                                                <p v-html="settings.description || defaultDescription"></p>
+                                            </div>
+                                            <div class="info" v-show="editEnabled">
+                                                <small>Bienvenido a</small>
+                                                <label v-html="localSettings.title || defaultTitle"></label>
+                                                <p v-html="localSettings.description || defaultDescription"></p>
                                             </div>
                                         </div>
                                     </div>
@@ -65,8 +75,12 @@
                                     <div class="row">
                                         <div class="col-12 col-md-6">
                                             <div class="form-group fg-float">
-                                                <div class="fg-line basic-input">
-                                                    <input type="text" class="form-control fg-input"
+                                                <div v-show="!editEnabled" class="fg-line basic-input">
+                                                    <p>{{settings.title}}</p>
+                                                    <label class="fg-label">Titulo</label>
+                                                </div>
+                                                <div v-show="editEnabled" class="fg-line basic-input">
+                                                    <input v-model.trim="localSettings.title" type="text" class="form-control fg-input"
                                                            placeholder="Titulo">
                                                     <label class="fg-label">Titulo</label>
                                                 </div>
@@ -74,29 +88,40 @@
                                         </div>
                                         <div class="col-12 col-md-6">
                                             <div class="form-group fg-float">
-                                                <div class="fg-line basic-input">
-                                                                <textarea type="text" class="form-control fg-input"
-                                                                          placeholder="Aquí podrás obtener información sobre los procedimientos de licitaciones para comparar la compra, renta y contratación de serviciosque se realizan en el Monitor Karewa."></textarea>
+                                                <div v-show="!editEnabled" class="fg-line basic-input">
+                                                    <p>{{settings.contactLocation}}</p>
+                                                    <label class="fg-label">Descripción de formulario de contacto</label>
+                                                </div>
+                                                <div v-show="editEnabled" class="fg-line basic-input">
+                                                    <textarea v-model.trim="localSettings.contactLocation" type="text" class="form-control fg-input"
+                                                              placeholder="Edita la dirección de correo de donde recibirás la información  de la gente que te contacte."></textarea>
+                                                    <label class="fg-label">Descripción de formulario contacto</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group fg-float">
+                                                <div v-show="!editEnabled" class="fg-line basic-input">
+                                                    <p>{{settings.description}}</p>
+                                                    <label class="fg-label">Descripción</label>
+                                                </div>
+                                                <div v-show="editEnabled" class="fg-line basic-input">
+                                                    <textarea v-model.trim="localSettings.description" type="text" class="form-control fg-input"
+                                                              placeholder="Aquí podrás obtener información sobre los procedimientos de licitaciones para comparar la compra, renta y contratación de serviciosque se realizan en el Monitor Karewa."></textarea>
                                                     <label class="fg-label">Descripción</label>
                                                 </div>
                                             </div>
                                         </div>
                                         <div class="col-12 col-md-6">
                                             <div class="form-group fg-float">
-                                                <div class="fg-line basic-input">
-                                                                <textarea type="text" class="form-control fg-input"
-                                                                          placeholder="Edita la dirección de correo de donde recibirás la información  de la gente que te contacte."></textarea>
-                                                    <label class="fg-label">Formulario de contacto</label>
+                                                <div v-show="!editEnabled" class="fg-line basic-input">
+                                                    <p>{{settings.contactEmail}}</p>
+                                                    <label class="fg-label">Correo de contacto</label>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-12 col-md-6">
-                                            <div class="form-group fg-float">
-                                                <div class="fg-line basic-input">
-                                                    <input type="text" class="form-control fg-input"
+                                                <div v-show="editEnabled" class="fg-line basic-input">
+                                                    <input v-model.trim="localSettings.contactEmail" type="text" class="form-control fg-input"
                                                            placeholder="Ingresa el correo de contacto">
-                                                    <label class="fg-label">Ingresa el correo de
-                                                        contacto</label>
+                                                    <label class="fg-label">Correo de contacto</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -119,70 +144,73 @@
                                                 plataforma.</p>
                                         </div>
                                         <div class="buttons-right w-50">
-                                            <a href=""
+                                            <a @click="editTheme()" v-show="!editThemeEnabled"
                                                class="btn-raised button-accent b-shadow-none p-t-5 p-b-5">
-                                                Editar/Guardar </a>
+                                                Editar </a>
+                                            <a @click="cancelEditTheme()" v-show="editThemeEnabled"
+                                               class="btn-raised button-accent b-shadow-none p-t-5 p-b-5">
+                                                Cancelar </a>
                                         </div>
                                     </div>
                                     <!-- AL DAR CLICK EN EDITAR, SE DEBE ELIMINAR LA CLASE "disabled".
                                     CUANDO SE DE GUARDAR, SE AGREGA LA CLASE "disabled". -->
-                                    <ul class="colors-list controls">
+                                    <ul class="colors-list controls" :class="{disabled: !editThemeEnabled}">
                                         <li>
-                                            <button class="controls" data-theme="default"></button>
+                                            <button class="controls" data-theme="default" @click="setTheme('default')"></button>
                                             <!-- SE AGREGA LA CLASE "active" CUANDO SE DA CLICK EN RECUADRO -->
-                                            <span class="active"></span> Default
+                                            <span :class="defaultClass"></span> Default
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="dark"></button>
-                                            <span></span> Oscuro
+                                            <button class="controls" data-theme="dark" @click="setTheme('dark')"></button>
+                                            <span :class="darkClass"></span> Oscuro
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="purple"></button>
-                                            <span></span> Morado
+                                            <button class="controls" data-theme="purple" @click="setTheme('purple')"></button>
+                                            <span :class="purpleClass"></span> Morado
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="orange"></button>
-                                            <span></span> Naranja
+                                            <button class="controls" data-theme="orange" @click="setTheme('orange')"></button>
+                                            <span :class="orangeClass"></span> Naranja
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="yellow"></button>
-                                            <span></span> Amarillo
+                                            <button class="controls" data-theme="yellow" @click="setTheme('yellow')"></button>
+                                            <span :class="yellowClass"></span> Amarillo
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="greenBlue"></button>
-                                            <span></span> Azul Verde
+                                            <button class="controls" data-theme="greenBlue" @click="setTheme('greenBlue')"></button>
+                                            <span :class="greenBlueClass"></span> Azul Verde
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="green"></button>
-                                            <span></span> Verde
+                                            <button class="controls" data-theme="green" @click="setTheme('green')"></button>
+                                            <span :class="greenClass"></span> Verde
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="sky"></button>
-                                            <span></span> Cielo
+                                            <button class="controls" data-theme="sky" @click="setTheme('sky')"></button>
+                                            <span :class="skyClass"></span> Cielo
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="blue"></button>
-                                            <span></span> Azul
+                                            <button class="controls" data-theme="blue" @click="setTheme('blue')"></button>
+                                            <span :class="blueClass"></span> Azul
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="red"></button>
-                                            <span></span> Rojo
+                                            <button class="controls" data-theme="red" @click="setTheme('red')"></button>
+                                            <span :class="redClass"></span> Rojo
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="pink"></button>
-                                            <span></span> Rosa
+                                            <button class="controls" data-theme="pink" @click="setTheme('pink')"></button>
+                                            <span :class="pinkClass"></span> Rosa
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="gray"></button>
-                                            <span></span> Gris
+                                            <button class="controls" data-theme="gray" @click="setTheme('gray')"></button>
+                                            <span :class="grayClass"></span> Gris
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="lilac"></button>
-                                            <span></span> Lila
+                                            <button class="controls" data-theme="lilac" @click="setTheme('lilac')"></button>
+                                            <span :class="lilacClass"></span> Lila
                                         </li>
                                         <li>
-                                            <button class="controls" data-theme="blueDark"></button>
-                                            <span></span> Azul Oscuro
+                                            <button class="controls" data-theme="blueDark" @click="setTheme('blueDark')"></button>
+                                            <span :class="blueDarkClass"></span> Azul Oscuro
                                         </li>
                                     </ul>
                                 </div>
@@ -205,31 +233,179 @@
 </style>
 
 <script>
-    import catalog from '@/mixins/catalog.mixin';
-    import { bus } from '@/main';
-    import { DELETE_SUCCESS } from "@/store/events";
-    import  ModalDanger from "@/components/modals/ModalDanger";
-    const storeModule = 'users';
-    const docName = 'users.user';
+    import AdminMainSection from '@/components/admin/AdminMainSection';
+    import BackButton from '@/components/general/BackButton';
+    import baseApi from '@/api/base.api';
 
-    let baseCatalog = catalog.configure({
-        storeModule: storeModule,
-        docName: docName
-    });
+    import {mapState} from 'vuex';
+    
+    const storeModule = 'settings';
 
     export default {
-        mixins: [baseCatalog],
         data () {
             return {
+                editEnabled: false,
+                editThemeEnabled: false,
+                localSettings: {
+                    title: '',
+                    description: '',
+                    contactLocation: '',
+                    contactEmail: '',
+                },
+                coverFileRef: 'coverFile',
+                coverFile: null,
+                allowedImageMimeTypes: [
+                    'image/png',
+                    'image/jpeg',
+                    'image/svg+xml',
+                    'image/gif',
+                ],
+                defaultTitle: 'Monitor <strong>Karewa</strong>',
+                defaultDescription: 'Aquí podras obtener información sobre los procedimientos de contrataciones públicas, incluyendo la compra, renta y contratación de servicios que se realizan en el Municipio de Chihuahua',
             }
         },
         components: {
+            AdminMainSection,
+            BackButton
+        },
+        watch: {
+            settings(val) {
+                this.setLocalSettings(val);
+            }
+        },
+        computed: {
+            ...mapState({
+                currentOrganization: state => state.currentOrganization,
+                settings: state => state[storeModule].settings,
+            }),
+            theme () {
+                return this.currentOrganization.theme || 'default';
+            },
+            defaultClass() {
+                return this.theme === 'default' ? 'active' : '';
+            },
+            darkClass() {
+                return this.theme === 'dark' ? 'active' : '';
+            },
+            purpleClass() {
+                return this.theme === 'purple' ? 'active' : '';
+            },
+            orangeClass() {
+                return this.theme === 'orange' ? 'active' : '';
+            },
+            yellowClass() {
+                return this.theme === 'yellow' ? 'active' : '';
+            },
+            greenBlueClass() {
+                return this.theme === 'greenBlue' ? 'active' : '';
+            },
+            greenClass() {
+                return this.theme === 'green' ? 'active' : '';
+            },
+            skyClass() {
+                return this.theme === 'sky' ? 'active' : '';
+            },
+            blueClass() {
+                return this.theme === 'blue' ? 'active' : '';
+            },
+            redClass() {
+                return this.theme === 'red' ? 'active' : '';
+            },
+            pinkClass() {
+                return this.theme === 'pink' ? 'active' : '';
+            },
+            grayClass() {
+                return this.theme === 'gray' ? 'active' : '';
+            },
+            lilacClass() {
+                return this.theme === 'lilac' ? 'active' : '';
+            },
+            blueDarkClass() {
+                return this.theme === 'blueDark' ? 'active' : '';
+            },
+            fileAcceptCover() {
+                return this.allowedImageMimeTypes.join(',');
+            },
+            hasCover() {
+                return !!this.currentOrganization.cover;
+            },
+            coverSrc() {
+                if (this.currentOrganization.cover) {
+                    return `${baseApi.baseUrl}/public-api/files/image/${this.currentOrganization.cover}`;
+                } else {
+                    return '';
+                }
+            }
         },
         methods:{
+            setTheme(theme) {
+                if (this.editThemeEnabled) {
+                    let session = this.$session;
+                    this.$store.dispatch(`${storeModule}/CHANGE_THEME`, {theme, session});
+                    this.editThemeEnabled = false;
+                }
+            },
+            editTheme() {
+                this.editThemeEnabled = true;
+            },
+            cancelEditTheme() {
+                this.editThemeEnabled = false;
+            },
+            setEditEnabled (setTo) {
+                if (setTo) {
+                    this.setLocalSettings(this.settings);
+                }
+                this.editEnabled = setTo;
+            },
+            saveChanges() {
+                //TODO: Save
+                let session = this.$session;
+                this.$store.dispatch(`${storeModule}/CHANGE_SETTINGS`, {session, ...this.localSettings});
+                this.setEditEnabled(false);
+            },
+            setLocalSettings(val) {
+                this.localSettings.title = val.title || '';
+                this.localSettings.description = val.description || '';
+                this.localSettings.contactLocation = val.contactLocation || '';
+                this.localSettings.contactEmail = val.contactEmail || '';  
+            },
+            handleCoverFileUpload() {
+
+                this.coverFile = null;
+
+                if (this.$refs[this.coverFileRef].files && this.$refs[this.coverFileRef].files.length) {
+                    this.coverFile = this.$refs[this.coverFileRef].files[0];
+                }
+
+                if (!this.coverFile || !this.coverFile.size || !this.coverFile.type) {
+                    //TODO: toast i18n
+                    tShow(`Por favor selecciona un archivo para la imagen`, 'danger');
+                    return;
+                }
+
+                if (!this.allowedImageMimeTypes.includes(this.coverFile.type)) {
+                    //TODO: toast i18n
+                    tShow(`Por favor selecciona una imagen con extensión .jpeg, .png, .gif o .svg`, 'danger');
+                    return;
+                }
+
+                let formData = new FormData();
+                formData.append('cover', this.coverFile);
+                
+                let session = this.$session;
+
+                this.$store.dispatch(`${storeModule}/CHANGE_COVER`, {session, formData});
+            },
         },
         created(){
         },
-        mounted(){
+        beforeMount(){
+            this.$store.dispatch(`${storeModule}/LOAD_SETTINGS`);
+        },
+        mounted() {
+            if (this.settings) {
+                this.setLocalSettings(this.settings);
+            }
         }
     }
 </script>

@@ -33,13 +33,13 @@
 </template>
 
 <script>
-    import BackButton from '@/components/general/BackButton';
-    import AdminMainSection from '@/components/admin/AdminMainSection';
+//    import BackButton from '@/components/general/BackButton';
+//    import AdminMainSection from '@/components/admin/AdminMainSection';
     const storeModule = 'publicOrganizations';
     import {mapState} from 'vuex';
     import axios from 'axios';
 
-    import i18n from '@/plugins/i18n';
+//    import i18n from '@/plugins/i18n';
 
     export default {
         name: "SelectOrganization",
@@ -49,8 +49,8 @@
             }
         },
         components: {
-            BackButton,
-            AdminMainSection
+//            BackButton,
+//            AdminMainSection
         },
 //        mounted() {
         //Check if user was redirected
@@ -73,12 +73,20 @@
                 this.$session.set('currentOrganizationName', organization.name);
                 this.$session.set('currentOrganizationShortName', organization.shortName);
                 this.$session.set('currentOrganizationColor', organization.color);
+                this.$session.set('currentOrganizationTheme', organization.theme);
+
+                let body = document.getElementById('body');
+                body.className = `theme-body ${organization.theme}`;
+                
+                this.$session.set('currentOrganizationCover', organization.cover);
+                this.$session.set('currentOrganizationTitle', organization.title);
+                this.$session.set('currentOrganizationDescription', organization.description);
+//                this.$session.set('currentOrganizationContactLocation', organization.contactLocation);
+//                this.$session.set('currentOrganizationContactEmail', organization.contactEmail);
+                
                 axios.defaults.headers.common['X-CURRENT-ORGANIZATION-ID'] = organization._id;
 
-                this.$store.commit('currentOrganizationId', organization._id.toString());
-                this.$store.commit('currentOrganizationName', organization.name);
-                this.$store.commit('currentOrganizationShortName', organization.shortName);
-                this.$store.commit('currentOrganizationColor', organization.color);
+                this.$store.commit('CURRENT_ORGANIZATION', organization);
 
                 let redirectTo = this.$router.currentRoute.query.redirectTo || this.defaultRedirectTo;
 

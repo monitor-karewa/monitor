@@ -6,6 +6,22 @@ const pluginCreatedUpdated = require('mongoose-createdat-updatedat');
 
 const regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
 
+const themes = [
+    'default',
+    'dark',
+    'orange',
+    'yellow',
+    'greenBlue',
+    'green',
+    'sky',
+    'blue',
+    'red',
+    'pink',
+    'gray',
+    'lilac',
+    'blueDark',
+];
+
 /**
  * Mongoose Schema for Organization.
  * @type {mongoose.Schema}
@@ -25,6 +41,34 @@ organizationSchema = mongoose.Schema({
         type: String,
         required: true,
         default: "#2cbcb6"
+    },
+    theme: {
+        type: String,
+        required: true,
+        enum: themes,
+        default: "default"
+    },
+    cover: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'File',
+        required: false
+    },
+    title: {
+        type: String,
+        required: true,
+        default: "Monitor Karewa"
+    },
+    description: {
+        type: String,
+        default: "Aquí podras obtener información sobre los procedimientos de contrataciones públicas, incluyendo la compra, renta y contratación de servicios que se realizan en el Municipio de Chihuahua"
+    },
+    contactLocation: {
+        type: String,
+        default: ""
+    },
+    contactEmail: {
+        type: String,
+        default: ""
     },
     deleted: require("./schemas/deleted.schema").Deleted
 });
@@ -66,7 +110,7 @@ class OrganizationClass {
 organizationSchema.loadClass(OrganizationClass);
 
 //Indexes
-organizationSchema.index({name: 1}, {unique: true});
+organizationSchema.index({name: 1, deleted: 1}, {unique: true});
 
 organizationSchema.statics.qByOrganization = function (req) {
     let currentOrganizationId = this.currentOrganizationId(req);
@@ -77,8 +121,14 @@ organizationSchema.statics.qByOrganization = function (req) {
 
 organizationSchema.statics.currentOrganizationId = function (req) {
     let currentOrganizationId = req.currentOrganizationId;
+    if (currentOrganizationId === 'undefined' || currentOrganizationId === 'null') {
+        currentOrganizationId = null;
+    }
     if (currentOrganizationId) {
-        currentOrganizationId = mongoose.Types.ObjectId(currentOrganizationId);
+        try {
+            currentOrganizationId = mongoose.Types.ObjectId(currentOrganizationId);
+        } catch(err) {
+        }
     }
     return currentOrganizationId;
 };

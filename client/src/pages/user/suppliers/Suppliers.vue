@@ -230,13 +230,12 @@
                 trimonths: state => state[storeModule].trimonths,
                 administrationPeriods: state => state[storeModule].administrationPeriods,
                 procedureTypes: state => state[storeModule].procedureTypes,
+                lastQuery: state => state[storeModule].lastQuery,
             })
         },
         methods: {
-
             downloadFile (format) {
-                console.log("format", format);
-                this.$store.dispatch('publicSuppliers/downloadFile', {format});
+                this.$store.dispatch('publicSuppliers/downloadFile', {format,filters:this.lastQuery});
             },
             copyUrlToClipBoard(){
                 const tempTextArea = document.createElement('textarea');

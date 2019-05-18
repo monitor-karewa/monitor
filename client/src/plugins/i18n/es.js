@@ -423,7 +423,7 @@ export default {
     //Resources
     "resources.resource": "Recurso | Recursos",
     "resources.title": "Título",
-    "resources.classification": "Casificación",
+    "resources.classification": "Clasificación",
     "resources.url": "URL",
     "resources.validation.required":"El campo {field} del Recurso es requerido",
     "resources.validation.url":"La Url no tiene el formato correcto",
@@ -432,10 +432,13 @@ export default {
     "resources.resource-type.marco-legal":"Marco Legal",
     "resources.resource-type.articulo":"Artículo",
     "resources.resource-type.notas":"Nota",
+    "resources.resource-type.website":"Sitio Web",
     "LEGAL_FRAMEWORK":"Marco Legal",
     "ARTICLE":"Artículo",
     "NOTES":"Nota",
+    "WEBSITE":"Sitio Web",
     "resources.resource-type.label":"Clasificación",
+    "resources.public.load.error":"La información de Recursos no se encuentra disponible en este momento",
 
 
     //Calculations
@@ -517,6 +520,16 @@ export default {
 
     "comparations.public.load.error": "La información de Comparativas no se encuentra disponible en este momento.",
     "comparations.public.load.corruption-index.error": "La información del Índice de Riesgo de Corrupción no se encuentra disponible en este momento.",
+    
+    //Settings
+
+    "settings.load-settings.error": "La información general no se encuentra disponible en este momento.",
+    "settings.change-cover.update.success": "Se ha actualizado la imagen correctamente.",
+    "settings.change-cover.update.error": "No fue posible actualizar la imágen. Por favor intenta de nuevo más tarde",
+    "settings.change-settings.update.success": "Se ha actualizado la información general correctamente",
+    "settings.change-settings.update.error": "No fue posible actualizar la información general. Por favor intenta de nuevo más tarde",
+    "settings.change-theme.update.success": "Se ha actualizado el tema correctamente",
+    "settings.change-theme.update.error": "No fue posible actualizar el tema. Por favor intenta de nuevo más tarde",
 
 
 }

@@ -44,9 +44,9 @@ exports.list = (req, res, next) => {
     if (req.body && req.body.filters) {
 
         if (req.body.filters.search && req.body.filters.search.length) {
-            orBuilder.push({contractId: utils.toAccentsRegex(req.body.filters.search)});
-            orBuilder.push({contractNumber: utils.toAccentsRegex(req.body.filters.search)});
-            orBuilder.push({servicesDescription: utils.toAccentsRegex(req.body.filters.search)});
+            orBuilder.push({contractId: utils.toAccentsRegex(req.body.filters.search, "gi")});
+            orBuilder.push({contractNumber: utils.toAccentsRegex(req.body.filters.search, "gi")});
+            orBuilder.push({servicesDescription: utils.toAccentsRegex(req.body.filters.search, "gi")});
             andBuilder.push({$or: orBuilder});
             orBuilder = [];
         }
@@ -456,7 +456,7 @@ exports.retrieveAdministrationPeriods = (req, res, next) => {
         },
         {
             $group : {
-                _id:"administrationPeriod",
+                _id:"$administrationPeriod",
                 administrationPeriod : {$first : "$administrationPeriod"}
             }
         }

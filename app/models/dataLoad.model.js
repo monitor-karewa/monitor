@@ -87,11 +87,12 @@ class DataLoadClass {
 }
 
 DataLoadSchema.statics.toJson = function (dataLoad) {
+    let uploadedBy = dataLoad.uploadedBy || {};
     return {
         _id: dataLoad._id,
         filename: dataLoad.filename,
         details: dataLoad.details,
-        uploadedBy: `${dataLoad.uploadedBy.name} ${dataLoad.uploadedBy.lastName}`,
+        uploadedBy: `${uploadedBy.name} ${uploadedBy.lastName}`,
         createdAt: dataLoad.createdAt
     };
 };
@@ -197,8 +198,6 @@ DataLoadSchema.statics.dataLoadInfo = function (currentOrganizationId, callback)
                 logger.error(err, req, 'dataLoad.model#dataLoadInfo', 'Error trying to fetch current DataLoad info');
             }
 
-            console.log('dataLoad', currentDataLoad);
-
             this
                 .findOne({
                     organization: currentOrganizationId,
@@ -220,19 +219,23 @@ DataLoadSchema.statics.dataLoadInfo = function (currentOrganizationId, callback)
                 .exec((err, recentDataLoad) => {
 
                     let dataLoadInfo = {};
+                    
 
                     if (currentDataLoad) {
+                        let currentUploadedBy = currentDataLoad.uploadedBy || {};
                         dataLoadInfo.current = {
                             _id: currentDataLoad._id,
                             summary: currentDataLoad.summary,
-                            uploadedBy: `${currentDataLoad.uploadedBy.name} ${currentDataLoad.uploadedBy.lastName}`,
+                            uploadedBy: `${currentUploadedBy.name} ${currentUploadedBy.lastName}`,
                             createdAt: currentDataLoad.createdAt
                         };
                     }
+                    
 
                     if (recentDataLoad) {
+                        let recentUploadedBy = recentDataLoad.uploadedBy || {};
                         dataLoadInfo.recent = {
-                            recentUploadedBy: `${recentDataLoad.uploadedBy.name} ${recentDataLoad.uploadedBy.lastName}`,
+                            recentUploadedBy: `${recentUploadedBy.name} ${recentUploadedBy.lastName}`,
                             recentConfirmedAt: recentDataLoad.confirmedAt
                         };
                     }
