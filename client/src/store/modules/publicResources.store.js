@@ -13,10 +13,18 @@ const getters = {
 };
 
 const actions = {
-    LOAD_RESOURCES ({commit}, page) {
+    LOAD_RESOURCES ({commit}, {page, search}) {
         let query = '';
         if (page) {
             query += `?page=${page}`;
+        }
+        if (search) {
+            if (!query.length) {
+                query += `?`;
+            } else {
+                query += `&`;
+            }
+            query += `search=${search}`;
         }
         apiPublicResources.list({query}, (result) => {
             commit('SET_RESOURCES', result.data.data);
