@@ -55,7 +55,7 @@
                                         </div>
                                     </div>
                                     <small>{{organization.name}}</small>
-                                    <router-link :to="'/comparations/' + organization._id + '?baseRemoteUrl=' + baseRemoteUrl" class="btn-stroke xs button-primary">
+                                    <router-link :to="'/comparations/' + organization._id + (baseRemoteUrl ? ('?baseRemoteUrl=' + baseRemoteUrl) : '')" class="btn-stroke xs button-primary">
                                         Comparar
                                     </router-link>
                                 </div>
@@ -164,14 +164,19 @@
             ...mapState({
                 organizations: state => state[organizationsStoreModule].organizations,
                 currentOrganization: state => state.currentOrganization,
-                baseRemoteUrl: state => state[organizationsStoreModule].baseRemoteUrl
+                baseRemoteUrl: function(state) {
+                    if(state[organizationsStoreModule].baseRemoteUrl && state[organizationsStoreModule].baseRemoteUrl.length && state[organizationsStoreModule].baseRemoteUrl !== "undefined"){
+                        return state[organizationsStoreModule].baseRemoteUrl;
+                    } else {
+                        return undefined;
+                    }
+                }
 
             }),
             filteredOrganizations() {
                 if (!this.organizations) {
                     return [];
                 }
-                console.log("this.organizations", this.organizations);
                 return this.organizations.filter((organization) => {
                     return organization._id.toString() !== this.currentOrganization._id.toString();
                 });

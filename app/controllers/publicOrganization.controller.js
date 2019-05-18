@@ -96,7 +96,8 @@ exports.getOrganizationsFromOuterServer = function (req, res, next) {
     let url = "", baseRemoteUrl;
     let index;
 
-    if (search) {
+
+    if (search && search.length) {
         let match = search.match(anyHttpRegex);
         if (match && match[0]) {
             url = search.replace(match[0], "");
@@ -108,27 +109,30 @@ exports.getOrganizationsFromOuterServer = function (req, res, next) {
             url = url.substr(0, url.indexOf("/"))
         }
 
-        baseRemoteUrl =  ""+url;//Scared of assigned relation
+
 
         if (match && match[0]) {
             url = match[0] + url;
         } else {
             url = HTTP_PREFIX + url;
         }
+        baseRemoteUrl =  url;//Scared of assigned relation
+
         url += ROUTE_SUFFIX;
 
         if (urlregex.test(url) && !normalSearchRegex.test(search)) {
             axios.get(url)
                 .then(response => {
-                    console.log("response.data", response.data);
                     res.json({docs : response.data, baseRemoteUrl:baseRemoteUrl})
                 })
                 .catch(error => {
                     axios.get(toggleHttpPrefix(url))
                         .then(response => {
-                            res.json({docs : response.data.data, baseRemoteUrl:baseRemoteUrl})
+                            baseRemoteUrl = toggleHttpPrefix(baseRemoteUrl);
+                            res.json({docs : response.data, baseRemoteUrl:baseRemoteUrl})
                         })
                         .catch(error => {
+                            console.log("error");
                             console.log(error);
                             res.json({error: true, message : "Verifique la url"})
                         });
@@ -138,14 +142,14 @@ exports.getOrganizationsFromOuterServer = function (req, res, next) {
                 name: utils.toAccentsRegex(req.query.search, "i", false)
             }).exec(
                 function (err, result) {
-                    res.json(result)
+                    return res.json({docs : result})
                 }
             )
         }
     } else {
         Organization.find({}).exec(
             function (err, result) {
-                res.json(result)
+                return res.json({docs : result})
             }
         )
     }

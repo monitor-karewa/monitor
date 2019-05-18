@@ -417,7 +417,6 @@
         mounted() {
             let otherOrganizationId = this.$route.params.id;
             let url = this.$route.query.baseRemoteUrl;
-            console.log('url --> ' + url);
 
             this.$store.dispatch(`${storeModule}/LOAD_DETAIL`, {
                 id: this.currentOrganization._id,
