@@ -1,5 +1,6 @@
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
+const utils = require('./../components/utils');
 
 const Organization = require('./../models/organization.model').Organization;
 const Resource = require('./../models/resource.model').Resource;
@@ -12,7 +13,6 @@ const deletedSchema = require('./../models/schemas/deleted.schema');
  * @param next
  */
 exports.list = (req, res, next) => {
-    console.log('publicResource.controller#list');
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
 
     // paginationOptions.select = 'name shortName color theme cover title description';
@@ -28,15 +28,15 @@ exports.list = (req, res, next) => {
 
     let search = req.query.search;
     if(search){
-        let searchAsRegex = new RegExp(search,"i");
+        let searchAsRegex = utils.toAccentsRegex(search, 'gi');
         query = {
             $or : [
-                {name : searchAsRegex},
+                {title : searchAsRegex},
                 {url : search},
             ]
         }
     }
-    
+
     Resource.aggregate([
         {
             $match: query
