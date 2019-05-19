@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="230" height="180" viewBox="0 0 230 180">
+    <defs>
+        <path id="a" d="M0 0h167.784v160H0z"/>
+    </defs>
+    <g fill="none" fill-rule="evenodd" transform="translate(31 10)">
+        <mask id="b" fill="#fff">
+            <use xlink:href="#a"/>
+        </mask>
+        <g mask="url(#b)">
+
+            <g fill="#DADCE5" transform="translate(19.027 19.027)">
+                <rect width="1.73" height="5.189" x="64" rx=".865"/>
+                <rect width="1.73" height="5.189" x="89.328" y="5.384" rx=".865" transform="rotate(24 90.192 7.978)"/>
+                <rect width="1.73" height="5.189" x="110.276" y="20.603" rx=".865" transform="rotate(48 111.14 23.198)"/>
+                <rect width="1.73" height="5.189" x="123.223" y="43.028" rx=".865" transform="rotate(72 124.087 45.622)"/>
+                <rect width="1.73" height="5.189" x="125.929" y="68.779" rx=".865" transform="rotate(96 126.794 71.374)"/>
+                <rect width="1.73" height="5.189" x="117.928" y="93.405" rx=".865" transform="rotate(120 118.793 96)"/>
+                <rect width="1.73" height="5.189" x="10.072" y="93.405" rx=".865" transform="rotate(-120 10.937 96)"/>
+                <rect width="1.73" height="5.189" x="2.071" y="68.779" rx=".865" transform="rotate(-96 2.936 71.374)"/>
+                <rect width="1.73" height="5.189" x="4.777" y="43.028" rx=".865" transform="rotate(-72 5.642 45.622)"/>
+                <rect width="1.73" height="5.189" x="17.724" y="20.603" rx=".865" transform="rotate(-48 18.589 23.198)"/>
+                <rect width="1.73" height="5.189" x="38.672" y="5.384" rx=".865" transform="rotate(-24 39.537 7.978)"/>
+            </g>
+
+        </g>
+
+    </g>
+</svg>     

@@ -1,0 +1,54 @@
+.switcher-tabs {
+	position: relative;
+	clear: both;
+	width: 100%;
+	justify-content: center;
+	display: inline-flex;
+}
+
+.switcher-tabs .tab {
+	float: left;
+}
+
+.switcher-tabs .tab .content {
+	position: absolute;
+	left: 0px;
+	width: 100%;
+}
+
+.checkboxtab {
+	display: none;
+}
+
+.tab label {
+	padding: 0 8px;
+	margin: 0;
+	border: solid 1px;
+	font-size: 10px;
+	font-weight: normal;
+	font-style: normal;
+	font-stretch: normal;
+	line-height: 1.57;
+	letter-spacing: normal;
+	text-align: center;
+	letter-spacing: 1px;
+	border-radius: 0;
+	text-transform: uppercase;
+    transition: all 0.3s linear;
+
+	&.bordered-first {
+		padding-left: 15px;
+		border-top-left-radius: 50px;
+		border-bottom-left-radius: 50px;
+	}
+
+	&.bordered-last {
+		padding-right: 15px;
+		border-top-right-radius: 50px;
+		border-bottom-right-radius: 50px;
+	}
+}
+
+.checkboxtab:checked ~ .content {
+	z-index: 1;
+}
