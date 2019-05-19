@@ -1,0 +1,41 @@
+.tag{
+  padding: 3px 12px;
+  font-size: 12px;
+  border: none;
+  border-radius: 20px;
+  float: left;
+  align-items: center;
+  text-transform: uppercase;
+  margin-right: 5px;
+  margin-bottom: 5px;
+  transition: all .2s;
+  display: flex;
+  cursor: default;
+  &.active{
+    &:hover{
+    opacity: 0.5;
+    }
+  }
+  button, a{
+    padding-left: 8px;
+    background: transparent;
+    border: none;
+    font-size: 14px;
+    vertical-align: middle;
+    padding-right: 0;
+    padding-top: 0px;
+    padding-bottom: 0;
+    cursor: pointer;
+  }
+}
+
+.tag-title{
+  padding-top: 3px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1.5;
+  text-align: left;
+  font-size: 12px;
+  float: left;
+  margin-right: 10px;
+}

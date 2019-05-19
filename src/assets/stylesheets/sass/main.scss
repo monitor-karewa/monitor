@@ -1,0 +1,62 @@
+/* Structure from official style guideline http://sass-guidelin.es/es/ */
+/* -----------------------------------------------------------------------------
+ * Temas: App's themes colors
+ * ----------------------------------------------------------------------------- */
+@import "./themes/_varFonts.scss";
+@import "./themes/_varColors.scss";
+@import "./themes/_theme-app.scss";
+
+
+/* -----------------------------------------------------------------------------
+ * Abstracts: Class utilities, helpers, mixins, variables
+ * ----------------------------------------------------------------------------- */
+@import "./abstracts/_class-utilities.scss";
+
+
+/* -----------------------------------------------------------------------------
+ * Base: Standard styles for HTML elements
+ * ----------------------------------------------------------------------------- */
+@import "./base/_alerts.scss";
+@import "./base/_animations.scss";
+@import "./base/_buttons.scss";
+@import "./base/_fontface.scss";
+@import "./base/_form-elements.scss";
+@import "./base/_modals.scss";
+@import "./base/_pagination.scss";
+@import "./base/_tooltips.scss";
+@import "./base/_toast.scss";
+
+
+/* -----------------------------------------------------------------------------
+ * Layout: Header, footer, navigation, sidebar, etc
+ * ----------------------------------------------------------------------------- */
+@import "./layout/_layout.scss";
+
+
+/* -----------------------------------------------------------------------------
+ * Components: Components like slider, modal, timeline, panel, etc
+ * ----------------------------------------------------------------------------- */
+@import "./components/_colors-list.scss";
+@import "./components/_collapsibles.scss";
+@import "./components/_dropdowns.scss";
+@import "./components/_material-tabs.scss";
+@import "./components/_switcher-tabs.scss";
+@import "./components/_tables.scss";
+@import "./components/_tachometer.scss";
+@import "./components/_tags.scss";
+
+
+/* -----------------------------------------------------------------------------
+ * Pages: Specific styles for full pages
+ * ----------------------------------------------------------------------------- */
+@import "./pages/_cover-page.scss";
+@import "./pages/_login.scss";
+@import "./pages/_page-error.scss";
+
+
+/* -----------------------------------------------------------------------------
+ * Exclusive files: Placed at the end so it does not affect the entire
+ * application and the responsive design is applied
+ * ----------------------------------------------------------------------------- */
+@import "./abstracts/_media-queries.scss";
+@import "./layout/_shame.scss";

@@ -1,0 +1,26 @@
+.regular-table {
+  padding: 0;
+  max-height: 650px;
+
+  tr {
+    th:first-child, td:first-child {
+      min-width: 320px
+    }
+    td:first-child {
+      font-weight: 500;
+    }
+
+  }
+  thead {
+    th {
+      padding-top: 15px !important;
+      padding-bottom: 15px !important;
+    }
+  }
+}
+
+.table-btn-stroke {
+  box-shadow: none;
+  text-transform: capitalize;
+  white-space: nowrap;
+}

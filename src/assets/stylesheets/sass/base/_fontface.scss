@@ -1,0 +1,95 @@
+/* Created on : 03/12/2018
+ * Author     : Ingrid Pinedo
+ * Version    : 1.0
+ * Content    : Fontface
+ */
+
+/*--------------------
+  Raleway Light
+---------------------*/
+@font-face {
+  font-family: 'Raleway-light';
+  font-style: normal;
+  font-weight: 300;
+  font-display: fallback;
+  src: local('Raleway-light'),
+       url('./assets/fonts/Raleway/Raleway-Light.woff2') format('woff2'),
+       url('./assets/fonts/Raleway/Raleway-Light.woff') format('woff'),
+       url('./assets/fonts/Raleway/Raleway-Light.ttf') format('truetype'),
+       url('./assets/fonts/Raleway/Raleway-Light.eot') format('embedded-opentype');
+}
+
+/*--------------------
+  Raleway Regular
+---------------------*/
+@font-face {
+  font-family: 'Raleway-regular';
+  font-style: normal;
+  font-weight: 400;
+  font-display: fallback;
+  src: local('Raleway-regular'),
+       url('./assets/fonts/Raleway/Raleway-Regular.woff2') format('woff2'),
+       url('./assets/fonts/Raleway/Raleway-Regular.woff') format('woff'),
+       url('./assets/fonts/Raleway/Raleway-Regular.ttf') format('truetype'),
+       url('./assets/fonts/Raleway/Raleway-Regular.eot') format('embedded-opentype');
+}
+
+/*--------------------
+  Raleway Medium
+---------------------*/
+@font-face {
+  font-family: 'Raleway-medium';
+  font-style: normal;
+  font-weight: 500;
+  font-display: fallback;
+  src: local('Raleway-medium'),
+       url('./assets/fonts/Raleway/Raleway-Medium.woff2') format('woff2'),
+       url('./assets/fonts/Raleway/Raleway-Medium.woff') format('woff'),
+       url('./assets/fonts/Raleway/Raleway-Medium.ttf') format('truetype'),
+       url('./assets/fonts/Raleway/Raleway-Medium.eot') format('embedded-opentype');
+}
+
+/*--------------------
+  Raleway SemiBold
+---------------------*/
+@font-face {
+  font-family: 'Raleway-semibold';
+  font-style: normal;
+  font-weight: 600;
+  font-display: fallback;
+  src: local('Raleway-semibold'),
+       url('./assets/fonts/Raleway/Raleway-SemiBold.woff2') format('woff2'),
+       url('./assets/fonts/Raleway/Raleway-SemiBold.woff') format('woff'),
+       url('./assets/fonts/Raleway/Raleway-SemiBold.ttf') format('truetype'),
+       url('./assets/fonts/Raleway/Raleway-SemiBold.eot') format('embedded-opentype'); 
+}
+
+/*--------------------
+  Raleway Bold
+---------------------*/
+@font-face {
+  font-family: 'Raleway-bold';
+  font-style: normal;
+  font-weight: 700;
+  font-display: fallback;
+  src: local('Raleway-bold'),
+       url('./assets/fonts/Raleway/Raleway-Bold.woff2') format('woff2'),
+       url('./assets/fonts/Raleway/Raleway-Bold.woff') format('woff'),
+       url('./assets/fonts/Raleway/Raleway-Bold.ttf') format('truetype'),
+       url('./assets/fonts/Raleway/Raleway-Bold.eot') format('embedded-opentype');
+}
+
+/*--------------------
+  Raleway Black
+---------------------*/
+@font-face {
+  font-family: 'Raleway-black';
+  font-style: normal;
+  font-weight: 900;
+  font-display: fallback;
+  src: local('Raleway-black'),
+       url('./assets/fonts/Raleway/Raleway-Black.woff2') format('woff2'),
+       url('./assets/fonts/Raleway/Raleway-Black.woff') format('woff'),
+       url('./assets/fonts/Raleway/Raleway-Black.ttf') format('truetype'),
+       url('./assets/fonts/Raleway/Raleway-Black.eot') format('embedded-opentype');
+}
