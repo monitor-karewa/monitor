@@ -7,7 +7,7 @@
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
     "lint": "vue-cli-service lint",
-    "prod": "node server.js"
+    "prod": "node src/server"
   },
   "dependencies": {
     "acorn-dynamic-import": "^4.0.0",
