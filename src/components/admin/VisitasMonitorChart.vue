@@ -53,7 +53,11 @@
                         categories: [],
                     },
 
-                    colors: ['#19babd']
+                    colors: ['#19babd'],
+                    responsive: [{
+                        breakpoint: undefined,
+                        options: {},
+                    }]
                 }
             }
         },
