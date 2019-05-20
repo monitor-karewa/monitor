@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites errors="0"
+            failures="1"
+            tests="1">
+
+  <testsuite name="test"
+    errors="0" failures="1" hostname="" id="" package="test" skipped="0"
+    tests="1" time="3.079" timestamp="Mon, 20 May 2019 19:43:45 GMT">
+  
+    <testcase name="default e2e tests" classname="test" time="3.079" assertions="2">
+
+      <failure message="Testing if element &lt;.hello&gt; is present.">    at Object.default e2e tests (/Users/taco/Documents/Projects/blacklabs/karewa/monitor-web/tests/e2e/specs/test.js:9:15)
+    at process._tickCallback (internal/process/next_tick.js:61:11)</failure>
+
+    
+    </testcase>
+  
+
+  
+
+  
+  </testsuite>
+</testsuites>

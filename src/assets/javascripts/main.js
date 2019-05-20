@@ -210,7 +210,8 @@ function ToastShow() {
                 $(this).css({
                     'opacity': 1
                 });
-                var topOffset = 15;
+                // var topOffset = 15;
+                var topOffset = 65;
                 $('.toast').each(function() {
                     var $this = $(this);
                     var height = $this.outerHeight();

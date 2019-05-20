@@ -144,8 +144,10 @@
     export default {
         data () {
             return {
-                username: 'admin@app.admin',
-                password: 'admin',
+//                username: 'admin@app.admin',
+//                password: 'admin',
+                username: '',
+                password: '',
             }
         },
         methods: {
