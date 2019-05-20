@@ -76,4 +76,4 @@ public/img/
 
 # Test results
 # ============================
-client/tests_output/
+tests_output

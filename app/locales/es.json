@@ -1,8 +1,0 @@
-{
-	"general.error.unexpected-error": "Ocurrió un error inesperado. Por favor inténtalo nuevamente.",
-	"general.success.created": "general.success.created",
-	"general.success.deleted": "general.success.deleted",
-	"general.success.updated": "general.success.updated",
-	"general.error.not-exists-or-already-deleted": "general.error.not-exists-or-already-deleted",
-	"general.error.save": "general.error.save"
-}
