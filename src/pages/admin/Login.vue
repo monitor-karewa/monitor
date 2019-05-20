@@ -51,15 +51,15 @@
                 <div class="form">
                     <div class="form-group fg-float m-b-40">
                         <div class="fg-line  basic-input">
-                            <input type="text" class="form-control fg-input" placeholder="Usuario" value="admin" v-model="username">
-                            <label class="fg-label">Usuario <!--<small>(small text)</small>--></label>
+                            <input id="username" type="text" class="form-control fg-input" placeholder="Usuario" value="admin" v-model="username">
+                            <label class="fg-label">Usuario<!--<small>(small text)</small>--></label>
                         </div>
                     </div>
 
                     <div class="form-group fg-float">
                         <div class="fg-line  basic-input">
-                            <input type="password" class="form-control fg-input" placeholder="Contraseña" value="admin" v-model="password">
-                            <label class="fg-label">Contraseña <!--<small>(small text)</small>--></label>
+                            <input id="password" type="password" class="form-control fg-input" placeholder="Contraseña" value="admin" v-model="password">
+                            <label class="fg-label">Contraseña<!--<small>(small text)</small>--></label>
                         </div>
                         <!--<span class="error-span">Error message</span>-->
                     </div>
@@ -144,8 +144,10 @@
     export default {
         data () {
             return {
-                username: 'admin@app.admin',
-                password: 'admin',
+//                username: 'admin@app.admin',
+//                password: 'admin',
+                username: '',
+                password: '',
             }
         },
         methods: {

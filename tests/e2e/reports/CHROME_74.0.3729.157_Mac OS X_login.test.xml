@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<testsuites errors="0"
+            failures="1"
+            tests="1">
+
+  <testsuite name="login.test"
+    errors="0" failures="1" hostname="" id="" package="login.test" skipped="0"
+    tests="1" time="7.911" timestamp="Mon, 20 May 2019 19:46:00 GMT">
+  
+    <testcase name="Login" classname="login.test" time="7.911" assertions="1">  <failure message="Testing if element &lt;/html[1]/body[1]&gt; contains text: &#34;Bienvenido a&#34;.">    at Object.Login (/Users/taco/Documents/Projects/blacklabs/karewa/monitor-web/tests/e2e/specs/login.test.js:34:21)
+    at process._tickCallback (internal/process/next_tick.js:61:11)</failure>
+
+    
+    </testcase>
+  
+
+  
+
+  
+  </testsuite>
+</testsuites>

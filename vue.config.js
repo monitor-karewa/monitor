@@ -22,16 +22,36 @@ module.exports = {
             alias: {
                 "@": path.resolve(__dirname, 'src/')
             }
-        }
-    }/*,
+        },
+        // rules: [
+        //     {
+        //         exclude: [
+        //             // './server.js'
+        //             path.resolve(__dirname, 'server.js')
+        //         ]
+        //        
+        //     }
+        // ]
+        // exclude: [
+        //     /\\src\\server\\.*\.js$/,
+        // ]
+    },
     chainWebpack: config => {
-        config.module
-            .rule('vue')
-            .use('vue-loader')
-            .loader('vue-loader')
-            .tap(options => {
-                // modify the options...
-                return options
-            })
-    }*/
+        // config.plugin('copy').tap((args) => [[{
+        //     from :'src/server/',
+        //     to: 'build',
+        //     toType: 'dir',
+        //     ignore: [
+        //         '*.js',
+        //     ],
+        // }]]);
+        // config.module
+        //     .rule('vue')
+        //     .use('vue-loader')
+        //     .loader('vue-loader')
+        //     .tap(options => {
+        //         // modify the options...
+        //         return options
+        //     })
+    }
 }
