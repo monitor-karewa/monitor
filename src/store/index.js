@@ -23,6 +23,7 @@ import publicSuppliersStore from '@/store/modules/publicSuppliers.store';
 import millonesTrimestreChart from '@/store/modules/landingCharts/millonesTrimestreChart.store';
 import ejercidoProcedimientoChart from '@/store/modules/landingCharts/ejercidoProcedimientoChart.store';
 import visitasMonitorChart from '@/store/modules/adminCharts/monitorVisitasChart.store';
+import visitasRutasChart from '@/store/modules/adminCharts/visitasRutasChart.store';
 import publicComparationsStore from '@/store/modules/publicComparations.store';
 import publicResourcesStore from '@/store/modules/publicResources.store';
 
@@ -46,6 +47,7 @@ export default new Vuex.Store({
         millonesTrimestreChart : millonesTrimestreChart,
         ejercidoProcedimientoChart : ejercidoProcedimientoChart,
         visitasMonitorChart : visitasMonitorChart,
+        visitasRutasChart : visitasRutasChart,
         contracts : contracts,
         resources : resources,
         users : users,

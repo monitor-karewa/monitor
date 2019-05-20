@@ -26,9 +26,11 @@
                 storeModule: storeModule,
                 chartOptions: {
                     chart: {
-                        height: 350,
                         zoom: {
                             enabled: false
+                        },
+                        toolbar: {
+                            show: false
                         }
                     },
                     dataLabels: {

@@ -5,6 +5,93 @@ exports.index = (req, res, next) => {
     res.render('admin/index');
 };
 
+exports.visitsByRoute= (req, res, next) => {
+    RouteLog.aggregate([
+        {
+            $match:{
+                "path":{$in:[/\/suppliers/, /\/resources/, /\/comparations/, /\/contracts/, /\/calculations\//]}
+            }
+        },
+        {
+            $project:{
+                arrayPath:{ $split: ["$path", "/"] }
+            }
+        },
+        {
+            $project:{
+                principalPath:{$arrayElemAt:["$arrayPath", 1]},
+                sizeArray:{$size:"$arrayPath"}
+            }
+        },
+        {
+            $project:{
+                principalPath:1,
+                hasDetail: {$cond:{if:{$eq:["$sizeArray", 3]}, then:true, else:false}}
+            }
+        },
+        {
+            $group:{
+                _id:{
+                    path:"$principalPath",
+                    hasDetail:"$hasDetail"
+                },
+                visits:{$sum:1}
+            }
+        }
+    ]).exec((err, data) => {
+        if (err) {
+            logger.error(err, req, 'landing.controller#amountByPeriods', 'Error trying to query amounts by period');
+            return res.json({
+                error: true
+            });
+        }
+        let datasets = [];
+        let finalLabels = [];
+        for (let i = 0; i < data.length; i++) {
+            switch (data[i]._id.path) {
+                case "suppliers":
+                    if(data[i]._id.hasDetail){
+                        finalLabels.push("Detalle de proveedores");
+                    } else {
+                        finalLabels.push("Listado de proveedores");
+                    }
+                    break;
+                case "resources":
+                    finalLabels.push("Recursos");
+                    break;
+                case "comparations":
+                    if(data[i]._id.hasDetail){
+                        finalLabels.push("Detalle de comparación de tableros");
+                    } else {
+                        finalLabels.push("Listado de comparación de tableros");
+                    }
+                    break;
+                case "contracts":
+                    if(data[i]._id.hasDetail){
+                        finalLabels.push("Detalle de contratos");
+                    } else {
+                        finalLabels.push("Listado de contratos");
+                    }
+                    break;
+                case "calculations":
+                    finalLabels.push("Índice de Corrupción");
+                    break;
+                default:
+                    finalLabels.push(data[i]._id.path);
+            }
+            datasets.push(data[i].visits);
+        }
+
+
+        return res.json({
+            error: false,
+            data: {
+                datasets:datasets,
+                labels:finalLabels
+            }
+        });
+    });
+};
 exports.visitsByMonths = (req, res, next) => {
     //Sacar los primeros dos meses
     let month = new Date().getMonth() + 1;
@@ -39,7 +126,8 @@ exports.visitsByMonths = (req, res, next) => {
     let aggregateList = [];
     aggregateList.push({
         $match:{
-            "path":{$nin:["/login", "/admin", "/select-organization"]},
+            "path":{$in:["/select-organization"]},
+            // "path":{$nin:["/login", "/admin", "/select-organization", "/style", "/style/client"]},
             // "organization":Organization.currentOrganizationId(req),
         }
     });
@@ -84,12 +172,12 @@ exports.visitsByMonths = (req, res, next) => {
             aggregateList.push({
                 $sort:{"_id.year":-1, "_id.month":-1}
             });
-            aggregateList.push({
-                    $limit:12
-                });
-            aggregateList.push({
-                $sort:{"_id.year": 1, "_id.month":-1}
-            });
+            // aggregateList.push({
+            //         $limit:12
+            //     });
+            // aggregateList.push({
+            //     $sort:{"_id.year": -1, "_id.month":-1}
+            // });
             break;
         case "QUARTER":
             for (let i = actualQuerter; i > 0; i--) {
@@ -135,12 +223,31 @@ exports.visitsByMonths = (req, res, next) => {
             aggregateList.push({
                 $sort:{"_id.year":-1, "_id.quarter":-1}
             });
-            aggregateList.push({
-                $sort:{"_id.year": 1, "_id.quarter":-1}
-            });
+            // aggregateList.push({
+            //     $sort:{"_id.year": -1, "_id.quarter":1-}
+            // });
             break;
         case "YEAR":
-            //TODO
+            for (let i = 5; i >0; i--) {
+                aviableYears.push(year-i);
+            }
+
+            aggregateList.push( {
+                $match:{
+                    year:{$in:aviableYears}
+                }
+            });
+            aggregateList.push({
+                $group:{
+                    _id:{
+                        year:"$year"
+                    },
+                    total:{$sum:1}
+                }
+            });
+            aggregateList.push({
+                $sort:{"_id.year": -1}
+            });
             break;
     }
 
@@ -151,8 +258,6 @@ exports.visitsByMonths = (req, res, next) => {
        aggregateList
 
     ).exec((err, data) => {
-        console.log("data");
-        console.log(data);
         if (err) {
             logger.error(err, req, 'landing.controller#amountByPeriods', 'Error trying to query amounts by period');
             return res.json({
@@ -167,6 +272,7 @@ exports.visitsByMonths = (req, res, next) => {
         };
         switch (typeRequest) {
             case "MONTHS":
+                aviableMatchs = aviableMatchs.reverse();
                 for (let i = 0; i < aviableMatchs.length; i++) {
                     let tempMatch = aviableMatchs[i];
                     let hasVisits = false;
@@ -183,6 +289,7 @@ exports.visitsByMonths = (req, res, next) => {
                 }
                 break;
             case "QUARTER":
+                aviableMatchs = aviableMatchs.reverse();
                 for (let i = 0; i < aviableMatchs.length; i++) {
                     let tempMatch = aviableMatchs[i];
                     let hasVisits = false;
@@ -197,6 +304,25 @@ exports.visitsByMonths = (req, res, next) => {
                     }
                     finalLabels.push(_getDescQ(tempMatch.quarter) + " " + tempMatch.year)
                 }
+                break;
+            case "YEAR":
+                aviableYears = aviableYears.sort(function(a, b){return a-b});
+                for (let i = 0; i <aviableYears.length; i++) {
+                    let yearI = aviableYears[i];
+                    let hasVisits = false;
+                    finalLabels = [];
+                    for (let j = 0; j < data.length; j++) {
+                        if(data[j]._id.year == yearI ){
+                            chartData.data.push(data[j].total);
+                            hasVisits = true;
+                        }
+                    }
+                    if(!hasVisits){
+                        chartData.data.push(0);
+                    }
+                    finalLabels = aviableYears;
+                }
+                break;
 
         }
 

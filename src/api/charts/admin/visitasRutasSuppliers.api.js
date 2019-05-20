@@ -5,7 +5,7 @@ const namespace = 'api/admin';
 
 export default {
     dataForChart: (params = {}, onSuccess, onError) => {
-        return axios.post(`${base.baseUrl}/${namespace}/visits-month`, params)
+        return axios.get(`${base.baseUrl}/${namespace}/visits-route`, params)
             .then(onSuccess)
             .catch(onError);
     },

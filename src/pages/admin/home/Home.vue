@@ -90,12 +90,13 @@
                 </div>
                 <div class="tab">
                     <input class="checkboxtab" id="checkbox3" name="checkbox-tabs-group" v-on:click="changeFilterVisitasMonitor('YEAR')" type="radio">
-                    <label class="btn waves-effect bordered-last" for="checkbox3">Tab 3</label>
+                    <label class="btn waves-effect bordered-last" for="checkbox3">Año</label>
                     <!--<div class="content"> Content Switch 3</div>-->
                 </div>
             </div>
             <div class="row">
                 <VisitasMonitorChart></VisitasMonitorChart>
+                <VisitasRutasChart></VisitasRutasChart>
                 <!--<img src="https://i.ibb.co/jZkhGVw/Screen-Shot-2019-03-29-at-2-15-26-PM.png"-->
                 <!--alt="Screen-Shot-2019-03-29-at-2-15-26-PM" border="0" style="float:left;width:50%;height:100%;object-fit:cover;">-->
                 <!--<img src="https://i.ibb.co/6B5kCTm/Screen-Shot-2019-03-29-at-2-15-31-PM.png"-->
@@ -151,6 +152,7 @@
     import VisitasMonitorChart from '@/components/admin/VisitasMonitorChart';
 
     import {mapState} from 'vuex';
+    import VisitasRutasChart from "../../../components/admin/VisitasRutasChart";
 
     //TODO Remove or change initialization because THIS IS NOT A CATALOG ()
 //    let baseCatalog = catalog.configure({
@@ -175,6 +177,7 @@
             }
         },
         components: {
+            VisitasRutasChart,
             AdminMainSection,
             VisitasMonitorChart
         },

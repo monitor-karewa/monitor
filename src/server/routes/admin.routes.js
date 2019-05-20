@@ -10,4 +10,6 @@ router.get('/', adminController.index);
 
 router.post('/visits-month', adminController.visitsByMonths);
 
+router.get('/visits-route', adminController.visitsByRoute);
+
 module.exports = router;
