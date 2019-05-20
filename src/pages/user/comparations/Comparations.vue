@@ -19,6 +19,13 @@
                             <h1>
                                 Comparar Monitores
                             </h1>
+                            <div class="filter">
+                                <div class="filter-container">
+                                    <input class="input-search" type="text" name="" v-model="search"
+                                           placeholder="Buscar usuarios"/>
+                                </div>
+                                <button class="filter-btn" type="button" name="button" @click="searchOrganizations(search)">Buscar</button>
+                            </div>
                             <div class="side-right">
                                 <a href="" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
                                         class="zmdi zmdi-share"></i> Compartir</a>
@@ -48,7 +55,7 @@
                                         </div>
                                     </div>
                                     <small>{{organization.name}}</small>
-                                    <router-link :to="'/comparations/' + organization._id" class="btn-stroke xs button-primary">
+                                    <router-link :to="'/comparations/' + organization._id + (baseRemoteUrl ? ('?baseRemoteUrl=' + baseRemoteUrl) : '')" class="btn-stroke xs button-primary">
                                         Comparar
                                     </router-link>
                                 </div>
@@ -85,6 +92,7 @@
 
         data() {
             return {
+                search : "",
                 monitores: [
                     {
                         name: "Cd. Juarez",
@@ -155,7 +163,15 @@
         computed: {
             ...mapState({
                 organizations: state => state[organizationsStoreModule].organizations,
-                currentOrganization: state => state.currentOrganization
+                currentOrganization: state => state.currentOrganization,
+                baseRemoteUrl: function(state) {
+                    if(state[organizationsStoreModule].baseRemoteUrl && state[organizationsStoreModule].baseRemoteUrl.length && state[organizationsStoreModule].baseRemoteUrl !== "undefined"){
+                        return state[organizationsStoreModule].baseRemoteUrl;
+                    } else {
+                        return undefined;
+                    }
+                }
+
             }),
             filteredOrganizations() {
                 if (!this.organizations) {
@@ -168,6 +184,10 @@
         },
         mounted() {
             this.$store.dispatch(`${organizationsStoreModule}/LOAD_ORGANIZATIONS`);
+        }, methods : {
+            searchOrganizations(search){
+                this.$store.dispatch(`${organizationsStoreModule}/SEARCH_ORGANIZATIONS`,search);
+            }
         }
     }
 </script>
