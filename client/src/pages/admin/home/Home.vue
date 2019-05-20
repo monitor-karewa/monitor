@@ -74,14 +74,34 @@
                     </div>
                 </div>
             </div>
-            <p>Vistas del monitor</p>
-
-            <div class="row">
-                <img src="https://i.ibb.co/jZkhGVw/Screen-Shot-2019-03-29-at-2-15-26-PM.png"
-                        alt="Screen-Shot-2019-03-29-at-2-15-26-PM" border="0" style="float:left;width:50%;height:100%;object-fit:cover;">
-                <img src="https://i.ibb.co/6B5kCTm/Screen-Shot-2019-03-29-at-2-15-31-PM.png"
-                     alt="Screen-Shot-2019-03-29-at-2-15-31-PM" border="0" style="float:left;width:50%;height:100%;object-fit:cover;">
+            <!--<p>Vistas del monitor</p>-->
+            <div class="switcher-tabs">
+                <p>Vistas del monitor</p>
+                <div class="tab">
+                    <input checked="" class="checkboxtab" id="checkbox1" v-on:click="changeFilterVisitasMonitor('MONTHS')" name="checkbox-tabs-group"
+                           type="radio">
+                    <label class="btn waves-effect bordered-first" for="checkbox1">Mensual</label>
+                    <!--<div class="content"> Content Switch 1</div>-->
+                </div>
+                <div class="tab">
+                    <input class="checkboxtab" id="checkbox2" name="checkbox-tabs-group" v-on:click="changeFilterVisitasMonitor('QUARTER')" type="radio">
+                    <label class="btn waves-effect" for="checkbox2">Trimestres</label>
+                    <!--<div class="content"> Content Switch 2</div>-->
+                </div>
+                <div class="tab">
+                    <input class="checkboxtab" id="checkbox3" name="checkbox-tabs-group" v-on:click="changeFilterVisitasMonitor('YEAR')" type="radio">
+                    <label class="btn waves-effect bordered-last" for="checkbox3">Tab 3</label>
+                    <!--<div class="content"> Content Switch 3</div>-->
+                </div>
             </div>
+            <div class="row">
+                <VisitasMonitorChart></VisitasMonitorChart>
+                <!--<img src="https://i.ibb.co/jZkhGVw/Screen-Shot-2019-03-29-at-2-15-26-PM.png"-->
+                <!--alt="Screen-Shot-2019-03-29-at-2-15-26-PM" border="0" style="float:left;width:50%;height:100%;object-fit:cover;">-->
+                <!--<img src="https://i.ibb.co/6B5kCTm/Screen-Shot-2019-03-29-at-2-15-31-PM.png"-->
+                <!--alt="Screen-Shot-2019-03-29-at-2-15-31-PM" border="0" style="float:left;width:50%;height:100%;object-fit:cover;">-->
+            </div>
+
 
             <div class="row m-b-50 m-t-80">
                 <div class="col-12 col-md-4">
@@ -127,9 +147,9 @@
 </style>
 
 <script>
-    import catalog from '@/mixins/catalog.mixin';
     import AdminMainSection from '@/components/admin/AdminMainSection';
-    
+    import VisitasMonitorChart from '@/components/admin/VisitasMonitorChart';
+
     import {mapState} from 'vuex';
 
     //TODO Remove or change initialization because THIS IS NOT A CATALOG ()
@@ -155,9 +175,17 @@
             }
         },
         components: {
-            AdminMainSection
+            AdminMainSection,
+            VisitasMonitorChart
         },
-        methods: {},
+        methods: {
+            changeFilterVisitasMonitor(value){
+                let tempParams = {
+                    type:value
+                }
+                this.$store.dispatch(`visitasMonitorChart/getInfoForChart`, tempParams);
+            }
+        },
         created() {
         },
         mounted() {

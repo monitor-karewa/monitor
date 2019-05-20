@@ -15,12 +15,19 @@ export default function (api) {
 
         getInfoForChart({commit}, query = {}) {
 
+            console.log("query");
+            console.log(query);
+
             api.dataForChart(
                 query,
                 (result) => {
                     Vue.$log.info('Response', result.data.data);
                     let aggregationData = result.data.data;
+                    console.log("aggregationData2222");
+                    console.log(aggregationData);
                     let tempData = api.transformDataForChart(aggregationData);
+                    console.log("tempData");
+                    console.log(tempData);
                     commit('updateDataChart', tempData);
                 },
                 (error) => {
@@ -33,6 +40,8 @@ export default function (api) {
 
     const mutations = {
         updateDataChart(state, {data}) {
+            console.log("data");
+            console.log(data);
             state.data = data;
         }
     };
