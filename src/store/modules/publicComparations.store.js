@@ -48,7 +48,16 @@ const actions = {
         }, (err) => {
             tShow(i18n.t('comparations.public.load.corruption-index.error'), 'danger');
         });
-    }
+    },
+
+    SAVE_COMPARATION({commit}, data) {
+        apiPublicComparations.saveComparation(data, (result) => {
+        }, (err) => {
+            console.log("err", err);
+        });
+    },
+
+
 };
 
 const mutations = {

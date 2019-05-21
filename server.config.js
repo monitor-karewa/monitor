@@ -7,7 +7,7 @@ const favicon = require('serve-favicon');
 const morgan = require('morgan');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
-// const i18n = require("i18n");
+const i18n = require("i18n");
 const jwt = require('jsonwebtoken');
 
 // Database
@@ -22,7 +22,7 @@ const compression = require('compression');
 const helmet = require('helmet');
 
 // Flash notifications
-const flash = require('express-flash-notification');``
+const flash = require('express-flash-notification');
 
 // Security
 const cors = require('cors');
@@ -78,40 +78,41 @@ const seedsManager = require('./src/server/components/seedsManager');
 
 const {USER_PERMISSIONS_DICT} = require('./src/server/models/user.model');
 
-// ============
-// Configuration
-// ============
-// Compatibility of MongoDB >=3.6 with Mongoose < v5.0.0
-mongoose.plugin(schema => {
-    schema.options.usePushEach = true
+i18n.configure({
+    locales:['es'],
+    directory: process.cwd() + '/src/server/locales',
+    autoReload: config.behavior.i18nAutoReload,
+    defaultLocale: 'es'
 });
-
-// Native promises in Mongoose
-mongoose.Promise = Promise;
-
-// Connect
-mongoose.connect(config.mongo.url, config.mongo.connectionOptions);
-mongoose.connection.on("open", function () {
-    //TODO: Use logger
-    console.log("MongoDB connection opened");
-});
-
-// i18n.configure({
-//     locales:['es'],
-//     directory: process.cwd() + '/app/locales',
-//     autoReload: config.behavior.i18nAutoReload,
-//     defaultLocale: 'es'
-// });
 
 // =============
 // ExpressJS App
 // =============
 // const app = express();
 
-// Ensure database basic config
-seedsManager.init();
 
 module.exports = app => {
+    // ============
+    // Configuration
+    // ============
+    // Compatibility of MongoDB >=3.6 with Mongoose < v5.0.0
+    mongoose.plugin(schema => {
+        schema.options.usePushEach = true
+    });
+
+    // Native promises in Mongoose
+    mongoose.Promise = Promise;
+
+    // Connect
+    mongoose.connect(config.mongo.url, config.mongo.connectionOptions);
+    mongoose.connection.on("open", function () {
+        //TODO: Use logger
+        console.log("MongoDB connection opened");
+    });
+    // Ensure database basic config
+    seedsManager.init();
+    
+    
     // =================
     // App settings & configuration
     // =================
@@ -132,7 +133,7 @@ module.exports = app => {
     app.use(morgan('dev'));
     app.use(bodyParser.json());
     app.use(bodyParser.urlencoded({extended: false}));
-    // app.use(i18n.init);
+    app.use(i18n.init);
     app.use(cookieParser(config.session.options.secret));
     // app.use(express.static(path.join(__dirname, 'public')));
     
@@ -202,7 +203,7 @@ module.exports = app => {
     // ======================
     // app.use('/api/users', usersRoutes);
     // app.use('/security', securityRoutes);
-    // app.use('/admin', securityController.checkLogin, adminRoutes);
+    app.use('/api/admin', securityController.checkLogin, adminRoutes);
     app.use('/api/resources', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.RESOURCES), resourceRoutes);
     app.use('/api/calculos', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CALCULATIONS), calculoRoutes);
     app.use('/api/suppliers', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.SUPPLIERS), supplierRoutes);
@@ -217,7 +218,7 @@ module.exports = app => {
     app.use('/api/data-load', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CONTRACTS), dataLoadRoutes);
     app.use('/api/settings', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.SETTINGS), settingsRoutes);
     
-    
+
     // app.get('*', function(req, res, next){
     //     // console.log("404 - Route not found");
     //     // res.status(404).send('NOT FOUND!');

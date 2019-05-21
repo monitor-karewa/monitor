@@ -1,5 +1,5 @@
 const session = require("express-session");
-const mongoStore = require('connect-mongo')(session);
+// const mongoStore = require('connect-mongo')(session);
 
 const mongoose = require('mongoose');
 
@@ -46,11 +46,11 @@ const config = {
                 secret: process.env.SESSION_SECRET || "537b8537c9292f085a233789f6411f92",
                 resave: false,
                 saveUninitialized: false,
-                store: new mongoStore({
-                    mongooseConnection: mongoose.connection,
-                    db: process.env.MONGODB_DB || 'monitor_karewa_web_dev',
-                    touchAfter: 24 * 3600 // time period in seconds
-                }),
+                // store: new mongoStore({
+                //     mongooseConnection: mongoose.connection,
+                //     db: process.env.MONGODB_DB || 'monitor_karewa_web_dev',
+                //     touchAfter: 24 * 3600 // time period in seconds
+                // }),
                 cookie: {
                     path: '/',
                     httpOnly: false,
@@ -61,7 +61,8 @@ const config = {
         },
         behavior: {
             logLevel: 'info',
-            i18nAutoReload: false
+            i18nAutoReload: false,
+            skipJobManager: process.env.SKIP_JOB_MANAGER || false
         }
     },
     dev: {
@@ -88,11 +89,11 @@ const config = {
                 secret: "537b8537c9292f085a233789f6411f92",
                 resave: false,
                 saveUninitialized: false,
-                store: new mongoStore({
-                    mongooseConnection: mongoose.connection,
-                    db: 'monitor_karewa_web_dev',
-                    touchAfter: 24 * 3600 // time period in seconds
-                }),
+                // store: new mongoStore({
+                //     mongooseConnection: mongoose.connection,
+                //     db: 'monitor_karewa_web_dev',
+                //     touchAfter: 24 * 3600 // time period in seconds
+                // }),
                 cookie: {
                     path: '/',
                     httpOnly: false,
@@ -103,7 +104,8 @@ const config = {
         },
         behavior: {
             logLevel: 'info',
-            i18nAutoReload: true
+            i18nAutoReload: true,
+            skipJobManager: process.env.SKIP_JOB_MANAGER || false
         }
     }
 };

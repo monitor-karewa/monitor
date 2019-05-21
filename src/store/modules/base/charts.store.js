@@ -14,7 +14,6 @@ export default function (api) {
     const actions = {
 
         getInfoForChart({commit}, query = {}) {
-
             api.dataForChart(
                 query,
                 (result) => {

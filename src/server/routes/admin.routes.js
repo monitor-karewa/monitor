@@ -8,4 +8,10 @@ const adminController = require('./../controllers/admin.controller');
  */
 router.get('/', adminController.index);
 
+router.post('/visits-month', adminController.visitsByMonths);
+
+router.get('/visits-route', adminController.visitsByRoute);
+
+router.get('/info-dashboard', adminController.infoValues);
+
 module.exports = router;

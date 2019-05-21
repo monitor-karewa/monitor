@@ -11,6 +11,7 @@ const utils = require('../components/utils');
 const permissions = require('./../components/permissions');
 const logger = require('./../components/logger').instance;
 
+// const importLazy = require('import-lazy')(require);
 
 const procedureTypesEnumDict = {
     'PUBLIC': [
@@ -685,18 +686,18 @@ let postInsertMany = function(docs) {
         })
         .catch((err) => {
             logger.error(err, null, 'contract.model#post-insertMany', 'Error trying to create task [%s]', jobManager.TASKS.BACKUP_CONTRACT_URLS);
-        })
+        });
+
 };
 
 let postSave = function(doc) {
-
     jobManager.runTask(jobManager.TASKS.BACKUP_CONTRACT_URLS, {contracts: [doc]})
         .then((job) => {
             logger.info(null, null, 'contract.model#post-postSave', 'Task creation finished [%s]', jobManager.TASKS.BACKUP_CONTRACT_URLS);
         })
         .catch((err) => {
             logger.error(err, null, 'contract.model#post-postSave', 'Error trying to create task [%s]', jobManager.TASKS.BACKUP_CONTRACT_URLS);
-        })
+        });
 };
 
 ContractSchema.post('insertMany', postInsertMany);
@@ -738,3 +739,4 @@ module.exports = {
 };
 
 const jobManager = require('./../components/jobManager');
+// const jobManager = importLazy('./../components/jobManager');

@@ -20,7 +20,7 @@
                                 Contratos
                             </h1>
                             <div class="side-right d-flex">
-                                <a type="button" @click="copyUrlToClipBoard()" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
+                                <a @click="copyUrlToClipBoard()" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
                                         class="zmdi zmdi-share"></i> Compartir</a>
 
                                 <div class="dropdown p-l-10">
@@ -264,5 +264,17 @@
                 return moment(date).format('DD/MM/YYYY');
             }
         },
+        methods : {
+            copyUrlToClipBoard(){
+                const tempTextArea = document.createElement('textarea');
+                tempTextArea.value =  window.location.href;
+                document.body.appendChild(tempTextArea);
+                tempTextArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempTextArea);
+                tShow('Se ha copiado el enlace correctamente', 'info');
+
+            }
+        }
     }
 </script>
