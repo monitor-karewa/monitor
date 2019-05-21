@@ -62,6 +62,31 @@
                             </div>
                         </div>
 
+
+                        <p class="f-14 c-plain_text principal-font-regular">
+                            <strong class="principal-font-semibold">Comparaciones Recientes</strong>
+                        </p>
+
+                        <div class="row">
+                            <div class="col-12 col-md-4 col-lg-3" v-for="comparation in comparations">
+                                <div class="card-compare">
+                                    <img class="img-fluid" src="@/assets/images/Cards/bgm-karewa.png" alt="Karewa"/>
+                                    <div class="logo-full">
+                                        <img class="img-fluid" src="@/assets/images/Logos/logo-karewa-xs.png"
+                                             alt="Logo"/>
+                                        <div>
+                                            <small>Monitor</small>
+                                            <label>{{comparation.targetName}}</label>
+                                        </div>
+                                    </div>
+                                    <small>{{comparation.targetName}}</small>
+                                    <router-link :to="'/comparations/' + comparation.target + (comparation.remoteUrl ? ('?baseRemoteUrl=' + comparation.remoteUrl) : '')" class="btn-stroke xs button-primary">
+                                        Comparar
+                                    </router-link>
+                                </div>
+                            </div>
+                        </div>
+
                         <br/>
 
                     </div>
@@ -163,6 +188,7 @@
         computed: {
             ...mapState({
                 organizations: state => state[organizationsStoreModule].organizations,
+                comparations: state => state[organizationsStoreModule].comparations,
                 currentOrganization: state => state.currentOrganization,
                 baseRemoteUrl: function(state) {
                     if(state[organizationsStoreModule].baseRemoteUrl && state[organizationsStoreModule].baseRemoteUrl.length && state[organizationsStoreModule].baseRemoteUrl !== "undefined"){
@@ -184,6 +210,7 @@
         },
         mounted() {
             this.$store.dispatch(`${organizationsStoreModule}/LOAD_ORGANIZATIONS`);
+            this.$store.dispatch(`${organizationsStoreModule}/LOAD_COMPARATIONS`);
         }, methods : {
             searchOrganizations(search){
                 this.$store.dispatch(`${organizationsStoreModule}/SEARCH_ORGANIZATIONS`,search);
