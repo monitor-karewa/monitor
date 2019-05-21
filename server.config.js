@@ -203,7 +203,7 @@ module.exports = app => {
     // ======================
     // app.use('/api/users', usersRoutes);
     // app.use('/security', securityRoutes);
-    app.use('/api/admin',  adminRoutes);
+    app.use('/api/admin', securityController.checkLogin, adminRoutes);
     app.use('/api/resources', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.RESOURCES), resourceRoutes);
     app.use('/api/calculos', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CALCULATIONS), calculoRoutes);
     app.use('/api/suppliers', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.SUPPLIERS), supplierRoutes);
@@ -218,7 +218,7 @@ module.exports = app => {
     app.use('/api/data-load', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CONTRACTS), dataLoadRoutes);
     app.use('/api/settings', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.SETTINGS), settingsRoutes);
     
-    
+
     // app.get('*', function(req, res, next){
     //     // console.log("404 - Route not found");
     //     // res.status(404).send('NOT FOUND!');

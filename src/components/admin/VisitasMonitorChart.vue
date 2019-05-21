@@ -39,10 +39,6 @@
                     stroke: {
                         curve: 'straight'
                     },
-                    title: {
-                        text: 'Visitas al monitor',
-                        align: 'left'
-                    },
                     grid: {
                         row: {
                             colors: ['#f3f3f3', 'transparent'], // takes an array which will be repeated on columns

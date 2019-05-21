@@ -154,7 +154,7 @@ exports.visitsByMonths = (req, res, next) => {
         $match:{
             "path":{$in:["/select-organization"]},
             // "path":{$nin:["/login", "/admin", "/select-organization", "/style", "/style/client"]},
-            // "organization":Organization.currentOrganizationId(req),
+            "organization":Organization.currentOrganizationId(req),
         }
     });
     aggregateList.push({
@@ -198,12 +198,6 @@ exports.visitsByMonths = (req, res, next) => {
             aggregateList.push({
                 $sort:{"_id.year":-1, "_id.month":-1}
             });
-            // aggregateList.push({
-            //         $limit:12
-            //     });
-            // aggregateList.push({
-            //     $sort:{"_id.year": -1, "_id.month":-1}
-            // });
             break;
         case "QUARTER":
             for (let i = actualQuerter; i > 0; i--) {
@@ -249,9 +243,6 @@ exports.visitsByMonths = (req, res, next) => {
             aggregateList.push({
                 $sort:{"_id.year":-1, "_id.quarter":-1}
             });
-            // aggregateList.push({
-            //     $sort:{"_id.year": -1, "_id.quarter":1-}
-            // });
             break;
         case "YEAR":
             for (let i = 5; i >0; i--) {
