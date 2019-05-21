@@ -19,11 +19,39 @@
                             <h1 m-t-0>
                                 Contratos
                             </h1>
-                            <div class="side-right">
-                                <a href="" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
+                            <div class="side-right d-flex">
+                                <a type="button" @click="copyUrlToClipBoard()" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
                                         class="zmdi zmdi-share"></i> Compartir</a>
-                                <a href="" class="btn-raised button-accent text-capi m-l-10" tabindex=""><i
-                                        class="zmdi zmdi-download"></i> DESCARGAR DATOS DE CONTRATOS</a>
+
+                                <div class="dropdown p-l-10">
+                                    <button class="btn-raised button-accent" type="button" id="dropdownDownloadOptions"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="zmdi zmdi-download"></i> DESCARGAR DATOS DE CONTRATOS
+                                    </button>
+                                    <div class="dropdown-menu dropdown-options dropdown-menu-right"
+                                         aria-labelledby="dropdownDownloadOptions">
+                                        <span>Descargar datos con formato:</span>
+                                        <div class="container-dropdown">
+                                            <a class="dropdown-item" @click.prevent="downloadFile('pdf')" target="_blank">
+                                                <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-pdf.svg"
+                                                     alt="Empty"/>
+                                            </a>
+                                            <a class="dropdown-item" @click.prevent="downloadFile('xls')">
+                                                <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-xls.svg"
+                                                     alt="Empty"/>
+                                            </a>
+                                            <a class="dropdown-item" @click.prevent="downloadFile('json')">
+                                                <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-json.svg"
+                                                     alt="Empty"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+                                <!--<a href="" class="btn-raised button-accent text-capi m-l-10" tabindex=""><i-->
+                                        <!--class="zmdi zmdi-download"></i> DESCARGAR DATOS DE CONTRATOS</a>-->
                             </div>
                         </div>
 
@@ -193,6 +221,7 @@
                 administrationPeriods: state => state[storeModule].administrationPeriods,
                 procedureTypes: state => state[storeModule].procedureTypes,
                 totals: state => state[storeModule].totals, //I like totals
+                lastQuery: state => state[storeModule].lastQuery,
             }),
         },
         components: {
@@ -208,7 +237,7 @@
             });
         },
         beforeMount() {
-            this.$store.dispatch(`${storeModule}/getTotals`);
+//            this.$store.dispatch(`${storeModule}/getTotals`);
             this.$store.dispatch(`${storeModule}/list`);
             this.$store.commit(`${storeModule}/setDocName`,  docName);
 
@@ -219,6 +248,11 @@
             this.$store.dispatch(`${storeModule}/getAdministrationPeriods`);
             this.$store.dispatch(`${storeModule}/getProcedureTypes`);
 
+        },
+        methods:{
+            downloadFile (format) {
+                this.$store.dispatch('publicContracts/downloadFile', {format,filters:this.lastQuery});
+            },
         },
         mounted(){
             this.$nextTick(function () {

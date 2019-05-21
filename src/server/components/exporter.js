@@ -65,7 +65,6 @@ class ExcelExporter extends Exporter {
     }
 
     setFilters(filters){
-        console.log("Estableciendo los filtros", filters);
         this.filters = filters;
         return this;
     }
@@ -98,6 +97,7 @@ class ExcelExporter extends Exporter {
         let cellIndexByHeader = {};
         let cellIndexByPropName = {};
         let formatByPropName = {};
+        let optionsByPropName = {};
 
 
         params.propInfoArray.forEach((propInfo, index) => {
@@ -108,9 +108,14 @@ class ExcelExporter extends Exporter {
             cellIndexByHeader[propInfo.header] = cellIndex;
             cellIndexByPropName[propInfo.propName] = cellIndex;
             formatByPropName[propInfo.propName] = propInfo.format;
+            optionsByPropName[propInfo.propName] = {
+                childPropName : propInfo.childPropName,
+                i18n : propInfo.childPropName
+            }
         });
-        
+
         params.docs.forEach((doc, index) => {
+
             let rowIndex = this.rowIndexes.CONTENT_START + index + 1; //base 1, offset from content start
             
             let propNames = Object.keys(doc);
@@ -121,15 +126,23 @@ class ExcelExporter extends Exporter {
                 if (cellIndex) {
 
                     let format = formatByPropName[propName] || 'string';
-                    
+                    let options = optionsByPropName[propName];
+                    let value = options.childPropName ? doc[propName][options.childPropName] : doc[propName];
+                    value = options.i18n && value ? req.__(value) : value;
+
+
                     switch(format) {
                         case 'currency':
                             sheet.getRow(rowIndex).getCell(cellIndex).numFmt = '"$"#,##0.00;[Red]\-"$"#,##0.00';
-                            sheet.getRow(rowIndex).getCell(cellIndex).value = doc[propName];
+                            sheet.getRow(rowIndex).getCell(cellIndex).value = value;
+                            break;
+                        case 'date':
+                            sheet.getRow(rowIndex).getCell(cellIndex).value = moment(value).format('DD/MM/YYYY');
                             break;
                         case 'string':
+
                         default:
-                            sheet.getRow(rowIndex).getCell(cellIndex).value = doc[propName];
+                            sheet.getRow(rowIndex).getCell(cellIndex).value = value;
                     }
                 }
             });
