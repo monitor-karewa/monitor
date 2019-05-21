@@ -27,7 +27,7 @@
                                 <button class="filter-btn" type="button" name="button" @click="searchOrganizations(search)">Buscar</button>
                             </div>
                             <div class="side-right">
-                                <a href="" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
+                                <a @click="copyUrlToClipBoard()" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
                                         class="zmdi zmdi-share"></i> Compartir</a>
                                 <!--<a href="" class="btn-raised button-accent text-capi m-l-10" tabindex=""><i-->
                                         <!--class="zmdi zmdi-download"></i> Descargar comparación</a>-->
@@ -214,6 +214,16 @@
         }, methods : {
             searchOrganizations(search){
                 this.$store.dispatch(`${organizationsStoreModule}/SEARCH_ORGANIZATIONS`,search);
+            },
+            copyUrlToClipBoard(){
+                const tempTextArea = document.createElement('textarea');
+                tempTextArea.value =  window.location.href;
+                document.body.appendChild(tempTextArea);
+                tempTextArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempTextArea);
+                tShow('Se ha copiado el enlace correctamente', 'info');
+
             }
         }
     }
