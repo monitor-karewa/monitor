@@ -18,7 +18,7 @@
                             <span class="text-upper"> {{contract.servicesDescription}}</span>
                         </h1>
                         <div class="side-right">
-                            <a href="" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i class="zmdi zmdi-share"></i> Compartir</a>
+                            <a @click="copyUrlToClipBoard()" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i class="zmdi zmdi-share"></i> Compartir</a>
                         </div>
                     </div>
                     <p class="f-14 c-plain_text principal-font-regular">El contrato <strong class="principal-font-semibold"><span class="text-upper"> {{contract.servicesDescription}}</span></strong>, a cargo del proveedor <strong class="principal-font-semibold">{{contract.supplier ? contract.supplier.name : ""}}</strong> obtuvo una cantidad de <strong class="c-accent">{{contract.totalAmount | currency}}</strong>, celebrado el día <strong>{{contract.contractDate | moment}}</strong></p>
@@ -128,7 +128,16 @@
             this.$store.dispatch(`${storeModule}/loadContractDetail`, contractId);
         },
         methods : {
+            copyUrlToClipBoard(){
+                const tempTextArea = document.createElement('textarea');
+                tempTextArea.value =  window.location.href;
+                document.body.appendChild(tempTextArea);
+                tempTextArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempTextArea);
+                tShow('Se ha copiado el enlace correctamente', 'info');
 
+            }
         },
         filters: {
             moment: function (date) {
