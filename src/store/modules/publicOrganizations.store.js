@@ -1,11 +1,13 @@
 import apiPublicOrganizations from '@/api/publicOrganizations.api';
+import apiPublicComparations from '@/api/publicComparations.api';
 import Vue from 'vue';
 
 import i18n from '@/plugins/i18n';
 
 const state = {
     organizations: [],
-    baseRemoteUrl : undefined
+    baseRemoteUrl : undefined,
+    comparations : []
 };
 
 const getters = {
@@ -25,6 +27,13 @@ const actions = {
             commit('SET_ORGANIZATIONS', {});
         })
     },
+    LOAD_COMPARATIONS ({commit}/*, page*/) {
+        apiPublicComparations.retrieveRecentComparations({/*query*/}, (result) => {
+            commit('SET_COMPARATIONS', result.data.data);
+        }, (err) => {
+            commit('SET_COMPARATIONS', []);
+        })
+    },
     SEARCH_ORGANIZATIONS ({commit}, search) {
         let query = `/?search=${search}`;
         apiPublicOrganizations.getOrganizationsFromOuterServer({query :  query}, (result) => {
@@ -42,11 +51,12 @@ const mutations = {
         // if (pagination) {
         //     state.pagination = pagination;
         // }
-        console.log("docs", docs);
-        console.log('baseRemoteUrl --> ' + baseRemoteUrl);
         state.organizations = docs || [];
         state.baseRemoteUrl = baseRemoteUrl;
         // state.totals = totals || {};
+    },
+    SET_COMPARATIONS (state, comparations) {
+        state.comparations = comparations || [];
     }
 };
 

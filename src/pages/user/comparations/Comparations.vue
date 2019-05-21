@@ -27,7 +27,7 @@
                                 <button class="filter-btn" type="button" name="button" @click="searchOrganizations(search)">Buscar</button>
                             </div>
                             <div class="side-right">
-                                <a href="" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
+                                <a @click="copyUrlToClipBoard()" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
                                         class="zmdi zmdi-share"></i> Compartir</a>
                                 <!--<a href="" class="btn-raised button-accent text-capi m-l-10" tabindex=""><i-->
                                         <!--class="zmdi zmdi-download"></i> Descargar comparación</a>-->
@@ -56,6 +56,31 @@
                                     </div>
                                     <small>{{organization.name}}</small>
                                     <router-link :to="'/comparations/' + organization._id + (baseRemoteUrl ? ('?baseRemoteUrl=' + baseRemoteUrl) : '')" class="btn-stroke xs button-primary">
+                                        Comparar
+                                    </router-link>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <p class="f-14 c-plain_text principal-font-regular">
+                            <strong class="principal-font-semibold">Comparaciones Recientes</strong>
+                        </p>
+
+                        <div class="row">
+                            <div class="col-12 col-md-4 col-lg-3" v-for="comparation in comparations">
+                                <div class="card-compare">
+                                    <img class="img-fluid" src="@/assets/images/Cards/bgm-karewa.png" alt="Karewa"/>
+                                    <div class="logo-full">
+                                        <img class="img-fluid" src="@/assets/images/Logos/logo-karewa-xs.png"
+                                             alt="Logo"/>
+                                        <div>
+                                            <small>Monitor</small>
+                                            <label>{{comparation.targetName}}</label>
+                                        </div>
+                                    </div>
+                                    <small>{{comparation.targetName}}</small>
+                                    <router-link :to="'/comparations/' + comparation.target + (comparation.remoteUrl ? ('?baseRemoteUrl=' + comparation.remoteUrl) : '')" class="btn-stroke xs button-primary">
                                         Comparar
                                     </router-link>
                                 </div>
@@ -163,6 +188,7 @@
         computed: {
             ...mapState({
                 organizations: state => state[organizationsStoreModule].organizations,
+                comparations: state => state[organizationsStoreModule].comparations,
                 currentOrganization: state => state.currentOrganization,
                 baseRemoteUrl: function(state) {
                     if(state[organizationsStoreModule].baseRemoteUrl && state[organizationsStoreModule].baseRemoteUrl.length && state[organizationsStoreModule].baseRemoteUrl !== "undefined"){
@@ -184,9 +210,20 @@
         },
         mounted() {
             this.$store.dispatch(`${organizationsStoreModule}/LOAD_ORGANIZATIONS`);
+            this.$store.dispatch(`${organizationsStoreModule}/LOAD_COMPARATIONS`);
         }, methods : {
             searchOrganizations(search){
                 this.$store.dispatch(`${organizationsStoreModule}/SEARCH_ORGANIZATIONS`,search);
+            },
+            copyUrlToClipBoard(){
+                const tempTextArea = document.createElement('textarea');
+                tempTextArea.value =  window.location.href;
+                document.body.appendChild(tempTextArea);
+                tempTextArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempTextArea);
+                tShow('Se ha copiado el enlace correctamente', 'info');
+
             }
         }
     }

@@ -23,12 +23,6 @@ router.post('/filtered-list', securityController.validatePermission(Contract.per
  */
 router.get('/totals', securityController.validatePermission(Contract.permission, 'read'), publicContractController.getTotals);
 
-/**
- * GET /list
- * Consulta de  suma de cantidad total en contratos
- */
-router.get('/totals', securityController.validatePermission(Contract.permission, 'read'), publicContractController.getTotals);
-
 
 /**
  * GET /detail
@@ -73,6 +67,12 @@ router.get('/retrieve/fiscal-years', securityController.validatePermission(Contr
  * Obtains the fiscal years available according to the currenct contracts
  */
 router.get('/retrieve/procedure-types', securityController.validatePermission(Contract.permission, 'read'), publicContractController.retrieveProceudureTypes);
+
+/**
+ * GET /download/:format
+ * Export/download Suppliers
+ */
+router.get('/download/:format', publicContractController.download);
 
 
 
