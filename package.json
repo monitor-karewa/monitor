@@ -3,13 +3,13 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "vue-cli-service build --verbose",
-    "test": "vue-cli-service test:e2e --url localhost:8080",
-    "lint": "vue-cli-service lint",
-    "dev": "vue-cli-service serve",
-    "prod": "node src/server",
-    "test:e2e": "vue-cli-service test:e2e"
+    "serve": "node node_modules/@vue/cli-service/bin/vue-cli-service.js serve",
+    "build": "NODE_ENV=production SKIP_JOB_MANAGER=true node --max_old_space_size=2048 node_modules/@vue/cli-service/bin/vue-cli-service.js build --verbose",
+    "test": "node node_modules/@vue/cli-service/bin/vue-cli-service.js test:e2e --url localhost:8080",
+    "lint": "node node_modules/@vue/cli-service/bin/vue-cli-service.js lint",
+    "dev": "node node_modules/@vue/cli-service/bin/vue-cli-service.js serve",
+    "prod": "node server.js",
+    "test:e2e": "node node_modules/@vue/cli-service/bin/vue-cli-service.js test:e2e"
   },
   "dependencies": {
     "acorn-dynamic-import": "^4.0.0",

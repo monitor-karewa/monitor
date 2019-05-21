@@ -34,7 +34,7 @@ module.exports = {
         //             // './server.js'
         //             path.resolve(__dirname, 'server.js')
         //         ]
-        //        
+        //
         //     }
         // ]
         // exclude: [
