@@ -23,6 +23,11 @@ module.exports = {
                 "@": path.resolve(__dirname, 'src/')
             }
         },
+        entry: {
+            app: './src/main.js',
+            //Dummy entry to allow hotreloading of server
+            server: './server.config.js'
+        }
         // rules: [
         //     {
         //         exclude: [
