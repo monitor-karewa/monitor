@@ -428,6 +428,14 @@
                 right: true,
                 url: url,//TODO: implement comparations to other urls
             });
+
+            this.$store.dispatch(`${storeModule}/SAVE_COMPARATION`, {
+                target: otherOrganizationId,
+                url: url,
+            });
+
+
+
         }
     }
 </script>

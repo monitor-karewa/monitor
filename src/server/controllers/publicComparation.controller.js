@@ -5,6 +5,7 @@ const axios = require('axios');
 const Contract = require('./../models/contract.model').Contract;
 const Organization = require('./../models/organization.model').Organization;
 const Calculation = require('./../models/calculation.model').Calculation;
+const Comparation = require('./../models/comparation.model').Comparation;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const {calculateAndValidateFormula} = require('./../controllers/calculation.controller');
@@ -21,7 +22,7 @@ exports.corruptionIndex = (req, res, next) => {
         .findOne(query)
         .lean()
         .exec((err, corruptionIndex) => {
-        
+
             if (err) {
                 //Error
                 logger.error(err, req, 'publicComparation.controller#corruptionIndex', 'Error trying to find Corruption index');
@@ -171,12 +172,12 @@ exports.detail = (req, res, next) => {
                 public: 1,
                 invitation: 1,
                 noBid: 1,
-                total: 1    
+                total: 1
             }
         }
     ]).exec((err, results) => {
         let result = results[0] || {};
-        
+
         async.parallel({
             corruptionIndex: (callback) => {
                 let query = {...qNotDeleted, ...qByOrganization, locked: true};
@@ -186,9 +187,9 @@ exports.detail = (req, res, next) => {
                     .exec((err, corruptionIndex) => {
 
                         corruptionIndex = corruptionIndex || {};
-                        
+
                         corruptionIndex.result = 0;
-                        
+
                         if (!corruptionIndex._id) {
                             return callback(null, corruptionIndex);
                         }
@@ -206,7 +207,7 @@ exports.detail = (req, res, next) => {
                             }
                             return callback(null, corruptionIndex);
                         });
-                    
+
                     });
             },
             organization: (callback) => {
@@ -227,7 +228,7 @@ exports.detail = (req, res, next) => {
             let invitationCount = result.invitationCount || 0;
             let noBidCount = result.noBidCount || 0;
             let totalCount = result.totalCount || 0;
-            
+
             let detail = {
                 organization: {
                     _id: organization._id.toString(),
@@ -246,7 +247,7 @@ exports.detail = (req, res, next) => {
                     publicPercent: publicCount / totalCount,
                     invitationPercent: invitationCount / totalCount,
                     noBidPercent: noBidCount / totalCount,
-                    
+
                     total: total
                 },
                 counts: {
@@ -261,8 +262,130 @@ exports.detail = (req, res, next) => {
                 error: false,
                 data: detail
             });
-            
+
         });
 
     });
+};
+
+
+
+exports.saveComparation =  (req, res, next) => {
+    console.log("publicComparation.controller#saveComparation");
+    getOrCreateComparation(req, function (err, result) {
+        console.log("result of getorCreate", result);
+        if(err){
+            return res.json({error: true})
+        }
+        if(result.error){
+            return res.json({errors: true, message: result.message})
+        }
+
+        let comparation = result.comparation;
+        console.log("result.comparation", result.comparation);
+
+        comparation.prepareComparationforSaving(function (error, result) {
+            if(error){
+                return res.json({
+                    error: true,
+                    err : error
+                })
+            } else if (result.error){
+                console.log(result.message);
+                return res.json({
+                    error: true,
+                    message : result.message
+                })
+            } else {
+                if(result.mustSave){
+                    comparation.save((err, comparationSaved) => {
+                      if(err){
+                          return res.json({
+                              error: true,
+                              err: err,
+                              message : "Ocurrió un error al tratar de salvar la comparación"
+                          })
+                      } else {
+                          return res.json({
+                              error: false,
+                              message : "Saved!"
+                          })
+                      }
+                    });
+                } else {
+                    res.json(result)
+                }
+            }
+        })
+    })
+};
+
+
+let getOrCreateComparation = (req, callback) => {
+
+    if (req.body._id) {
+        Comparation.findOne({
+            _id: req.body._id
+        }, (err, response) => {
+            if (err) {
+                console.log("err", err);
+                return callback(err)
+            }
+            // console.log("response data publicComparation.controller#getOrCreateComparation", response.data);
+            if (response) {
+                return callback(null, {error: false, comparation: response, message: "Found comparation"});
+            }
+        })
+    } else {
+        if (req.body && req.body.target) {
+            Comparation.findOne({
+                target: mongoose.Types.ObjectId(req.body.target),
+                from: Organization.currentOrganizationId(req),
+            }, (err, response) => {
+                if (err) {
+                    console.log("err", err);
+                    return callback(err)
+                }
+                // console.log("response data publicComparation.controller#getOrCreateComparation", response.data);
+                if (response) {
+                    return callback(null, {error: false, comparation: response, message: "Found comparation"});
+                } else {
+                    let comparation = new Comparation({
+                        target: mongoose.Types.ObjectId(req.body.target),
+                        from: Organization.currentOrganizationId(req),
+                        remoteUrl: req.body.url
+                    });
+
+                    return callback(null, {error: false, comparation: comparation})
+                }
+            })
+        } else {
+            return callback(true, {message: "Incomplete data"})
+        }
+    }
+};
+
+
+exports.retrieveRecentComparations =  (req, res, next) => {
+
+    // console.log('Organization.currentOrganizationId(req) --> ' + Organization.currentOrganizationId(req));
+
+    Comparation.find(
+        {
+            // from: Organization.currentOrganizationId(req)
+        },
+        (err, result) => {
+        if(err){
+            return res.json({
+                "error": false,
+                "message": "Se produjo un error intentando conseguir las comparaciones"
+            });
+        }
+
+        return res.json({
+            error : false,
+            message : "Comparations retrieved correctly",
+            data : result
+        });
+    })
 };
