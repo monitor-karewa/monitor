@@ -201,7 +201,7 @@ app.use(securityController.loadUserSession);
 // ======================
 // app.use('/api/users', usersRoutes);
 // app.use('/security', securityRoutes);
-app.use('/admin', adminRoutes);
+app.use('/admin', securityController.checkLogin, adminRoutes);
 app.use('/api/resources', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.RESOURCES), resourceRoutes);
 app.use('/api/calculos', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.CALCULATIONS), calculoRoutes);
 app.use('/api/suppliers', securityController.checkLogin, securityController.checkPermission(USER_PERMISSIONS_DICT.SUPPLIERS), supplierRoutes);
