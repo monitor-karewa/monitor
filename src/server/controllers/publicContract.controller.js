@@ -1,6 +1,7 @@
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 const mongoose = require('mongoose');
+const moment = require('moment');
 
 const {Organization} = require('./../models/organization.model');
 const Contract = require('./../models/contract.model').Contract;
@@ -10,35 +11,17 @@ const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const utils = require('./../components/utils.js');
 
+const { PDFTable, PDFExporter } = require('./../components/pdfExporter');
+const {ExcelExporter} = require('./../components/exporter');
+
 const { validationResult } = require('express-validator/check');
 
-/**
- * Renderiza la vista principal de consulta de Contract.
- * @param req
- * @param res
- * @param next
- */
-exports.index = (req, res, next) => {
-    let renderParams = {};
-    renderParams.model = Contract;
-    renderParams.permission = Contract.permission;
-    res.render('contract', renderParams);
-};
 
-/**
- * Consulta los registros de Contract disponibles.
- * @param req
- * @param res
- * @param next
- */
-exports.list = (req, res, next) => {
-
-    let paginationOptions = pagination.getDefaultPaginationOptions(req);
-    paginationOptions.lean = false;
-
+function _fetchContractsAndTotals(req, res, options = {}, callback) {
+    let paginationOptions = {};
     let query = {};
-    var orBuilder = [];
-    var andBuilder = [];
+    let orBuilder = [];
+    let andBuilder = [];
 
 
     if (req.body && req.body.filters) {
@@ -90,7 +73,6 @@ exports.list = (req, res, next) => {
                 orBuilder.push({areaInCharge: new mongoose.Types.ObjectId(req.body.filters.administrativeUnits[i]._id)})
             }
             andBuilder.push({$or: orBuilder});
-            console.log("administrativeUnits", orBuilder);
             orBuilder = [];
         }
 
@@ -103,40 +85,133 @@ exports.list = (req, res, next) => {
     let qByOrganization = Organization.qByOrganization(req);
     query = {...query, ...deletedSchema.qNotDeleted(), ...qByOrganization};
 
-    Contract
-        .paginate(
-            query,
+    let totalsQuery = Contract.aggregate([
             {
-                ...paginationOptions,
-                populate : [
-                    'supplier',
-                    'administrativeUnit ',
-                    'organizerAdministrativeUnit ',
-                    'areaInCharge ',
-                    'applicantAdministrativeUnit '
-                ]
+                $match : query
             },
-            (err, result) => {
-                if (err) {
-                    logger.error(err, req, 'contract.controller#list', 'Error al consultar lista de Contract');
-                    return res.json({
-                        errors: true,
-                        message: res.__('general.error.unexpected-error')
-                    });
+            {
+                $group  : {
+                    _id : "totalAmountSum",
+                    total : {$sum : "$totalAmount"},
+                    contracts: { $push : "$$ROOT" }
                 }
 
-                return res.json({
-                    errors: false,
-                    message: "",
-                    data: {
-                        docs: result.docs,
-                        page: result.page,
-                        pages: result.pages,
-                        total: result.total
-                    }
-                });
+            },
+            {
+                $unwind : "$contracts"
+            },
+            {
+                $addFields : {
+                    "contracts.total" : "$total",
+                }
+            },
+            {
+                $project : {
+                    "contracts" : true
+                }
+            },    {
+                $replaceRoot : {
+                    newRoot : "$contracts"
+                }
+            },
+            //procedureType
+            {
+                $group  : {
+                    _id : "$procedureType",
+                    total : {$sum : "$totalAmount"},
+                    totalAmount: {$first : "$total"}
+                }
+            },
+            {
+                $project : {
+                    total : true,
+                    totalAmount : true
+
+                }
             }
-        );
+
+        ]
+    );
+
+let contractsQuery = {};
+
+    if(!!options.paginate){
+        paginationOptions = options.paginationOptions;
+        paginationOptions.lean = false;
+        contractsQuery = Contract.paginate(query, {
+            ...paginationOptions,
+            populate : [
+                'supplier',
+                'administrativeUnit ',
+                'organizerAdministrativeUnit ',
+                'areaInCharge ',
+                'applicantAdministrativeUnit '
+            ]
+        });
+    } else {
+        contractsQuery = Contract.find(query,{_id:0, deleted:0})
+            .populate('supplier administrativeUnit organizerAdministrativeUnit areaInCharge applicantAdministrativeUnit')
+            .lean();
+    }
+    let promiseIterable = [totalsQuery,contractsQuery];
+
+    Promise.all(promiseIterable).then(values => {
+        let totals = values && values.length ? values[0] : [];
+        let contracts = values && values.length ? values[1] : {};
+
+        callback(null, { totals, contracts });
+    }).catch(reason => {
+        callback(reason);
+    })
+
+
+}
+
+
+/**
+ * Renderiza la vista principal de consulta de Contract.
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.index = (req, res, next) => {
+    let renderParams = {};
+    renderParams.model = Contract;
+    renderParams.permission = Contract.permission;
+    res.render('contract', renderParams);
+};
+
+/**
+ * Consulta los registros de Contract disponibles.
+ * @param req
+ * @param res
+ * @param next
+ */
+exports.list = (req, res, next) => {
+    let paginationOptions = pagination.getDefaultPaginationOptions(req);
+    paginationOptions.lean = false;
+    _fetchContractsAndTotals(req, res, { paginate:true, paginationOptions},(err, {totals, contracts}) => {
+       if(err){
+            logger.error(err, req, 'contract.controller#list', 'Error al consultar lista de Contract');
+            return res.json({
+                errors: true,
+                message: res.__('general.error.unexpected-error')
+            });
+       } else {
+        return res.json({
+            errors: false,
+            message: "",
+            data: {
+                docs: contracts.docs,
+                page: contracts.page,
+                pages: contracts.pages,
+                total: contracts.total,
+                totals:totals
+            }
+        });
+
+       }
+    });
 };
 
 
@@ -184,6 +259,7 @@ exports.detail = (req, res, next) => {
 
 /**
  * Consulta los totales de los contratos, totales y por tipo
+ * @deprecated Se incluyo el calculo en el list
  */
 exports.getTotals = (req, res, next) => {
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
@@ -245,7 +321,6 @@ exports.getTotals = (req, res, next) => {
     ).exec(function (err,result) {
 
     if(err){
-        console.log("err", err);
         res.json({error:true, message: err.toString()});
     } else {
         res.json(result);
@@ -504,4 +579,284 @@ exports.retrieveProceudureTypes = (req, res, next) => {
         function (error) {
             console.log("error", error);
         })
+};
+
+exports.download = (req, res, next) => {
+    let format = req.params.format;
+    req.body.filters = JSON.parse(req.query.filters);
+
+    if (!['xls', 'pdf', 'json'].includes(format)) {
+        res.status(404);
+        return res.end();
+    }
+
+    let filters = req.body.filters;
+    let formatedFilter = [];
+    for(let item in filters){
+        let row = {
+            key : req.__('suppliers.filters.'+item),
+            values:''
+        }
+        if(Array.isArray(filters[item])){
+            filters[item].forEach((filter) => {
+                if(typeof filter == "string"){
+                    row.values += `${req.__(filter)}. `;
+
+                } else if(filter.hasOwnProperty('_id') && filter.hasOwnProperty('name')){
+                    row.values += `${filter.name}. `;
+                } else {
+                    row.values += `${filter._id}. `
+                }
+                // formatedFilter[item] = { value:filter._id};
+            });
+        } else if(typeof filters[item] == "string" || typeof filters[item] == "number"){
+            row.values += filters[item];
+            // formatedFilter[item] = filters[item]._id;
+        }
+        formatedFilter.push(row);
+    }
+    _fetchContractsAndTotals(req, res, {paginate: false}, (err, {totals, contracts}) => {
+
+            let totalsPretty = {};
+            totals.forEach((item) => {
+                totalsPretty[item._id] = item.total;
+                totalsPretty['totalAmount'] = item.totalAmount;
+            });
+
+
+
+        switch(format){
+            case 'xls':
+                downloadXls(req, res, contracts, formatedFilter);
+                break;
+            case 'pdf':
+                downloadPDF(req, res,{totals:totalsPretty, contracts:contracts, filters: formatedFilter});
+                break;
+            case 'json':
+                return res.json({ totals:totalsPretty, contracts, filters: formatedFilter });
+                break;
+            default:
+                break;
+        }
+    });
+};
+
+let downloadXls = (req,res, contracts, filters) => {
+    new ExcelExporter()
+        .setPropInfoArray([
+            {
+                header: 'ID. PROCESO',
+                propName: 'contractId'
+            },
+            {
+                header: 'ID. CONTRATO',
+                propName: 'contractNumber'
+            },
+            {
+                header: 'DESCRIPCIÓN DE LA OBRA',
+                propName: 'servicesDescription'
+            },
+            {
+                header: 'MONTO TOTAL',
+                propName: 'totalAmount',
+                format: 'currency'
+            },
+            {
+                header: 'TIPO DE PROCEDIMIENTO',
+                propName: 'procedureType',
+                i18n: true
+            },
+            {
+                header: 'ESTADO DEL PROCEDIMIENTO',
+                propName: 'procedureState',
+                i18n: true
+            },
+            {
+                header: 'UNIDAD ADMINISTRATIVA SOLICITANTE',
+                propName: 'applicantAdministrativeUnit',
+                childPropName: 'name'
+            },
+            {
+                header: 'MATERIA',
+                propName: 'category',
+                i18n: true
+            },
+            {
+                header: 'TIPO DE CONTRATO',
+                propName: 'contractType',
+                i18n: true
+            },
+            {
+                header: 'NOTAS',
+                propName: 'notes'
+            },
+            {
+                header: 'HIPERVÍNCULO A LA CONVOCATORIA',
+                propName: 'announcementUrl'
+            },
+            {
+                header: 'HIPERVÍNCULO AL DOCUMENTO DEL CONTRATO',
+                propName: 'contractUrl'
+            },
+            {
+                header: 'HIPERVÍNCULO AL DOCUMENTO DE LA PRESENTACIÓN DE PROPUESTAS',
+                propName: 'presentationProposalsDocUrl'
+            },
+            {
+                header: 'FECHA DE OBTENCIÓN DE LOS DATOS',
+                propName: 'informationDate'
+            },
+            {
+                header: 'FECHA DEL CONTRATO ',
+                propName: 'contractDate'
+            },
+        ])
+        .setDocs(contracts)
+        .setFilters(filters)
+        .setTitle('Contratos')
+        .setFileName('contratos')
+        .exportToFile(req, res);
+};
+
+let downloadPDF = (req, res, { totals, contracts, filters }) => {
+
+    filters = filters.map((filter)=>{
+        if(filter.key && filter.values!==""){
+            return { text:`   ${filter.key} : ${filter.values}`,style:'headerFilters' }
+        }
+    });
+
+    if(filters && filters.length){
+        filters.unshift({text:'Filtrado por:', style:'headerFilters'});
+    }
+
+    let resultsTable = {
+        style:'statsExample',
+        layout: 'lightHorizontalLines',
+        table: new PDFTable({headerRows:1,docs:totals})
+            .setTableMetadata([
+                {
+                    header: 'Monto Total',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowNumberStyle',
+                    propName:'totalAmount',
+                    format:'currency'
+                },
+                {
+                    header: 'Monto Total de Contratos por Licitación Pública',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowNumberStyle',
+                    propName:'PUBLIC',
+                    format:'currency'
+                },
+                {
+                    header: 'Monto Total de Contratos por Invitación',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowNumberStyle',
+                    propName:'INVITATION',
+                    format:'currency'
+                },
+                {
+                    header: 'Monto Total de Contratos por Adjudicación Directa',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowNumberStyle',
+                    propName:'NO_BID',
+                    format:'currency'
+                }
+            ])
+            .setHeaders()
+            .setWidths([150,150,150,150],"auto")
+            .transformDocs(req)
+    };
+    let suppliersTable = {
+        style:'tableExample',
+        // layout: 'lightHorizontalLines',
+        table:new PDFTable({headerRows:1,docs:contracts})
+            .setTableMetadata([
+                {
+                    header: 'Id. Proceso',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowStyle',
+                    propName:'contractId'
+                },
+                {
+                    header: 'Id. Contrato',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'contractNumber'
+                },
+                {
+                    header: 'Descripción de la obra',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'servicesDescription'
+                },
+                {
+                    header: 'Monto Total',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'totalAmount',
+                    format:'currency'
+                },
+                {
+                    header: 'Fecha del Contrato',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'contractDate',
+                    format:'date'
+                },
+                {
+                    header: 'Tipo de procedimiento',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'procedureType',
+                    i18n: true
+                },
+                {
+                    header: 'Estado del Procedimiento',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'procedureState',
+                    i18n: true
+                },
+                {
+                    header: 'U. Administrativa Solicitante',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'applicantAdministrativeUnit',
+                    childPropName:'name'
+                },
+                {
+                    header: 'Materia',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'category',
+                    i18n: true
+                },
+                {
+                    header: 'Tipo de Contrato',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'contractType',
+                    i18n: true
+                }
+            ])
+            .setHeaders()
+            .setWidths(null,"auto")
+            .transformDocs(req)
+    };
+
+    let headers = [{ text:"Monitor Karewa", style:'header'},
+        {text : moment(new Date()).format('MM/DD/YYYY'), style:'header'}];
+
+    new PDFExporter()
+        .setFileName('monitor-karewa-contratos.pdf')
+        .addHeadersToPDF(headers)
+        .addTitleToPDF({text:"Información general de Contratos", style:'title'})
+        .addContentToPDF(filters)
+        .addContentToPDF(resultsTable)
+        .addContentToPDF(suppliersTable)
+        .addFooterToPDF()
+        .setPageOrientation('landscape')
+        .exportToFile(req, res)
 };

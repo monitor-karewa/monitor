@@ -554,7 +554,6 @@ let ContractSchema = new Schema({
         validate:{
             validator: function(v) {
                 if(this.contractType == 'OPEN'){
-                    console.log("Entro aqúi");
                     return this.maxAmount ?  this.maxAmount == v : true;
                 } else if (this.contractType == 'NORMAL'){
                     return this.totalAmount ? this.totalAmount == v : true;
