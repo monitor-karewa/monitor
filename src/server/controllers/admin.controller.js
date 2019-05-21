@@ -1,5 +1,9 @@
 const {Organization} = require('./../models/organization.model');
 const {RouteLog} = require('./../models/routeLog.model');
+const {Contract} = require('./../models/contract.model');
+const {Supplier} = require('./../models/supplier.model');
+const {AdministrativeUnit} = require('./../models/administrativeUnit.model');
+const {Calculation} = require('./../models/calculation.model');
 
 exports.index = (req, res, next) => {
     res.render('admin/index');
@@ -92,6 +96,28 @@ exports.visitsByRoute= (req, res, next) => {
         });
     });
 };
+
+exports.infoValues= (req, res, next) => {
+    Promise.all([
+        RouteLog.count({"path":{$in:["/select-organization"]}}),
+        Contract.count({"deleted.isDeleted":false}),
+        Supplier.count({"deleted.isDeleted":false}),
+        AdministrativeUnit.count({"deleted.isDeleted":false}),
+        Calculation.count({"deleted.isDeleted":false})
+    ]).then(function (counts) {
+        return res.json({
+            error: false,
+            data: {
+                visitsCount:counts[0],
+                contractsCount:counts[1],
+                proveedoresCount:counts[2],
+                unidadesCount:counts[3],
+                calculosCount:counts[4],
+            }
+        });
+    })
+};
+
 exports.visitsByMonths = (req, res, next) => {
     //Sacar los primeros dos meses
     let month = new Date().getMonth() + 1;

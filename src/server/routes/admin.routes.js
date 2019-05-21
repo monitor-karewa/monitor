@@ -12,4 +12,6 @@ router.post('/visits-month', adminController.visitsByMonths);
 
 router.get('/visits-route', adminController.visitsByRoute);
 
+router.get('/info-dashboard', adminController.infoValues);
+
 module.exports = router;

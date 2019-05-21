@@ -22,7 +22,7 @@
                         <div class="panel-info">
                             <div class="w-70">
                                 <label>Vistas</label>
-                                <span>20876</span>
+                                <span>{{currentGeneralInfoInfo.visitsCount}}</span>
                             </div>
                             <div class="w-30">
                                 <i class="zmdi zmdi-eye"></i>
@@ -33,7 +33,7 @@
                         <div class="panel-info">
                             <div class="w-70">
                                 <label>Contratos</label>
-                                <span>1678</span>
+                                <span>{{currentGeneralInfoInfo.contractsCount}}</span>
                             </div>
                             <div class="w-30">
                                 <i class="zmdi zmdi-eye"></i>
@@ -44,7 +44,7 @@
                         <div class="panel-info">
                             <div class="w-70">
                                 <label>Proveedores</label>
-                                <span>240</span>
+                                <span>{{currentGeneralInfoInfo.proveedoresCount}}</span>
                             </div>
                             <div class="w-30">
                                 <i class="zmdi zmdi-eye"></i>
@@ -55,7 +55,7 @@
                         <div class="panel-info">
                             <div class="w-70">
                                 <label>U. Administrativas</label>
-                                <span>23</span>
+                                <span>{{currentGeneralInfoInfo.unidadesCount}}</span>
                             </div>
                             <div class="w-30">
                                 <i class="zmdi zmdi-eye"></i>
@@ -66,7 +66,7 @@
                         <div class="panel-info">
                             <div class="w-70">
                                 <label>Cálculos</label>
-                                <span>7</span>
+                                <span>{{currentGeneralInfoInfo.calculosCount}}</span>
                             </div>
                             <div class="w-30">
                                 <i class="zmdi zmdi-eye"></i>
@@ -180,6 +180,9 @@
             ...mapState({
                 currentDataLoadInfo: state => state.dataLoad.dataLoadInfo.current,
             }),
+            ...mapState({
+                currentGeneralInfoInfo: state => state.adminHomeStore,
+            }),
             permissions () {
                 return this.$session.get('permissions') || [];
             },
@@ -205,6 +208,7 @@
         mounted() {
             if (this.hasAccessToDataLoad) {
                 this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO');
+                this.$store.dispatch('adminHomeStore/LOAD_GENERAL_INFO_DASHBOARD');
             }
             $(document).ready(function () {
                 $('.selectpicker').selectpicker();

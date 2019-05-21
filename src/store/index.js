@@ -11,6 +11,7 @@ import users from '@/store/modules/users.store';
 import calculations from '@/store/modules/calculations.store';
 import organizations from '@/store/modules/organizations.store';
 import dataLoad from '@/store/modules/dataLoad.store';
+import adminHomeStore from '@/store/modules/adminHomeStore.store';
 import accounts from '@/store/modules/accounts.store';
 import settings from '@/store/modules/settings.store';
 
@@ -54,6 +55,7 @@ export default new Vuex.Store({
         calculations : calculations,
         organizations : organizations,
         dataLoad: dataLoad,
+        adminHomeStore: adminHomeStore,
         accounts: accounts,
         settings: settings,
         //public stores (for users)
