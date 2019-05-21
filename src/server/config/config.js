@@ -61,7 +61,8 @@ const config = {
         },
         behavior: {
             logLevel: 'info',
-            i18nAutoReload: false
+            i18nAutoReload: false,
+            skipJobManager: process.env.SKIP_JOB_MANAGER || false
         }
     },
     dev: {
@@ -103,7 +104,8 @@ const config = {
         },
         behavior: {
             logLevel: 'info',
-            i18nAutoReload: true
+            i18nAutoReload: true,
+            skipJobManager: process.env.SKIP_JOB_MANAGER || false
         }
     }
 };
