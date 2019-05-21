@@ -11,6 +11,7 @@ import users from '@/store/modules/users.store';
 import calculations from '@/store/modules/calculations.store';
 import organizations from '@/store/modules/organizations.store';
 import dataLoad from '@/store/modules/dataLoad.store';
+import adminHomeStore from '@/store/modules/adminHomeStore.store';
 import accounts from '@/store/modules/accounts.store';
 import settings from '@/store/modules/settings.store';
 
@@ -22,6 +23,8 @@ import publicContractsStore from '@/store/modules/publicContracts.store';
 import publicSuppliersStore from '@/store/modules/publicSuppliers.store';
 import millonesTrimestreChart from '@/store/modules/landingCharts/millonesTrimestreChart.store';
 import ejercidoProcedimientoChart from '@/store/modules/landingCharts/ejercidoProcedimientoChart.store';
+import visitasMonitorChart from '@/store/modules/adminCharts/monitorVisitasChart.store';
+import visitasRutasChart from '@/store/modules/adminCharts/visitasRutasChart.store';
 import publicComparationsStore from '@/store/modules/publicComparations.store';
 import publicResourcesStore from '@/store/modules/publicResources.store';
 
@@ -44,12 +47,15 @@ export default new Vuex.Store({
         administrativeUnits : administrativeUnits,
         millonesTrimestreChart : millonesTrimestreChart,
         ejercidoProcedimientoChart : ejercidoProcedimientoChart,
+        visitasMonitorChart : visitasMonitorChart,
+        visitasRutasChart : visitasRutasChart,
         contracts : contracts,
         resources : resources,
         users : users,
         calculations : calculations,
         organizations : organizations,
         dataLoad: dataLoad,
+        adminHomeStore: adminHomeStore,
         accounts: accounts,
         settings: settings,
         //public stores (for users)
