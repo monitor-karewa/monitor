@@ -5,8 +5,8 @@
                 <div class="col-12 m-t-40">
                     <div class="floating-title-dash">
                         <div class="side-left">
-                            <h1>¡Hola, Cesar!</h1>
-                            <label>LUNES 03 DE DICIEMBRE DEL 2018</label>
+                            <h1>¡Hola, {{currentUser.fullName}}!</h1>
+                            <label>{{actualDateFormat}}</label>
                         </div>
                         <template v-if="currentDataLoadInfo && currentDataLoadInfo.uploadedBy && hasAccessToDataLoad">
                             <div class="side-right">
@@ -179,16 +179,24 @@
         computed: {
             ...mapState({
                 currentDataLoadInfo: state => state.dataLoad.dataLoadInfo.current,
-            }),
-            ...mapState({
                 currentGeneralInfoInfo: state => state.adminHomeStore,
+                currentUser: state => state.currentUser
             }),
             permissions () {
                 return this.$session.get('permissions') || [];
             },
             hasAccessToDataLoad() {
                 return this.permissions && this.permissions.includes('CONTRACTS');
-            }
+            },
+            actualDateFormat() {
+                let actualDate = new Date();
+                let month = actualDate.getMonth() + 1;
+                let year = actualDate.getFullYear();
+                let numberDay = actualDate.getDate();
+                let days = ['Domingo', 'Lunes', 'Martes', 'Miércoles', 'Jueves', 'Viernes', 'Sábado'];
+                let dayName = days[actualDate.getDay()];
+                return dayName + " " + numberDay + " de " + this.getNameOfMonth(month) + " del " + year;
+            },
         },
         components: {
             VisitasRutasChart,
@@ -201,6 +209,35 @@
                     type:value
                 }
                 this.$store.dispatch(`visitasMonitorChart/getInfoForChart`, tempParams);
+            },
+            getNameOfMonth(value) {
+                switch (value) {
+                    case 1:
+                        return "Enero";
+                    case 2:
+                        return "Febrero";
+                    case 3:
+                        return "Marzo";
+                    case 4:
+                        return "Abril";
+                    case 5:
+                        return "Mayo";
+                    case 6:
+                        return "Junio";
+                    case 7:
+                        return "Julio";
+                    case 8:
+                        return "Agosto";
+                    case 9:
+                        return "Septiembre";
+                    case 10:
+                        return "Octubre";
+                    case 11:
+                        return "Noviembre";
+                    case 12:
+                        return "Diciembre";
+                }
+
             }
         },
         created() {
