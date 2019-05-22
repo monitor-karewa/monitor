@@ -8,6 +8,8 @@ const logger = require('./../components/logger').instance;
 const utils = require('./../components/utils');
 const EmailClient = require('./../components/emailClient');
 
+const encryptionManager = require('./../components/encryptionManager');
+
 const {USER_PERMISSIONS, User} = require('./../models/user.model');
 
 let crypto = require('crypto'),
@@ -118,11 +120,8 @@ exports.resetPassword = (req, res, next) => {
                 error: true
             });
         }else{
-
-            let date = new Date().getTime() + "";
-            let token = encrypt(user._id + "_" + date);
             
-
+            let token = encryptionManager.encryptWithDate(user._id);
             
             let update = {
                 resetPasswordToken: token
@@ -159,21 +158,29 @@ exports.resetPassword = (req, res, next) => {
 exports.validToken = (req, res, next) => {
 
     let encryptedToken = req.body.token;
-    let token = decrypt(encryptedToken);
+
+    let tokenInfo = encryptionManager.decryptWithDate(encryptedToken);
+
+    console.log('tokenInfo', tokenInfo);
+
+    let userId = tokenInfo.payload;
+    let dateOfRetrieval = tokenInfo.date;
+    
+    // let token = decrypt(encryptedToken);
 
     let currentDate = new Date();
 
-    let dateOfRetrieval = null;
-    let dateOfRetrievalAsStr = "";
+    // let dateOfRetrieval = null;
+    // let dateOfRetrievalAsStr = "";
 
     let errorMsg = 'accounts.password.updated.error';
 
-    if (token.indexOf('_') !== -1) {
-        dateOfRetrievalAsStr = token.substring(token.indexOf('_') + 1, token.length);
-        dateOfRetrieval = utils.dateFromTimestamp(dateOfRetrievalAsStr);
-    } else {
-        return res.json({error: true, message: errorMsg});
-    }
+    // if (token.indexOf('_') !== -1) {
+    //     dateOfRetrievalAsStr = token.substring(token.indexOf('_') + 1, token.length);
+    //     dateOfRetrieval = utils.dateFromTimestamp(dateOfRetrievalAsStr);
+    // } else {
+    //     return res.json({error: true, message: errorMsg});
+    // }
 
     if (!dateOfRetrieval) {
         return res.json({error: true, message: errorMsg});
@@ -187,7 +194,7 @@ exports.validToken = (req, res, next) => {
         return res.json({error: true, message: 'accounts.password.updated.token-invalid', data: {tokenExpired: true}});
     }
 
-    let userId = token.replace("_" + dateOfRetrievalAsStr, "");
+    // let userId = token.replace("_" + dateOfRetrievalAsStr, "");
     if (userId.length !== 24) {
         return res.json({error: true, message: errorMsg});
     }
@@ -195,6 +202,8 @@ exports.validToken = (req, res, next) => {
     if (!req.body.password) {
         res.json({error: true, message: "Por favor ingresa tu nueva contraseña."});
     }
+
+    console.log('req.body', req.body);
 
     User.findOne({_id: mongoose.Types.ObjectId(userId), resetPasswordToken: encryptedToken}).exec((err, user) => {
         if (err) {
@@ -209,7 +218,7 @@ exports.validToken = (req, res, next) => {
         if(req.body.password !== req.body.confirmPassword){
             res.json({error: true, message: "Las contraseñas no coinciden."});
         }else{
-            user.password = bcrypt.hashSync(req.body.password, bcrypt.genSaltSync(8), null);
+            user.setPassword(req.body.password);
             user.resetPasswordToken = null;
             user.save((err) => {
                 if (err) {

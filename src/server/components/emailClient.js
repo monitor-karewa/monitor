@@ -44,17 +44,18 @@ class EmailClient {
         
         //Changed to use full timestamp
         // date = date.substring(0, date.length - 6);
-        //let urlpsw = `<a href='localhost:3000/api/users/establish/password/${token}'>RESET PASSWORD</a>`;
-        // let urlpsw = `localhost:8080/#/new-password/${token}`;
+        //let emailContent = `<a href='localhost:3000/api/users/establish/password/${token}'>RESET PASSWORD</a>`;
+        // let emailContent = `localhost:8080/#/new-password/${token}`;
         let baseUrl = config.app.host;
         if (config.app.port.toString() !== '80' && config.app.port.toString() !== '443') {
             baseUrl += `:${config.app.port}`;
         }
-        let urlpsw = `${baseUrl}/new-password/${token}`;
+        let urlRestorePassword = `${baseUrl}/new-password/${token}`;
+        let emailContent = `<p>Por favor ingresa al siguiente enlace para restablecer tu contraseña:</p><a href="${urlRestorePassword}">${urlRestorePassword}</a>`;
         /*let logoImg = `${config.baseUrl}/img/pagando/pagando-logo.png`;
         let logoBl = `${config.baseUrl}/img/pagando/bl-logo.png`;
         let html = pug.renderFile('./views/restorePassword.pug', {
-            url: urlpsw,
+            url: emailContent,
             logo: logoImg,
             logo2: logoBl,
             fullName: user.name +" "+ user.lastName,
@@ -68,7 +69,7 @@ class EmailClient {
             from: from,
             to: to,
             subject: subject,
-            attachment:[{data:urlpsw, alternative:true}]
+            attachment:[{data:emailContent, alternative:true}]
         }, (err, message) => {
             if (err) {
                 logger.error(err, null, 'EmailUtilities#sendRestorePasswordEmail', 'Error trying to send restore password email to user: %j' +
@@ -76,7 +77,7 @@ class EmailClient {
                     '\nto: %j' +
                     '\nsubject: %j' +
                     '\nattachment: %j',
-                    user, from, to, subject, {data:urlpsw, alternative:true});
+                    user, from, to, subject, {data:emailContent, alternative:true});
             }
         });
     }

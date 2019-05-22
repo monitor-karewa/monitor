@@ -130,7 +130,7 @@ userSchema.virtual("fullName").get(function() {
 userSchema.loadClass(UserClass);
 
 //Indexes
-userSchema.index({email: 1}, {unique: true});
+userSchema.index({email: 1, deleted: 1}, {unique: true});
 
 let User = mongoose.model('User', userSchema);
 

@@ -6,6 +6,8 @@ const mongoose = require('mongoose');
 const User = require('./../models/user.model').User;
 const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
+const EmailClient = require('./../components/emailClient');
+const encryptionManager = require('./../components/encryptionManager');
 
 const {validationResult} = require('express-validator/check');
 
@@ -107,7 +109,7 @@ exports.save = (req, res, next) => {
             .findOne(query)
             .exec((err, user) => {
                 if (err || !user) {
-                    logger.error(req, err, 'user.controller#save', 'Error al consultar User');
+                    logger.error(err, req, 'user.controller#save', 'Error al consultar User');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.save')
@@ -125,7 +127,7 @@ exports.save = (req, res, next) => {
 
                 user.save((err, savedUser) => {
                     if (err) {
-                        logger.error(req, err, 'user.controller#save', 'Error al guardar User 1 ');
+                        logger.error(err, req, 'user.controller#save', 'Error al guardar User 1 ');
                         return res.json({
                             errors: true,
                             message: req.__('general.error.save')
@@ -153,11 +155,13 @@ exports.save = (req, res, next) => {
             administratorType : req.body.administratorType,
             notes : req.body.notes,
         });
+        
+        let token = encryptionManager.encryptWithDate(user._id);
+        user.resetPasswordToken = token;
 
         user.save((err, savedUser) => {
             if (err) {
-                console.log("err", err);
-                logger.error(req, err, 'user.controller#save', 'Error al guardar User 2');
+                logger.error(err, req, 'user.controller#save', 'Error al guardar User 2');
                 return res.json({
                     "error": true,
                     "message": req.__('general.error.save')
@@ -165,8 +169,8 @@ exports.save = (req, res, next) => {
             }
 
             //Send an email to set password
-            var emailClient = new EmailClient(user.email, "Monitor Karewa | Bienvenido a la plataforma", req);
-            emailClient.sendResetPasswordEmail(user);
+            let emailClient = new EmailClient(user.email, "Monitor Karewa | Bienvenido a la plataforma", req);
+            emailClient.sendResetPasswordEmail(user, token);
 
             return res.json({
                 "error": false,
