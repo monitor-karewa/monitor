@@ -182,6 +182,12 @@ export default {
     "general.files.backup.original-download":"Descargar (original)",
     "general.files.backup.backup-unavailable":"Respaldo no disponible",
     "general.files.backup.backup-download":"Descargar (respaldo)",
+    "general.modal-alert.download.title":"Descargar datos",
+    "general.modal-alert.download.message":"Estás a punto de descargar los datos aplicando los filtros seleccionados.",
+    "general.modal-alert.download.question":"¿Estás seguro de continuar con esta acción?",
+    "general.modal-alert.download.all":"Descargar lista completa",
+    "general.modal-alert.download.filtered":"Descargar datos filtrados",
+    "general.modal.wait.message":"Tu documento se descargará en un momento...",
 
     "calculations.calculation": "Cálculo| Cálculos",
 
@@ -210,6 +216,7 @@ export default {
     "suppliers.rfc": "RFC",
     "suppliers.notes": "Notas",
     "suppliers.public.load.error": "La información de Proveedores no se encuentra disponible en este momento.",
+    "suppliers.detail.description": "Aquí podrás encontrar la lista de todos los contratos del proveedor ",
 
 
     //Organizations
