@@ -1,13 +1,18 @@
 // vue.config.js
-const configureAPI = require('./server.config');
+// const configureAPI = require('./server.config');
 const webpack = require('webpack');
 const path = require('path');
 
+let devServer = {
+    host: 'localhost'
+};
+
+if (process.env.NODE_ENV === 'production') {
+    devServer.before = require('./server.config')
+}
+
 module.exports = {
-    devServer: {
-        before: configureAPI,
-        host: 'localhost'
-    },
+    devServer: devServer,
     configureWebpack: {
         plugins: [
             // new MyAwesomeWebpackPlugin()
@@ -26,7 +31,7 @@ module.exports = {
         entry: {
             app: './src/main.js',
             //Dummy entry to allow hotreloading of server
-            server: './server.config.js'
+            // server: './server.config.js'
         }
         // rules: [
         //     {

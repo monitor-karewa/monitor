@@ -65,6 +65,10 @@ let userSchema = mongoose.Schema({
         required: true
         // enum: ['GENERAL', 'CONTRATO']
     },
+    resetPasswordToken: {
+        type: String,
+        required: false
+    },
     deleted: require("./schemas/deleted.schema").Deleted
 });
 

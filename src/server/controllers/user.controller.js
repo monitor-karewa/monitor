@@ -2,11 +2,13 @@ const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 const utils = require('./../components/utils');
 
+const mongoose = require('mongoose');
 const User = require('./../models/user.model').User;
 const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const {validationResult} = require('express-validator/check');
+
 
 /**
  * Renderiza la vista principal de consulta de User.
@@ -161,6 +163,10 @@ exports.save = (req, res, next) => {
                     "message": req.__('general.error.save')
                 });
             }
+
+            //Send an email to set password
+            var emailClient = new EmailClient(user.email, "Monitor Karewa | Bienvenido a la plataforma", req);
+            emailClient.sendResetPasswordEmail(user);
 
             return res.json({
                 "error": false,

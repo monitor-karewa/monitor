@@ -10,6 +10,7 @@ import session from "@/plugins/vueSession";
 
 let state = {
     // permissions: []
+    alertMessage: null
 };
 
 let getters = {};
@@ -52,12 +53,18 @@ let actions = {
         commit('SET_CURRENT_ORGANIZATION_DEFAULTS', {}, {root: true});
         
         router.push('/');
-    }
+    },
+    alertMessage({commit}, message){
+        commit('SET_ALERT_MESSAGE', message);
+    },
 };
 let mutations = {
     // SET_PERMISSIONS (state, {permissions}) {
     //     state.permissions = permissions;
     // }
+    SET_ALERT_MESSAGE(state, alertMessage){
+        state.alertMessage = alertMessage;
+    }
 };
 
 export default {

@@ -4,7 +4,15 @@
  * Module dependencies.
  */
 
-var app = require('../app');
+// var app = require('../devServer');
+var app;
+
+if (process.env.NODE_ENV === 'production') {
+    app = require('../server');
+} else {
+    app = require('../devServer');
+}
+
 var debug = require('debug')('monitor-web:server');
 var http = require('http');
 
