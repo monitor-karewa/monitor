@@ -182,7 +182,7 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import { bus } from '@/main';
-    import { DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT, DOC_UPDATED } from "@/store/events";
+    import { DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT, DOC_UPDATED, DOC_START_CREATE } from "@/store/events";
     import  ModalDanger from "@/components/modals/ModalDanger";
     import  ModalDefault from "@/components/modals/ModalDefault";
     import { required, email, minLength, requiredIf } from 'vuelidate/lib/validators';
@@ -276,7 +276,16 @@
 
             },
             clearEntry(){
-                this.entry = {};
+                this.doc = {
+                    _id:null,
+                    name:"",
+                    lastName:"",
+                    email:"",
+                    active:true,
+                    permissions : [],
+                    administratorType : "CUSTOM",
+                    notes:""
+                };
                 this.$v.$reset();
             }
         },
@@ -325,6 +334,9 @@
                 this.doc.notes = entry.notes || "";
 //                this.$v.doc.notes.$touch();
                 
+            });
+            bus.$on(storeModule+DOC_START_CREATE, (entry)=>{
+                this.clearEntry();
             });
         },
         mounted(){

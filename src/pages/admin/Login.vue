@@ -7,7 +7,6 @@
                     <img class="" src="@/assets/images/Backgrounds/bgm-login.jpeg" alt="">
                 </div>
 
-
                 <div class="overlay-login"></div>
 
                 <div class="logo"><img src="@/assets/images/Logos/logo-karewa-white.png" alt=""></div>
@@ -39,26 +38,26 @@
                     Si aún no tienes acceso, solicítalo al administrador de la plataforma o Inicia sesión para continuar.
                 </p>
                 <br>
-                <!--<div class="alert alert-info">-->
-                    <!--<i class="zmdi zmdi-info-outline"></i>-->
-                    <!--<div>-->
-                        <!--¡Tu contraseña se reestableció correctamente! <br>-->
-                        <!--<strong>Inicia sesión</strong> con tu nueva contraseña.-->
-                    <!--</div>-->
-                <!--</div>-->
-                <!--<br>-->
+
+                <div class="alert alert-info" v-if="alertMessage">
+                    <i class="zmdi zmdi-info-outline"></i>
+                    <div>
+                        {{$t(alertMessage)}}
+                    </div>
+                </div>
+                <br/>
 
                 <div class="form">
                     <div class="form-group fg-float m-b-40">
                         <div class="fg-line  basic-input">
-                            <input id="username" type="text" class="form-control fg-input" placeholder="Usuario" value="admin" v-model="username">
+                            <input id="username" type="text" class="form-control fg-input" placeholder="Usuario" value="admin" v-model="username" @keyup.enter="login">
                             <label class="fg-label">Usuario<!--<small>(small text)</small>--></label>
                         </div>
                     </div>
 
                     <div class="form-group fg-float">
                         <div class="fg-line  basic-input">
-                            <input id="password" type="password" class="form-control fg-input" placeholder="Contraseña" value="admin" v-model="password">
+                            <input id="password" type="password" class="form-control fg-input" placeholder="Contraseña" value="admin" v-model="password" @keyup.enter="login">
                             <label class="fg-label">Contraseña<!--<small>(small text)</small>--></label>
                         </div>
                         <!--<span class="error-span">Error message</span>-->
@@ -75,9 +74,9 @@
                         </div>
                     </div>
                     <div class="col-6 col-md-6 text-align-r">
-                        <a href="" class="f-13 c-accent f-bold">
+                        <router-link to="/forgot-password" class="f-13 c-accent f-bold">
                             Olvide mi contraseña
-                        </a>
+                        </router-link>
                     </div>
                 </div>
 
@@ -134,6 +133,8 @@
 </style>
 
 <script>
+    import { mapState } from 'vuex';
+
     import axios from 'axios';
     import {bus} from '@/main';
     
@@ -159,6 +160,13 @@
                 };
                 this.$store.dispatch(`${storeModule}/LOGIN`, {credentials, _session});
             }
+        },
+        computed: {
+            ...mapState({
+                alertMessage: function (state) {
+                    return state[storeModule].alertMessage;
+                }
+            })
         },
         components: {
         },
