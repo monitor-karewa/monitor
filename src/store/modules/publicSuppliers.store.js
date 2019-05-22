@@ -28,8 +28,9 @@ const getters = {
 };
 
 const actions = {
-    downloadFile({commit},{filters,format}) {
-        apiPublicSuppliers.download({filters,format}, (result) => {
+    downloadFile({commit},{filters,format, isDetail, id}) {
+        let action = isDetail ? 'downloadDetail' : 'download';
+        apiPublicSuppliers[action]({filters,format,id}, (result) => {
             const url = window.URL.createObjectURL(new Blob([result.data]));
             const link = document.createElement('a');
             link.href = url;

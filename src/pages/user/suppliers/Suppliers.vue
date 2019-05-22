@@ -245,7 +245,6 @@
                 document.execCommand('copy');
                 document.body.removeChild(tempTextArea);
                 tShow('Se ha copiado el enlace correctamente', 'info');
-
             }
         },
         mounted() {

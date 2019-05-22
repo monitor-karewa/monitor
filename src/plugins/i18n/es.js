@@ -207,6 +207,7 @@ export default {
     "suppliers.rfc": "RFC",
     "suppliers.notes": "Notas",
     "suppliers.public.load.error": "La información de Proveedores no se encuentra disponible en este momento.",
+    "suppliers.detail.description": "Aquí podrás encontrar la lista de todos los contratos del proveedor ",
 
 
     //Organizations
