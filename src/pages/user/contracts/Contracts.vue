@@ -1,6 +1,21 @@
 <template>
     <div>
 
+        <!-- MODAL AUTO DISMISS-->
+        <ModalAutoDismiss :message="$t('general.modal.wait.message')" ></ModalAutoDismiss>
+
+        <!-- MODAL ALERT SUCCESS -->
+        <ModalAlert :title="$t('general.modal-alert.download.title')"
+                    :message="$t('general.modal-alert.download.message')"
+                    :question="$t('general.modal-alert.download.question')">
+            <button type="button" @click.prevent="downloadFile(false)"
+                    class="btn-stroke button-accent" data-dismiss="modal">{{$t('general.modal-alert.download.all')}}
+            </button>
+            <button type="button" @click.prevent="downloadFile(true)"
+                    class="btn-stroke button-accent" data-dismiss="modal">{{$t('general.modal-alert.download.filtered')}}
+            </button>
+        </ModalAlert>
+
         <section class="client-content">
             <div class="neutral-width">
 
@@ -32,15 +47,15 @@
                                          aria-labelledby="dropdownDownloadOptions">
                                         <span>Descargar datos con formato:</span>
                                         <div class="container-dropdown">
-                                            <a class="dropdown-item" @click.prevent="downloadFile('pdf')" target="_blank">
+                                            <a class="dropdown-item" @click.prevent="openModalAndSetFormat('pdf')" target="_blank">
                                                 <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-pdf.svg"
                                                      alt="Empty"/>
                                             </a>
-                                            <a class="dropdown-item" @click.prevent="downloadFile('xls')">
+                                            <a class="dropdown-item" @click.prevent="openModalAndSetFormat('xls')">
                                                 <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-xls.svg"
                                                      alt="Empty"/>
                                             </a>
-                                            <a class="dropdown-item" @click.prevent="downloadFile('json')">
+                                            <a class="dropdown-item" @click.prevent="openModalAndSetFormat('json')">
                                                 <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-json.svg"
                                                      alt="Empty"/>
                                             </a>
@@ -204,12 +219,15 @@
     import moment from 'moment';
     import TableTdFormat from '@/components/tables/tds/TableTdFormat';
     import PublicFilter from '@/components/filters/PublicFilter.vue';
+    import ModalAutoDismiss from '@/components/catalogs/ModalAutoDismiss.vue';
+    import ModalAlert from '@/components/catalogs/ModalAlert.vue';
 
 
     export default {
         data() {
             return {
                 storeModule : storeModule,
+                format:""
             }
         },
         computed  : {
@@ -228,7 +246,9 @@
             MoreInfo,
             TableTdFormat,
             Pagination,
-            PublicFilter
+            PublicFilter,
+            ModalAutoDismiss,
+            ModalAlert
         },
         created() {
             window.$(document).ready(function () {
@@ -250,21 +270,15 @@
 
         },
         methods:{
-            downloadFile (format) {
-                this.$store.dispatch('publicContracts/downloadFile', {format,filters:this.lastQuery});
+            openModalAndSetFormat(format){
+                this.format = format;
+                $('#modalAlertSuccess').modal('show');
             },
-        },
-        mounted(){
-            this.$nextTick(function () {
-                $('.selectpicker').selectpicker('refresh');
-            })
-        },
-        filters: {
-            moment: function (date) {
-                return moment(date).format('DD/MM/YYYY');
-            }
-        },
-        methods : {
+            downloadFile (withFilters) {
+                $('#modalAutoDismiss').modal('show');
+                let filters = withFilters ? this.lastQuery : {};
+                this.$store.dispatch('publicContracts/downloadFile', {format:this.format,filters});
+            },
             copyUrlToClipBoard(){
                 const tempTextArea = document.createElement('textarea');
                 tempTextArea.value =  window.location.href;
@@ -274,6 +288,16 @@
                 document.body.removeChild(tempTextArea);
                 tShow('Se ha copiado el enlace correctamente', 'info');
 
+            }
+        },
+        mounted(){
+            this.$nextTick(function () {
+                $('.selectpicker').selectpicker('refresh');
+            })
+        },
+        filters: {
+            moment: function (date) {
+                return moment(date).format('DD/MM/YYYY');
             }
         }
     }

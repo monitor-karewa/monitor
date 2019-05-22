@@ -15,6 +15,263 @@ function _getPageFromReq(req) {
     return Number(req.query.page) || 1;
 }
 
+function _getFormatedFilters(req, filters){
+    let formatedFilter = [];
+    for(let item in filters){
+        let row = {
+            key : req.__('suppliers.filters.'+item),
+            values:''
+        }
+        if(Array.isArray(filters[item])){
+            filters[item].forEach((filter) => {
+                if(typeof filter == "string"){
+                    row.values += `${req.__(filter)}. `;
+
+                } else if(filter.hasOwnProperty('_id') && filter.hasOwnProperty('name')){
+                    row.values += `${filter.name}. `;
+                } else {
+                    row.values += `${filter._id}. `
+                }
+                // formatedFilter[item] = { value:filter._id};
+            });
+        } else if(typeof filters[item] == "string" || typeof filters[item] == "number"){
+            row.values += filters[item];
+            // formatedFilter[item] = filters[item]._id;
+        }
+        formatedFilter.push(row);
+    }
+
+    return formatedFilter
+}
+
+function _aggregateSupplierDetail(req, res, callback){
+    let supplierId = req.query.id;
+
+    if (supplierId) {
+        supplierId = mongoose.Types.ObjectId(supplierId);
+    }
+
+    let query = {supplier : supplierId};
+
+    let matchContracts = {};
+    let orBuilder = [];
+    let andBuilder = [];
+
+
+    if (req.body && req.body.filters) {
+
+        if (req.body.filters.search && req.body.filters.search.length) {
+            orBuilder.push({contractId: utils.toAccentsRegex(req.body.filters.search, "gi")});
+            orBuilder.push({contractNumber: utils.toAccentsRegex(req.body.filters.search, "gi")});
+            orBuilder.push({servicesDescription: utils.toAccentsRegex(req.body.filters.search, "gi")});
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if (req.body.filters.administrationPeriods && req.body.filters.administrationPeriods.length) {
+            for (let i = 0; i < req.body.filters.administrationPeriods.length; i++) {
+                orBuilder.push({administrationPeriod: req.body.filters.administrationPeriods[i].administrationPeriod})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if (req.body.filters.fiscalYears && req.body.filters.fiscalYears.length) {
+            for (let i = 0; i < req.body.filters.fiscalYears.length; i++) {
+                orBuilder.push({fiscalYear: req.body.filters.fiscalYears[i].fiscalYear})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if (req.body.filters.trimonths && req.body.filters.trimonths.length) {
+            for (let i = 0; i < req.body.filters.trimonths.length; i++) {
+                orBuilder.push({period: req.body.filters.trimonths[i].period})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if (req.body.filters.procedureTypes && req.body.filters.procedureTypes.length) {
+            for (let i = 0; i < req.body.filters.procedureTypes.length; i++) {
+                orBuilder.push({procedureType: req.body.filters.procedureTypes[i]})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if (req.body.filters.administrativeUnits && req.body.filters.administrativeUnits.length) {
+            for (let i = 0; i < req.body.filters.administrativeUnits.length; i++) {
+                orBuilder.push({applicantAdministrativeUnit: new mongoose.Types.ObjectId(req.body.filters.administrativeUnits[i]._id)})
+                orBuilder.push({organizerAdministrativeUnit: new mongoose.Types.ObjectId(req.body.filters.administrativeUnits[i]._id)})
+                orBuilder.push({areaInCharge: new mongoose.Types.ObjectId(req.body.filters.administrativeUnits[i]._id)})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if(andBuilder.length){
+            matchContracts = {$and : andBuilder};
+            query = {
+                "supplier": supplierId,
+                ...matchContracts
+            };
+        }
+    }
+
+
+    let aggregate = Contract.aggregate([
+        {
+            $match: query
+        },
+        {
+            $project: {
+                supplier: 1,
+                _id: 1,
+                servicesDescription: 1,
+                totalOrMaxAmount: 1,
+                informationDate: 1,
+                procedureType: 1
+            }
+        },
+        {
+            $group: {
+                _id: '$supplier',
+                contracts: {$push: '$$ROOT'},
+                'totalPublic': {
+                    $sum: {
+                        $cond: {
+                            if: {$eq: ["$procedureType", "PUBLIC"]},
+                            then: "$totalOrMaxAmount",
+                            else: 0
+                        }
+                    }
+                },
+                'totalPublicCount': {
+                    $sum: {
+                        $cond: {
+                            if: {$eq: ["$procedureType", "PUBLIC"]},
+                            then: 1,
+                            else: 0
+                        }
+                    }
+                },
+                'totalInvitation': {
+                    $sum: {
+                        $cond: {
+                            if: {$eq: ["$procedureType", "INVITATION"]},
+                            then: "$totalOrMaxAmount",
+                            else: 0
+                        }
+                    }
+                },
+                'totalInvitationCount': {
+                    $sum: {
+                        $cond: {
+                            if: {$eq: ["$procedureType", "INVITATION"]},
+                            then: 1,
+                            else: 0
+                        }
+                    }
+                },
+                'totalNoBid': {
+                    $sum: {
+                        $cond: {
+                            if: {$eq: ["$procedureType", "NO_BID"]},
+                            then: "$totalOrMaxAmount",
+                            else: 0
+                        }
+                    }
+                },
+                'totalNoBidCount': {
+                    $sum: {
+                        $cond: {
+                            if: {$eq: ["$procedureType", "NO_BID"]},
+                            then: 1,
+                            else: 0
+                        }
+                    }
+                },
+                total: {$sum: "$totalOrMaxAmount"},
+                count: {$sum: 1}
+            },
+
+        },
+        {
+            $lookup: {
+                from: Supplier.collection.name,
+                let: { "supplierId": "$_id" },
+                pipeline: [
+                    {
+                        "$match": {
+                            "$expr": {
+                                "$eq": [ "$_id", "$$supplierId" ] }
+                        }
+                    },
+                    {
+                        "$project": {
+                            "name": 1
+                        }
+                    }
+                ],
+                as: "supplier"
+            }
+        },
+        {
+            $unwind: {
+                path: "$supplier",
+                preserveNullAndEmptyArrays: true
+            },
+        },
+        {
+            $project: {
+                supplier: 1,
+                contracts: 1,
+                totals: {
+                    total: "$total",
+                    public: "$totalPublic",
+                    invitation: "$totalInvitation",
+                    noBid: "$totalNoBid",
+                    totalCount: "$count",
+                    publicCount: "$totalPublicCount",
+                    invitationCount: "$totalInvitationCount",
+                    noBidCount: "$totalNoBidCount"
+                }
+            }
+        },
+        {
+            $project: {
+                supplier: 1,
+                totals: 1,
+                public: {
+                    $filter: {
+                        input: "$contracts",
+                        as: "contract",
+                        cond: { $eq: [ "$$contract.procedureType", "PUBLIC" ] }
+                    }
+                },
+                invitation: {
+                    $filter: {
+                        input: "$contracts",
+                        as: "contract",
+                        cond: { $eq: [ "$$contract.procedureType", "INVITATION" ] }
+                    }
+                },
+                noBid: {
+                    $filter: {
+                        input: "$contracts",
+                        as: "contract",
+                        cond: { $eq: [ "$$contract.procedureType", "NO_BID" ] }
+                    }
+                },
+            }
+        }
+
+    ]);
+
+    return aggregate.exec(callback);
+}
+
 function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
     
     let paginate = !!options.paginate;
@@ -266,200 +523,38 @@ exports.list = (req, res, next) => {
     });
 };
 
+exports.downloadDetail = (req, res, next) => {
+    let format = req.params.format;
+    req.body.filters = JSON.parse(req.query.filters);
+
+    _aggregateSupplierDetail(req, res, (err, supplierDetail) => {
+        let filters = req.body.filters;
+        let formatedFilter = _getFormatedFilters(req, filters);
+        supplierDetail = supplierDetail && supplierDetail.length ? supplierDetail[0] : {};
+
+        switch(format){
+            case 'xls':
+                downloadDetailXls(req, res, { supplier:supplierDetail, filters:formatedFilter } );
+                break;
+            case 'pdf':
+                downloadDetailPDF(req, res, { supplier:supplierDetail,filters: formatedFilter });
+                break;
+            case 'json':
+                return res.json({ supplierDetail, filters: formatedFilter });
+                break;
+            default:
+                break;
+        }
+
+
+    });
+
+};
+
+
 exports.detail = (req, res, next) => {
-    let supplierId = req.query.id;
 
-    if (supplierId) {
-        supplierId = mongoose.Types.ObjectId(supplierId);
-    }
-
-    let query = {supplier : supplierId};
-
-    let matchContracts = {};
-    let orBuilder = [];
-    let andBuilder = [];
-
-
-    if (req.body && req.body.filters) {
-
-        if (req.body.filters.search && req.body.filters.search.length) {
-            orBuilder.push({contractId: utils.toAccentsRegex(req.body.filters.search, "gi")});
-            orBuilder.push({contractNumber: utils.toAccentsRegex(req.body.filters.search, "gi")});
-            orBuilder.push({servicesDescription: utils.toAccentsRegex(req.body.filters.search, "gi")});
-            andBuilder.push({$or: orBuilder});
-            orBuilder = [];
-        }
-
-        if (req.body.filters.administrationPeriods && req.body.filters.administrationPeriods.length) {
-            for (let i = 0; i < req.body.filters.administrationPeriods.length; i++) {
-                orBuilder.push({administrationPeriod: req.body.filters.administrationPeriods[i].administrationPeriod})
-            }
-            andBuilder.push({$or: orBuilder});
-            orBuilder = [];
-        }
-
-        if (req.body.filters.fiscalYears && req.body.filters.fiscalYears.length) {
-            for (let i = 0; i < req.body.filters.fiscalYears.length; i++) {
-                orBuilder.push({fiscalYear: req.body.filters.fiscalYears[i].fiscalYear})
-            }
-            andBuilder.push({$or: orBuilder});
-            orBuilder = [];
-        }
-
-        if (req.body.filters.trimonths && req.body.filters.trimonths.length) {
-            for (let i = 0; i < req.body.filters.trimonths.length; i++) {
-                orBuilder.push({period: req.body.filters.trimonths[i].period})
-            }
-            andBuilder.push({$or: orBuilder});
-            orBuilder = [];
-        }
-
-        if (req.body.filters.procedureTypes && req.body.filters.procedureTypes.length) {
-            for (let i = 0; i < req.body.filters.procedureTypes.length; i++) {
-                orBuilder.push({procedureType: req.body.filters.procedureTypes[i]})
-            }
-            andBuilder.push({$or: orBuilder});
-            orBuilder = [];
-        }
-
-        if (req.body.filters.administrativeUnits && req.body.filters.administrativeUnits.length) {
-            for (let i = 0; i < req.body.filters.administrativeUnits.length; i++) {
-                orBuilder.push({applicantAdministrativeUnit: new mongoose.Types.ObjectId(req.body.filters.administrativeUnits[i]._id)})
-                orBuilder.push({organizerAdministrativeUnit: new mongoose.Types.ObjectId(req.body.filters.administrativeUnits[i]._id)})
-                orBuilder.push({areaInCharge: new mongoose.Types.ObjectId(req.body.filters.administrativeUnits[i]._id)})
-            }
-            andBuilder.push({$or: orBuilder});
-            orBuilder = [];
-        }
-
-        if(andBuilder.length){
-            matchContracts = {$and : andBuilder};
-            query = {
-                "supplier": supplierId,
-                ...matchContracts
-            };
-        }
-    }
-
-
-    Contract.aggregate([
-        {
-            $match: query
-        },
-        {
-            $project: {
-                supplier: 1,
-                _id: 1,
-                servicesDescription: 1,
-                totalOrMaxAmount: 1,
-                informationDate: 1,
-                procedureType: 1
-            }
-        },
-        {
-            $group: {
-                _id: '$supplier',
-                contracts: {$push: '$$ROOT'},
-                'totalPublic': {
-                    $sum: {
-                        $cond: {
-                            if: {$eq: ["$procedureType", "PUBLIC"]},
-                            then: "$totalOrMaxAmount",
-                            else: 0
-                        }
-                    }
-                },
-                'totalInvitation': {
-                    $sum: {
-                        $cond: {
-                            if: {$eq: ["$procedureType", "INVITATION"]},
-                            then: "$totalOrMaxAmount",
-                            else: 0
-                        }
-                    }
-                },
-                'totalNoBid': {
-                    $sum: {
-                        $cond: {
-                            if: {$eq: ["$procedureType", "NO_BID"]},
-                            then: "$totalOrMaxAmount",
-                            else: 0
-                        }
-                    }
-                },
-                total: {$sum: "$totalOrMaxAmount"},
-                count: {$sum: 1}
-            },
-            
-        },
-        {
-            $lookup: {
-                from: Supplier.collection.name,
-                let: { "supplierId": "$_id" },
-                pipeline: [
-                    {
-                        "$match": {
-                            "$expr": {
-                                "$eq": [ "$_id", "$$supplierId" ] }
-                        }
-                    },
-                    {
-                        "$project": {
-                            "name": 1
-                        }
-                    }
-                ],
-                as: "supplier"
-            }
-        },
-        {
-            $unwind: {
-                path: "$supplier",
-                preserveNullAndEmptyArrays: true
-            },
-        },
-        {
-            $project: {
-                supplier: 1,
-                contracts: 1,
-                totals: {
-                    total: "$total",
-                    public: "$totalPublic",
-                    invitation: "$totalInvitation",
-                    noBid: "$totalNoBid"
-                }
-            }
-        },
-        {
-            $project: {
-                supplier: 1,
-                totals: 1,
-                public: {
-                    $filter: {
-                        input: "$contracts",
-                        as: "contract",
-                        cond: { $eq: [ "$$contract.procedureType", "PUBLIC" ] }
-                    }
-                },
-                invitation: {
-                    $filter: {
-                        input: "$contracts",
-                        as: "contract",
-                        cond: { $eq: [ "$$contract.procedureType", "INVITATION" ] }
-                    }
-                },
-                noBid: {
-                    $filter: {
-                        input: "$contracts",
-                        as: "contract",
-                        cond: { $eq: [ "$$contract.procedureType", "NO_BID" ] }
-                    }
-                },
-            }
-        }
-        
-    ]).exec((err, supplierDetails) => {
-
+    _aggregateSupplierDetail(req, res,(err, supplierDetails) => {
 
         // {
         //     supplier: {
@@ -545,30 +640,7 @@ exports.download = (req, res, next) => {
 
 
         let filters = req.body.filters;
-        let formatedFilter = [];
-        for(let item in filters){
-            let row = {
-                key : req.__('suppliers.filters.'+item),
-                values:''
-            }
-            if(Array.isArray(filters[item])){
-                filters[item].forEach((filter) => {
-                    if(typeof filter == "string"){
-                       row.values += `${req.__(filter)}. `;
-
-                    } else if(filter.hasOwnProperty('_id') && filter.hasOwnProperty('name')){
-                       row.values += `${filter.name}. `;
-                    } else {
-                       row.values += `${filter._id}. `
-                    }
-                   // formatedFilter[item] = { value:filter._id};
-                });
-            } else if(typeof filters[item] == "string" || typeof filters[item] == "number"){
-                row.values += filters[item];
-                // formatedFilter[item] = filters[item]._id;
-            }
-            formatedFilter.push(row);
-        }
+        let formatedFilter = _getFormatedFilters(req, filters);
 
         switch(format){
             case 'xls':
@@ -584,6 +656,82 @@ exports.download = (req, res, next) => {
                 break;
         }
     });
+};
+
+let downloadDetailXls = (req, res, suppliersDetail, filters) => {
+
+    new ExcelExporter()
+        .setNumberOfSheets(2)
+        .setPropInfoArray([
+            {
+                header: 'MONTO TOTAL',
+                propName: 'total',
+                format : 'currency',
+                sheet: 1
+            },
+            {
+                header: 'MONTO TOTAL DE CONTRATOS POR LICITACIÓN PÚBLICA',
+                propName: 'public',
+                format: 'currency',
+                sheet: 1
+            },
+            {
+                header: 'MONTO TOTAL DE CONTRATOS POR INVITACIÓN',
+                propName: 'invitation',
+                format: 'currency',
+                sheet: 1
+            },
+            {
+                header: 'MONTO TOTAL DE CONTRATOS POR ADJUDICACIÓN DIRECTA',
+                propName: 'noBid',
+                format: 'currency',
+                sheet: 1
+            },
+            {
+                header: 'CONTRATOS POR LICITACIÓN PÚBLICA',
+                propName: 'publicCount',
+                sheet: 1
+            },
+            {
+                header: 'CONTRATOS POR INVITACIÓN',
+                propName: 'invitationCount',
+                sheet: 1
+            },
+            {
+                header: 'CONTRATOS POR ADJUDICACIÓN DIRECTA',
+                propName: 'noBidCount',
+                sheet: 1
+            },
+            {
+                header: 'TIPO DE PROCEDIMIENTO',
+                propName: 'procedureType',
+                sheet: 2,
+                i18n:true
+            },
+            {
+                header: 'DESCRIPCION DE LAS OBRAS, BIENES O SERVICIOS',
+                propName: 'servicesDescription',
+                sheet: 2
+            },
+            {
+                header: 'MONTO TOTAL',
+                propName: 'totalOrMaxAmount',
+                format:'currency',
+                sheet: 2
+            },
+            {
+                header: 'FECHA DE OBTENCIÓN DE LOS DATOS',
+                propName: 'informationDate',
+                format:'date',
+                sheet: 2
+            },
+
+        ])
+        .setDocs(suppliersDetail)
+        .setFilters(filters)
+        .setTitle(`Proveedor ${suppliersDetail.supplier.name} Detalle`)
+        .setFileName('proveedores-detalle')
+        .exportSupplierDetailToFile(req, res);
 };
 
 
@@ -668,7 +816,7 @@ let downloadPDF = (req, res, { totals, suppliers, filters }) => {
                         }
                     ])
                     .setHeaders()
-                    .setWidths(null,"auto", 4)
+                    .setWidths(null,"auto")
                     .transformDocs()
     };
     let suppliersTable = {
@@ -712,7 +860,7 @@ let downloadPDF = (req, res, { totals, suppliers, filters }) => {
                 },
             ])
             .setHeaders()
-            .setWidths([145,145,145,145,145],"auto", 5)
+            .setWidths([145,145,145,145,145],"auto")
             .transformDocs()
     };
 
@@ -726,6 +874,155 @@ let downloadPDF = (req, res, { totals, suppliers, filters }) => {
         .addContentToPDF(filters)
         .addContentToPDF(resultsTable)
         .addContentToPDF(suppliersTable)
+        .addFooterToPDF()
+        .setPageOrientation('landscape')
+        .exportToFile(req, res)
+};
+
+
+let downloadDetailPDF = (req, res, { supplier, filters }) => {
+
+    filters = filters.map((filter)=>{
+        if(filter.key && filter.values!==""){
+            return { text:`   ${filter.key} : ${filter.values}`,style:'headerFilters' }
+        }
+    });
+
+    if(filters && filters.length){
+        filters.unshift({text:'Filtrado por:', style:'headerFilters'});
+    }
+    let totalsTable = {
+        style:'statsCurrency4Col',
+        layout: 'lightHorizontalLines',
+        table: new PDFTable({headerRows:1,docs:supplier.totals})
+                    .setTableMetadata([
+                        {
+                            header: 'Monto Total',
+                            headerStyle:'headerStyle',
+                            rowStyle:'rowNumberStyle',
+                            propName:'total',
+                            format:'currency'
+                        },
+                        {
+                            header: 'Monto Total de Contratos por Licitación Pública',
+                            headerStyle:'headerStyle',
+                            rowStyle:'rowNumberStyle',
+                            propName:'public',
+                            format:'currency'
+                        },
+                        {
+                            header: 'Monto Total de Contratos por Invitación',
+                            headerStyle:'headerStyle',
+                            rowStyle:'rowNumberStyle',
+                            propName:'invitation',
+                            format:'currency'
+                        },
+                        {
+                            header: 'Monto Total de Contratos por Adjudicación Directa',
+                            headerStyle:'headerStyle',
+                            rowStyle:'rowNumberStyle',
+                            propName:'noBid',
+                            format:'currency'
+                        }
+                        // {
+                        //     header: 'Monto Total de Contratos por Adjudicación Directa',
+                        //     headerStyle:'headerStyle',
+                        //     rowStyle:'rowNumberStyle',
+                        //     propName:'noBid',
+                        //     format:'currency'
+                        // },
+                    ])
+                    .setHeaders()
+                    .setWidths(null,"auto")
+                    .transformDocs()
+    };
+
+    let countTable = {
+        style:'statsExample',
+        layout: 'lightHorizontalLines',
+        table: new PDFTable({headerRows:1,docs:supplier.totals})
+                    .setTableMetadata([
+                        {
+                            header: 'Contratos Totales',
+                            headerStyle:'headerStyle',
+                            rowStyle:'rowNumberStyle',
+                            propName:'totalCount'
+                        },
+                        {
+                            header: 'Contratos por Licitación Pública',
+                            headerStyle:'headerStyle',
+                            rowStyle:'rowNumberStyle',
+                            propName:'publicCount'
+                        },
+                        {
+                            header: 'Contratos por Invitación',
+                            headerStyle:'headerStyle',
+                            rowStyle:'rowNumberStyle',
+                            propName:'invitationCount'
+                        },
+                        {
+                            header: 'Contratos por Adjudicación Directa',
+                            headerStyle:'headerStyle',
+                            rowStyle:'rowNumberStyle',
+                            propName:'noBidCount'
+
+                        }
+                    ])
+                    .setHeaders()
+                    .setWidths(null,"auto")
+                    .transformDocs(req)
+    };
+
+    let rowsTable = {
+        style:'table4Col',
+        // layout: 'lightHorizontalLines',
+        table:new PDFTable({headerRows:1, docs:[...supplier.public,...supplier.invitation,...supplier.noBid]})
+            .setTableMetadata([
+                {
+                    header: 'Tipo de Procedimiento',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowStyle',
+                    propName:'procedureType',
+                    i18n:true
+                },
+                {
+                    header: 'Descripción de las obras, bienes o servicios',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowStyle',
+                    propName:'servicesDescription'
+                },
+                {
+                    header: 'Monto Total',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowStyle',
+                    propName:'totalOrMaxAmount',
+                    format:'currency'
+                },
+                {
+                    header: 'Fecha de obtención de los datos',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowStyle',
+                    propName:'informationDate',
+                    format:'date'
+                },
+            ])
+            .setHeaders()
+            .setWidths(null,"auto")
+            .transformDocs(req)
+    };
+
+
+    let headers = [{ text:"Monitor Karewa", style:'header'},
+                    {text : moment(new Date()).format('MM/DD/YYYY'), style:'header'}];
+
+     new PDFExporter()
+        .setFileName('monitor-karewa-proveedores.pdf')
+        .addHeadersToPDF(headers)
+        .addTitleToPDF({text:`Información del Proveedor ${supplier.supplier.name}`, style:'title'})
+        .addContentToPDF(filters)
+        .addContentToPDF(totalsTable)
+        .addContentToPDF(countTable)
+        .addContentToPDF(rowsTable)
         .addFooterToPDF()
         .setPageOrientation('landscape')
         .exportToFile(req, res)
