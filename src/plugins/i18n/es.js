@@ -197,6 +197,9 @@ export default {
     "accounts.login.info.redirecting": "Por favor inicia sesión para continuar.",
     "accounts.organization.info.redirecting": "Por favor selecciona una Organización para continuar.",
     "accounts.logout.success": "Tu sesión se ha cerrado correctamente.",
+    "accounts.password.updated.error": "No fue posible restablecer tu contraseña. Por favor intenta nuevamente.",
+    "accounts.password.updated.token-invalid": "Este enlace ha expirado o no es válido. Por favor intenta recuperar tu contraseña nuevamente.",
+    "accounts.password.updated.success": "Tu contraseña se ha actualizado correctamente. Por favor inicia sesión nuevamente.",
     
     //Suppliers
     "suppliers.supplier": "Proveedor | Proveedores",

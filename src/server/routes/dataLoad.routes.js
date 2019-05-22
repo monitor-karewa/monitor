@@ -21,4 +21,9 @@ router.get('/current-info', dataLoadController.currentInfo);
 router.post('/cancel-current', dataLoadController.cancelCurrent);
 router.post('/confirm-current', dataLoadController.confirmCurrent);
 
+router.get('/current', dataLoadController.current);
+router.get('/current-info', dataLoadController.currentInfo);
+
+router.post('/cancel-current', dataLoadController.cancelCurrent);
+
 module.exports = router;

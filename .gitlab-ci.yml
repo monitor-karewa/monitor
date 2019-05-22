@@ -1,49 +1,110 @@
 stages:
   - setup
+  - release
+  - deploy
 
 variables:
-  DOCKER_DRIVER: overlay2
+  CONTAINER_IMAGE_NAME: ${REGISTRY}/${CI_PROJECT_NAMESPACE}-${CI_PROJECT_NAME}
+  CONTAINER_IMAGE_TAG:  ${CI_COMMIT_REF_NAME}
 
-server:
-  stage: setup
+
+prepare:
+  stage:                setup
+  image:                node:8.16.0-alpine
+  extends:              .devops
+  variables:
+    DOCKER_DRIVER:      overlay2
   script:
-    - |
-      heroku container:push web --app karewa-server \
-      && heroku container:release web --app karewa-server
-  only:
-    - dev
-  except:
-    - schedules
-  tags:
-    - helm
+    - dependencies
+    - build
+  cache:
+    key:                ${CI_COMMIT_REF_SLUG}
+    policy:             push
+    paths:
+      - node_modules/
 
-client:
-  stage: setup
+build:
+  stage:                release
+  image:                docker:stable
+  extends:              .devops
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST:        tcp://docker:2375
+    DOCKER_DRIVER:      overlay2
   script:
-    - |
-      cd client \
-      && docker build \
-      --target builder \
-      --cache-from registry.heroku.com/karewa-client/web:builder \
-      -t registry.heroku.com/karewa-client/web:builder . \
-      && \
-      docker build \
-        --target release \
-        --cache-from registry.heroku.com/karewa-client/web \
-        -t registry.heroku.com/karewa-client/web . \
-      || \
-      docker build \
-        -t registry.heroku.com/karewa-client/web .
-        gcloud docker -- push registry.heroku.com/karewa-client/web \
-      && heroku container:push web --app karewa-client \
-      && heroku container:release web --app karewa-client
-  only:
-    - dev
-  except:
-    - schedules
-  tags:
-    - helm
+    - setup_docker
 
-include:
-  - project:          'devops/machete'
-    file:             '/cicd/gitlab-test-sast.yml'
+.devops:
+  before_script:
+    - |
+      function dependencies() {
+        npm install -s --no-progress
+      }
+
+      function build() {
+        npm install -s --no-progress -g @vue/cli
+        npm run build
+      }
+
+      function setup_docker() {
+        docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY}
+      }
+
+      function docker_build() {
+        docker build \
+          --pull \
+          --build-arg MONGODB_URL_ARG=${MONGODB_URL_VAR} \
+          -t ${CONTAINER_IMAGE_NAME}:${CONTAINER_IMAGE_TAG} .
+        docker push $PROJECT_IMAGE
+      }
+
+# stages:
+#   - setup
+#
+# variables:
+#   DOCKER_DRIVER:      overlay2
+#
+# server:
+#   stage:              setup
+#   script:
+#     - |
+#       heroku container:push web --app karewa-server \
+#       && heroku container:release web --app karewa-server
+#   only:
+#     - dev
+#   except:
+#     - schedules
+#   tags:
+#     - helm
+#
+# client:
+#   stage:              setup
+#   script:
+#     - |
+#       cd client \
+#       && docker build \
+#       --target builder \
+#       --cache-from registry.heroku.com/karewa-client/web:builder \
+#       -t registry.heroku.com/karewa-client/web:builder . \
+#       && \
+#       docker build \
+#         --target release \
+#         --cache-from registry.heroku.com/karewa-client/web \
+#         -t registry.heroku.com/karewa-client/web . \
+#       || \
+#       docker build \
+#         -t registry.heroku.com/karewa-client/web .
+#         gcloud docker -- push registry.heroku.com/karewa-client/web \
+#       && heroku container:push web --app karewa-client \
+#       && heroku container:release web --app karewa-client
+#   only:
+#     - dev
+#   except:
+#     - schedules
+#   tags:
+#     - helm
+#
+# include:
+#   - project:          'devops/machete'
+#     file:             '/cicd/gitlab-test-sast.yml'

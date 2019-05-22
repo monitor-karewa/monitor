@@ -65,6 +65,10 @@ let userSchema = mongoose.Schema({
         required: true
         // enum: ['GENERAL', 'CONTRATO']
     },
+    resetPasswordToken: {
+        type: String,
+        required: false
+    },
     deleted: require("./schemas/deleted.schema").Deleted
 });
 
@@ -126,7 +130,7 @@ userSchema.virtual("fullName").get(function() {
 userSchema.loadClass(UserClass);
 
 //Indexes
-userSchema.index({email: 1}, {unique: true});
+userSchema.index({email: 1, deleted: 1}, {unique: true});
 
 let User = mongoose.model('User', userSchema);
 

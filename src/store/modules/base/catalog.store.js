@@ -19,7 +19,7 @@ export default function (api, storeName) {
         selectedDocId: '',
         isEditingTable : false,
         entrySelected : {},
-        formErrors : []
+        formErrors : [],
     };
 
     const getters = {
@@ -132,17 +132,16 @@ export default function (api, storeName) {
                         Vue.$log.error('Response error', result.data.message);
                         tShow(result.data.message,'danger');
                         commit("SET_FORM_ERRORS", result.data.errors);
-                    } else {
-                        //result.data.data.docs
-                        // commit('updateDocs', {
-                        //     docs: result.data.data.docs
-                        // });
-                        dispatch(`${storeName}/list`,{},{root:true});
-                        if(data._id){
-                            bus.$emit(storeName + events.DOC_UPDATED);
-                        }else{
-                            bus.$emit(storeName + events.DOC_CREATED);
-                        }
+                    } else {//result.data.data.docs
+                    // commit('updateDocs', {
+                    //     docs: result.data.data.docs
+                    // });
+                    dispatch(`${storeName}/list`,{},{root:true});
+                    
+                    if(data._id){
+                        bus.$emit(storeName + events.DOC_UPDATED);
+                    }else{
+                        bus.$emit(storeName + events.DOC_CREATED);}
                     }
                 },
                 (error) => {
@@ -241,7 +240,7 @@ export default function (api, storeName) {
         },
         CLEAR_FORM_ERRORS(state){
             state.formErrors = []
-        }
+        },
 
         // CLEAR_SELECTED_ENTRY(state){
         //     state.entrySelected = {};

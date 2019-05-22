@@ -7,6 +7,7 @@ const User = require('./../models/user.model').User;
 // const ExtractJwt = require('passport-jwt').ExtractJwt;
 
 const logger = require('./../components/logger').instance;
+const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const _initLocalStrategy = () => {
 };
@@ -19,7 +20,7 @@ passport.use('local-login', new LocalStrategy({
     },
     (username, password, callback) => {
         logger.info(null, null, 'passportManager#_initLocalStrategy', '@local-login');
-        User.findOne({email: username, active: true}, (err, user) => {
+        User.findOne({email: username, active: true, ...deletedSchema.qNotDeleted()}, (err, user) => {
             //The same message is used to prevent "testing" for user existence
             if (err || !user) {
                 return callback(null, false, {message: "Invalid username or password. Please try again.", email: username});
@@ -28,7 +29,6 @@ passport.use('local-login', new LocalStrategy({
             if (!user.active) {
                 return callback(null, false, {message: "Invalid username or password. Please try again.", email: username});
             }
-            
             //TODO: Validate account
             // if (!user.accountConfirmed) {
             //     return callback(null, false, {message: "Please activate your account to continue. Check your email for instructions.", email: username});
