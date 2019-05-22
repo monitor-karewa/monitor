@@ -2,7 +2,8 @@
     <td class="text-upper" 
         :class="{
             'c-error': hasErrors,
-            'c-info': hasInfos
+            'c-info': hasInfos,
+            'c-success': willCreateDoc
         }">
         <template v-if="!format || format === 'string'">
             <span :class="tippyTooltipClassName">{{info.value | ellipsify}}</span>
@@ -19,6 +20,7 @@
         </template>
         <i class="zmdi zmdi-alert-triangle c-error f-14" :class="tippyErrorsClassName" v-if="hasErrors"></i>
         <i class="zmdi zmdi-alert-triangle c-info f-14" :class="tippyInfosClassName" v-if="hasInfos"></i>
+        <i class="zmdi zmdi-alert-triangle c-success f-14" :class="tippyCreateDocClassName" v-if="willCreateDoc"></i>
     </td>
 </template>
 
@@ -83,6 +85,9 @@
             hasInfos() {
                 return this.info.infos.length;
             },
+            willCreateDoc() {
+                return this.info.shouldCreateDoc;
+            },
 
             tippyTooltipClassName() {
                 if (this.info.value && this.info.value.length && this.info.value.length > this.maxTextLength) {
@@ -98,6 +103,9 @@
             tippyInfosClassName() {
                 return `tippy-infos-${this.fieldName}-${this._uid}`;
             },
+            tippyCreateDocClassName() {
+                return `tippy-create-doc-${this.fieldName}-${this._uid}`;
+            },
             
             tippyErrorsContent() {
                 if (!this.hasErrors) {
@@ -110,6 +118,12 @@
                     return '';
                 }
                 return this.info.infos.map(e => `<span class="f-14"><i class="zmdi zmdi-alert-triangle c-info f-14"></i> ${e.message}</span>`).join('<br/>\n');
+            },
+            tippyCreateDocContent() {
+                if (!this.willCreateDoc) {
+                    return '';
+                }
+                return `<span class="f-14"><i class="zmdi zmdi-alert-triangle c-success f-14"></i> Se creará un nuevo registro</span>`;
             }
         },
         props: {
@@ -139,6 +153,11 @@
                 if (this.hasInfos) {
                     tippy(`.${this.tippyInfosClassName}`, {
                         content: this.tippyInfosContent
+                    });
+                }
+                if (this.willCreateDoc) {
+                    tippy(`.${this.tippyCreateDocClassName}`, {
+                        content: this.tippyCreateDocContent
                     });
                 }
                 if (this.tippyTooltipClassName.length) {

@@ -130,6 +130,7 @@
                                         <td>
                                             <i class="zmdi zmdi-alert-triangle c-info f-14" v-if="dataLoadDetail.data.summary.skipRow || dataLoadDetail.data.summary.hasInfos"></i>
                                             <i class="zmdi zmdi-alert-triangle c-error f-14" v-if="dataLoadDetail.data.summary.hasErrors"></i>
+                                            <i class="zmdi zmdi-alert-triangle c-success f-14" v-if="!dataLoadDetail.data.summary.hasErrors || dataLoadDetail.data.summary.willCreateDoc"></i>
                                         </td>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="procedureType"/>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="category"/>
@@ -169,13 +170,15 @@
                                 </table>
                             </div>
                         </div>
+                        <button type="" class="btn-outline c-error m-t-30" @click="cancel">Cancelar procesamiento</button>
                     </div>
                     <Pagination storeModule="dataLoad" v-show="!filtering"/>
                     <div class="vertical-center" v-show="!filtering">
                         <!--<div class="floating-label-table info m-r-40">Omitidos (duplicados)</div>-->
                         <!--<div class="floating-label-table error">Registros con errores</div>-->
                         <div class="floating-label-table m-r-40"><i class="zmdi zmdi-alert-triangle c-info f-14"></i> Omitidos (duplicados)</div>
-                        <div class="floating-label-table "><i class="zmdi zmdi-alert-triangle c-error f-14"></i> Registros con errores</div>
+                        <div class="floating-label-table  m-r-40"><i class="zmdi zmdi-alert-triangle c-error f-14"></i> Registros con errores</div>
+                        <div class="floating-label-table "><i class="zmdi zmdi-alert-triangle c-success f-14"></i> Se crearán uno o más registros</div>
                     </div>
                 </div>
                 

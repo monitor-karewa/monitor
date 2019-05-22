@@ -793,9 +793,9 @@
                 servicesDescription:{
                     required
                 },
-                supplier:{
-                    required
-                },
+//                supplier:{
+//                    required
+//                },
                 organizerAdministrativeUnit:{
                     required
                 },
@@ -898,8 +898,9 @@
                 //     required
                 // },
                 // /* Número que identifique al contrato */
-                // contractNumber:{
-                // },
+                 contractNumber:{
+                     required
+                 },
                 /* Fecha del contrato */
                 // contractDate:{
                 //     required

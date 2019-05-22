@@ -32,11 +32,14 @@ const {
     contractTypeEnumDict,
     contractTypeEnum,
     getContractTypeEnumObject,
+
+    CONTRACT_VALIDATION_REGEX_DICT
 } = require('./../models/contract.model');
 const AdministrativeUnit = require('./../models/administrativeUnit.model').AdministrativeUnit;
-const Supplier = require('./../models/supplier.model').Supplier;
+const {Supplier, SUPPLIER_VALIDATION_REGEX_DICT} = require('./../models/supplier.model');
 const DataLoad = require('./../models/dataLoad.model').DataLoad;
 const DataLoadDetail = require('./../models/dataLoadDetail.model').DataLoadDetail;
+const qNotDeleted = require('./../models/schemas/deleted.schema').qNotDeleted();
 
 //Always the first sheet
 const WORKSHEET_ID = 1;
@@ -53,6 +56,13 @@ const REF_STRATEGIES = {
     SUBSET: 2,
     FUZZY: 3
 };
+
+/**
+ * Threshold used to match ref-based fields with the Jaccard Index. The evaluated index is then checked with 
+ * (index >= JACCARD_VALUE_REF_MATCH_THRESHOLD), and if the result is truthy then the ref is a valid ref.
+ * @type {number} a value from 0 to 1
+ */
+const JACCARD_VALUE_REF_MATCH_THRESHOLD = 0.8;
 
 //Column identifiers
 const C_IDS = {
@@ -135,6 +145,8 @@ const C_IDS_DESCRIPTIONS = {
     [C_IDS.AMOUNT_EXCEEDED]: 'Monto que excede el límite de la Adjudicación',
 };
 
+const LETTERS_AND_SPACES_REGEX_STR = "[a-zA-ZñÑ]+[\S]*([a-zA-ZñÑ][\S]*)?";
+
 const ARGB_ERRORS = "FFEAD3DC";
 
 const ARGB_INFOS_FULL_OPACITY = "FF587FE3";
@@ -181,7 +193,7 @@ class ContractExcelReader {
     }
 
     _buildRefCheckQuery(currentOrganizationId, model, field, value, strategy) {
-        let query = {organization: currentOrganizationId};
+        let query = {organization: currentOrganizationId, ...qNotDeleted};
         switch (strategy) {
             case REF_STRATEGIES.EXACT:
                 query[field] = value;
@@ -526,12 +538,12 @@ class ContractExcelReader {
                         //Check all matches and pick the best match
 
                         //Error if there's more than one match
+                        let valueMatchesString = '';
+                        let multipleMatchesErrorMessage = null;
                         if (docs.length > 1) {
-                            let valueMatchesString = docs.map(_doc => _doc[field] || "").join(", ");
+                            valueMatchesString = docs.map(_doc => _doc[field] || "").join(", ");
                             let firstValue = docs[0][field] || "";
-                            fieldInfo.errors.push({
-                                message: `El registro coincide con varios registros cargados previamente [${valueMatchesString}] y se utilizará la mejor coincidencia encontrada.`
-                            });
+                            multipleMatchesErrorMessage = `El registro coincide con varios registros cargados previamente [${valueMatchesString}] y se utilizará la mejor coincidencia encontrada.`;
 
                         }
 
@@ -572,8 +584,29 @@ class ContractExcelReader {
                                 }
 
                                 if (bestJaccardMatch) {
-                                    let index = Number(bestJaccardMatch.source);
-                                    doc = docs[index];
+                                    //Check if it's a good enough match
+                                    
+                                    
+                                    //Console.logs kept for future reviewing of JACCARD_VALUE_REF_MATCH_THRESHOLD
+                                    
+                                    // console.log('\n\n');
+                                    // console.log('valueMatchesString', valueMatchesString);
+                                    // console.log('fieldInfo.value', fieldInfo.value);
+                                    // console.log('links', links);
+                                    // console.log('bestJaccardMatch', bestJaccardMatch);
+                                    // console.log('highestJaccardValue', highestJaccardValue);
+                                    // console.log('\n\n');
+
+                                    if (highestJaccardValue >= JACCARD_VALUE_REF_MATCH_THRESHOLD) {
+                                        let index = Number(bestJaccardMatch.source);
+                                        doc = docs[index];
+                                    } else {
+                                        
+                                        //No good match was found
+                                        multipleMatchesErrorMessage = null;
+                                        doc = null;
+                                    }
+                                    
                                 } else {
                                     doc = docs[0];
                                 }
@@ -588,6 +621,12 @@ class ContractExcelReader {
                                     fieldInfo.infos.push({
                                         message: `El registro se omitirá ya que coincide con uno cargado previamente [${doc[field]}]`
                                     });
+
+                                    if (multipleMatchesErrorMessage) {
+                                        fieldInfo.errors.push({
+                                            message: multipleMatchesErrorMessage
+                                        });
+                                    }
 
                                     //Check if doc.[field] matches fieldInfo.value will be (hopefully) done after this process
                                 } else {
@@ -615,6 +654,13 @@ class ContractExcelReader {
                                     fieldInfo.infos.push({
                                         message: `El registro se omitirá ya que coincide con uno cargado previamente [${doc[field]}]`
                                     });
+
+                                    if (multipleMatchesErrorMessage) {
+                                        fieldInfo.errors.push({
+                                            message: multipleMatchesErrorMessage
+                                        });
+                                    }
+                                    
                                     //Check if doc.[field] matches fieldInfo.value will be (hopefully) done after this process
                                 } else {
                                     fieldInfo.shouldCreateDoc = true;
@@ -812,6 +858,30 @@ class ContractExcelReader {
         });
     }
 
+    _checkAutosetFieldsForRowInfo(rowInfo) {
+        rowInfo.contractType = {
+            fieldName: 'contractType',
+            value: null,
+            errors: [],
+            infos: [],
+            model: null,
+            duplicate: false,
+            shouldCreateDoc: false,
+            skipRow: false,
+            refLinkedBy: [],
+            refLink: null,
+            overrides: {
+                refStrategy: null
+            },
+            options: {required: true}
+        };
+        if (rowInfo.minAmount.value && rowInfo.maxAmount.value) {
+            rowInfo.contractType.value = 'OPEN';
+        } else {
+            rowInfo.contractType.value = 'NORMAL';
+        }
+    }
+
 
     _checkValidationsForFieldInfo(rowInfo, fieldInfo, callback) {
         let options = fieldInfo.options || {};
@@ -1004,35 +1074,61 @@ class ContractExcelReader {
                 case C_IDS.ADMINISTRATION:
                     return _this._readField(rowInfo, cell, 'administration', String, {
                         required: true,
-                        //TODO: Centralize this Regex
                         match: {
-                            regexStr: "^[12][0-9]{3}-[12][0-9]{3}$"
+                            regexStr: CONTRACT_VALIDATION_REGEX_DICT.ADMINISTRATION
                         }
                     }, callback);
                     break;
                 case C_IDS.FISCAL_YEAR:
                     return _this._readField(rowInfo, cell, 'fiscalYear', String, {
                         required: true,
-                        //TODO: Centralize this Regex
                         match: {
-                            regexStr: "^[12][0-9]{3}" 
+                            regexStr: CONTRACT_VALIDATION_REGEX_DICT.FISCAL_YEAR 
+                        },
+                        validator: function(rowInfo, callback){
+                            let yearContractDate = new Date(rowInfo.contractDate.value).getFullYear();
+                            let fiscalYear = Number(rowInfo.fiscalYear.value);
+                            let isValid = yearContractDate === fiscalYear;
+
+                            let errorMessage = null;
+                            if (!isValid) {
+                                //TODO: i18n
+                                errorMessage = 'La fecha del ejercicio fiscal no coincide con el fecha del contrato.';
+                            }
+
+                            return callback(null, errorMessage);
                         }
                     }, callback);
                     break;
                 case C_IDS.PERIOD:
                     return _this._readField(rowInfo, cell, 'period', String, {
                         required: true,
-                        //TODO: Centralize this Regex
                         match: {
-                            regexStr: "^[1234]o\\s2[0-9]{3}$"
-                        }
+                            regexStr: CONTRACT_VALIDATION_REGEX_DICT.PERIOD
+                        },
+                        validator: function (rowInfo, callback) {
+                            if (rowInfo.contractDate.value && rowInfo.period.value) {
+                                let yearContractDate = new Date(rowInfo.contractDate.value).getFullYear();
+                                let isValid = rowInfo.period.value.includes(String(yearContractDate));
+
+                                let errorMessage = null;
+                                
+                                if (!isValid) {
+                                    errorMessage = "La fecha del periodo no coincide con la fecha del contrato.";
+                                }
+                                
+                                return callback(null, errorMessage);
+                            }
+
+                            return callback();
+                        },
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_ID:
                     return _this._readField(rowInfo, cell, 'contractId', String, {
-                        required: true,
-                        unique: true
-                        //TODO: Validations
+                        // required: false,
+                        //Field confirmed as not 100% unique
+                        // unique: true
                     }, callback);
                     break;
                 case C_IDS.PARTIDA:
@@ -1129,7 +1225,7 @@ class ContractExcelReader {
                         // match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
                         // match: /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi,
                         match: {
-                            regexStr: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
+                            regexStr: CONTRACT_VALIDATION_REGEX_DICT.URL,
                             flags: "gi"
                         }
                     }, callback);
@@ -1149,7 +1245,7 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell, 'clarificationMeetingJudgmentUrl', String, {
                         hyperlink: true,
                         match: {
-                            regexStr: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
+                            regexStr: CONTRACT_VALIDATION_REGEX_DICT.URL,
                             flags: "gi"
                         }
                     }, callback);
@@ -1159,18 +1255,21 @@ class ContractExcelReader {
                         hyperlink: true,
                         // match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
                         match: {
-                            regexStr: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
+                            regexStr: CONTRACT_VALIDATION_REGEX_DICT.URL,
                             flags: "gi"
                         }
                     }, callback);
                     break;
                 case C_IDS.SUPPLIER_NAME:
                     return _this._readField(rowInfo, cell, 'supplierName', String, {
-                        required: true,
+                        // required: true,
+                        match: {
+                            regexStr: LETTERS_AND_SPACES_REGEX_STR,
+                            flags: "gi"
+                        },
                         ref: {
                             model: Supplier.modelName,
                             field: 'name',
-                            //TODO: Change to FUZZY
                             strategy: REF_STRATEGIES.SUBSET
                         }
                     }, callback);
@@ -1178,12 +1277,9 @@ class ContractExcelReader {
                 case C_IDS.SUPPLIER_RFC:
                     return _this._readField(rowInfo, cell, 'supplierRfc', String, {
                         // required: true,
-                        //TODO: Centralize this Regex
-                        // match: new RegExp("^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$"),
                         match: {
-                            regexStr: "^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$"
+                            regexStr: SUPPLIER_VALIDATION_REGEX_DICT.RFC
                         },
-                        
                         refLink: {
                             linkToField: 'supplierName',
                             shouldMatchField: 'rfc'
@@ -1193,10 +1289,13 @@ class ContractExcelReader {
                 case C_IDS.ORGANIZER_ADMINISTRATIVE_UNIT:
                     return _this._readField(rowInfo, cell, 'organizerAdministrativeUnit', String, {
                         required: true,
+                        match: {
+                            regexStr: LETTERS_AND_SPACES_REGEX_STR,
+                            flags: "gi"
+                        },
                         ref: {
                             model: AdministrativeUnit.modelName,
                             field: 'name',
-                            //TODO: Change to FUZZY
                             strategy: REF_STRATEGIES.SUBSET
                         },
                         //TODO: Centralize this validation
@@ -1216,10 +1315,13 @@ class ContractExcelReader {
                 case C_IDS.APPLICANT_ADMINISTRATIVE_UNIT:
                     return _this._readField(rowInfo, cell, 'applicantAdministrativeUnit', String, {
                         required: true,
+                        match: {
+                            regexStr: LETTERS_AND_SPACES_REGEX_STR,
+                            flags: "gi"
+                        },
                         ref: {
                             model: AdministrativeUnit.modelName,
                             field: 'name',
-                            //TODO: Change to FUZZY
                             strategy: REF_STRATEGIES.SUBSET
                         },
                     }, callback);
@@ -1233,28 +1335,27 @@ class ContractExcelReader {
                     break;
                 case C_IDS.CONTRACT_NUMBER:
                     return _this._readField(rowInfo, cell, 'contractNumber', String, {
-                        //TODO: required?
-                        // required: true,
-                        // unique: true
+                        required: true,
+                        unique: true
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_DATE:
                     return _this._readField(rowInfo, cell, 'contractDate', Date, {
                         required: true,
                         //TODO: Centralize this validation
-                        validator: function(rowInfo, callback){
-                            let yearContractDate = new Date(rowInfo.contractDate.value).getFullYear();
-                            let fiscalYear = Number(rowInfo.fiscalYear.value);
-                            let isValid = yearContractDate === fiscalYear;
-
-                            let errorMessage = null;
-                            if (!isValid) {
-                                //TODO: i18n
-                                errorMessage = 'La fecha del contrato no coincide con el ejercicio fiscal.';
-                            }
-
-                            return callback(null, errorMessage);
-                        }
+                        // validator: function(rowInfo, callback){
+                        //     let yearContractDate = new Date(rowInfo.contractDate.value).getFullYear();
+                        //     let fiscalYear = Number(rowInfo.fiscalYear.value);
+                        //     let isValid = yearContractDate === fiscalYear;
+                        //
+                        //     let errorMessage = null;
+                        //     if (!isValid) {
+                        //         //TODO: i18n
+                        //         errorMessage = 'La fecha del contrato no coincide con el ejercicio fiscal.';
+                        //     }
+                        //
+                        //     return callback(null, errorMessage);
+                        // }
                     }, callback);
                     break;
                 // case C_IDS.CONTRACT_TYPE:
@@ -1265,27 +1366,70 @@ class ContractExcelReader {
                 //     }, callback);
                 //     break;
                 case C_IDS.TOTAL_AMOUT:
-                    return _this._readField(rowInfo, cell, 'totalAmount', Number, {}, callback);
+                    return _this._readField(rowInfo, cell, 'totalAmount', Number, {
+                        required: function (rowInfo, callback) {
+                            let isRequired = rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'NORMAL';
+                            let errorMessage = 'El campo Monto mínimo es requerido al ser un contrato normal';
+
+                            return callback(null, isRequired, errorMessage);
+                        },
+                    }, callback);
                     break;
                 case C_IDS.MIN_AMOUNT:
-                    return _this._readField(rowInfo, cell, 'minAmount', Number, {}, callback);
+                    return _this._readField(rowInfo, cell, 'minAmount', Number, {
+                        required: function (rowInfo, callback) {
+                            let isRequired = rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'OPEN';
+                            let errorMessage = 'El campo Monto mínimo es requerido al ser un contrato normal';
+
+                            return callback(null, isRequired, errorMessage);
+                        },
+                    }, callback);
                     break;
                 case C_IDS.MAX_AMOUNT:
-                    return _this._readField(rowInfo, cell, 'maxAmount', Number, {}, callback);
+                    return _this._readField(rowInfo, cell, 'maxAmount', Number, {
+                        required: function (rowInfo, callback) {
+                            let isRequired = rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'OPEN';
+                            let errorMessage = 'El campo Monto máximo es requerido al ser un contrato normal';
+
+                            return callback(null, isRequired, errorMessage);
+                        },
+                    }, callback);
                     break;
                 case C_IDS.MAX_OR_TOTAL_AMOUNT:
                     return _this._readField(rowInfo, cell, 'totalOrMaxAmount', Number, {
-                        required: true
+                        required: true,
+                        validator: function (rowInfo, callback) {
+                            
+                            if (rowInfo.totalOrMaxAmount.value) {
+                                let isOpen = rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'OPEN';
+                                let isNormal = rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'NORMAL';
+
+                                let isValid = true;
+                                let errorMessage = null;
+                                if (isOpen) {
+                                    isValid = rowInfo.totalOrMaxAmount.value === rowInfo.maxAmount.value;
+                                    errorMessage = 'Este campo debe coincidir con el monto máximo debido al tipo de contrato.';
+                                }
+                                if (isNormal) {
+                                    isValid = rowInfo.totalOrMaxAmount.value === rowInfo.totalAmount.value;
+                                    errorMessage = 'Este campo debe coincidir con el monto total debido al tipo de contrato.';
+                                }
+                                
+                                if (!isValid) {
+                                    return callback(null, errorMessage)
+                                }
+                            }
+
+                            return callback();
+                        },
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_URL:
                     return _this._readField(rowInfo, cell, 'contractUrl', String, {
-                        required: true,
+                        // required: true,
                         hyperlink: true,
-                        //TODO: Centralize this regex
-                        // match: new RegExp("(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})", "gi"),
                         match: {
-                            regexStr: "(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})",
+                            regexStr: CONTRACT_VALIDATION_REGEX_DICT.URL,
                             flags: "gi"
                         }
                     }, callback);
@@ -1293,10 +1437,13 @@ class ContractExcelReader {
                 case C_IDS.AREA_IN_CHARGE:
                     return _this._readField(rowInfo, cell, 'areaInCharge', String, {
                         required: true,
+                        match: {
+                            regexStr: LETTERS_AND_SPACES_REGEX_STR,
+                            flags: "gi"
+                        },
                         ref: {
                             model: AdministrativeUnit.modelName,
                             field: 'name',
-                            //TODO: Change to FUZZY
                             strategy: REF_STRATEGIES.SUBSET
                         },
                     }, callback);
@@ -1341,6 +1488,7 @@ class ContractExcelReader {
                 hasErrors: false,
                 hasInfos: false,
                 skipRow: false,
+                willCreateDoc: false,
             };
             
             let fieldNames = Object.keys(rowInfo);
@@ -1352,23 +1500,14 @@ class ContractExcelReader {
                 let fieldInfo = rowInfo[fieldName];
                 fieldInfoArray.push(fieldInfo);
             }
+            
+            //Autoset fields
+            this._checkAutosetFieldsForRowInfo(rowInfo);
 
             //Check additional validations: 
             //validator fn, hasErrors, hasInfos, and skipRow
             async.each(fieldInfoArray, (fieldInfo, callback) => {
                 if (fieldInfo) {
-                    
-                    if (fieldInfo.errors && fieldInfo.errors.length) {
-                        rowInfo.summary.hasErrors = true;
-                    }
-    
-                    if (fieldInfo.infos && fieldInfo.infos.length) {
-                        rowInfo.summary.hasInfos = true;
-                    }
-    
-                    if (fieldInfo.skipRow) {
-                        rowInfo.summary.skipRow = true;
-                    }
                     
                     // return callback();
                     
@@ -1380,7 +1519,26 @@ class ContractExcelReader {
                     async.applyEach([
                         this._checkValidationsForFieldInfo, 
                         this._checkRequiredForFieldInfo
-                    ], rowInfo, fieldInfo, callback);
+                    ], rowInfo, fieldInfo, () => {
+
+                        if (fieldInfo.errors && fieldInfo.errors.length) {
+                            rowInfo.summary.hasErrors = true;
+                        }
+
+                        if (fieldInfo.infos && fieldInfo.infos.length) {
+                            rowInfo.summary.hasInfos = true;
+                        }
+
+                        if (fieldInfo.skipRow) {
+                            rowInfo.summary.skipRow = true;
+                        }
+
+                        if (fieldInfo.shouldCreateDoc) {
+                            rowInfo.summary.willCreateDoc = true;
+                        }
+                        
+                        return callback();
+                    });
                     
                 } else {
                     logger.error(null, null, 'dataLoader#_readContractRow', '[null] or [undefined] fieldInfo found');

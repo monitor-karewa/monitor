@@ -259,6 +259,9 @@
 		td.c-info {
 			background-color: transparentize($info, 0.82);
 		}
+		td.c-success {
+			background-color: transparentize($success, 0.82);
+		}
 	}
 }
 
