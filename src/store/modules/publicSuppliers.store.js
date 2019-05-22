@@ -55,6 +55,7 @@ const actions = {
         let query = `?id=${id}`;
 
         if(filters){
+            commit('SET_LAST_QUERY',filters);
             apiPublicSuppliers.detailFiltered({query, filters}, (result) => {
                 commit('SET_SUPPLIER_DETAIL_CONTRACTS', result.data.data);
             }, (err) => {

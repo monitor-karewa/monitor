@@ -2,47 +2,19 @@
     <div>
 
         <!-- MODAL AUTO DISMISS-->
-        <div class="modal fade" id="modalAutoDismiss" tabindex="-1" role="dialog"
-             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-body">
-                        <div class="content-img">
-                            <img class="img-fluid" src="@/assets/images/Illustrations/files-download.svg" alt=""/>
-                            <p>Tu documento se descargará en un momento...</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <ModalAutoDismiss :message="$t('general.modal.wait.message')" ></ModalAutoDismiss>
 
         <!-- MODAL ALERT SUCCESS -->
-        <div class="modal modal-alert fade" id="modalAlertSuccess" tabindex="-1" role="dialog"
-             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title" id="">Descargar datos</h1>
-                        <a class="close-modal" data-dismiss="modal"><i class="zmdi zmdi-close"></i></a>
-                    </div>
-                    <div class="modal-body">
-                        <p class="text-centered">Estás a punto de descargar los datos aplicando los filtros
-                            seleccionados.
-                            <br>
-                            <strong>¿Estás seguro de continuar con esta acción?</strong>
-                        </p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" @click.prevent="downloadFile(false)" class="btn-stroke button-accent" data-dismiss="modal">Descargar lista
-                            completa
-                        </button>
-                        <button type="button" @click.prevent="downloadFile(true)" class="btn-stroke button-accent" data-dismiss="modal">Descargar datos
-                            filtrados
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <ModalAlert :title="$t('general.modal-alert.download.title')"
+                    :message="$t('general.modal-alert.download.message')"
+                    :question="$t('general.modal-alert.download.question')">
+                <button type="button" @click.prevent="downloadFile(false)"
+                        class="btn-stroke button-accent" data-dismiss="modal">{{$t('general.modal-alert.download.all')}}
+                </button>
+                <button type="button" @click.prevent="downloadFile(true)"
+                        class="btn-stroke button-accent" data-dismiss="modal">{{$t('general.modal-alert.download.filtered')}}
+                </button>
+        </ModalAlert>
 
 
         <section class="client-content">
@@ -341,7 +313,9 @@
     
     const storeModule = 'publicSuppliers';
     import PublicFilter from '@/components/filters/PublicFilter.vue';
-    
+    import ModalAutoDismiss from '@/components/catalogs/ModalAutoDismiss.vue';
+    import ModalAlert from '@/components/catalogs/ModalAlert.vue';
+
     export default {
         data() {
             return {
@@ -389,7 +363,9 @@
         },
         components: {
             MoreInfo,
-            PublicFilter
+            PublicFilter,
+            ModalAutoDismiss,
+            ModalAlert
         },
         computed: {
             ...mapState({
@@ -434,8 +410,10 @@
                 $('#modalAlertSuccess').modal('show');
             },
             downloadFile(withFilters){
+                $('#modalAutoDismiss').modal('show');
                 let filters = withFilters ? this.lastQuery : {};
                 this.$store.dispatch('publicSuppliers/downloadFile', {format:this.format,filters,isDetail:true, id:this.supplier._id});
+
             }
         },
         created() {
