@@ -22,28 +22,28 @@
 
                             <div class="form-group fg-float m-b-30">
                                 <div class="fg-line basic-input">
-                                    <input type="text" class="form-control fg-input" placeholder="Escribe tu nombre y apellidos">
-                                    <label class="fg-label">Nombre completo <small class="c-error">*</small></label>
+                                    <input v-model="data.name" type="text" class="form-control fg-input" placeholder="Escribe tu nombre y apellidos">
+                                    <label class="fg-label">Nombre Completo<small class="c-error">*</small></label>
                                 </div>
                             </div>
 
                             <div class="form-group fg-float m-b-30">
                                 <div class="fg-line basic-input">
-                                    <input type="text" class="form-control fg-input" placeholder="Escribe un númeto telefónico para contactarte">
+                                    <input v-model="data.phone"  type="text" class="form-control fg-input" placeholder="Escribe un númeto telefónico para contactarte">
                                     <label class="fg-label">Teléfono</label>
                                 </div>
                             </div>
 
                             <div class="form-group fg-float m-b-30">
                                 <div class="fg-line basic-input">
-                                    <input type="text" class="form-control fg-input" placeholder="Escribe una dirección de correo electrónico para contactarte">
+                                    <input v-model="data.email"  type="text" class="form-control fg-input" placeholder="Escribe una dirección de correo electrónico para contactarte">
                                     <label class="fg-label">Correo electrónico <small class="c-error">*</small></label>
                                 </div>
                             </div>
 
                             <div class="form-group fg-float m-b-60">
                                 <div class="fg-line basic-input">
-                                    <textarea class="form-control fg-textarea" placeholder="Escribe tu mensaje"></textarea>
+                                    <textarea v-model="data.message"  class="form-control fg-textarea" placeholder="Escribe tu mensaje"></textarea>
                                     <label class="fg-label active">Mensaje <small class="c-error">*</small></label>
                                 </div>
                             </div>
@@ -54,7 +54,7 @@
                                 </div>
                                 <div class="text-align-r m-auto-left">
                                     <span class="d-block m-b-25 f-12 c-primary principal-font-medium"><i class="f-16 c-error">*</i> Campos obligatorios</span>
-                                    <a href="" class="btn-raised button-accent">Enviar Mensaje</a>
+                                    <a class="btn-raised button-accent" @click="submitForm()">Enviar Mensaje</a>
                                 </div>
                             </div>
 
@@ -69,7 +69,12 @@
                         <div class="col-12 col-md-5 m-t-25">
                             <div class="card-map-info">
                                 <div class="google-map">
-                                    <img src="https://www.harvard.edu/sites/default/files/content/harvard-map-google.jpg"/>
+                                    <div class="mapouter">
+                                        <div class="gmap_canvas">
+                                            <iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=Blvd.%20Ortiz%20Mena%202807%20Local%2018%2C%20Quintas%20del%20Sol%20%2C%20Chihuahua%2C%20Chih.&t=&z=15&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0">
+                                            </iframe>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="info">
                                     <h1>Nos puedes encontrar en:</h1>
@@ -81,9 +86,10 @@
                             </div>
                             <div class="card-map-info">
                                 <div class="info">
-                                    <h1>Nos puedes encontrar en:</h1>
+                                    <h1>Ligas de contacto:</h1>
+
                                     <ul>
-                                        <li class="c-info"><i class="zmdi zmdi-email"></i> contacto@karewa.org </li>
+                                        <li class="c-info"><i class="zmdi zmdai-email"></i> contacto@karewa.org </li>
                                         <li class="c-info"><i class="zmdi zmdi-facebook-box"></i> @Karewacuu </li>
                                     </ul>
                                 </div>
@@ -101,88 +107,77 @@
 
 <script>
     import MoreInfo from '@/components/general/MoreInfo';
+    const storeModule = "contact";
+
+    const API_KEY = 'AIzaSyDwgAd7wEiKZajm4q3rJDtSIOcoFrTMzks';
+    const CALLBACK_NAME = 'gmapsCallback';
+
+    let initialized = !!window.google;
+    let resolveInitPromise;
+    let rejectInitPromise;
+
+    window[CALLBACK_NAME] = () => resolveInitPromise(window.google);
+
+
+    // This promise handles the initialization
+    const initPromise = new Promise((resolve, reject) => {
+        resolveInitPromise = resolve;
+        rejectInitPromise = reject;
+    });
+
+    let init = function () {
+        // If Google Maps already is initialized
+        // the `initPromise` should get resolved
+        // eventually.
+        if (initialized) return initPromise;
+
+        initialized = true;
+        // The callback function is called by
+        // the Google Maps script if it is
+        // successfully loaded.
+        window[CALLBACK_NAME] = function () {
+            console.log("Google maps Loaded");
+            resolveInitPromise(window.google)
+        };
+
+        // We inject a new script tag into
+        // the `<head>` of our HTML to load
+        // the Google Maps script.
+        const script = document.createElement('script');
+        script.async = true;
+        script.defer = true;
+        script.src = `https://maps.googleapis.com/maps/api/js?key=${API_KEY}&callback=${CALLBACK_NAME}`;
+        script.onerror = rejectInitPromise;
+        document.querySelector('head').appendChild(script);
+
+        return initPromise;
+    }
 
     export default {
         data() {
             return {
-                suppliers: [
-                    {
-                        name: "CENTRO PARA EL ESTUDIO DE LA OSTEOPOROSIS MENOPAUSIA METABOLISMO MINERAL COMMSA SA DE CV",
-                        licitacionPublica: "$0.00",
-                        porInvitacion: "$0.00",
-                        adjudicacionDirecta: "CENTRO PARA EL ESTUDIO DE LA OSTEOPOROSIS MENOPAUSIA METABOLISMO MINERAL COMMSA SA DE CV",
-                        montoTotal: "$267,438,726.85"
-                    },
-                    {
-                        name: "MERP EDIFICACIONES Y TERRACERIAS SA DE CV",
-                        licitacionPublica: "$83,760,842.79",
-                        porInvitacion: "$39,924,791.80",
-                        adjudicacionDirecta: "$24,085,369.24",
-                        montoTotal: "$147,771,003.84"
-                    },
-                    {
-                        name: "GCC comercial SA DE CV",
-                        licitacionPublica: "$102,866,337.58",
-                        porInvitacion: "$0.00",
-                        adjudicacionDirecta: "$17,178.62",
-                        montoTotal: "$102,883,516.20"
-                    },
-                    {
-                        name: "CONSTRUCCIONES MARRO SA DE CV",
-                        licitacionPublica: "$23,980,030.81",
-                        porInvitacion: "$2,398,871.43",
-                        adjudicacionDirecta: "$31,458,674.04",
-                        montoTotal: "$57,837,576.28"
-                    },
-                    {
-                        name: "TEPORACA CONSTRUCTORA SA DE CV",
-                        licitacionPublica: "$0.00",
-                        porInvitacion: "$$4,399,802.55",
-                        adjudicacionDirecta: "$31,369,617.86",
-                        montoTotal: "$35,769,420.41"
-                    },
-                    {
-                        name: "URBANIZADORA Y EDIFICADORA DE MEXICO SA DE CV",
-                        licitacionPublica: "$0.00",
-                        porInvitacion: "$0.00",
-                        adjudicacionDirecta: "$27,779,997.20",
-                        montoTotal: "$27,779,997.20"
-                    },
-                    {
-                        name: "JOEL OSCAR ESPARZA GONZALEZ",
-                        licitacionPublica: "$19,248,367.08",
-                        porInvitacion: "$4,589,931.52",
-                        adjudicacionDirecta: "$1,159,603.18",
-                        montoTotal: "$24,997,901.77"
-                    },
-                    {
-                        name: "STAHL CONSTRUCCIONES SA DE CV",
-                        licitacionPublica: "$12,807,926.08",
-                        porInvitacion: "$5,406,479.39",
-                        adjudicacionDirecta: "$5,418,698.23",
-                        montoTotal: "$23,633,103.70"
-                    },
-                    {
-                        name: "DELICIAS TRANSPORTE DE ASFALTO SA DE CV",
-                        licitacionPublica: "$0.00",
-                        porInvitacion: "$5,527,786.63",
-                        adjudicacionDirecta: "$15,389,188.93",
-                        montoTotal: "$20,916,975.56"
-                    },
-                    {
-                        name: "IVAN NOE SIMENTAL ORTEGA",
-                        licitacionPublica: "$19,762,898.31",
-                        porInvitacion: "$0.00",
-                        adjudicacionDirecta: "$19,762,898.31",
-                        montoTotal: "$19,762,898.31"
-                    },
-                ]
+                data : {
+                    name : "name",
+                    phone : "1231",
+                    email : "email@server.com",
+                    message : "Hi I<3all",
+                }
             }
         },
         components: {
             MoreInfo
         },
         created() {
+
+        },
+        mounted(){
+
+        },
+        methods : {
+            submitForm(){
+                console.log("data", this.data);
+                this.$store.dispatch(`${storeModule}/postContact`, this.data);
+            }
         }
     }
 </script>
