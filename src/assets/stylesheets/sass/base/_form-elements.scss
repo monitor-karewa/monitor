@@ -245,13 +245,15 @@ html:not(.ie9) .select.fg-line:before {
     }
 
     .bootstrap-select {
+      display: flex;
+      vertical-align: middle;
 
       .dropdown-toggle {
         background-color:transparent !important;
         border-color: transparent !important;
         padding-top: 2px;
         padding-bottom: 2px;
-        margin-top: 6px;
+        //margin-top: 6px;
 
         &::after {
           opacity: 0;

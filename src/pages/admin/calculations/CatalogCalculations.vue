@@ -8,7 +8,7 @@
                     :tableColumns="tableColumns"
                     :store-module="storeModule"
                     :singular="'Cálculo'"
-                    :plural="'Cálculos'"
+                    :plural="'Cálculos'" :hideEditButton="true"
             />
         </AdminMainSection>
 
@@ -56,8 +56,8 @@
                         <div class="checkbox">
                             <input type="checkbox" value="" v-model="entry.enabled">
                             <i class="input-helper"></i>
-                            <span>{{$t('users.new.enabled.checkbox-label')}} </span>
-                            <p class="fg-label "> {{$t('users.new.enabled.label')}}
+                            <span>{{$t('calculations.enabled')}} </span>
+                            <p class="fg-label "> {{$t('calculations.enabled.label')}}
                                 <small></small>
                                 <br>
                             </p>

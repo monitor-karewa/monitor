@@ -22,7 +22,7 @@
                         <div class="panel-info">
                             <div class="w-70">
                                 <label>Vistas</label>
-                                <span>{{currentGeneralInfoInfo.visitsCount}}</span>
+                                <span class="min-h-20px">{{currentGeneralInfoInfo.visitsCount}}</span>
                             </div>
                             <div class="w-30">
                                 <i class="zmdi zmdi-eye"></i>
@@ -33,7 +33,7 @@
                         <div class="panel-info">
                             <div class="w-70">
                                 <label>Contratos</label>
-                                <span>{{currentGeneralInfoInfo.contractsCount}}</span>
+                                <span class="min-h-20px">{{currentGeneralInfoInfo.contractsCount}}</span>
                             </div>
                             <div class="w-30">
                                 <i class="zmdi zmdi-eye"></i>
@@ -44,7 +44,7 @@
                         <div class="panel-info">
                             <div class="w-70">
                                 <label>Proveedores</label>
-                                <span>{{currentGeneralInfoInfo.proveedoresCount}}</span>
+                                <span class="min-h-20px">{{currentGeneralInfoInfo.proveedoresCount}}</span>
                             </div>
                             <div class="w-30">
                                 <i class="zmdi zmdi-eye"></i>
@@ -55,7 +55,7 @@
                         <div class="panel-info">
                             <div class="w-70">
                                 <label>U. Administrativas</label>
-                                <span>{{currentGeneralInfoInfo.unidadesCount}}</span>
+                                <span class="min-h-20px">{{currentGeneralInfoInfo.unidadesCount}}</span>
                             </div>
                             <div class="w-30">
                                 <i class="zmdi zmdi-eye"></i>
@@ -66,7 +66,7 @@
                         <div class="panel-info">
                             <div class="w-70">
                                 <label>Cálculos</label>
-                                <span>{{currentGeneralInfoInfo.calculosCount}}</span>
+                                <span class="min-h-20px">{{currentGeneralInfoInfo.calculosCount}}</span>
                             </div>
                             <div class="w-30">
                                 <i class="zmdi zmdi-eye"></i>

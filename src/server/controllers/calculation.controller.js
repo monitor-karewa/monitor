@@ -385,6 +385,7 @@ exports.save = (req, res, next) => {
                 calculation.abbreviation = req.body.abbreviation;
                 calculation.type = req.body.type;
                 calculation.enabled = req.body.enabled;
+                // calculation.locked = false;
                 calculation.notes = req.body.notes;
                 //  Formula stuff
                 calculation.formula = req.body.formula;
@@ -400,7 +401,8 @@ exports.save = (req, res, next) => {
                     if(formulaValidation.error){
                         return res.json({error: true, message: req.__('calculations.formula.syntax.error'), err:formulaValidation.err})
                     }
-                    calculation.save((err, savedCalculation) => {
+
+                calculation.save((err, savedCalculation) => {
                         if (err) {
                             let errors = [];
                             if(err.code == 11000){

@@ -82,7 +82,7 @@
 
                 <div class="row m-t-60">
                     <div class="col-6 col-md-6 m-b-30 login-btn">
-                        <a href="" class="btn-outline p-l-5 p-r-10 vertical-center"><i class="zmdi zmdi-long-arrow-left"></i><strong>Volver al Monitor</strong> </a>
+                        <a @click.prevent="goBack" class="btn-outline p-l-5 p-r-10 vertical-center"><i class="zmdi zmdi-long-arrow-left"></i><strong>Volver al Monitor</strong> </a>
                     </div>
                     <div class="col-6 col-md-6 m-b-30 login-btn">
                         
@@ -159,6 +159,9 @@
                     password: this.password,
                 };
                 this.$store.dispatch(`${storeModule}/LOGIN`, {credentials, _session});
+            },
+            goBack: function () {
+                this.$router.back();
             }
         },
         computed: {
