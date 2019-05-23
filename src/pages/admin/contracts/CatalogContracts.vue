@@ -27,7 +27,7 @@
                         </select>
                         <label class="fg-label">{{$t('contracts.new.procedure-type.label')}}</label>
                     </div>
-                    <span v-if="$v.entry.procedureType.$invalid  && $v.entry.procedureType.$dirty && !$v.entry.procedureType.required">
+                    <span v-if="$v.entry.procedureType.$invalid  && $v.entry.procedureType.$dirty && !$v.entry.procedureType.required"
                           class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.procedure-type.label')})}}</span>
                 </div>
 
