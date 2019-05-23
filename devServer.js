@@ -40,3 +40,5 @@ serverConfig(app);
 // app.use(express.static(publicPath, staticConf));
 
 module.exports = app;
+
+console.log('App started');
