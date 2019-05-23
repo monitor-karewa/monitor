@@ -2,10 +2,7 @@
 
 ### Features
 - Repo created.
-- Gitignore file added.
-- Basic app.js configuration with ExpressJS.
-- Pug view template configuration.
-- Basic file structure created.
+- Basic project structure.
 
 ### Updates
 

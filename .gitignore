@@ -18,8 +18,8 @@ coverage/
 
 # MEAN.js app and assets
 # ======================
-assets/
-public/dist/
+#assets/
+dist/
 uploads
 modules/users/client/img/profile/uploads
 config/env/local.js
@@ -34,7 +34,7 @@ config/env/local-*.js
 modules/*/client/scss/*.css
 modules/*/client/less/*.css
 
-# Ignoring MEAN.JS's gh-pages branch for documenation
+# Ignoring MEAN.JS's gh-pages branch for documentation
 _site/
 
 # General
@@ -71,5 +71,9 @@ mongod
 # Files from style template
 # ============================
 public/stylesheets/css/
-public/fonts/
+#public/fonts/
 public/img/
+
+# Test results
+# ============================
+tests_output
