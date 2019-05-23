@@ -41,8 +41,8 @@
 
                                     <div class="form-group fg-float m-b-30">
                                         <div class="fg-line basic-input">
-                                            <input v-model="data.phone" type="number" class="form-control fg-input"
-                                                   placeholder="Escribe un númeto telefónico para contactarte">
+                                            <input v-model="data.phone" type="text" class="form-control fg-input"
+                                                   placeholder="Escribe un número telefónico para contactarte">
                                             <label class="fg-label">Teléfono</label>
                                         </div>
                                     </div>
@@ -89,7 +89,7 @@
                                 <div class="google-map">
                                     <div class="mapouter">
                                         <div class="gmap_canvas">
-                                            <iframe width="600" height="500" id="gmap_canvas" src="https://maps.google.com/maps?q=Blvd.%20Ortiz%20Mena%202807%20Local%2018%2C%20Quintas%20del%20Sol%20%2C%20Chihuahua%2C%20Chih.&t=&z=15&ie=UTF8&iwloc=&output=embed" frameborder="0" scrolling="no" marginheight="0" marginwidth="0">
+                                            <iframe width="600" height="500" id="gmap_canvas" :src="`https://maps.google.com/maps?q=${organization.address}&z=13&ie=UTF8&iwloc=&output=embed`" frameborder="0" scrolling="no" marginheight="0" marginwidth="0">
                                             </iframe>
                                         </div>
                                     </div>
@@ -97,8 +97,8 @@
                                 <div class="info">
                                     <h1>Nos puedes encontrar en:</h1>
                                     <ul>
-                                        <li><i class="zmdi zmdi-pin"></i> Blvd. Ortiz Mena 2807 Local 18, Quintas del Sol C.P. 31214, Chihuahua, Chih. </li>
-                                        <li><i class="zmdi zmdi-time"></i> Lunes a Viernes de 9:30am a 2:00pm y de 4:00pm a 6:00pm </li>
+                                        <li><i class="zmdi zmdi-pin"></i> {{organization.address}} </li>
+                                        <li><i class="zmdi zmdi-time"></i> {{organization.schedule}}</li>
                                     </ul>
                                 </div>
                             </div>
@@ -180,7 +180,9 @@
                     phone : "",
                     email : "",
                     message : "",
-                }
+                },
+                address : undefined,
+                schedule : ""
             }
         },
         components: {
@@ -189,19 +191,23 @@
         created() {
 
         },
-        mounted(){
-
+        beforeMount(){
+            this.address = this.$session.get('currentOrganizationAddress')
+            this.schedule = this.$session.get('currentOrganizationSchedule')
+            this.$store.dispatch(`${storeModule}/loadOrganization`);
         },
         methods : {
             submitForm(){
-                console.log("data", this.data);
                 this.$store.dispatch(`${storeModule}/postContact`, this.data);
             }
         },
         computed : {
             ...mapState({
-                messageSent: state => state[storeModule].messageSent
-            })
+                messageSent: state => state[storeModule].messageSent,
+                organization: function (state) {
+                    return state[storeModule].organization;
+                }
+            }),
         }
     }
 </script>

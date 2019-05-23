@@ -57,3 +57,18 @@ exports.contact = (req, res, next) => {
     );
 
 };
+
+exports.loadInfo = (req,res, next) => {
+    Organization.findOne({_id: req.currentOrganizationId})
+        .select('address schedule')
+        .lean()
+        .exec((err, organization) => {
+            if (err) {
+                logger.error(err, null, 'settings.controller#changeSettings', 'Error trying to load settings for Organization [%s]', currentOrganizationId);
+            }
+            return res.json({
+                error: !!err,
+                data: organization
+            });
+        }, 5000)
+};
