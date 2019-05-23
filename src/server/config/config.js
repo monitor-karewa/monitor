@@ -37,7 +37,7 @@ const config = {
         defaults: defaults,
         app: app,
         mongo: {
-            url: process.env.MONGODB_URL || 'mongodb://127.0.0.1:27017/monitor_karewa_web_dev',
+            url: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/monitor_karewa_web_dev',
             connectionOptions: {
                 usePushEach: true,
                 autoIndex: true, // Auto-build indexes
@@ -135,5 +135,5 @@ exports.get = function get() {
 };
 
 exports.isProd = function () {
-    return !!nodeEnv && nodeEnv === 'production'; 
+    return !!nodeEnv && nodeEnv === 'production';
 };
