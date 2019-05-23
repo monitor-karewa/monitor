@@ -1,3 +1,6 @@
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://gitlab.com/karewa/monitor.git)
+
+
 # Monitor Karewa Web
 
 **Repository name**: *monitor-web*

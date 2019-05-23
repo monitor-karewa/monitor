@@ -23,5 +23,17 @@ export default {
         return axios.get(`${base.baseUrl}/public-api/${namespace}/retrieve`, params)
             .then(onSuccess)
             .catch(onError);
-    }
+    },
+    download: (params = {}, onSuccess, onError) => {
+        return axios({
+            url: `${base.baseUrl}/public-api/${namespace}/download/${params.format}/${params.id}${params.query || ''}`,
+            method: 'GET',
+            responseType: 'blob',
+            // data:params,
+            // query:params,
+            params
+        })
+            .then(onSuccess)
+            .catch(onError);
+    },
 }

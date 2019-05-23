@@ -28,6 +28,12 @@ router.post('/save', publicComparationController.saveComparation);
  */
 router.get('/retrieve', publicComparationController.retrieveRecentComparations);
 
+/**
+ * GET /download
+ * Download Corruption Index File in PDF,XLS and JSON format
+ */
+router.get('/download/:format/:id', publicComparationController.download);
+
 
 
 module.exports = router;

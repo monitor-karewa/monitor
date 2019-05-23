@@ -23,6 +23,17 @@ const getters = {
 };
 
 const actions = {
+    downloadFile({commit},{format, id}) {
+        apiPublicComparations.download({format,id}, (result) => {
+            const url = window.URL.createObjectURL(new Blob([result.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `monitor-karewa-indice-corrupcion.${format}`); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+        });
+    },
+
     LOAD_DETAIL ({commit}, {right, id, url}/*, page*/) {
         let query = `?id=${id}`;
         if (url && url.length) {
