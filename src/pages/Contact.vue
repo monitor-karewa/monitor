@@ -18,52 +18,70 @@
                                 <h1>Contacto</h1>
                             </div>
 
-                            <p class="d-block f-14 c-plain_text principal-font-regular m-b-40">Si necesitas ayuda, tienes dudas o comentarios puedes mandarnos un mensaje llenando el siguiente formulario:</p>
-
-                            <div class="form-group fg-float m-b-30">
-                                <div class="fg-line basic-input">
-                                    <input v-model="data.name" type="text" class="form-control fg-input" placeholder="Escribe tu nombre y apellidos">
-                                    <label class="fg-label">Nombre Completo<small class="c-error">*</small></label>
-                                </div>
+                            <p class="d-block f-14 c-plain_text principal-font-regular m-b-40">Si necesitas ayuda,
+                                tienes dudas o comentarios puedes mandarnos un mensaje llenando el siguiente
+                                formulario:</p>
+                            <!-- MESSAGE SENT -->
+                            <div class="img-centered" v-if="messageSent">
+                                <img class="img-fluid" src="@/assets/images/Illustrations/send-message.svg" alt="" />
+                                <h1 class="">¡Tu mensaje ha sido enviado!</h1>
+                                <p>Gracias por comunicarte con nosotros, en breve te responderemos.</p>
                             </div>
+                            <div v-else>
+                                <form @submit.prevent="submitForm">
+                                    <div class="form-group fg-float m-b-30">
+                                        <div class="fg-line basic-input">
+                                            <input v-model="data.name" type="text" class="form-control fg-input"
+                                                   placeholder="Escribe tu nombre y apellidos" required>
+                                            <label class="fg-label">Nombre Completo
+                                                <small class="c-error">*</small>
+                                            </label>
+                                        </div>
+                                    </div>
 
-                            <div class="form-group fg-float m-b-30">
-                                <div class="fg-line basic-input">
-                                    <input v-model="data.phone"  type="text" class="form-control fg-input" placeholder="Escribe un númeto telefónico para contactarte">
-                                    <label class="fg-label">Teléfono</label>
-                                </div>
+                                    <div class="form-group fg-float m-b-30">
+                                        <div class="fg-line basic-input">
+                                            <input v-model="data.phone" type="number" class="form-control fg-input"
+                                                   placeholder="Escribe un númeto telefónico para contactarte">
+                                            <label class="fg-label">Teléfono</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group fg-float m-b-30">
+                                        <div class="fg-line basic-input">
+                                            <input v-model="data.email" type="email" class="form-control fg-input"
+                                                   placeholder="Escribe una dirección de correo electrónico para contactarte"
+                                                   required>
+                                            <label class="fg-label">Correo electrónico
+                                                <small class="c-error">*</small>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group fg-float m-b-30">
+                                        <div class="fg-line basic-input">
+                                        <textarea rows="4" v-model="data.message"
+                                                  class="form-control fg-textarea m-t-10 "
+                                                  placeholder="Escribe tu mensaje" required></textarea>
+                                            <label class="fg-label active">Mensaje
+                                                <small class="c-error">*</small>
+                                            </label>
+                                        </div>
+                                    </div>
+
+                                    <div class="vertical-center recaptcha-container">
+                                        <div class="re-captcha">
+                                            <!-- INSERTAR AQUI RE CAPTCHA -->
+                                        </div>
+                                        <div class="text-align-r m-auto-left">
+                                        <span class="d-block m-b-25 f-12 c-primary principal-font-medium"><i
+                                                class="f-16 c-error">*</i> Campos obligatorios</span>
+                                            <button class="btn-raised button-accent" type="submit">Enviar Mensaje
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
                             </div>
-
-                            <div class="form-group fg-float m-b-30">
-                                <div class="fg-line basic-input">
-                                    <input v-model="data.email"  type="text" class="form-control fg-input" placeholder="Escribe una dirección de correo electrónico para contactarte">
-                                    <label class="fg-label">Correo electrónico <small class="c-error">*</small></label>
-                                </div>
-                            </div>
-
-                            <div class="form-group fg-float m-b-60">
-                                <div class="fg-line basic-input">
-                                    <textarea v-model="data.message"  class="form-control fg-textarea" placeholder="Escribe tu mensaje"></textarea>
-                                    <label class="fg-label active">Mensaje <small class="c-error">*</small></label>
-                                </div>
-                            </div>
-
-                            <div class="vertical-center recaptcha-container">
-                                <div class="re-captcha">
-                                    <!-- INSERTAR AQUI RE CAPTCHA -->
-                                </div>
-                                <div class="text-align-r m-auto-left">
-                                    <span class="d-block m-b-25 f-12 c-primary principal-font-medium"><i class="f-16 c-error">*</i> Campos obligatorios</span>
-                                    <a class="btn-raised button-accent" @click="submitForm()">Enviar Mensaje</a>
-                                </div>
-                            </div>
-
-                            <!-- MESSAGE SEND -->
-                            <!-- <div class="img-centered">
-                              <img class="img-fluid" src="@/assets/images/Illustrations/send-message.svg" alt="" />
-                              <h1 class="">¡Tu mensaje ha sido enviado!</h1>
-                              <p>Gracias por comunicarte con nosotros, en breve te responderemos.</p>
-                            </div> -->
                         </div>
 
                         <div class="col-12 col-md-5 m-t-25">
@@ -115,6 +133,7 @@
     let initialized = !!window.google;
     let resolveInitPromise;
     let rejectInitPromise;
+    import {mapState} from 'vuex';
 
     window[CALLBACK_NAME] = () => resolveInitPromise(window.google);
 
@@ -157,10 +176,10 @@
         data() {
             return {
                 data : {
-                    name : "name",
-                    phone : "1231",
-                    email : "email@server.com",
-                    message : "Hi I<3all",
+                    name : "",
+                    phone : "",
+                    email : "",
+                    message : "",
                 }
             }
         },
@@ -178,6 +197,11 @@
                 console.log("data", this.data);
                 this.$store.dispatch(`${storeModule}/postContact`, this.data);
             }
+        },
+        computed : {
+            ...mapState({
+                messageSent: state => state[storeModule].messageSent
+            })
         }
     }
 </script>
