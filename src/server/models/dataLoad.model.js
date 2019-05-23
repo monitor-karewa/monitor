@@ -246,8 +246,8 @@ DataLoadSchema.statics.dataLoadInfo = function (currentOrganizationId, callback)
         });
 };
 
-DataLoadSchema.statics.confirm = function (dataLoad, confirmCallback) {
-    let details = dataLoad.details || [];
+DataLoadSchema.statics.confirm = function (dataLoad, details, confirmCallback) {
+    details = dataLoad.details || [];
     
     async.map(details, (detail, callback) => {
         

@@ -195,9 +195,17 @@ exports.downloadValidations = (req, res, next) => {
                     data: null
                 });
             }
-            
-            new ContractExcelWriter(dataLoad)
-                .sendFileAsDownload(req, res);
+
+            DataLoadDetail.find({dataLoad: dataLoad._id})
+                .exec((err, details) => {
+                    details = details || [];
+                    
+                    let dataLoadObj = dataLoad.toObject();
+                    dataLoadObj.details = details;
+                    
+                    new ContractExcelWriter(dataLoadObj)
+                        .sendFileAsDownload(req, res);
+                });
 
             // return res.json({
             //     error: false,
@@ -260,11 +268,13 @@ exports.current = (req, res, next) => {
             let andBuilder = [];
             let orArray = [];
 
+            console.log('search', search);
+
 
             if (search) {
                 let queryAsRegex = utils.toAccentsRegex(search, "gi");
 
-                let orArray = [
+                orArray = [
                     {'data.administration.value': queryAsRegex},
                     {'data.fiscalYear.value': queryAsRegex},
                     {'data.period.value': queryAsRegex},
@@ -329,52 +339,41 @@ exports.current = (req, res, next) => {
                     );
                 }
 
-                query = {
-                    $or: orArray
-                };
-
             }
             
-            let filtersOrArray = [];
-            
+            //Note: complex filter logic ahead
             if (showSkipped) {
-                filtersOrArray.push({'data.summary.skipRow': true});
+                //Show means do not filter in this case
             } else {
                 query = {...query, 'data.summary.skipRow': false};
             }
-            
+
             if (showErrors) {
-                filtersOrArray.push({'data.summary.hasErrors': true});
+                //Show means do not filter in this case
             } else {
                 query = {...query, 'data.summary.hasErrors': false};
             }
 
             if (showNoIssues) {
-                //Mostrar los que NO tienen issues
-                //que no tienen skipRow, hasErrors, ni hasInfos
-                filtersOrArray.push({$and: [
-                    {'data.summary.skipRow': false},
-                    {'data.summary.hasErrors': false},
-                    {'data.summary.hasInfos': false},
-                ]});
+                //Show means do not filter in this case
             } else {
-                //Ocultar los que NO tienen issues
-                //que no tienen skipRow, hasErrors, ni hasInfos
-                //Es decir, mostrar aquellos que tengan por lo menos un issue
-                query = {...query, $or: [
-                    {'data.summary.skipRow': true},
-                    {'data.summary.hasErrors': true},
-                    {'data.summary.hasInfos': true},
-                ]};
+                //Hide contracts without issues, i.e. show contracts with issues
+                //So we filter contracts with at least one issue-related field with true
+                orArray.push({'data.summary.skipRow': true});
+                orArray.push({'data.summary.hasErrors': true});
+                orArray.push({'data.summary.hasInfos': true});
             }
-            
-            if (filtersOrArray.length) {
-                query = {...query, $or: filtersOrArray};
-            }
-            
-            query = {dataLoad: currentDataLoad._id, ...query};
 
-            console.log('query', JSON.stringify(query));
+            //$or requires a non-empty array
+            if (orArray.length) {
+                query = {
+                    ...query,
+                    $or: orArray
+                };
+                
+            }
+
+            query = {dataLoad: currentDataLoad._id, ...query};
 
             let aggregate = DataLoadDetail.aggregate([
                 {
@@ -467,63 +466,6 @@ exports.currentInfo = (req, res, next) => {
             data: dataLoadInfo
         });
     });
-
-    // DataLoad
-    //     .findOne({
-    //         organization: currentOrganizationId,
-    //         confirmed: false,
-    //         'deleted.isDeleted': {'$ne': true}
-    //     })
-    //     .populate({
-    //         path: 'uploadedBy',
-    //         model: 'User',
-    //         select: 'name lastName'
-    //     })
-    //     .exec((err, dataLoad) => {
-    //         if (err) {
-    //             logger.error(err, req, 'dataLoad.controller#currentInfo', 'Error trying to fetch current DataLoad info');
-    //         }
-    //
-    //
-    //         DataLoad
-    //             .findOne({
-    //                 organization: currentOrganizationId,
-    //                 confirmed: true,
-    //                 'deleted.isDeleted': {'$ne': true}
-    //             })
-    //             .populate({
-    //                 path: 'uploadedBy',
-    //                 model: 'User',
-    //                 select: 'name lastName'
-    //             })
-    //             .sort({
-    //                 modifiedAt: -1
-    //             })
-    //             .exec((err, recentDataLoad) => {
-    //                
-    //                 let data = {};
-    //
-    //                 if (dataLoad) {
-    //                     data.current = {
-    //                         uploadedBy: `${dataLoad.uploadedBy.name} ${dataLoad.uploadedBy.lastName}`,
-    //                         createdAt: dataLoad.createdAt
-    //                     };
-    //                 }
-    //                
-    //                 if (recentDataLoad) {
-    //                     data.recent = {
-    //                         recentUploadedBy: `${recentDataLoad.uploadedBy.name} ${recentDataLoad.uploadedBy.lastName}`,
-    //                         recentConfirmedAt: recentDataLoad.confirmedAt
-    //                     };
-    //                 }
-    //                 return res.json({
-    //                     error: false,
-    //                     data: data
-    //                 });
-    //             });
-    //        
-    //     });
-    
 };
 
 exports.cancelCurrent = (req, res, next) => {
@@ -610,39 +552,42 @@ exports.confirmCurrent = (req, res, next) => {
                 });
             }
 
-            DataLoad.confirm(dataLoad, (err, confirmResults) => {
-                console.log('confirmResults', confirmResults);
 
-                if (err) {
-                    return res.json({
-                        error: true,
-                        data: null
-                    });
-                }
-                
-                DataLoad.dataLoadInfo(currentOrganizationId, (err, dataLoadInfo) => {
-                    if (err) {
-                        logger.error(err, req, 'dataLoad.controller#currentInfo', 'Error trying to fetch current DataLoad info');
-                    }
-                    
-                    //To ensure no race conditions from reloading from the database, the current DataLoad is forced as undefined
-                    dataLoadInfo.current = null;
-                    
-                    return res.json({
-                        error: false,
-                        data: dataLoadInfo
+            DataLoadDetail.find({dataLoad: dataLoad._id})
+                .exec((err, details) => {
+                    details = details || [];
+
+                    DataLoad.confirm(dataLoad, details, (err, confirmResults) => {
+                        console.log('confirmResults', confirmResults);
+        
+                        if (err) {
+                            return res.json({
+                                error: true,
+                                data: null
+                            });
+                        }
+                        
+                        DataLoad.dataLoadInfo(currentOrganizationId, (err, dataLoadInfo) => {
+                            if (err) {
+                                logger.error(err, req, 'dataLoad.controller#currentInfo', 'Error trying to fetch current DataLoad info');
+                            }
+                            
+                            //To ensure no race conditions from reloading from the database, the current DataLoad is forced as undefined
+                            dataLoadInfo.current = null;
+                            
+                            return res.json({
+                                error: false,
+                                data: dataLoadInfo
+                            });
+                        });
                     });
                 });
-
-
-            });
-
         });
 };
 
 let appRoot = require('app-root-path');
 
 exports.downloadPlantilla = (req, res, next) => {
-    let file = appRoot.path + '/app/public/sources/plantilla.xlsx';
+    let file = appRoot.path + '/src/server/public/sources/plantilla.xlsx';
     res.download(file);
 };

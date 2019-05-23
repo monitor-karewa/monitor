@@ -3,7 +3,7 @@ const async = require('async');
 const mongoose = require('mongoose');
 const Jaccard = require('jaccard-index');
 
-const logger = require('./logger').instance;
+let logger = {};
 const utils = require('./utils');
 
 const Contract = require('./../models/contract.model').Contract;
@@ -255,7 +255,7 @@ class ContractExcelReader {
         async.waterfall([
             //Initialize the fieldInfo
             (callback) => {
-                console.log(`\tReading ${fieldName}`);
+                logger.debug(null, null, '', `\tReading ${fieldName}`);
                 let fieldInfo = {
                     fieldName: fieldName,
                     value: null,
@@ -358,9 +358,6 @@ class ContractExcelReader {
                                             break;
                                         default:
                                     }
-                                    console.log('\n\nfieldInfo.fieldName', fieldInfo.fieldName);
-                                    console.log('validationStrategyOverride', validationStrategyOverride);
-                                    console.log('\n\n');
                                     fieldInfo.overrides.validationStrategy = validationStrategyOverride;
                                     //Remove the override value from the string
                                     fieldInfo.value = fieldInfo.value.substr(3, fieldInfo.value.length);
@@ -475,13 +472,9 @@ class ContractExcelReader {
                             } else {
                                 fieldInfo.value = utils.parseDate(value, true);
                             }
-                            // console.log('Date value', value);
-
                             break;
                         case Number:
                             value = value || '';
-
-                            // console.log(fieldName + ' => ', value);
 
                             if (!utils.isNumber(value) && typeof(value) !== 'string') {
                                 logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
@@ -504,19 +497,12 @@ class ContractExcelReader {
                             break;
                     }
                 } catch (err) {
-                    console.log('\t\terr', err);
+                    logger.error(err, null, 'dataLoader#_readField', 'Error trying to parse value');
                 }
                 return callback(null, fieldInfo);
             },
             //Check ref in a collection
             (fieldInfo, callback) => {
-                // console.log('options.ref', options.ref);
-                // console.log('utils.isDefined(options.ref)', utils.isDefined(options.ref));
-                // if (options.ref) {
-                    // console.log('utils.isDefined(options.ref.model)', utils.isDefined(options.ref.model));
-                // }
-
-
                 fieldInfo.value = fieldInfo.value || '';
 
                 if (typeof(fieldInfo.value) !== 'string') {
@@ -581,7 +567,6 @@ class ContractExcelReader {
                     }
 
                     let query = _this._buildRefCheckQuery(_this.organizationId, model, field, fieldInfo.value, strategy);
-                    // console.log('query', query);
 
                     query.exec((err, docs) => {
 
@@ -916,7 +901,7 @@ class ContractExcelReader {
 
             // return mainCallback(null, obj);
 
-            console.log(`\t${fieldInfo.fieldName} done: [${fieldInfo.value}]`);
+            logger.debug(null, null, '', `\t${fieldInfo.fieldName} done: [${fieldInfo.value}]`);
             return mainCallback(null, fieldInfo);
         });
     }
@@ -1050,7 +1035,7 @@ class ContractExcelReader {
 
         let rowInfo = {};
 
-        console.log(`Reading row #${rowIndex}...`);
+        logger.debug(null, null, '', `Reading row #${rowIndex}...`);
         let startDate = new Date();
 
         async.map(cellsInfoArr, (cellInfo, callback) => {
@@ -1064,7 +1049,7 @@ class ContractExcelReader {
 
 
             if (!column) {
-                console.log('undefined column, skipping');
+                logger.debug(null, null, '', 'undefined column, skipping');
                 return callback();
             }
             
@@ -1631,12 +1616,12 @@ class ContractExcelReader {
                 }
             }, (err, results) => {
                 if (err) {
-                    console.log('err', err);
+                    logger.debug(err, null, 'dataLoader#_readContractRow', 'Error trying to process fieldInfo validations and summary');
                 }
                 //All additional validations done
 
                 let finishDate = new Date();
-                console.log(`Row #${rowIndex} done in [${finishDate.getTime() - startDate.getTime()}] millis`);
+                logger.debug(null, null, '', `Row #${rowIndex} done in [${finishDate.getTime() - startDate.getTime()}] millis`);
                 
                 return readRowCallback(null, rowInfo);
             });
@@ -1663,8 +1648,6 @@ class ContractExcelReader {
                             row: row,
                             rowNumber: rowNumber
                         });
-
-                        // console.log('Row ' + rowNumber + ' = ' + JSON.stringify(row.values));
                     });
                     
                     let rowIndex = 1;
@@ -1756,7 +1739,6 @@ class ContractExcelReader {
                                         }
                                         
                                         let dataLoadDetailsIds = (dataLoad.details || []).map((detail) => {
-                                            console.log('mongoose.Types.ObjectId(detail._id)', mongoose.Types.ObjectId(detail._id));
                                             return mongoose.Types.ObjectId(detail._id);
                                         });
 
@@ -1767,7 +1749,7 @@ class ContractExcelReader {
                                                     logger.error(err, null, 'dataLoader#readBuffer', 'Error trying to delete obsolete DataLoadDetail from db, unused details may me kept in the database.');
                                                 }
 
-                                                console.log('results (from deletion)', results);
+                                                logger.debug(null, null, '', 'results (from deletion): %j', results);
 
                                                 //Overwrite with new details
                                                 // dataLoad.details = savedDetails;
@@ -1991,3 +1973,5 @@ module.exports = {
     ContractExcelReader,
     ContractExcelWriter
 };
+
+logger = require('./logger').instance;

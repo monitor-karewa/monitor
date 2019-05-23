@@ -21,7 +21,9 @@ log.level = config.behavior.logLevel;
 const _logMessage = (err, req, logFn, source, message, args) => {
     if (!source) {
         source = '[unspecified source]';
-        logger.warn(null, req, source, 'Logging without source. This may reduce the effectiveness of the logs');
+        //Logging without source. This may reduce the effectiveness of the logs
+        // console.log('Logging without source. This may reduce the effectiveness of the logs');
+        // logger.warn(null, req, source, 'Logging without source. This may reduce the effectiveness of the logs');
     }
     args = args || [];
     logFn(source, message, ...args);
