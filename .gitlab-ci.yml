@@ -1,110 +1,60 @@
 stages:
-  - setup
   - release
   - deploy
 
-variables:
-  CONTAINER_IMAGE_NAME: ${REGISTRY}/${CI_PROJECT_NAMESPACE}-${CI_PROJECT_NAME}
-  CONTAINER_IMAGE_TAG:  ${CI_COMMIT_REF_NAME}
+# build:
+#   stage:         release
+#   image:         docker:stable
+#   extends:       .devops
+#   services:
+#     - docker:dind
+#   variables:
+#     DOCKER_HOST: tcp://docker:2375
+#     DOCKER_DRIVER: overlay2
+#   script:
+#     - docker_build
+#   artifacts:
+#     paths:
+#       - imageid.txt
 
-
-prepare:
-  stage:                setup
-  image:                node:8.16.0-alpine
-  extends:              .devops
-  variables:
-    DOCKER_DRIVER:      overlay2
-  script:
-    - dependencies
-    - build
-  cache:
-    key:                ${CI_COMMIT_REF_SLUG}
-    policy:             push
-    paths:
-      - node_modules/
-
-build:
-  stage:                release
-  image:                docker:stable
-  extends:              .devops
+heroku:
+  stage:           deploy
+  image:           docker:stable
+  extends:         .devops
   services:
     - docker:dind
   variables:
-    DOCKER_HOST:        tcp://docker:2375
-    DOCKER_DRIVER:      overlay2
+    DOCKER_HOST:   tcp://docker:2375
+    DOCKER_DRIVER: overlay2
   script:
-    - setup_docker
+    - heroku_deploy
 
 .devops:
   before_script:
     - |
-      function dependencies() {
-        npm install -s --no-progress
-      }
-
-      function build() {
-        npm install -s --no-progress -g @vue/cli
-        npm run build
-      }
-
-      function setup_docker() {
-        docker login -u ${REGISTRY_USER} -p ${REGISTRY_PASSWORD} ${REGISTRY}
+      function docker_login() {
+        docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
       }
 
       function docker_build() {
-        docker build \
-          --pull \
-          --build-arg MONGODB_URL_ARG=${MONGODB_URL_VAR} \
-          -t ${CONTAINER_IMAGE_NAME}:${CONTAINER_IMAGE_TAG} .
-        docker push $PROJECT_IMAGE
+        docker build --iidfile imageid.txt --pull -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
+        docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
       }
 
-# stages:
-#   - setup
-#
-# variables:
-#   DOCKER_DRIVER:      overlay2
-#
-# server:
-#   stage:              setup
-#   script:
-#     - |
-#       heroku container:push web --app karewa-server \
-#       && heroku container:release web --app karewa-server
-#   only:
-#     - dev
-#   except:
-#     - schedules
-#   tags:
-#     - helm
-#
-# client:
-#   stage:              setup
-#   script:
-#     - |
-#       cd client \
-#       && docker build \
-#       --target builder \
-#       --cache-from registry.heroku.com/karewa-client/web:builder \
-#       -t registry.heroku.com/karewa-client/web:builder . \
-#       && \
-#       docker build \
-#         --target release \
-#         --cache-from registry.heroku.com/karewa-client/web \
-#         -t registry.heroku.com/karewa-client/web . \
-#       || \
-#       docker build \
-#         -t registry.heroku.com/karewa-client/web .
-#         gcloud docker -- push registry.heroku.com/karewa-client/web \
-#       && heroku container:push web --app karewa-client \
-#       && heroku container:release web --app karewa-client
-#   only:
-#     - dev
-#   except:
-#     - schedules
-#   tags:
-#     - helm
-#
-# include:
-#   - project:          'devops/machete'
-#     file:             '/cicd/gitlab-test-sast.yml'
+      function heroku_deploy() {
+        apk add --update --no-cache curl
+        # docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+        # docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} ${HEROKU_REGISTRY}
+        ###
+        docker build --iidfile imageid.txt --pull -t ${HEROKU_REGISTRY} .
+        ###
+        docker login -u _ -p ${HEROKU_API_KEY} registry.heroku.com
+        docker push ${HEROKU_REGISTRY}
+        curl \
+          -X PATCH \
+          https://api.heroku.com/apps/${HEROKU_APP}/formation \
+          --header "Content-Type: application/json" \
+          --header "Accept: application/vnd.heroku+json; version=3.docker-releases" \
+          --header "Authorization: Bearer ${HEROKU_API_KEY}" \
+          --data '{ "updates": [ { "type": "web", "docker_image": "'$(cat imageid.txt)'" } ] }'
+      }

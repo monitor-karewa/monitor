@@ -793,9 +793,9 @@
                 servicesDescription:{
                     required
                 },
-                supplier:{
-                    required
-                },
+//                supplier:{
+//                    required
+//                },
                 organizerAdministrativeUnit:{
                     required
                 },
@@ -817,12 +817,12 @@
                 areaInCharge:{
                     required
                 },
-                updateDate:{
-                    required
-                },
-                informationDate:{
-                    required
-                },
+//                updateDate:{
+//                    required
+//                },
+//                informationDate:{
+//                    required
+//                },
 
 
                 // procedureType: {
@@ -898,8 +898,9 @@
                 //     required
                 // },
                 // /* Número que identifique al contrato */
-                // contractNumber:{
-                // },
+                 contractNumber:{
+                     required
+                 },
                 /* Fecha del contrato */
                 // contractDate:{
                 //     required

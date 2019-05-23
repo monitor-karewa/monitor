@@ -98,7 +98,7 @@ exports.list = (req, res, next) => {
         let categoryEnumQueryAsRegexStr = utils.enumSearchRegexString(search, categoryEnum, categoryEnumDict);
         if (categoryEnumQueryAsRegexStr && categoryEnumQueryAsRegexStr.length) {
             orArray.push(
-                {procedureType: new RegExp(categoryEnumQueryAsRegexStr)}
+                {category: new RegExp(categoryEnumQueryAsRegexStr)}
             );
         }
 
@@ -119,7 +119,7 @@ exports.list = (req, res, next) => {
         let contractTypeTypeEnumQueryAsRegexStr = utils.enumSearchRegexString(search, contractTypeEnum, contractTypeEnumDict);
         if (contractTypeTypeEnumQueryAsRegexStr && contractTypeTypeEnumQueryAsRegexStr.length) {
             orArray.push(
-                {administrativeUnitType: new RegExp(contractTypeTypeEnumQueryAsRegexStr)}
+                {contractType: new RegExp(contractTypeTypeEnumQueryAsRegexStr)}
             );
         }
 

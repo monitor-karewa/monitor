@@ -4,12 +4,12 @@
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
-    "build": "NODE_ENV=production SKIP_JOB_MANAGER=true node --max_old_space_size=2048 vue-cli-service build --verbose",
+    "build": "NODE_ENV=production SKIP_JOB_MANAGER=true vue-cli-service build --verbose",
     "test": "vue-cli-service test:e2e --url localhost:8080",
     "lint": "vue-cli-service lint",
     "dev": "vue-cli-service serve",
     "start": "supervisor -i public ./bin/www",
-    "prod": "NODE_ENV=production node ./bin/www",
+    "prod": "NODE_ENV=production npm run start",
     "test:e2e": "vue-cli-service test:e2e"
   },
   "dependencies": {
@@ -52,6 +52,7 @@
     "pdfmake": "^0.1.56",
     "pug": "2.0.0-beta11",
     "register-service-worker": "^1.6.2",
+    "request": "^2.88.0",
     "serve-favicon": "~2.4.5",
     "underscore": "^1.9.1",
     "vue": "^2.6.6",

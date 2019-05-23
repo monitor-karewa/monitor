@@ -1,5 +1,8 @@
 <template>
     <section class="client-content">
+        <!-- MODAL AUTO DISMISS-->
+        <ModalAutoDismiss :message="$t('general.modal.wait.message')" ></ModalAutoDismiss>
+
         <div class="neutral-width">
 
             <!--<div class="col-12 p-0 m-t-20 m-b-20 d-flex">-->
@@ -21,6 +24,46 @@
                 <div class="card d-flex">
                     <div class="floating-title-panel">
                         <h1>Índice de Riesgo de Corrupción</h1>
+
+                        <div class="side-right d-flex">
+                            <a @click="copyUrlToClipBoard()" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
+                                    class="zmdi zmdi-share"></i> Compartir</a>
+
+                            <div class="dropdown p-l-10">
+                                <button class="btn-raised button-accent text-capi m-l-10" type="button" id="dropdownDownloadOptions"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="zmdi zmdi-download"></i> DESCARGAR DATOS DEl ÍNDICE DE CORRUPCIÓN
+
+                                </button>
+                                <div class="dropdown-menu dropdown-options dropdown-menu-right"
+                                     aria-labelledby="dropdownDownloadOptions">
+                                    <span>Descargar datos con formato:</span>
+                                    <div class="container-dropdown">
+                                        <a class="dropdown-item" @click.prevent="downloadFile('pdf')" target="_blank">
+                                            <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-pdf.svg"
+                                                 alt="Empty"/>
+                                        </a>
+                                        <a class="dropdown-item" @click.prevent="downloadFile('xls')">
+                                            <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-xls.svg"
+                                                 alt="Empty"/>
+                                        </a>
+                                        <a class="dropdown-item" @click.prevent="downloadFile('json')">
+                                            <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-json.svg"
+                                                 alt="Empty"/>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <!--<button class="btn-raised button-accent text-capi m-l-10" data-toggle="modal"-->
+                            <!--data-target="#modalAlertSuccess" tabindex=""><i class="zmdi zmdi-download"></i>-->
+                            <!--DESCARGAR DATOS DEL PROVEEDOR-->
+                            <!--</button>-->
+                        </div>
+
                     </div>
                     
                     <div class="row">
@@ -83,6 +126,7 @@
 <script>
 
     import MoreInfo from '@/components/general/MoreInfo';
+    import ModalAutoDismiss from '@/components/catalogs/ModalAutoDismiss.vue';
 
     import {Gauge} from 'gaugeJS';
     import {mapState} from 'vuex';
@@ -124,7 +168,8 @@
             }
         },
         components: {
-            MoreInfo
+            MoreInfo,
+            ModalAutoDismiss
         },
         methods: {
             initTachometer(elementId, textElementId, value) {
@@ -135,6 +180,22 @@
                 gauge.setTextField(document.getElementById(textElementId));
 
                 gauge.set(value);
+            },
+            copyUrlToClipBoard(){
+                const tempTextArea = document.createElement('textarea');
+                tempTextArea.value =  window.location.href;
+                document.body.appendChild(tempTextArea);
+                tempTextArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempTextArea);
+                tShow('Se ha copiado el enlace correctamente', 'info');
+
+            },
+
+            downloadFile(format){
+                $('#modalAutoDismiss').modal('show');
+                this.$store.dispatch(`${storeModule}/downloadFile`, { format, id : this.currentOrganization._id});
+
             }
         },
         watch: {

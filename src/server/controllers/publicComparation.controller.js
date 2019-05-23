@@ -7,6 +7,9 @@ const Organization = require('./../models/organization.model').Organization;
 const Calculation = require('./../models/calculation.model').Calculation;
 const Comparation = require('./../models/comparation.model').Comparation;
 const deletedSchema = require('./../models/schemas/deleted.schema');
+const { PDFTable, PDFExporter } = require('./../components/pdfExporter');
+const {ExcelExporter} = require('./../components/exporter');
+const moment = require('moment');
 
 const {calculateAndValidateFormula} = require('./../controllers/calculation.controller');
 const logger = require('./../components/logger').instance;
@@ -388,4 +391,258 @@ exports.retrieveRecentComparations =  (req, res, next) => {
             data : result
         });
     })
+};
+
+exports.download = (req, res, next) => {
+    let id = req.params.id;
+    let format = req.params.format;
+
+
+    if (!['xls', 'pdf', 'json'].includes(format)) {
+        res.status(404);
+        return res.end();
+    }
+
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    let qByOrganization = {"organization": mongoose.Types.ObjectId(id)};
+
+    let query = {...qNotDeleted, ...qByOrganization, locked: true};
+    Calculation
+        .findOne(query)
+        .populate('organization calculations')
+        .lean()
+        .exec((err, corruptionIndex) => {
+
+            if (err) {
+                //Error
+                logger.error(err, req, 'publicComparation.controller#corruptionIndex', 'Error trying to find Corruption index');
+                return res.json({
+                    error: true,
+                    data: {}
+                });
+            } else if (!corruptionIndex) {
+                //Not found
+                logger.error(null, req, 'publicComparation.controller#corruptionIndex', 'Corruption index not found');
+                // return res.json({
+                //     error: true,
+                //     data: {}
+                // });
+            }
+
+            corruptionIndex = corruptionIndex || {};
+
+            corruptionIndex.result = 0;
+
+
+            if (!corruptionIndex._id) {
+                return res.json({
+                    error: true,
+                    data: corruptionIndex
+                });
+            }
+
+            let cache = {
+                done: [],
+                calls: [],
+                i: 0,
+                resultsMap: {},
+            };
+
+            calculateAndValidateFormula(cache, corruptionIndex._id, (err, result) => {
+                if (result && result.value) {
+                    corruptionIndex.result = result.value;
+                }
+
+                if (corruptionIndex.result <= 55) {
+                    corruptionIndex.corruptionLevel = 'BAJO'
+                } else if (corruptionIndex.result <= 75) {
+                    corruptionIndex.corruptionLevel = 'MEDIO'
+                } else {
+                    corruptionIndex.corruptionLevel = 'ALTO'
+                }
+
+
+                delete corruptionIndex._id;
+                switch(format){
+                    case 'xls':
+                        downloadXls(req, res, corruptionIndex);
+                        break;
+                    case 'pdf':
+                        downloadPDF(req, res, corruptionIndex);
+                        break;
+                    case 'json':
+                        return res.json({ corruptionIndex });
+                        break;
+                    default:
+                        break;
+                }
+            });
+
+        });
+};
+
+function downloadXls(req, res, corruptionIndex){
+    try {
+
+        let excelInfo = {
+            generalInfo:{
+                docs : [corruptionIndex],
+                sheetNumber: 1
+            },
+            corruptionInfo:{
+                docs : [...corruptionIndex.formula.variables, ...corruptionIndex.formula.calculations],
+                sheetNumber : 2
+            }
+        };
+        new ExcelExporter()
+            .setPropInfoArray([
+                {
+                    header: 'NOMBRE DEL CALCULO',
+                    propName: 'name',
+                    sheet:1
+                },
+                {
+                    header: 'DESCRIPCIÓN DEL CALCULO',
+                    propName: 'description',
+                    sheet:1
+                },
+                {
+                    header: 'ORGANIZACIÓN',
+                    propName: 'organization',
+                    childPropName:'name',
+                    sheet:1
+                },
+                {
+                    header: 'FORMULA',
+                    propName: 'formula',
+                    childPropName : 'expression',
+                    sheet:1
+                },
+                {
+                    header: 'RESULTADO',
+                    propName: 'result',
+                    sheet:1
+                },
+                {
+                    header: 'PROBABILIDAD',
+                    propName: 'corruptionLevel',
+                    sheet:1
+                },
+                {
+                    header: 'ABREVIACIÓN',
+                    propName: 'abbreviation',
+                    sheet:2
+                },
+                {
+                    header: 'NOMBRE',
+                    propName: 'name',
+                    sheet:2
+                },
+                {
+                    header: 'DESCRIPCIÓN',
+                    propName: 'description',
+                    sheet:2
+                },
+            ])
+            .setDocs(corruptionIndex)
+            .setTitle('Indice de corrupción')
+            .setFileName('indice-corrupcion')
+            .exportToFileExtraSheets(req, res, excelInfo);
+    } catch(err){
+        logger.error(err,req,"publicComparition.controller#downloadXls","Error intentando crear el archivo xls del índice de corrupción")
+    }
+};
+
+let downloadPDF = (req, res, corruptionIndex) => {
+
+
+    let generalInfoTable = {
+        style: 'statsCurrency4Col',
+        layout: 'lightHorizontalLines',
+        table: new PDFTable({ headerRows:1, docs:corruptionIndex })
+            .setTableMetadata([
+                {
+                    header: 'Nombre del Calculo',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowNumberStyle',
+                    propName:'name'
+                },
+                {
+                    header: 'Descripción del Calculo',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowNumberStyle',
+                    propName:'description'
+                },
+                {
+                    header: 'Organización',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowNumberStyle',
+                    propName:'organization',
+                    childPropName:'name'
+                },
+                {
+                    header: 'Formula',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowNumberStyle',
+                    propName:'formula',
+                    childPropName:'expression'
+                },
+                {
+                    header: 'Resultado',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowNumberStyle',
+                    propName:'result'
+                },
+                {
+                    header: 'Probabilidad',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowNumberStyle',
+                    propName:'corruptionLevel'
+                }
+            ])
+            .setHeaders()
+            .setWidths(null,"auto")
+            .transformDocs(req)
+    };
+    let variablesTable = {
+        style:'table4Col',
+        // layout: 'lightHorizontalLines',
+        table:new PDFTable({headerRows:1,docs:[...corruptionIndex.formula.variables, ...corruptionIndex.formula.calculations]})
+            .setTableMetadata([
+                {
+                    header: 'Abreviación',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowStyle',
+                    propName:'abbreviation'
+                },
+                {
+                    header: 'Nombre',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'name'
+                },
+                {
+                    header: 'Descripción',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'description'
+                }
+            ])
+            .setHeaders()
+            .setWidths(null,"auto")
+            .transformDocs(req)
+    };
+
+    let headers = [{ text:"Monitor Karewa", style:'header'},
+        {text : moment(new Date()).format('MM/DD/YYYY'), style:'header'}];
+
+    new PDFExporter()
+        .setFileName('monitor-karewa-indice-corrupcion.pdf')
+        .addHeadersToPDF(headers)
+        .addTitleToPDF({text:"Índice de corrupción", style:'title'})
+        .addContentToPDF(generalInfoTable)
+        .addContentToPDF(variablesTable)
+        .addFooterToPDF()
+        .setPageOrientation('landscape')
+        .exportToFile(req, res)
 };

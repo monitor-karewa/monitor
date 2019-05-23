@@ -1,0 +1,13 @@
+{
+  "name": "Monitor Karewa",
+  "description": "",
+  "logo": "https://node-js-sample.herokuapp.com/node.png",
+  "keywords": ["node", "express", "static"],
+  "image": "registry.gitlab.com/karewa/monitor",
+  "addons": [
+    {
+      "plan": "mongolab:sandbox",
+      "as": "MONGODB_URI"
+    }
+  ]
+}

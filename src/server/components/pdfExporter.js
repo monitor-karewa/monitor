@@ -54,7 +54,7 @@ let defaultStyles = {
         fontSize:10,
         alignment:"left",
         font:'Courier',
-        margin:[0,10,10,0]
+        margin:[30,10,10,0]
     },
     headerTable:{
         fontSize:12,
@@ -71,9 +71,17 @@ let defaultStyles = {
         alignment:'center',
         margin: [0, 30, 0, 30]
     },
+    table4Col: {
+        alignment:'center',
+        margin: [50, 30, 0, 30]
+    },
     statsExample: {
         alignment:'center',
         margin: [50, 30, 0, 0]
+    },
+    statsCurrency4Col: {
+        alignment:'center',
+        margin: [0, 30, 0, 0]
     },
     headerExample:{
         margin: [15, 5]
@@ -109,11 +117,19 @@ let defaultStyles = {
         font:'Courier',
         margin:[0,10,0,10]
     },
+    subTitle:{
+        fontSize:13,
+        bold:true,
+        font:'Times',
+        alignment:"left",
+        margin:[0,40,0,0]
+    },
     defaultStyle:{
         fontSize:15,
         alignment:'right',
         font:'Helvetica'
     }
+
 };
 
 class PDFExporter extends Exporter {
@@ -224,6 +240,11 @@ class PDFTable {
         this.tableMetadata = params.tableMetadata || [];
     }
 
+    setDocs(docs){
+        this.docs = docs;
+        return this;
+    }
+
     setTableMetadata(metadata){
         this.tableMetadata = metadata;
         return this;
@@ -288,7 +309,7 @@ class PDFTable {
                 return Number(value).toLocaleString('es-MX', { style: 'currency', currency:'MXN'});
                 break;
             case 'date':
-                return moment(value).format('MM/DD/YYYY')
+                return moment(value).format('MM/DD/YYYY');
                 break;
             default:
                 return value;
