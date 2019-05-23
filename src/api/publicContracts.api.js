@@ -57,7 +57,6 @@ export default {
             .catch(onError);
     },
     download: (params = {}, onSuccess, onError) => {
-        console.log("params", params);
         return axios({
             url: `${base.baseUrl}/public-api/${namespace}/download/${params.format}${params.query || ''}`,
             method: 'GET',

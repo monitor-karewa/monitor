@@ -74,7 +74,6 @@
                         <p class="f-14 c-plain_text principal-font-regular">{{$t('suppliers.detail.description')}}
                             <strong class="principal-font-semibold"> {{ supplier.name }} </strong></p>
 
-                        //one Filter here please
                         <PublicFilter
                                 :storeModule="storeModule"
                                 :administrativeUnits="adminstrativeUnitsForFilter"
