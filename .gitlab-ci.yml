@@ -63,12 +63,14 @@ prod:
         VUE_APP_API_HOST=$VUE_APP_API_HOST_BETA
         VUE_APP_API_PORT=$VUE_APP_API_PORT_BETA
         EOF
-        ;;
 
         docker build \
           --iidfile imageid.txt \
           --pull -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
         docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+
+        ;;
+
         *)
         cat <<EOF > .env.production
         API_HOST=$API_HOST_PROD
