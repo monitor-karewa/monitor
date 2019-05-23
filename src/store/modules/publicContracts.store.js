@@ -61,7 +61,7 @@ const actions = {
             const url = window.URL.createObjectURL(new Blob([result.data]));
             const link = document.createElement('a');
             link.href = url;
-            link.setAttribute('download', `monitor-karewa-proveedores.${format}`); //or any other extension
+            link.setAttribute('download', `monitor-karewa-contratos.${format}`); //or any other extension
             document.body.appendChild(link);
             link.click();
         });

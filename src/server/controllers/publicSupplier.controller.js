@@ -660,6 +660,17 @@ exports.download = (req, res, next) => {
 
 let downloadDetailXls = (req, res, suppliersDetail, filters) => {
 
+    let excelInfo = {
+        totals:{
+            docs : [suppliersDetail.totals],
+            sheetNumber: 1
+        },
+        supplierContracts:{
+            docs : [...suppliersDetail.public, ...suppliersDetail.invitation, ...suppliersDetail.noBid],
+            sheetNumber : 2
+        }
+    };
+
     new ExcelExporter()
         .setNumberOfSheets(2)
         .setPropInfoArray([
@@ -731,7 +742,7 @@ let downloadDetailXls = (req, res, suppliersDetail, filters) => {
         .setFilters(filters)
         .setTitle(`Proveedor ${suppliersDetail.supplier.name} Detalle`)
         .setFileName('proveedores-detalle')
-        .exportSupplierDetailToFile(req, res);
+        .exportToFileExtraSheets(req, res, excelInfo);
 };
 
 

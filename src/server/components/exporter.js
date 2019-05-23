@@ -80,7 +80,7 @@ class ExcelExporter extends Exporter {
         return this;
     }
 
-    exportSupplierDetailToFile(req, res){
+    exportToFileExtraSheets(req, res, excelInfo){
         let params = this.getParams();
         let workbook = new Excel.Workbook();
 
@@ -93,20 +93,10 @@ class ExcelExporter extends Exporter {
         let formatByPropName = {};
         let optionsByPropName = {};
 
-        let excelInfo = {
-            totals:{
-                propInfoArray : params.propInfoArray.filter(info => info.sheet == 1),
-                docs : [params.docs.totals],
-                sheet : sheetTotal
-            },
-            supplierContracts:{
-                propInfoArray : params.propInfoArray.filter(info => info.sheet == 2),
-                docs : [...params.docs.public, ...params.docs.invitation, ...params.docs.noBid],
-                sheet : sheetDetail
-            }
-        };
 
         for(let item in excelInfo){
+            excelInfo[item].propInfoArray = params.propInfoArray.filter(info => info.sheet == excelInfo[item].sheetNumber);
+            excelInfo[item].sheet = excelInfo[item].sheetNumber == 1 ? sheetTotal : sheetDetail;
 
             cellIndexByHeader = {};
             cellIndexByPropName = {};
@@ -140,11 +130,9 @@ class ExcelExporter extends Exporter {
                     i18n : propInfo.i18n
                 }
             });
-
             excelInfo[item].docs.forEach((doc, index) => {
 
                 let rowIndex = this.rowIndexes.CONTENT_START + index + 1; //base 1, offset from content start
-
                 let propNames = Object.keys(doc);
 
                 propNames.forEach((propName) => {
