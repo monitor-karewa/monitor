@@ -268,8 +268,6 @@ exports.current = (req, res, next) => {
             let andBuilder = [];
             let orArray = [];
 
-            console.log('search', search);
-
 
             if (search) {
                 let queryAsRegex = utils.toAccentsRegex(search, "gi");
