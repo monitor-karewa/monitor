@@ -326,7 +326,8 @@
                     message: 'data-load.confirm.modal.confirm-operation',
                     messageIgnoreErrors: 'data-load.confirm.modal.confirm-operation-ignore-errors',
                     confirmationQuestion: 'data-load.confirm.modal.confirm-operation.question'
-                }
+                },
+                busListenerSet: false
             }
         },
         components: {
@@ -521,15 +522,15 @@
         created() {
         },
         mounted(){
-            bus.$on('dataLoad/CURRENT_DATA_LOAD_INFO_LOADED', ({dataLoadInfo})=>{
-                //Current was canceled, confirmed, or otherwise not available, so we redirect to the non-current view
-
-                console.log('@bus.$on dataLoadInfo', dataLoadInfo);
-
-                if (!dataLoadInfo.current) {
-                    this.canceled();
-                }
-            });
+            if (!this.busListenerSet) {
+                bus.$on('dataLoad/CURRENT_DATA_LOAD_INFO_LOADED', ({dataLoadInfo})=>{
+                    this.busListenerSet = true;
+                    //Current was canceled, confirmed, or otherwise not available, so we redirect to the non-current view
+                    if (!dataLoadInfo.current) {
+                        this.canceled();
+                    }
+                });
+            }
             
             this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO');
         }

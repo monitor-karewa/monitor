@@ -8,7 +8,7 @@
                     :tableColumns="tableColumns"
                     :store-module="storeModule"
                     :singular="'Usuario'"
-                    :plural="'Usuarios'"
+                    :plural="'Usuarios'" :hideEditButton="true"
             />
         </AdminMainSection>
 

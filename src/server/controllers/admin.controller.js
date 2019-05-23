@@ -5,6 +5,8 @@ const {Supplier} = require('./../models/supplier.model');
 const {AdministrativeUnit} = require('./../models/administrativeUnit.model');
 const {Calculation} = require('./../models/calculation.model');
 
+const deletedSchema = require('./../models/schemas/deleted.schema');
+
 exports.index = (req, res, next) => {
     res.render('admin/index');
 };
@@ -98,12 +100,15 @@ exports.visitsByRoute= (req, res, next) => {
 };
 
 exports.infoValues= (req, res, next) => {
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    let qByOrganization = Organization.qByOrganization(req);
+    let query = {...qByOrganization, ...qNotDeleted};
     Promise.all([
         RouteLog.count({"path":{$in:["/select-organization"]}}),
-        Contract.count({"deleted.isDeleted":false}),
-        Supplier.count({"deleted.isDeleted":false}),
-        AdministrativeUnit.count({"deleted.isDeleted":false}),
-        Calculation.count({"deleted.isDeleted":false})
+        Contract.count(query),
+        Supplier.count(query),
+        AdministrativeUnit.count(query),
+        Calculation.count(query)
     ]).then(function (counts) {
         return res.json({
             error: false,
@@ -154,7 +159,7 @@ exports.visitsByMonths = (req, res, next) => {
         $match:{
             "path":{$in:["/select-organization"]},
             // "path":{$nin:["/login", "/admin", "/select-organization", "/style", "/style/client"]},
-            "organization":Organization.currentOrganizationId(req),
+            // "organization":Organization.currentOrganizationId(req),
         }
     });
     aggregateList.push({
