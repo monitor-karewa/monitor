@@ -344,13 +344,13 @@
         },
         watch: {
             showNoIssues() {
-                this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO', this.filters);
+                this.$store.dispatch('dataLoad/FILTER_CURRENT_DATA_LOAD', this.filters);
             },
             showSkipped() {
-                this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO', this.filters);
+                this.$store.dispatch('dataLoad/FILTER_CURRENT_DATA_LOAD', this.filters);
             },
             showErrors() {
-                this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO', this.filters);
+                this.$store.dispatch('dataLoad/FILTER_CURRENT_DATA_LOAD', this.filters);
             },
         },
         computed: {

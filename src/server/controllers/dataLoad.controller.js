@@ -335,69 +335,43 @@ exports.current = (req, res, next) => {
 
             }
             
-//                if (!this.showSkipped && rowInfo.summary.skipRow) {
-//                    return false;
-//                }
-//                if (!this.showErrors && rowInfo.summary.hasErrors) {
-//                    return false;
-//                }
-//                if (!this.showNoIssues && !rowInfo.summary.skipRow && !rowInfo.summary.hasErrors) {
-//                    return false;
-//                }
-            console.log('showSkipped', showSkipped);
-            console.log('showErrors', showErrors);
-            console.log('showNoIssues', showNoIssues);
-            
             let filtersOrArray = [];
             
             if (showSkipped) {
                 filtersOrArray.push({'data.summary.skipRow': true});
+            } else {
+                query = {...query, 'data.summary.skipRow': false};
             }
             
             if (showErrors) {
                 filtersOrArray.push({'data.summary.hasErrors': true});
+            } else {
+                query = {...query, 'data.summary.hasErrors': false};
             }
 
             if (showNoIssues) {
+                //Mostrar los que NO tienen issues
+                //que no tienen skipRow, hasErrors, ni hasInfos
                 filtersOrArray.push({$and: [
                     {'data.summary.skipRow': false},
                     {'data.summary.hasErrors': false},
+                    {'data.summary.hasInfos': false},
                 ]});
+            } else {
+                //Ocultar los que NO tienen issues
+                //que no tienen skipRow, hasErrors, ni hasInfos
+                //Es decir, mostrar aquellos que tengan por lo menos un issue
+                query = {...query, $or: [
+                    {'data.summary.skipRow': true},
+                    {'data.summary.hasErrors': true},
+                    {'data.summary.hasInfos': true},
+                ]};
             }
             
             if (filtersOrArray.length) {
                 query = {...query, $or: filtersOrArray};
             }
             
-            //
-            //
-            //
-            //
-            // if (!showSkipped) {
-            //     query['data.summary.skipRow'] = false;
-            // }
-            //
-            // if (!showErrors) {
-            //     query['data.summary.hasErrors'] = false;
-            // }
-            //
-            // if (!showNoIssues) {
-            //     // query['data.summary.hasErrors'] = false;
-            //     query = {...query, $or: [
-            //         {'data.summary.hasErrors': true},
-            //         {'data.summary.skipRow': true}
-            //     ]}
-            //     // orArray.push(
-            //     //     {'data.summary.hasErrors': new RegExp(contractTypeTypeEnumQueryAsRegexStr)}
-            //     // );
-            // }
-
-
-            // if (orArray.length) {
-            //     query['$or'] = orArray;
-            // }
-
-
             query = {dataLoad: currentDataLoad._id, ...query};
 
             console.log('query', JSON.stringify(query));
