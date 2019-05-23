@@ -67,7 +67,7 @@ export default function (api, storeName) {
                 { query },
                 (result) => {
                     // console.log('result', result);
-                    Vue.$log.info('Response', result);
+                    // Vue.$log.info('Response', result);
                     //result.data.data.docs
                     // commit('updateDocs', {
                     //     docs: result.data.data.docs
@@ -77,7 +77,7 @@ export default function (api, storeName) {
                 (error) => {
                     // console.log('error', error);
                     Vue.$log.error('Response error', error);
-                    tShow(`Hubo un error al cargar el listado : ${error}`);
+                    tShow(`No fue posible cargar los registros.`, 'danger');
                 }
             )
         },
@@ -91,7 +91,7 @@ export default function (api, storeName) {
             api.list(
                 { query },
                 (result) => {
-                    Vue.$log.info('Response', result);
+                    // Vue.$log.info('Response', result);
                     //result.data.data.docs
                     // commit('updateDocs', {
                     //     docs: result.data.data.docs
@@ -100,7 +100,7 @@ export default function (api, storeName) {
                 },
                 (error) => {
                     Vue.$log.error('Response error', error);
-                    tShow(`Hubo un error en el paginado: ${error}`);
+                    tShow(`No fue posible cargar los registros.`, 'danger');
                 }
             )
         },
@@ -109,11 +109,16 @@ export default function (api, storeName) {
                 { id : id },
                 (result) => {
                     dispatch(`${storeName}/list`,{},{root:true});
-                    bus.$emit(storeName + events.DELETE_SUCCESS);
+                    console.log('result.data', result.data);
+                    if (result.data.error || result.data.errors) {
+                        tShow(`No fue posible eliminar el registro.`, 'danger');
+                    } else {
+                        bus.$emit(storeName + events.DELETE_SUCCESS);
+                    }
                 },
                 (error) => {
                     Vue.$log.error('Response error', error);
-                    tShow(`Hubo un error al eliminar el registro: ${error}`);
+                    tShow(`No fue posible eliminar el registro.`, 'danger');
                 }
             )
         },
@@ -127,21 +132,22 @@ export default function (api, storeName) {
                 data,
                 (result) => {
 
-                    Vue.$log.info('Response', result);
-                    if(result.data.error){
+                    // Vue.$log.info('Response', result);
+                    if (result.data.error || result.data.errors) {
                         Vue.$log.error('Response error', result.data.message);
-                        tShow(result.data.message,'danger');
+                        tShow(result.data.message, 'danger');
                         commit("SET_FORM_ERRORS", result.data.errors);
                     } else {//result.data.data.docs
-                    // commit('updateDocs', {
-                    //     docs: result.data.data.docs
-                    // });
-                    dispatch(`${storeName}/list`,{},{root:true});
-                    
-                    if(data._id){
-                        bus.$emit(storeName + events.DOC_UPDATED);
-                    }else{
-                        bus.$emit(storeName + events.DOC_CREATED);}
+                        // commit('updateDocs', {
+                        //     docs: result.data.data.docs
+                        // });
+                        dispatch(`${storeName}/list`, {}, {root: true});
+
+                        if (data._id) {
+                            bus.$emit(storeName + events.DOC_UPDATED);
+                        } else {
+                            bus.$emit(storeName + events.DOC_CREATED);
+                        }
                     }
                 },
                 (error) => {
@@ -150,7 +156,8 @@ export default function (api, storeName) {
                         errorsStr += e.msg + "\n";
                     });
                     Vue.$log.error('Response error', error);
-                    tShow(`Hubo un error al guardar un registro: ${errorsStr}`);
+                    // tShow(`Hubo un error al guardar un registro: ${errorsStr}`);
+                    tShow(`No fue posible guardar el registro.`, 'danger');
                 },
                 data.requestConfig
             )
@@ -160,13 +167,14 @@ export default function (api, storeName) {
             api.saveUpdatedDocs(
                 data,
                 (result) => {
-                    Vue.$log.info('Response', result);
+                    // Vue.$log.info('Response', result);
                     dispatch(`${storeName}/list`,{},{root:true});
                     dispatch(`${storeName}/setEditTable`,false,{root:true});
                     commit('CLEAR_DOCS_UPDATED');
                 },
                 (error) => {
-                    Vue.$log.error('Response error', error);
+                    // Vue.$log.error('Response error', error);
+                    tShow(`No fue posible guardar los registros.`, 'danger');
                 }
             )
 
