@@ -6,7 +6,7 @@ module.exports = {
     beforeEach: utils.middlewares.beforeEach,
 
 
-    'AdministrativeUnits': function (browser) {
+    'Users': function (browser) {
 
         browser
 
@@ -34,13 +34,13 @@ module.exports = {
             .click('//a[text()="Seleccionar"]')
             .assert.visible(utils.xpath.elementWithClass("ul","main-menu"))
 
-            .click('//a[contains(text(), " U. Administrativas ")]')
-            .assert.containsText(utils.xpath.body(), "Unidades Administrativas")
+            .click('//a[contains(text(), " Usuarios ")]')
+            .assert.containsText(utils.xpath.body(), "Catálogo de Usuarios")
 
         // --------------- NEW ---------------------
-            .assert.containsText(utils.xpath.body(), "NUEVO(A) UNIDAD ADMINISTRATIVA")
+            .assert.containsText(utils.xpath.body(), "NUEVO(A) USUARIO")
 
-            .waitForElementVisible('//a[text()=" Nuevo(a) Unidad Administrativa"]', 1000)
+            .waitForElementVisible('//a[text()=" Nuevo(a) Usuario"]', 1000)
             .pause(1000)
             .execute(function(){
                 //obtiene todos los botones
@@ -51,14 +51,18 @@ module.exports = {
             .pause(500)
 
             .assert.visible(utils.xpath.elementWithText("label", "Nombre"))
+            .assert.visible(utils.xpath.elementWithText("label", "Apellido"))
+            .assert.visible(utils.xpath.elementWithText("label", " Correo electrónico"))
             .assert.visible(utils.xpath.elementWithText("label", "Notas Adicionales"))
             .assert.visible(utils.xpath.elementWithText("button", " Guardar "))
 
-            .setValue(utils.xpath.elementWithPlaceholder("input","Introduce el nombre"), "Black Labs")
-            .setValue(utils.xpath.elementWithPlaceholder("input","Introduce las notas adicionales"), "En Black Labs nos inspiramos por la creatividad de las personas, nos motiva la idea de cambiar el mundo a través de la tecnología.")
+            .setValue(utils.xpath.elementWithPlaceholder("input","Introduce el nombre"), "Lalo")
+            .setValue(utils.xpath.elementWithPlaceholder("input","Introduce el apellido"), "Pérez")
+            .setValue(utils.xpath.elementWithPlaceholder("input","Introduce el email del Usuario"), "user@user.com")
+            .setValue(utils.xpath.elementWithPlaceholder("input","Introduce las notas adicionales"), "Usuario agregado en pruebas automatizadas")
             .click('//button[contains(text(), " Guardar ")]')
 
-            .assert.containsText(utils.xpath.body(), "La unidad administrativa fue creada correctamente")
+            .assert.containsText(utils.xpath.body(), "El usuario fue creado correctamente")
             .pause(1000)
             // -------------- EDIT --------------------
 
@@ -72,9 +76,9 @@ module.exports = {
             })
 
             .pause(1000)
-            .setValue(utils.xpath.elementWithPlaceholder("input","Black Labs")," Company")
+        .setValue(utils.xpath.elementWithPlaceholder("input","Lalo")," Alejandro")
             .pause(1000)
-            //.setValue(utils.xpath.elementWithPlaceholder("input","En Black Labs nos inspiramos por la creatividad de las personas, nos motiva la idea de cambiar el mundo a través de la tecnología."), "Nos Motiva la idea de cambiar el mundo a través de la tecnología.")
+            .setValue(utils.xpath.elementWithPlaceholder("input","Pérez")," Arrollo")
             .assert.visible(utils.xpath.elementWithText("button", "Guardar"))
 
             .execute(function(){
@@ -106,11 +110,15 @@ module.exports = {
             })
             .pause(500)
             .assert.visible(utils.xpath.elementWithText("label", "Nombre"))
+            .assert.visible(utils.xpath.elementWithText("label", "Apellido"))
+            .assert.visible(utils.xpath.elementWithText("label", " Correo electrónico"))
             .assert.visible(utils.xpath.elementWithText("label", "Notas Adicionales"))
             .assert.visible(utils.xpath.elementWithText("button", " Guardar "))
 
             .clearValue(utils.xpath.elementWithPlaceholder("input","Introduce el nombre"))
-            .setValue(utils.xpath.elementWithPlaceholder("input","Introduce el nombre"), "Desarrollo BlackLabs")
+            .setValue(utils.xpath.elementWithPlaceholder("input","Introduce el nombre"), "Lalo")
+            .clearValue(utils.xpath.elementWithPlaceholder("input","Introduce el apellido"))
+            .setValue(utils.xpath.elementWithPlaceholder("input","Introduce el apellido"), "Pérez")
             .clearValue(utils.xpath.elementWithPlaceholder("input", "Introduce las notas adicionales"))
             .setValue(utils.xpath.elementWithPlaceholder("input","Introduce las notas adicionales"), "Campos editados desde el modal")
             .pause(1000)
@@ -130,7 +138,7 @@ module.exports = {
             .assert.visible(utils.xpath.elementWithText("button", "Eliminar"))
             .click('//button[contains(text(), "Eliminar")]')
             .pause(500)
-            .assert.containsText(utils.xpath.body(), "La unidad administrativa fue eliminada correctamente")
+            .assert.containsText(utils.xpath.body(), "El usuario fue eliminado correctamente")
 
 
 
