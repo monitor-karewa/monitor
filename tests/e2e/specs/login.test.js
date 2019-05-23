@@ -7,7 +7,7 @@ module.exports = {
 
     'Login': function (browser) {
 
-        console.log(browser.globals);
+        //console.log(browser.globals);
         // {
         //   "myGlobalVar" : "some value",
         //   "otherGlobal" : "some other value"

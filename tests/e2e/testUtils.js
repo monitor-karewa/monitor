@@ -32,6 +32,12 @@ module.exports = {
         },
         elementWithId: function (element, id) {
             return `//${element}[@id="${id}"]`;
+        },
+        elementWithClass: function (element, clase) {
+            return `//${element}[@class="${clase}"]`;
+        },
+        elementWithPlaceholder: function (element, text) {
+            return `//${element}[@placeholder="${text}"]`;
         }
     }
 };
