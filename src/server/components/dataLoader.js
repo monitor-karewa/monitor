@@ -57,6 +57,16 @@ const REF_STRATEGIES = {
     FUZZY: 3
 };
 
+const VALIDATION_STRATEGIES = {
+    SKIP: 0,
+    CHECK: 1
+};
+
+const REQUIRED_STRATEGIES = {
+    SKIP: 0,
+    CHECK: 1
+};
+
 /**
  * Threshold used to match ref-based fields with the Jaccard Index. The evaluated index is then checked with 
  * (index >= JACCARD_VALUE_REF_MATCH_THRESHOLD), and if the result is truthy then the ref is a valid ref.
@@ -259,7 +269,9 @@ class ContractExcelReader {
                     refLinkedBy: [],
                     refLink: null,
                     overrides: {
-                        refStrategy: null
+                        refStrategy: null,
+                        validationStrategy: null,
+                        requiredStrategy: null,
                     },
                     options: options
                 };
@@ -309,7 +321,7 @@ class ContractExcelReader {
                                     //Get the 3rd char (base 0) from the value; which is the override code we're looking for
                                     let overrideStr = fieldInfo.value.charAt(2);
                                     let refStrategyOverride = null;
-                                    //TODO: dynamic check based on the REG_STRATEGY map
+                                    //TODO: dynamic check based on the REF_STRATEGIES map
                                     switch(overrideStr) {
                                         case '0':
                                             refStrategyOverride = REF_STRATEGIES.EXACT;
@@ -325,6 +337,57 @@ class ContractExcelReader {
                                     fieldInfo.overrides.refStrategy = refStrategyOverride;
                                     //Remove the override value from the string
                                     fieldInfo.value = fieldInfo.value.substr(3, fieldInfo.value.length);
+                                }
+                            }
+
+                            //Check for reference check strategy override
+                            //[!v#] at the start of a string overrides the validation strategy, where # is a number from 0 to 1
+                            if (fieldInfo.value && fieldInfo.value.length) {
+                                let regexMatchRefStrategy = fieldInfo.value.match("^!v[0-1]");
+                                if (regexMatchRefStrategy) {
+                                    //Get the 3rd char (base 0) from the value; which is the override code we're looking for
+                                    let overrideStr = fieldInfo.value.charAt(2);
+                                    let validationStrategyOverride = null;
+                                    //TODO: dynamic check based on the REG_STRATEGY map
+                                    switch(overrideStr) {
+                                        case '0':
+                                            validationStrategyOverride = VALIDATION_STRATEGIES.SKIP;
+                                            break;
+                                        case '1':
+                                            validationStrategyOverride = VALIDATION_STRATEGIES.CHECK;
+                                            break;
+                                        default:
+                                    }
+                                    console.log('\n\nfieldInfo.fieldName', fieldInfo.fieldName);
+                                    console.log('validationStrategyOverride', validationStrategyOverride);
+                                    console.log('\n\n');
+                                    fieldInfo.overrides.validationStrategy = validationStrategyOverride;
+                                    //Remove the override value from the string
+                                    fieldInfo.value = fieldInfo.value.substr(3, fieldInfo.value.length);
+                                }
+                            }
+
+                            //Check for required check strategy override
+                            //[!req#] at the start of a string overrides the required strategy, where # is a number from 0 to 1
+                            if (fieldInfo.value && fieldInfo.value.length) {
+                                let regexMatchRefStrategy = fieldInfo.value.match("^!req[0-1]");
+                                if (regexMatchRefStrategy) {
+                                    //Get the 5th char (base 0) from the value; which is the override code we're looking for
+                                    let overrideStr = fieldInfo.value.charAt(4);
+                                    let requiredStrategyOverride = null;
+                                    //TODO: dynamic check based on the REQUIRED_STRATEGIES map
+                                    switch(overrideStr) {
+                                        case '0':
+                                            requiredStrategyOverride = REQUIRED_STRATEGIES.SKIP;
+                                            break;
+                                        case '1':
+                                            requiredStrategyOverride = REQUIRED_STRATEGIES.CHECK;
+                                            break;
+                                        default:
+                                    }
+                                    fieldInfo.overrides.requiredStrategy = requiredStrategyOverride;
+                                    //Remove the override value from the string
+                                    fieldInfo.value = fieldInfo.value.substr(5, fieldInfo.value.length);
                                 }
                             }
 
@@ -871,7 +934,9 @@ class ContractExcelReader {
             refLinkedBy: [],
             refLink: null,
             overrides: {
-                refStrategy: null
+                refStrategy: null,
+                validationStrategy: null,
+                requiredStrategy: null,
             },
             options: {required: true}
         };
@@ -883,8 +948,19 @@ class ContractExcelReader {
     }
 
 
-    _checkValidationsForFieldInfo(rowInfo, fieldInfo, callback) {
+    _checkValidationsForFieldInfo(rowInfo, fieldInfo, validationStrategy, requiredStrategy, callback) {
         let options = fieldInfo.options || {};
+        
+        //Check for override
+        if (fieldInfo.overrides && utils.isDefined(fieldInfo.overrides.validationStrategy)) {
+            validationStrategy = fieldInfo.overrides.validationStrategy;
+        }
+        
+        //If the validation strategy is skip, skip the validation
+        if (validationStrategy === VALIDATION_STRATEGIES.SKIP) {
+            return callback();
+        }
+        
         if (options && utils.isDefined(options.validator) && utils.isFunction(options.validator)) {
             // logger.info(null, null, 'dataLoader#_readField', 'TODO: options.validator');
             options.validator(rowInfo, (err, errorMessage) => {
@@ -900,8 +976,17 @@ class ContractExcelReader {
         }
     }
 
-    _checkRequiredForFieldInfo(rowInfo, fieldInfo, callback) {
+    _checkRequiredForFieldInfo(rowInfo, fieldInfo, validationStrategy, requiredStrategy, callback) {
         let options = fieldInfo.options || {};
+
+        //Check for override
+        if (fieldInfo.overrides && utils.isDefined(fieldInfo.overrides.requiredStrategy)) {
+            requiredStrategy = fieldInfo.overrides.requiredStrategy;
+        }
+
+        if (requiredStrategy === REQUIRED_STRATEGIES.SKIP) {
+            return callback();
+        }
 
         //We can check if the fieldInfo.value is already defined to skip this check, but we have to take into account 
         // that an empty string is not fulfilling a required validation
@@ -1450,7 +1535,7 @@ class ContractExcelReader {
                     break;
                 case C_IDS.UPDATE_DATE:
                     return _this._readField(rowInfo, cell, 'actualizationDate', Date, {
-                        required: true,
+                        // required: true,
                     }, callback);
                     break;
                 case C_IDS.NOTES:
@@ -1461,7 +1546,7 @@ class ContractExcelReader {
                     break;
                 case C_IDS.INFORMATION_DATE:
                     return _this._readField(rowInfo, cell, 'informationDate', Date, {
-                        required: true,
+                        // required: true,
                     }, callback);
                     break;
                 case C_IDS.LIMIT_EXCEEDED:
@@ -1519,7 +1604,7 @@ class ContractExcelReader {
                     async.applyEach([
                         this._checkValidationsForFieldInfo, 
                         this._checkRequiredForFieldInfo
-                    ], rowInfo, fieldInfo, () => {
+                    ], rowInfo, fieldInfo, VALIDATION_STRATEGIES.CHECK, REQUIRED_STRATEGIES.CHECK, () => {
 
                         if (fieldInfo.errors && fieldInfo.errors.length) {
                             rowInfo.summary.hasErrors = true;
@@ -1598,12 +1683,18 @@ class ContractExcelReader {
                     }, (err, objs) => {
                         //Delete first two rows
                         objs.splice(0, 2);
-                        
-                        
-                        let dataLoadDetailsArray = objs.map((obj) => {
-                            return {data: obj};
+
+                        let newDataLoad = new DataLoad({
+                            // details: dataLoadDetailsIds
+                            // details: savedDetails
                         });
                         
+                        let dataLoadDetailsArray = objs.map((obj) => {
+                            return {
+                                dataLoad: _this.idDataLoad || newDataLoad._id,
+                                data: obj
+                            };
+                        });
                         
                         /*
                         if (_this.idDataLoad) {
@@ -1659,7 +1750,7 @@ class ContractExcelReader {
                                         if (!dataLoad) {
                                             let dataLoad = new DataLoad({
                                                 // details: dataLoadDetailsIds
-                                                details: savedDetails
+                                                // details: savedDetails
                                             });
                                             return resolve(dataLoad);
                                         }
@@ -1668,8 +1759,6 @@ class ContractExcelReader {
                                             console.log('mongoose.Types.ObjectId(detail._id)', mongoose.Types.ObjectId(detail._id));
                                             return mongoose.Types.ObjectId(detail._id);
                                         });
-
-                                        console.log('dataLoadDetailsIds', dataLoadDetailsIds);
 
                                         DataLoadDetail
                                             .deleteMany({_id: {$in: dataLoadDetailsIds}})
@@ -1681,16 +1770,14 @@ class ContractExcelReader {
                                                 console.log('results (from deletion)', results);
 
                                                 //Overwrite with new details
-                                                dataLoad.details = savedDetails;
-                                                return resolve(dataLoad);
+                                                // dataLoad.details = savedDetails;
+                                                return resolve({dataLoad: dataLoad, details: savedDetails});
                                             });
                                     });
                             } else {
-                                let dataLoad = new DataLoad({
-                                    // details: dataLoadDetailsIds
-                                    details: savedDetails
-                                });
-                                return resolve(dataLoad);
+                                // newDataLoad.details = savedDetails;
+
+                                return resolve({dataLoad: newDataLoad, details: savedDetails});
                             }
                         });
                         

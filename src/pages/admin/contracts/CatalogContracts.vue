@@ -817,12 +817,12 @@
                 areaInCharge:{
                     required
                 },
-                updateDate:{
-                    required
-                },
-                informationDate:{
-                    required
-                },
+//                updateDate:{
+//                    required
+//                },
+//                informationDate:{
+//                    required
+//                },
 
 
                 // procedureType: {

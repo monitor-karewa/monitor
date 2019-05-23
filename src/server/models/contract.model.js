@@ -589,7 +589,7 @@ let ContractSchema = new Schema({
     /*Fecha de actualización*/
     updateDate: {
         type: Date,
-        required: [true, "El campo Fecha de actualización es requerido"],
+        // required: [true, "El campo Fecha de actualización es requerido"],
         // default: Date.new
     },
     /*Notas*/
@@ -603,7 +603,7 @@ let ContractSchema = new Schema({
     /*Fecha de obtención de los datos*/
     informationDate: {
         type: Date,
-        required: [true, "El campo Fecha de obtención de datos es requerido"],
+        // required: [true, "El campo Fecha de obtención de datos es requerido"],
     },
     /*Adjudicaciones Directas que exceden el límite*/
     limitExceeded: {

@@ -126,7 +126,7 @@
                                     </thead>
                                     <tbody>
                                     <!--<tr class="height-60" v-for="(rowInfo, rowInfoIndex) in filteredDataLoad" v-if="isRowInfoVisible(rowInfo)">-->
-                                    <tr class="height-60" v-for="(dataLoadDetail, dataLoadDetailIndex) in paginatedDataLoad" v-if="isRowInfoVisible(dataLoadDetail.data)">
+                                    <tr class="height-60" v-for="(dataLoadDetail, dataLoadDetailIndex) in paginatedDataLoad" v-if="isRowInfoVisible(dataLoadDetail.data)" :key="dataLoadDetail._id">
                                         <td>
                                             <i class="zmdi zmdi-alert-triangle c-info f-14" v-if="dataLoadDetail.data.summary.skipRow || dataLoadDetail.data.summary.hasInfos"></i>
                                             <i class="zmdi zmdi-alert-triangle c-error f-14" v-if="dataLoadDetail.data.summary.hasErrors"></i>
@@ -299,7 +299,7 @@
                 baseUrl: baseApi.baseUrl,
                 storeModule: 'dataLoad',
                 showDetails: false,
-                filterActionName: 'FILTER_CURRENT_DATA_LOAD',
+                filterActionName: 'LOAD_CURRENT_DATA_LOAD',
                 filterRows: [
                     {
                         label: 'data-load.review.columns.no-issues',
@@ -342,6 +342,17 @@
             CardUploading,
             ModalDefault
         },
+        watch: {
+            showNoIssues() {
+                this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO', this.filters);
+            },
+            showSkipped() {
+                this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO', this.filters);
+            },
+            showErrors() {
+                this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO', this.filters);
+            },
+        },
         computed: {
             current () {
                 //Ensure there's a current or at least a functional placeholder
@@ -359,6 +370,13 @@
             },
             showErrors () {
                 return this.filterRows[2].visible;
+            },
+            filters () {
+                return {
+                    showNoIssues: this.showNoIssues,
+                    showSkipped: this.showSkipped,
+                    showErrors: this.showErrors,
+                };
             },
             ...mapState({
                 dataLoadInfo: state => state.dataLoad.dataLoadInfo,
@@ -418,15 +436,16 @@
                 this.$router.push('/admin/data-load');
             },
             isRowInfoVisible (rowInfo) {
-                if (!this.showSkipped && rowInfo.summary.skipRow) {
-                    return false;
-                }
-                if (!this.showErrors && rowInfo.summary.hasErrors) {
-                    return false;
-                }
-                if (!this.showNoIssues && !rowInfo.summary.skipRow && !rowInfo.summary.hasErrors) {
-                    return false;
-                }
+                //Filters moved to query
+//                if (!this.showSkipped && rowInfo.summary.skipRow) {
+//                    return false;
+//                }
+//                if (!this.showErrors && rowInfo.summary.hasErrors) {
+//                    return false;
+//                }
+//                if (!this.showNoIssues && !rowInfo.summary.skipRow && !rowInfo.summary.hasErrors) {
+//                    return false;
+//                }
                 return true;
             },
             resetInput () {

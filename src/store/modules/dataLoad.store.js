@@ -10,33 +10,46 @@ const state = {
     paginatedDataLoad: null,
     filtering: false,
     
-    docName: 'contracts.contract',
+    docName: 'contracts.doc-name',
+
+    search: '',
+    
+    filters: {
+        showNoIssues: true,
+        showSkipped: true,
+        showErrors: true,
+    },
     
     pagination: {
         total: 0,
         page: 1,
-        records: 0,
-        pages: 0,
-        totalPages: 0
+        pages: 1
     }
 };
 
 const getters = {
-    // filteredDataLoad (state) {
-    //     if (state._filteredDataLoad) {
-    //         console.log('returning state._filteredDataLoad', state._filteredDataLoad);
-    //         return state._filteredDataLoad;
-    //     } else if (state.dataLoad) {
-    //         console.log('returning state.dataLoad', state.dataLoad);
-    //         return state.dataLoad.data;
-    //     } else {
-    //         console.log('returning []');
-    //         return [];
-    //     }
-    // },
     rawData (state) {
         return state.dataLoad && state.dataLoad.details ? state.dataLoad.details : [];
-    }
+    },
+    getUrlQuery(state){
+        let query = '?';
+        if (state.pagination.page) {
+            query += `page=${state.pagination.page}`
+        }
+        if(state.search){
+            if(query.length > 2){
+                query += '&';
+            }
+            query += `search=${state.search}`
+        }
+        if(query.length > 2){
+            query += '&';
+        }
+        query += `showNoIssues=${state.filters.showNoIssues}`; 
+        query += `&showSkipped=${state.filters.showSkipped}`; 
+        query += `&showErrors=${state.filters.showErrors}`; 
+        return query;
+    },
 };
 
 const actions = {
@@ -51,14 +64,24 @@ const actions = {
         });
     },
     
-    LOAD_CURRENT_DATA_LOAD: ({commit}) => {
+    LOAD_CURRENT_DATA_LOAD: ({commit, getters}, searchString) => {
+        if(searchString && searchString.length){
+            commit('SET_SEARCH',searchString);
+        } else {
+            commit('SET_SEARCH',"");
+        }
+        commit('SET_PAGE', 1);
+
+
+        let query = getters.getUrlQuery;
+        
         commit('SET_FILTERING', true);
-        dataLoadApi.getCurrent({}, (response) => {
+        dataLoadApi.getCurrent({query}, (response) => {
             if (!response.data.error && response.data) {
                 setTimeout(function () {
-                    commit('SET_CURRENT_DATA_LOAD', {dataLoad: response.data.data});
-                    commit('SET_FILTERED_CURRENT_DATA_LOAD', {filteredDataLoad: response.data.data.details});
-                    commit('SET_PAGE_AND_PAGINATE', {page: 1});
+                    console.log('response.data.data', response.data.data);
+                    commit('SET_PAGINATED_CURRENT_DATA_LOAD', {dataLoadInfo: response.data.data.doc});
+                    commit('SET_PAGINATION', response.data.data.pagination);
                     commit('SET_FILTERING', false);
                 });
             }
@@ -74,7 +97,6 @@ const actions = {
                 tShow(i18n.t(response.data.message), 'danger');
             } else {
                 commit('SET_CURRENT_DATA_LOAD_INFO', {dataLoadInfo: response.data.data});
-                // commit('SET_PAGE_AND_PAGINATE', {page: 1});
                 tShow(i18n.t(response.data.message), 'success');
             }
         }, (err) => {
@@ -82,81 +104,43 @@ const actions = {
         });
     },
     
-    changePage: ({commit, state}, page) => {
-        // commit('SET_PAGE_AND_PAGINATE', {page: 1});
-        
-        
+    changePage: ({commit, getters}, page) => {
         commit('SET_FILTERING', true);
+        commit('SET_PAGE', page);
+
+        let query = getters.getUrlQuery;
         
-        let paginatedPromise = new Promise((resolve, reject) => {
-            let limit = 10;
-            let skip = (state.pagination.page - 1) * limit;
-
-            // state.paginatedDataLoad = state.filteredDataLoad;
-            // state.paginatedDataLoad.details = state.paginatedDataLoad.details || [];
-
-            // state.paginatedDataLoad.slice(skip, skip + limit);
-
-            resolve(state.filteredDataLoad.slice(skip, skip + limit))
-        });
-
-        paginatedPromise.then((paginatedDataLoad) => {
-            commit('SET_PAGE_AND_PAGINATE', {page: page, paginatedDataLoad: paginatedDataLoad});
-            commit('SET_FILTERING', false);
+        dataLoadApi.getCurrent({query}, (response) => {
+            if (!response.data.error && response.data && response.data.data) {
+                console.log('response.data.data', response.data.data);
+                commit('SET_PAGINATED_CURRENT_DATA_LOAD', {dataLoadInfo: response.data.data.doc});
+                commit('SET_PAGINATION', response.data.data.pagination);
+                commit('SET_FILTERING', false);
+            }
+        }, (err) => {
+            //Error trying to load current data load info
         });
     },
     
-    FILTER_CURRENT_DATA_LOAD: ({commit, getters}, search) => {
+    FILTER_CURRENT_DATA_LOAD: ({commit, getters}, filters) => {
 
-        // let filteredDataLoad = getters.rawData;
-        // let filteredDataLoad = [];
-        //
-        // console.log('filteredDataLoad', filteredDataLoad);
+        commit('SET_FILTERS', filters);
+        commit('SET_PAGE', 1);
 
-        //TODO: filter data
-        commit('SET_FILTERING', true);
-        let dataToFilter = getters.rawData;
+        let query = getters.getUrlQuery;
 
-        
-        let filterPromise = new Promise((resolve, reject) =>{
-            let filteredData = [];
-            
-            if (!search || !search.length) {
-                return resolve(dataToFilter);
+        dataLoadApi.getCurrent({query}, (response) => {
+            if (!response.data.error && response.data && response.data.data) {
+                console.log('response.data.data', response.data.data);
+                commit('SET_PAGINATED_CURRENT_DATA_LOAD', {dataLoadInfo: response.data.data.doc});
+                commit('SET_PAGINATION', response.data.data.pagination);
+                commit('SET_FILTERING', false);
+                // commit('SET_PAGE_AND_PAGINATE', {page: 1});
             }
-            
-            dataToFilter.forEach((rowInfo) => {
-                let keys = Object.keys(rowInfo);
-                for (let key of keys) {
-                    if (rowInfo[key].value && rowInfo[key].value.toString().match(utils.toAccentsRegex(search, 'gi'))) {
-                        filteredData.push(rowInfo);
-                        break;
-                    }
-                }
-            });
-
-            return resolve(filteredData);
-        });
-
-        filterPromise.then((filteredDataLoad) => {
-
-
-            commit('SET_FILTERED_CURRENT_DATA_LOAD', {filteredDataLoad});
-            commit('SET_PAGE_AND_PAGINATE', {page: 1});
-            // commit('changePage', 1);
-            commit('SET_FILTERING', false);
-        }).catch((err) =>{
-            commit('SET_FILTERED_CURRENT_DATA_LOAD', {dataToFilter});
-            commit('SET_PAGE_AND_PAGINATE', {page: 1});
-            // commit('changePage', 1);
-            commit('SET_FILTERING', false);
+        }, (err) => {
+            //Error trying to load current data load info
         });
         
-        
-        // setTimeout(() => {
-        //     commit('SET_FILTERED_CURRENT_DATA_LOAD', {filteredDataLoad});
-        //     commit('SET_FILTERING', false);
-        // }, 2000);
     },
     //Confirm current and save to database
     CONFIRM_CURRENT: ({commit}) => {
@@ -205,128 +189,32 @@ const mutations = {
         bus.$emit('dataLoad/CURRENT_DATA_LOAD_LOADED', {dataLoad, canceled});
         
     },
-    
-    SET_PAGINATED_CURRENT_DATA_LOAD: (state, {filteredDataLoad}) => {
 
-        let limit = 20;
-        let skip = (state.pagination.page - 1) * limit;
-        
-        state.paginatedDataLoad = filteredDataLoad;
-        state.paginatedDataLoad.details = state.paginatedDataLoad.details || [];
-
-        state.paginatedDataLoad.details = state.paginatedDataLoad.details.splice(skip);
-
-        state.filteredDataLoad = filteredDataLoad;
+    SET_PAGINATION: (state, pagination) => {
+        state.pagination = pagination
     },
     
-    SET_FILTERED_CURRENT_DATA_LOAD: (state, {filteredDataLoad}) => {
-
-        let startTime = new Date().getTime();
-
-
-        state.filteredDataLoad = filteredDataLoad;
-        //paginate then set paginatedDataLoad
-        
-        let count = 0;
-        let total = filteredDataLoad.length || 0;
-
-        let page = state.pagination.page;
-        let limit = 10;
-        // Calculate skips based on limit & page
-        // let skip = (page - 1) * limit;
-
-
-        state.pagination.total = total;
-        state.pagination.page = page;
-        state.pagination.pages = Math.floor(total / limit) + 1;
-        //
-        //
-        //
-        //
-        // state.paginatedDataLoad = filteredDataLoad;
-        // state.paginatedDataLoad.details = state.paginatedDataLoad.details || [];
-        //
-        // state.paginatedDataLoad.details = state.paginatedDataLoad.details.splice(skip);
-        
-        // If clasification is TODOS then all services are fetched
-        // clasification = clasification === "TODOS" ? null : clasification;
-
-
-        // filteredDataLoad.details.forEach((detail) => {
-        //     if (skip < 1 && count < limit) {
-        //         count++;
-        //         return isValid;
-        //     } else {
-        //         skip--;
-        //     }
-        // });
-
-        // let result = services.filter(function(service) {
-        //     let isValid = clasification ? ( service.clasification === clasification ) : true;
-        //     isValid = isValid && (service.comingSoon || service.activeService) && !(service.deleted && service.deleted.isDeleted);
-        //     if (isValid) {
-        //         total++;
-        //         if (skip < 1 && count < limit) {
-        //             count++;
-        //             return isValid;
-        //         } else {
-        //             skip--;
-        //         }
-        //     }
-        //     return false;
-        // });
-        // state.pagination.totalPages = Math.ceil(total / limit);
-        // state.pagination.records = total;
-        // state.pagination.pages = [];
-        //
-        // var idx = state.pagination.page - 2;
-        // if(state.pagination.page == state.pagination.totalPages - 1){
-        //     idx = state.pagination.page - 3;
-        // }
-        // if(state.pagination.page == state.pagination.totalPages){
-        //     idx = state.pagination.page - 4;
-        // }
-        //
-        // while(state.pagination.pages.length < 5 && state.pagination.pages.length < state.pagination.totalPages){
-        //     if(idx > 0 && idx <= state.pagination.totalPages + 1){
-        //         state.pagination.pages.push(idx);
-        //     }
-        //     idx++;
-        // }
-        //
-        // return result;
-        
-        
-        
+    SET_PAGINATED_CURRENT_DATA_LOAD: (state, {dataLoadInfo}) => {
+        state.paginatedDataLoad = dataLoadInfo.details;
     },
 
     SET_FILTERING: (state, setTo) => {
         state.filtering = setTo;
     },
 
+    SET_FILTERS: (state, filters) => {
+        state.filters = filters;
+    },
 
-    SET_PAGE_AND_PAGINATE: (state, {page, paginatedDataLoad}) => {
+    SET_PAGE(state, page){
+        page = page || 1;
         state.pagination.page = page;
+    },
 
+    SET_SEARCH(state, search){
+        state.search = search;
+    },
 
-        // console.log('state.filteredDataLoad', state.filteredDataLoad);
-        
-        
-        if (paginatedDataLoad) {
-            state.paginatedDataLoad = paginatedDataLoad;
-        } else {
-            let limit = 10;
-            let skip = (state.pagination.page - 1) * limit;
-            
-            state.paginatedDataLoad = state.filteredDataLoad;
-            // state.paginatedDataLoad.details = state.paginatedDataLoad.details || [];
-    
-            state.paginatedDataLoad = state.paginatedDataLoad.slice(skip, skip + limit);
-        }
-
-
-        // console.log('state.paginatedDataLoad', state.paginatedDataLoad);
-    }
 };
 
 
