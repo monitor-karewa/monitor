@@ -15,13 +15,16 @@ const getters = {
 };
 
 const actions = {
-    LOAD_ORGANIZATIONS ({commit}/*, page*/) {
+    LOAD_ORGANIZATIONS ({commit},/*, page*/{callback}) {
         // let query = '';
         // if (page) {
         //     query += `?page=${page}`;
         // }
         apiPublicOrganizations.list({/*query*/}, (result) => {
             commit('SET_ORGANIZATIONS', result.data.data);
+            if (callback) {
+                callback();
+            }
         }, (err) => {
             tShow(i18n.t('organizations.public.load.error'), 'danger');
             commit('SET_ORGANIZATIONS', {});

@@ -60,7 +60,32 @@
 //        },
         beforeMount() {
 //            this.$store.dispatch(`${storeModule}/list`);
-            this.$store.dispatch(`${storeModule}/LOAD_ORGANIZATIONS`);
+            
+            let autoSelectOrganizationId = this.$route.query.autoSelectOrganization;
+
+            let callback = null;
+            if (autoSelectOrganizationId) {
+                callback = () => {
+                    
+                    let autoSelectOrganization = null;
+                    if (this.organizations && this.organizations.length) {
+                        this.organizations.forEach((organization) => {
+                            if (organization._id && organization._id.toString() === autoSelectOrganizationId) {
+                                autoSelectOrganization = organization;
+                            }
+                        });
+                    }
+
+                    if (autoSelectOrganization) {
+                        console.log('autoSelectOrganization', autoSelectOrganization);
+                        this.selectOrganization(autoSelectOrganization);
+                    }
+                };
+            }
+
+            this.$store.dispatch(`${storeModule}/LOAD_ORGANIZATIONS`, {callback: callback});
+
+
         },
         computed: {
             ...mapState({

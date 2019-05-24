@@ -17,6 +17,7 @@ export default function (api, storeName) {
         },
         docName: '',
         selectedDocId: '',
+        isEditing : false,
         isEditingTable : false,
         entrySelected : {},
         formErrors : [],
@@ -72,6 +73,7 @@ export default function (api, storeName) {
                     // commit('updateDocs', {
                     //     docs: result.data.data.docs
                     // });
+                    console.log('result.data.data', result.data.data);
                     commit('updateDocs', result.data.data);
                 },
                 (error) => {
@@ -236,6 +238,9 @@ export default function (api, storeName) {
                 docUpdated[field] = value;
                 state.docsUpdated.push(docUpdated);
             }
+        },
+        SET_EDIT(state, isEditing){
+            state.isEditing = isEditing;
         },
         SET_EDIT_TABLE(state, payload){
             state.isEditingTable = payload;

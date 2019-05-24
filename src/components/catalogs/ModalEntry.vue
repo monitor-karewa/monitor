@@ -10,8 +10,10 @@
                     <!-- HEADER -->
                     <div class="modal-header">
                         <a class="close-modal" data-dismiss="modal"><i class="zmdi zmdi-close"></i></a>
-                        <h1 class="modal-title">Nuevo(a) <strong>{{$tc(docName, 1)}}</strong></h1>
-                        <label class="modal-subtitle">A continuación puedes agregar un(a) {{$tc(docName, 1)}}</label>
+                        <h1 v-show="!isEditing" class="modal-title">Nuevo(a) <strong>{{$tc(docName, 1)}}</strong></h1>
+                        <h1 v-show="isEditing" class="modal-title">Editar <strong>{{$tc(docName, 1)}}</strong></h1>
+                        <label v-show="!isEditing" class="modal-subtitle">A continuación puedes agregar un(a) {{$tc(docName, 1)}}</label>
+                        <label v-show="isEditing" class="modal-subtitle">A continuación puedes editar un(a) {{$tc(docName, 1)}}</label>
                     </div>
 
 
@@ -48,7 +50,10 @@
             ...mapState({
                 docName: function (state) {
                     return state[this.$props.storeModule].docName
-                }
+                },
+                isEditing: function (state) {
+                    return state[this.$props.storeModule].isEditing;
+                },
             })
         },
         created(){},
