@@ -38,16 +38,9 @@ heroku:
 
 prod:
   stage:           deploy
-  image:           docker:stable
+  image:           alpine
   extends:         .devops
-  services:
-    - docker:dind
-  variables:
-    DOCKER_HOST:   tcp://docker:2375
-    DOCKER_DRIVER: overlay2
   script:
-    - docker_login
-    - docker_build
     - deploy_prod
   only:
     - tags
