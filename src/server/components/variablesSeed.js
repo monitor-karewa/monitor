@@ -123,8 +123,8 @@ let variables = {
           $group:{_id: null, myCount: {$sum: 1 } }},
           {$project:{ result : "$myCount", abbreviation : { $literal : "$NCSF"}}
       }]
-  }),
-  $MADEM: Variable.makeVariable({
+  }), 
+  $NCADSM: Variable.makeVariable({
       name:"Numero de contratos de adjudicaciones directas que sobrepasan monto",
       description:"Numero de adjudicaciones directas que sobrepasan el monto máximo aprobado",
       abbreviation:"$NCADSM",

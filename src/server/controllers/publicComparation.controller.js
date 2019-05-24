@@ -11,14 +11,15 @@ const { PDFTable, PDFExporter } = require('./../components/pdfExporter');
 const {ExcelExporter} = require('./../components/exporter');
 const moment = require('moment');
 
-const {calculateAndValidateFormula} = require('./../controllers/calculation.controller');
+const calculateAndValidateFormula = require('./../controllers/calculation.controller').calculateAndValidateFormula;
 const logger = require('./../components/logger').instance;
 
 exports.corruptionIndex = (req, res, next) => {
     let id = req.query.id;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    let qByOrganization = {"organization": mongoose.Types.ObjectId(id)};
+    let currentOrganizationId = mongoose.Types.ObjectId(id);
+    let qByOrganization = {"organization": currentOrganizationId};
 
     let query = {...qNotDeleted, ...qByOrganization, locked: true};
     Calculation
@@ -60,16 +61,25 @@ exports.corruptionIndex = (req, res, next) => {
                 resultsMap: {},
             };
 
-            calculateAndValidateFormula(cache, corruptionIndex._id, (err, result) => {
-                if (result && result.value) {
-                    corruptionIndex.result = result.value;
-                }
+            Calculation.getEnabledCalculations(req, cache, currentOrganizationId, (err, calculationsInfo) => {
+                
+                let query = Calculation.qAdministrationPeriodFromYearToYear(corruptionIndex);
 
-                return res.json({
-                    error: true,
-                    data: corruptionIndex
+                calculateAndValidateFormula(req, cache, corruptionIndex._id, {query: query}, (err, result) => {
+                    if (result && result.value) {
+                        corruptionIndex.result = result.value;
+                    }
+    
+                    return res.json({
+                        error: true,
+                        data: {
+                            corruptionIndex,
+                            calculationsInfo
+                        }
+                    });
                 });
             });
+
 
         });
 };
@@ -189,9 +199,17 @@ exports.detail = (req, res, next) => {
                     .lean()
                     .exec((err, corruptionIndex) => {
 
+                        if (err) {
+                            logger.error(err, req, 'publicComparation.controller#detail', 'Error trying to query corruption index');
+                        }
+
                         corruptionIndex = corruptionIndex || {};
 
+                        //Set default result
                         corruptionIndex.result = 0;
+                        
+                        //Set url
+                        corruptionIndex.url = url;
 
                         if (!corruptionIndex._id) {
                             return callback(null, corruptionIndex);
@@ -204,7 +222,12 @@ exports.detail = (req, res, next) => {
                             resultsMap: {},
                         };
 
-                        calculateAndValidateFormula(cache, corruptionIndex._id, (err, result) => {
+                        let query = Calculation.qAdministrationPeriodFromYearToYear(corruptionIndex);
+
+                        calculateAndValidateFormula(req, cache, corruptionIndex._id, {query: query}, (err, result) => {
+                            if (err) {
+                                logger.error(err, req, 'publicComparation.controller#detail', 'Error trying to get result for corruption index');
+                            }
                             if (result && result.value) {
                                 corruptionIndex.result = result.value;
                             }
@@ -222,9 +245,27 @@ exports.detail = (req, res, next) => {
                         return callback(null, organization);
                     });
             },
+            calculationsInfo: (callback) => {
+                let cache = {
+                    done: [],
+                    calls: [],
+                    i: 0,
+                    resultsMap: {},
+                };
+
+                Calculation.getEnabledCalculations(req, cache, id, (err, calculationsInfo) => {
+                    if (err) {
+                        logger.error(err, req, 'publicComparation.controller#detail', 'Error trying to get enabled calculations');
+                    }
+                    calculationsInfo = calculationsInfo || [];
+                    
+                    return callback(null, calculationsInfo);
+                });
+            },
         }, (err, results) => {
             let corruptionIndex = results.corruptionIndex;
             let organization = results.organization;
+            let calculationsInfo = results.calculationsInfo;
 
             let total = result.total || 0;
             let publicCount = result.publicCount || 0;
@@ -239,9 +280,8 @@ exports.detail = (req, res, next) => {
                     shortName: organization.shortName,
                     color: organization.color,
                 },
-                corruptionIndex: {
-                    result: corruptionIndex.result
-                },
+                corruptionIndex: corruptionIndex,
+                calculationsInfo: calculationsInfo,
                 totals: {
                     public: result.public || 0,
                     invitation: result.invitation || 0,
@@ -274,9 +314,7 @@ exports.detail = (req, res, next) => {
 
 
 exports.saveComparation =  (req, res, next) => {
-    console.log("publicComparation.controller#saveComparation");
     getOrCreateComparation(req, function (err, result) {
-        console.log("result of getorCreate", result);
         if(err){
             return res.json({error: true})
         }
@@ -285,7 +323,6 @@ exports.saveComparation =  (req, res, next) => {
         }
 
         let comparation = result.comparation;
-        console.log("result.comparation", result.comparation);
 
         comparation.prepareComparationforSaving(function (error, result) {
             if(error){
@@ -404,81 +441,101 @@ exports.download = (req, res, next) => {
     }
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    let qByOrganization = {"organization": mongoose.Types.ObjectId(id)};
-
-    let query = {...qNotDeleted, ...qByOrganization, locked: true};
-    Calculation
-        .findOne(query)
-        .populate('organization calculations')
-        .lean()
-        .exec((err, corruptionIndex) => {
-
+    // let qByOrganization = {"organization": mongoose.Types.ObjectId(id)};
+    
+    Organization.findOne({_id: Organization.currentOrganizationId(req)})
+        .exec((err, currentOrganization) => {
             if (err) {
-                //Error
-                logger.error(err, req, 'publicComparation.controller#corruptionIndex', 'Error trying to find Corruption index');
+                logger.error(err, req, 'publicComparation.controller#corruptionIndex', 'Error trying to find current Organization');
+                
                 return res.json({
                     error: true,
                     data: {}
                 });
-            } else if (!corruptionIndex) {
-                //Not found
-                logger.error(null, req, 'publicComparation.controller#corruptionIndex', 'Corruption index not found');
-                // return res.json({
-                //     error: true,
-                //     data: {}
-                // });
             }
+            
+            let query = {...qNotDeleted/*, ...qByOrganization*/, locked: true};
+            Calculation
+                .findOne(query)
+                .populate('organization calculations')
+                // .lean()
+                .exec((err, corruptionIndex) => {
+        
+                    if (err) {
+                        //Error
+                        logger.error(err, req, 'publicComparation.controller#corruptionIndex', 'Error trying to find Corruption index');
+                        return res.json({
+                            error: true,
+                            data: {}
+                        });
+                    } else if (!corruptionIndex) {
+                        //Not found
+                        logger.error(null, req, 'publicComparation.controller#corruptionIndex', 'Corruption index not found');
+                        // return res.json({
+                        //     error: true,
+                        //     data: {}
+                        // });
+                    }
+        
+                    corruptionIndex = corruptionIndex || {};
+                    
+                    if (corruptionIndex.toObject) {
+                        corruptionIndex = corruptionIndex.toObject();
+                        corruptionIndex.organization = currentOrganization;
+                    }
+        
+                    corruptionIndex.result = 0;
+        
+        
+                    if (!corruptionIndex._id) {
+                        return res.json({
+                            error: true,
+                            data: corruptionIndex
+                        });
+                    }
+        
+                    let cache = {
+                        done: [],
+                        calls: [],
+                        i: 0,
+                        resultsMap: {},
+                    };
 
-            corruptionIndex = corruptionIndex || {};
-
-            corruptionIndex.result = 0;
-
-
-            if (!corruptionIndex._id) {
-                return res.json({
-                    error: true,
-                    data: corruptionIndex
+                    let query = Calculation.qAdministrationPeriodFromYearToYear(corruptionIndex);
+        
+                    calculateAndValidateFormula(req, cache, corruptionIndex._id, {query: query}, (err, result) => {
+                        if (result && result.value) {
+                            corruptionIndex.result = result.value;
+                        }
+        
+                        if (corruptionIndex.result <= 55) {
+                            corruptionIndex.corruptionLevel = 'BAJO'
+                        } else if (corruptionIndex.result <= 75) {
+                            corruptionIndex.corruptionLevel = 'MEDIO'
+                        } else {
+                            corruptionIndex.corruptionLevel = 'ALTO'
+                        }
+        
+        
+                        delete corruptionIndex._id;
+                        switch(format){
+                            case 'xls':
+                                downloadXls(req, res, corruptionIndex);
+                                break;
+                            case 'pdf':
+                                downloadPDF(req, res, corruptionIndex);
+                                break;
+                            case 'json':
+                                return res.json({ corruptionIndex });
+                                break;
+                            default:
+                                break;
+                        }
+                    });
+        
                 });
-            }
-
-            let cache = {
-                done: [],
-                calls: [],
-                i: 0,
-                resultsMap: {},
-            };
-
-            calculateAndValidateFormula(cache, corruptionIndex._id, (err, result) => {
-                if (result && result.value) {
-                    corruptionIndex.result = result.value;
-                }
-
-                if (corruptionIndex.result <= 55) {
-                    corruptionIndex.corruptionLevel = 'BAJO'
-                } else if (corruptionIndex.result <= 75) {
-                    corruptionIndex.corruptionLevel = 'MEDIO'
-                } else {
-                    corruptionIndex.corruptionLevel = 'ALTO'
-                }
-
-
-                delete corruptionIndex._id;
-                switch(format){
-                    case 'xls':
-                        downloadXls(req, res, corruptionIndex);
-                        break;
-                    case 'pdf':
-                        downloadPDF(req, res, corruptionIndex);
-                        break;
-                    case 'json':
-                        return res.json({ corruptionIndex });
-                        break;
-                    default:
-                        break;
-                }
-            });
-
         });
+
 };
 
 function downloadXls(req, res, corruptionIndex){

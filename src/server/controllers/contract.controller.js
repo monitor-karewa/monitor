@@ -338,6 +338,8 @@ exports.save = (req, res, next) => {
                 contract.procedureType = req.body.procedureType;
                 contract.category = req.body.category;
                 contract.administrationPeriod = req.body.administrationPeriod;
+                contract.administrationPeriodFromYear = Contract.parseAdministrationPeriodFromYear(req.body.administrationPeriod);
+                contract.administrationPeriodToYear = Contract.parseAdministrationPeriodToYear(req.body.administrationPeriod);
                 contract.fiscalYear = req.body.fiscalYear;
                 contract.period = req.body.period;
                 contract.contractId = req.body.contractId;
@@ -435,6 +437,9 @@ exports.save = (req, res, next) => {
                             applicantAdministrativeUnit :  mongoose.Types.ObjectId(req.body.applicantAdministrativeUnit._id),
                             areaInCharge : mongoose.Types.ObjectId(req.body.areaInCharge._id),
                         });
+
+                        contract.administrationPeriodFromYear = Contract.parseAdministrationPeriodFromYear(req.body.administrationPeriod);
+                        contract.administrationPeriodToYear = Contract.parseAdministrationPeriodToYear(req.body.administrationPeriod);
 
 
                         contract.save((err, savedContract) => {

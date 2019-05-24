@@ -65,7 +65,40 @@
                     </div>
                 </div>
 
-                <div class="form-group fg-float subtitle">
+
+                <div class="floating-text-form">
+                    <h1>Cálculo corresponde a Índice de riesgo de corrupción</h1>
+                </div>
+                <div class="form-group fg-float dropdown-inside m-t-10 p-t-0">
+                    <div class="fg-line basic-input">
+                        <div class="toggle-switch col-12">
+                            <div class="switch-border"></div>
+                            <input id="locked" type="checkbox" hidden="hidden" v-model="entry.locked" @change="assignPercentScale($event)">
+                            <label for="locked" class="ts-helper"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <!--administrationPeriod-->
+                <div class="form-group fg-float subtitle" v-show="entry.locked">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input"
+                               :placeholder="$t('calculations.administration-period.placeholder')"
+                               v-model="entry.administrationPeriod"
+                               @input="delayTouch($v.entry.administrationPeriod)">
+                        <label class="fg-label">{{$t('calculations.administration-period.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('calculations.administration-period.sub-label')}}</strong>
+                        </label>
+                    </div>
+                    <span v-if="$v.entry.administrationPeriod.$invalid  && $v.entry.administrationPeriod.$dirty && !$v.entry.administrationPeriod.validAdministrationPeriod"
+                          class="c-error">{{$t(regExpErrorMessage, {field:$t('calculations.new.administration-period.label'), example:'2016-2018' })}}</span>
+                    <!--<span v-if="$v.entry.administrationPeriod.$invalid  && $v.entry.administrationPeriod.$dirty && !$v.entry.administrationPeriod.required"-->
+                          <!--class="c-error">{{$t(requiredErrorMessage, {field:$t('calculations.administration-period.label')})}}</span>-->
+                </div>
+
+                <div class="form-group fg-float subtitle" v-show="!entry.locked">
                     <div class="fg-line basic-input">
                         <div class="input-radio-check col-md-12 p-0">
                             <div class=" check-container col-md-6">
@@ -104,8 +137,8 @@
                     <div class="row m-b-30">
                         <div class="col-md-6">
                             <div class="floating-text-form">
-                                <h1>Escala de porcentajes</h1>
-                                <p>Establece la escala para determinar la calificación del indicador</p>
+                                <h1>Escala de valores</h1>
+                                <p>Establece la escala para determinar el valor del cálculo</p>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -120,7 +153,7 @@
                                    v-model="scale.min">
                             <label class="fg-label m-t-10" v-if="index === 0">
                                 <small></small>
-                                <strong>Min(%)</strong>
+                                <strong>Min</strong>
                             </label>
                         </div>
                         <span class="w-10 m-r-10"><strong class="c-accent f-12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</strong></span>
@@ -129,7 +162,7 @@
                                    v-model="scale.max">
                             <label class="fg-label m-t-10" v-if="index === 0">
                                 <small></small>
-                                <strong>Max(%)</strong>
+                                <strong>Max</strong>
                             </label>
                         </div>
                         <span class="w-10 m-r-10"><strong class="c-accent f-12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=</strong></span>
@@ -138,7 +171,7 @@
                                    v-model="scale.value">
                             <label class="fg-label m-t-10" v-if="index === 0">
                                 <small></small>
-                                <strong>Calificación</strong>
+                                <strong>Valor</strong>
                             </label>
                         </div>
                         <div class="col-md-2">
@@ -264,7 +297,8 @@
                 </div>
                 <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar
                 </button>
-                <button type="submit" class="btn-raised button-accent m-l-15">Agregar</button>
+                <button v-show="!isEditing" type="submit" class="btn-raised button-accent m-l-15">Agregar</button>
+                <button v-show="isEditing" type="submit" class="btn-raised button-accent m-l-15">Actualizar</button>
             </div>
 
 
@@ -313,6 +347,7 @@
                     {label: 'calculations.type', field: 'type', visible: true, type:"i18n" },
                     {label: 'calculations.formula.expression', field: 'formula.expression', visible: true, type:"highlight" },
                     {label: 'calculations.enabled', field: 'enabled', type:"boolean", visible: true},
+                    {label: 'calculations.locked', field: 'locked', type:"boolean", visible: true},
                     {label: 'calculations.notes', field: 'notes', visible: true},
                     {label: 'general.created-at', field: 'createdAt', type: 'Date', visible: true}
                 ],
@@ -331,6 +366,8 @@
                     },
                     displayForm : "NORMAL",
                     notes: "",
+                    locked:false,
+                    administrationPeriod:'',
                     hasPercentScale:false,
                     scale:[]
                 },
@@ -363,6 +400,15 @@
                         return (/^\${2}[A-Z0-9]{1,7}$/).test(value);
                     }
                 },
+                administrationPeriod: {
+//                    required,
+                    validAdministrationPeriod: (value) => {
+                        if (value == null || value == undefined || value == "") {
+                            return true
+                        }
+                        return (/^[12][0-9]{3}-[12][0-9]{3}$/).test(value);
+                    }
+                },
                 type: {
                     required,
                 }
@@ -384,6 +430,7 @@
             },
             addToFormula(element) {
                 if (element) {
+                    this.entry.formula.expression = this.entry.formula.expression || '';
                     if (this.entry.formula.expression.length > 0) {
                         this.entry.formula.expression += " ";
                     }
@@ -522,6 +569,7 @@
         created() {
             bus.$on(storeModule + DOC_UPDATED, () => {
                 $('#ModalEntry').modal('hide');
+                tShow('El cálculo se ha actualizado correctamente', 'success');
                 this.$store.dispatch (`${storeModule}/clearFormErrors`);
                 this.clearEntry();
             });
@@ -535,6 +583,8 @@
                 this.entry.enabled= "";
                 this.entry.notes= "";
                 this.entry.abbreviation= "";
+                this.entry.locked = false;
+                this.entry.administrationPeriod = '';
                 this.entry.hasPercentScale = false;
                 this.entry.scale = [];
                 $('#ModalEntry').modal('hide');
@@ -563,6 +613,8 @@
                 tempEntry.displayForm = entry.displayForm;
                 tempEntry.notes = entry.notes;
                 tempEntry.abbreviation = entry.abbreviation;
+                tempEntry.locked = entry.locked;
+                tempEntry.administrationPeriod = entry.administrationPeriod;
                 tempEntry.hasPercentScale = entry.hasPercentScale;
                 tempEntry.scale = entry.scale;
 
@@ -599,6 +651,14 @@
                 }
                 if(!this.$v.entry.abbreviation.validAbbreviation){
                     return "calculations.validation.abbreviation"
+                }
+            },
+            administrationPeriodMessage(){
+                if(!this.$v.entry.administrationPeriod.required){
+                    return "calculation.validation.required";
+                }
+                if(!this.$v.entry.administrationPeriod.validAdministrationPeriod){
+                    return "calculations.validation.administrationPeriod"
                 }
             },
             ...mapState({

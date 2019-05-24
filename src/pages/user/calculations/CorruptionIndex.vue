@@ -108,10 +108,34 @@
                                 <br>
                                  Se calcula analizando el número de adjudicaciones directas contra el número de invitaciones al proveedor y de licitaciones públicas. En adición, se toman en cuenta diferentes variables para generar un índice exacto.
 
-                                <!--Si deseas conocer más al respecto, dirígete a nuestras recursos haciendo clic aquí.-->
+                                Si deseas conocer más sobre la plataforma, dirígete a nuestras recursos haciendo <router-link to="/resources">clic aquí</router-link>.
+
                             </p>
+                            <a data-toggle="modal" data-target="#corruption-index-modal" class="btn-stroke button-primary text-unset" tabindex="">¿Cómo se
+                                calcula?</a>
+                            <ModalCorruptionIndexHow id="corruption-index-modal"/>
                         </div>
                     </div>
+
+                    <PanelOtherCalculations :calculationsInfo="calculationsInfo"/>
+
+                    <!--<div class="panel-table m-t-50" v-show="calculationsInfo && calculationsInfo.length">-->
+                        <!--<div class="row m-0 p-b-20">-->
+                            <!--<span class="border-lines col-12">-->
+                                <!--<label>Otros cálculos</label>-->
+                            <!--</span>-->
+                            <!--<template v-for="(calculationInfo) in calculationsInfo">-->
+                                <!--<div class="col-6 p-l-20 p-r-20 p-t-20">-->
+                                    <!--<p class="f-12 c-plain_text principal-font-medium text-upper d-block m-b-0"> {{calculationInfo.name}} - {{calculationInfo.description}}</p>-->
+                                <!--</div>-->
+                                <!--<div class="col-6 p-l-20 p-r-20 p-t-20">-->
+                                    <!--<p class="f-16 c-plain_text principal-font-bold text-upper text-align-c d-block m-b-0">-->
+                                        <!--{{calculationInfo.result | currency}}-->
+                                    <!--</p>-->
+                                <!--</div>-->
+                            <!--</template>-->
+                        <!--</div>-->
+                    <!--</div>-->
                 </div>
             </div>
 
@@ -127,6 +151,9 @@
 
     import MoreInfo from '@/components/general/MoreInfo';
     import ModalAutoDismiss from '@/components/catalogs/ModalAutoDismiss.vue';
+    import ModalCorruptionIndexHow from '@/components/modals/ModalCorruptionIndexHow';
+    
+    import PanelOtherCalculations from '@/components/panels/PanelOtherCalculations';
 
     import {Gauge} from 'gaugeJS';
     import {mapState} from 'vuex';
@@ -169,7 +196,9 @@
         },
         components: {
             MoreInfo,
-            ModalAutoDismiss
+            ModalAutoDismiss,
+            ModalCorruptionIndexHow,
+            PanelOtherCalculations,
         },
         methods: {
             initTachometer(elementId, textElementId, value) {
@@ -209,6 +238,7 @@
         computed: {
             ...mapState({
                 corruptionIndex: state => state[storeModule].corruptionIndex,
+                calculationsInfo: state => state[storeModule].calculationsInfo,
                 currentOrganization: state => state.currentOrganization,
             }),
             tachometerValue() {
