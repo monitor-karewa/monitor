@@ -57,12 +57,12 @@ prod:
       function docker_build() {
         case ${CI_COMMIT_REF_SLUG} in
           master)
-            cat <<EOF > .env.production
-            API_HOST=$API_HOST_BETA
-            API_PORT=$API_PORT_BETA
-            VUE_APP_API_HOST=$VUE_APP_API_HOST_BETA
-            VUE_APP_API_PORT=$VUE_APP_API_PORT_BETA
-            EOF
+            echo " \
+      API_HOST=$API_HOST_BETA \n \
+      API_PORT=$API_PORT_BETA \n \
+      VUE_APP_API_HOST=$VUE_APP_API_HOST_BETA \n \
+      VUE_APP_API_PORT=$VUE_APP_API_PORT_BETA" \
+      > .env.production
 
             docker build \
               --iidfile imageid.txt \
@@ -71,12 +71,12 @@ prod:
             ;;
 
           *)
-            cat <<EOF > .env.production
-            API_HOST=$API_HOST_PROD
-            API_PORT=$API_PORT_PROD
-            VUE_APP_API_HOST=$VUE_APP_API_HOST_PROD
-            VUE_APP_API_PORT=$VUE_APP_API_PORT_PROD
-            EOF
+            echo " \
+          API_HOST=$API_HOST_PROD \n \
+          API_PORT=$API_PORT_PROD \n \
+          VUE_APP_API_HOST=$VUE_APP_API_HOST_PROD \n \
+          VUE_APP_API_PORT=$VUE_APP_API_PORT_PROD" \
+          > .env.production
 
             docker build \
               --iidfile imageid.txt \
