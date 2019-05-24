@@ -10,9 +10,9 @@
                     <slot></slot>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">{{$t('general.modal-editable-table.cancel-button')}}
+                    <button v-show="!hideCancelButton" type="button" class="btn-stroke button-info_text" data-dismiss="modal">{{$t('general.modal-editable-table.cancel-button')}}
                     </button>
-                    <button type="button" class="btn-raised button-accent m-l-15" data-dismiss="modal" @click="confirmAction">{{$t('general.modal-editable-table.ok-button')}}</button>
+                    <button type="button" class="btn-raised button-accent m-l-15" data-dismiss="modal" @click="confirmAction">{{$t(this.confirmActionButtonText)}}</button>
                 </div>
             </div>
         </div>
@@ -29,7 +29,11 @@
         },
         methods:{
            confirmAction(){
-               this.$store.dispatch(`${this.$props.storeModule}/${this.$props.action}`);
+               if (this.closeOnly) {
+                   //Do nothing, only close
+               } else {
+                   this.$store.dispatch(`${this.$props.storeModule}/${this.$props.action}`);
+               }
            }
         },
         props:{
@@ -39,7 +43,19 @@
             },
             "title": String,
             "storeModule": String,
-            "action": String
+            "action": String,
+            "hideCancelButton": {
+                type: Boolean,
+                default: false
+            },
+            "confirmActionButtonText": {
+                type: String,
+                default: 'general.modal-editable-table.ok-button'
+            },
+            "closeOnly": {
+                type: Boolean,
+                default: false
+            },
         }
     }
 </script>

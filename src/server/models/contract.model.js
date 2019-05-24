@@ -364,7 +364,18 @@ let ContractSchema = new Schema({
     administrationPeriod: {
         type: String,
         required: [true, "El campo Administración es requerido"],
-        match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.ADMINISTRATION), 'El campo Administración no cumple con el formato esperado. Ejemplo: 2017-2019']
+        match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.ADMINISTRATION), 'El campo Administración no cumple con el formato esperado. Ejemplo: 2017-2019'],
+        default: '2016-2018' 
+    },
+    administrationPeriodFromYear: {
+        type: Number,
+        required: true,
+        default: 2016 
+    },
+    administrationPeriodToYear: {
+        type: Number,
+        required: true,
+        default: 2018
     },
     /* Ejercicio */
     fiscalYear: {
@@ -682,6 +693,22 @@ ContractSchema.statics.expressValidator = function () {
         // check('type').isIn(allowedTypes),
         // check('url').isUrl()
     ]
+};
+
+ContractSchema.statics.parseAdministrationPeriodFromYear = function (administrationPeriod) {
+    let fromYearAsStr = '2016';
+    if (administrationPeriod && administrationPeriod.match(new RegExp(CONTRACT_VALIDATION_REGEX_DICT.ADMINISTRATION))) {
+        fromYearAsStr = administrationPeriod.substr(0, 4);
+    }
+    return Number(fromYearAsStr);
+};
+
+ContractSchema.statics.parseAdministrationPeriodToYear = function (administrationPeriod) {
+    let toYearAsStr = '2018';
+    if (administrationPeriod && administrationPeriod.match(new RegExp(CONTRACT_VALIDATION_REGEX_DICT.ADMINISTRATION))) {
+        toYearAsStr = administrationPeriod.substr(5, administrationPeriod.length - 1);
+    }
+    return Number(toYearAsStr);
 };
 
 

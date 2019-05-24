@@ -16,6 +16,11 @@ let ComparationSchema = new Schema({
         type: String,
         required: true
     },
+    color: {
+        type: String,
+        required: true,
+        default: "#2cbcb6"
+    },
     from: {
         type: Schema.Types.ObjectId,
         ref: 'Organization',
@@ -40,29 +45,34 @@ class ComparationClass {
     }
 
     prepareComparationforSaving(callback) {
-        this.getTargetName((err, result) => {
-            console.log("getTargetName#result", result);
+        this.getTarget((err, result) => {
+            // console.log("getTargetName#result", result);
             if(err){
-                console.log("error", err);
+                // console.log("error", err);
                 return callback(err);
             }
             if(result.error){
                 return callback(null, {error: true, message : result.message})
             }
-            console.log("this", this);
-            console.log('this.targetName --> ' + this.targetName);
-            console.log('RESULT NAME --> ' + result.data);
-            if(this.targetName !== result.data){
-                this.targetName = result.data;
-                console.log("name changed");
-                return callback(null,  {message : "Name changed --> " + result.data, mustSave : true })
+            
+            let mustSave = false;
+            
+            if(this.targetName !== result.data.shortName){
+                this.targetName = result.data.shortName;
+                mustSave = true;
             }
-            return callback(null,  {message : "All good", mustSave : false})
+            
+            if(this.color !== result.data.color){
+                this.color = result.data.color;
+                mustSave = true;
+            }
+            return callback(null,  {message : ""/* + result.data*/, mustSave : mustSave});
+            // return callback(null,  {message : "All good", mustSave : false})
         })
     }
 
 
-    getTargetName(callback) {
+    getTarget(callback) {
         const URL_DETAIL_SUFFIX = "/public-api/comparations/detail/?id=";
         let url = "";
         if (this.remoteUrl) {
@@ -71,7 +81,7 @@ class ComparationClass {
                 .then(function (response) {
                     return callback(null, {
                         error: false,
-                        data: response.data.data.organization.shortName,
+                        data: response.data.data.organization,
                     })
                 })
                 .catch(error => {
@@ -83,19 +93,16 @@ class ComparationClass {
         } else {
             Organization.findOne(
                 {_id: mongoose.Types.ObjectId(this.target)}
-                , (err, response) => {
+                , (err, organization) => {
                     if (err) {
-                        console.log("err", err);
                         return callback(err, {
                             error: true,
                             message: "Error retrieving local organization"
                         })
                     }
-                    console.log("response", response);
-                    console.log('this.target --> ' + this.target);
                     return callback(null, {
                         error: false,
-                        data: response.shortName,
+                        data: organization,
                     })
                 });
         }

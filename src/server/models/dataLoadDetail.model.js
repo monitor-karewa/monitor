@@ -59,6 +59,9 @@ DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
             //Someone renamed the model name
             // administrationPeriod : detail.administrationPeriod.value,
             administrationPeriod : detail.administration.value,
+
+            administrationPeriodFromYear: Contract.parseAdministrationPeriodFromYear(detail.administration.value),
+            administrationPeriodToYear: Contract.parseAdministrationPeriodToYear(detail.administration.value),
             
             fiscalYear : detail.fiscalYear.value,
             period : detail.period.value,

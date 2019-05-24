@@ -30,9 +30,9 @@
 
                     <div class="panel-table">
                         <div class="row m-0 p-b-20">
-                          <span class="border-lines col-12">
-                            <label>Monitores a comparar</label>
-                          </span>
+                            <span class="border-lines col-12">
+                                <label>Monitores a comparar</label>
+                            </span>
                             <div class="col-4 p-30"></div>
                             <div class="col-4 p-30">
                                 <div class="logo-full lg">
@@ -43,7 +43,9 @@
                                     </div>
                                 </div>
                                 <!--<a href="" class="btn-stroke button-primary text-unset" tabindex="">Ir a Inicio</a>-->
-                                <router-link to="/" class="btn-stroke button-primary text-unset">Ir a Inicio</router-link>
+                                <router-link v-show="!isExternalCorruptionIndex(detailLeft.corruptionIndex)" :to="getInternalCorruptionIndexHomeUrl(detailLeft.corruptionIndex, detailLeft.organization)" class="btn-stroke button-primary text-unset">Ir a Inicio</router-link>
+                                <!--<a v-show="!isExternalCorruptionIndex(detailLeft.corruptionIndex)" :href="getInternalCorruptionIndexHomeUrl(detailLeft.corruptionIndex, detailLeft.organization)" class="btn-stroke button-primary text-unset" tabindex="">Ir a Inicio</a>-->
+                                <a v-show="isExternalCorruptionIndex(detailLeft.corruptionIndex)" target="_blank" :href="getExternalCorruptionIndexHomeUrl(detailLeft.corruptionIndex, detailLeft.organization)" class="btn-stroke button-primary text-unset" tabindex="">Ir a Inicio</a>
                             </div>
                             <div class="col-4 p-30">
                                 <div class="logo-full lg">
@@ -53,35 +55,27 @@
                                         <label :style="{color: detailRight.organization.color}">{{detailRight.organization.shortName}}</label>
                                     </div>
                                 </div>
-                                <router-link to="/" class="btn-stroke button-primary text-unset" tabindex="">
-                                    Ir a Inicio
-                                </router-link>
+                                <router-link v-show="!isExternalCorruptionIndex(detailRight.corruptionIndex)" :to="getInternalCorruptionIndexHomeUrl(detailRight.corruptionIndex, detailRight.organization)" class="btn-stroke button-primary text-unset">Ir a Inicio</router-link>
+                                <!--<a v-show="!isExternalCorruptionIndex(detailRight.corruptionIndex)" :href="getInternalCorruptionIndexHomeUrl(detailRight.corruptionIndex, detailRight.organization)" class="btn-stroke button-primary text-unset" tabindex="">Ir a Inicio</a>-->
+                                <a v-show="isExternalCorruptionIndex(detailRight.corruptionIndex)" target="_blank" :href="getExternalCorruptionIndexHomeUrl(detailRight.corruptionIndex, detailRight.organization)" class="btn-stroke button-primary text-unset" tabindex="">Ir a Inicio</a>
                             </div>
 
 
                             <span class="border-lines col-12">
-                    <label>Índice de corrupción <i id="indice-tooltip" class="zmdi zmdi-help-outline"></i></label>
-                                <!-- TOOLTIP -->
-                                <!--<template id="help-tooltip-indice">
-                                 <div class="help-tooltip-div">
-                                   <label>¿Qué significa esto?</label>
-                                   <p>Es la sumatoria de los montos dados por cada contrato a lo largo de la administración 2016-2018.</p>
-                                   <p>Estos se dividen en 3 tipos de procedimientos de los contratos, los cuales son: <i>Licitación pública, Por invitación y Adquisición directa.</i></p>
-                                   <p class="m-b-0">Puedes consultar esta y más información en la sección de <i>Ayuda.</i></p>
-                                 </div>
-                                </template>-->
-                  </span>
+                                <label>Índice de corrupción <i id="corruption-index-tooltip" class="zmdi zmdi-help-outline"></i></label>
+                                <div id="help-tooltip-corruption-index-content" class="d-none">
+                                    <div class="help-tooltip-div">
+                                        <label>¿Qué significa esto?</label>
+                                        <p>Este es un índice de riesgo de corrupción para la administración {{detailLeft.corruptionIndex.administrationPeriod}} de {{detailLeft.organization.name}} y la administración {{detailRight.corruptionIndex.administrationPeriod}} de {{detailRight.organization.name}}.</p>
+                                        <p>El sistema analiza automáticamente la información de las contrataciones públicas cargadas en el sistema y mediante un cálculo avanzado y automatizado, obtiene un porcentaje que indica la posibilidad de que la organización presente actividades de corrupción.</p>
+                                        <p>Este cálculo avanzado toma en cuenta 3 ejes principales. El manejo correcto de las contrataciones públicas por parte de la organización, la competencia económica, y un análisis de su transparencia.</p>
+                                        <p>Para más información, puedes consultar nuestra sección de Recursos.</p>
+                                    </div>
+                                </div>
+                            </span>
                             <div class="col-4 p-30 vertical-center">
                                 <p class="f-12 c-plain_text principal-font-medium text-upper m-b-0 vertical-center">
-                                    Tacómetro <i id="tacometro-tooltip"
-                                                 class="zmdi zmdi-help-outline c-info f-18 m-l-5"></i></p>
-                                <!-- TOOLTIP -->
-                                <template id="help-tooltip-tacometro">
-                                    <div class="help-tooltip-div">
-                                        <!--<label>¿Qué significa esto?</label>-->
-                                        <!--<p>TEXTO FALTANTE</p>-->
-                                    </div>
-                                </template>
+                                    Tacómetro </p>
                             </div>
                             <div class="col-4 p-30">
                                 <div class="tacometro-container">
@@ -103,17 +97,16 @@
                                             <div id="gauge-text-left">0</div>
                                             %
                                         </div>
-                                        <div class="prob">text</div>
+                                        <div class="prob">---</div>
                                     </div>
 
                                 </div>
-                                <a href="" class="btn-stroke button-primary text-unset" tabindex="">¿Cómo se
+                                <a data-toggle="modal" :data-target="`#${leftModalCorruptionIndexHow}`" class="btn-stroke button-primary text-unset" tabindex="">¿Cómo se
                                     calcula?</a>
+                                <ModalCorruptionIndexHow :id="leftModalCorruptionIndexHow"/>
                             </div>
                             <div class="col-4 p-30">
                                 <div class="tacometro-container">
-
-
                                     <div class="gauge-container">
                                         <div class="gauge gauge-element">
                                             <img class="left-border" src="@/assets/images/All-Icons/gauge-shape.png"
@@ -128,32 +121,35 @@
 
                                         </div>
                                         <div class="text">
-                                            <div id="gauge-text-right">25</div>
+                                            <div id="gauge-text-right">0</div>
                                             %
                                         </div>
-                                        <div class="prob">text</div>
+                                        <div class="prob">---</div>
                                     </div>
 
                                 </div>
-                                <a href="" class="btn-stroke button-primary text-unset" tabindex="">¿Cómo se
+                                <!--<a href="" class="btn-stroke button-primary text-unset" tabindex="">¿Cómo se-->
+                                    <!--calcula?</a>-->
+                                <a data-toggle="modal" :data-target="`#${rightModalCorruptionIndexHow}`" class="btn-stroke button-primary text-unset" tabindex="">¿Cómo se
                                     calcula?</a>
+                                <ModalCorruptionIndexHow :id="rightModalCorruptionIndexHow"/>
                             </div>
 
 
                             <span class="border-lines col-12">
-                    <label>Montos totales de la administración 2016-2018 <i id="totales-tooltip"
-                                                                            class="zmdi zmdi-help-outline"></i></label>
+                                <label>Montos totales de la administración {{administrationPeriods}} <i id="totales-tooltip" class="zmdi zmdi-help-outline"></i></label>
                                 <!-- TOOLTIP -->
-                     <!--<template id="help-tooltip-totales">-->
-                      <!--<div class="help-tooltip-div">-->
-                        <!--&lt;!&ndash;<label>¿Qué significa esto?</label>-->
-                        <!--<p>TEXTO FALTANTE</p>&ndash;&gt;-->
-                      <!--</div>-->
-                     <!--</template>-->
-                  </span>
+                                <div id="help-tooltip-totales-content" class="d-none">
+                                    <div class="help-tooltip-div">
+                                        <label>¿Qué significa esto?</label>
+                                        <p>Es la sumatoria de los montos dados por cada contrato a lo largo de la administración {{detailLeft.corruptionIndex.administrationPeriod}} de {{detailLeft.organization.name}} y la administración {{detailRight.corruptionIndex.administrationPeriod}} de {{detailRight.organization.name}}.</p>
+                                        <p>Estos se dividen en 3 tipos de procedimientos de los contratos, los cuales son Licitación pública, Por invitación y Adquisición directa.</p>
+                                        <p>Si quieres saber más, puedes consultar nuestra sección de Recursos.</p>
+                                    </div>
+                                </div>
+                            </span>
                             <div class="col-4 p-l-20 p-r-20 p-t-20">
-                                <p class="f-12 c-plain_text principal-font-medium text-upper d-block m-b-0"> Licitación
-                                    Pública </p>
+                                <p class="f-12 c-plain_text principal-font-medium text-upper d-block m-b-0"> Licitación Pública </p>
                             </div>
                             <!--<div class="col-4 p-l-20 p-r-20 p-t-20">-->
                                 <!--<p class="f-16 c-plain_text principal-font-bold text-upper text-align-c d-block m-b-0">-->
@@ -221,19 +217,20 @@
 
 
                             <span class="border-lines col-12">
-                    <label>Contratos dados de la administración 2016-2018 <i id="contratos-tooltip"
-                                                                             class="zmdi zmdi-help-outline"></i></label>
-                                <!-- TOOLTIP -->
-                     <!--<template id="help-tooltip-contratos">-->
-                      <!--<div class="help-tooltip-div">-->
-                        <!--<label>¿Qué significa esto?</label>-->
-                        <!--<p>TEXTO FALTANTE</p>-->
-                      <!--</div>-->
-                     <!--</template>-->
-                  </span>
+                                <label>Contratos dados de la administración {{administrationPeriods}} <i id="contratos-tooltip" class="zmdi zmdi-help-outline"></i></label>
+                                <div id="help-tooltip-contratos-content" class="d-none">
+                                    <div class="help-tooltip-div">
+                                        <label>¿Qué significa esto?</label>
+                                        <p>Estas cantidades son los contratos registrados para la administración {{detailLeft.corruptionIndex.administrationPeriod}} de {{detailLeft.organization.name}} y la administración {{detailRight.corruptionIndex.administrationPeriod}} de {{detailRight.organization.name}}.</p>
+                                        <p>Los contratos se dividen en 3, dependiendo de su tipo de procedimiento.</p>
+                                        <p>Los contratos de <strong>Licitación Pública</strong> llevan a cabo un proceso público y transparente de compra donde se invita a cierto número de proveedores. Después, se lleva a cabo un proceso de aclaración de dudas, para que todo proveedor involucrado conozca a detalle la contratación. Una vez concluido este proceso, la Licitación continúa con la evaluación de las propuestas de los proveedores, siempre manteniendo la transparencia en el proceso. Finalmente, se elige a un proveedor ganador con base en el análisis realizado, garantizando que sea la opción óptima.</p>
+                                        <p>Los contratos <strong>Por Invitación</strong> solicitan cotización a un cierto número de proveedores, indicando las especificaciones del servicio o producto deseado. Después, se elige la mejor cotización como ganadora y el contrato procede con el proveedor cuya cotización fue elegida.</p>
+                                        <p>Los contratos de <strong>Adjudicación Directa</strong> realizan la compra directamente con un Proveedor. Si bien el proceso es más ágil que los otros dos tipos de procedimento, en veces no permite buscar mejores opciones de costo, calidad, o cualquier otro parámetro importante para la contratación.</p>
+                                    </div>
+                                </div>
+                            </span>
                             <div class="col-4 p-l-20 p-r-20 p-t-20">
-                                <p class="f-12 c-plain_text principal-font-medium text-upper d-block m-b-0"> CONTRATOS
-                                    DE LICITACIÓN PÚBLICA </p>
+                                <p class="f-12 c-plain_text principal-font-medium text-upper d-block m-b-0"> CONTRATOS DE LICITACIÓN PÚBLICA </p>
                             </div>
                             <div class="col-4 p-l-20 p-r-20 p-t-20">
                                 <p class="f-16 c-plain_text principal-font-bold text-upper text-align-c d-block m-b-0">
@@ -246,8 +243,7 @@
                                 </p>
                             </div>
                             <div class="col-4 p-l-20 p-r-20 p-t-20">
-                                <p class="f-12 c-plain_text principal-font-medium text-upper d-block m-b-0"> CONTRATOS
-                                    POR INVITACIÓN </p>
+                                <p class="f-12 c-plain_text principal-font-medium text-upper d-block m-b-0"> CONTRATOS POR INVITACIÓN </p>
                             </div>
                             <div class="col-4 p-l-20 p-r-20 p-t-20">
                                 <p class="f-16 c-plain_text principal-font-bold text-upper text-align-c d-block m-b-0">
@@ -260,8 +256,7 @@
                                 </p>
                             </div>
                             <div class="col-4 p-l-20 p-r-20 p-t-20">
-                                <p class="f-12 c-plain_text principal-font-medium text-upper d-block m-b-0"> CONTRATOS
-                                    DE ADJUDICACIÓN DIRECTA </p>
+                                <p class="f-12 c-plain_text principal-font-medium text-upper d-block m-b-0"> CONTRATOS DE ADJUDICACIÓN DIRECTA </p>
                             </div>
                             <div class="col-4 p-l-20 p-r-20 p-t-20">
                                 <p class="f-16 c-plain_text principal-font-bold text-upper text-align-c d-block m-b-0">
@@ -320,6 +315,7 @@
                                     <!--1,391,180 (2015) </p>-->
                             <!--</div>-->
                         </div>
+                        <PanelOtherCalculations :leftCalculationsInfo="detailLeft.calculationsInfo" :rightCalculationsInfo="detailRight.calculationsInfo"/>
                     </div>
                 </div>
             </div>
@@ -333,9 +329,13 @@
 
 <script>
     import MoreInfo from '@/components/general/MoreInfo';
+    import ModalCorruptionIndexHow from "@/components/modals/ModalCorruptionIndexHow";
+    import PanelOtherCalculations from '@/components/panels/PanelOtherCalculations';
 
     import {mapState} from 'vuex';
     import {Gauge} from 'gaugeJS';
+    import tippy from 'tippy.js';
+    import baseApi from '@/api/base.api';
 
     const storeModule = 'publicComparations';
 
@@ -363,10 +363,14 @@
 
         data() {
             return {
+                leftModalCorruptionIndexHow: 'left-corruption-index-modal',
+                rightModalCorruptionIndexHow: 'right-corruption-index-modal',
             }
         },
         components: {
-            MoreInfo
+            MoreInfo,
+            ModalCorruptionIndexHow,
+            PanelOtherCalculations
         },
         filters: {
             percentage(num) {
@@ -380,6 +384,23 @@
                 detailLeft: state => state[storeModule].detailLeft,
                 detailRight: state => state[storeModule].detailRight,
             }),
+            leftAdministrationPeriod() {
+                if (this.detailLeft && this.detailLeft.corruptionIndex && this.detailLeft.corruptionIndex.administrationPeriod && this.detailLeft.corruptionIndex.administrationPeriod.length) {
+                    return this.detailLeft.corruptionIndex.administrationPeriod;
+                } else {
+                    return '';
+                }
+            },
+            rightAdministrationPeriod() {
+                if (this.detailRight && this.detailRight.corruptionIndex && this.detailRight.corruptionIndex.administrationPeriod && this.detailRight.corruptionIndex.administrationPeriod.length) {
+                    return this.detailRight.corruptionIndex.administrationPeriod;
+                } else {
+                    return '';
+                }
+            },
+            administrationPeriods() {
+                return `${this.leftAdministrationPeriod} / ${this.rightAdministrationPeriod}`;
+            }
         },
         methods: {
             initTachometer(elementId, textElementId, value) {
@@ -400,7 +421,52 @@
                 document.body.removeChild(tempTextArea);
                 tShow('Se ha copiado el enlace correctamente', 'info');
 
-            }
+            },
+            initTooltip(contentElementId, tooltipElementId) {
+                $(document).ready(function () {
+//                const templateTotales = document.getElementById('help-tooltip-totales');
+                    const templateContent = document.getElementById(contentElementId);
+                    tippy(`#${tooltipElementId}`, {
+                        allowHTML: true,
+//                        placement: "top",
+                        content: templateContent.innerHTML,
+                        arrow: true,
+                        animation: "fade",
+//                        distance: 15,
+                        interactive: true,
+                        maxWidth: 750
+                    });
+                });
+            },
+            initTooltipCorruptionIndex() {
+                this.initTooltip('help-tooltip-corruption-index-content', 'corruption-index-tooltip');
+            },
+            initTooltipTotals() {
+                this.initTooltip('help-tooltip-totales-content', 'totales-tooltip');
+            },
+            initTooltipContracts() {
+                this.initTooltip('help-tooltip-contratos-content', 'contratos-tooltip');
+            },
+            isExternalCorruptionIndex(corruptionIndex) {
+                return corruptionIndex.url && corruptionIndex.url.length;
+            },
+            getInternalCorruptionIndexHomeUrl(corruptionIndex, organization) {
+//                return `/calculations/corruption-index?changeOrganization=${organization._id}`;
+                return `/select-organization`;
+            },
+            getExternalCorruptionIndexHomeUrl(corruptionIndex) {
+                if (!corruptionIndex) {
+                    return '';
+                }
+
+                let urlPrefix = '';
+                if (corruptionIndex.url && corruptionIndex.url.length) {
+                    urlPrefix = corruptionIndex.url;
+                }
+
+//                return `${urlPrefix}/calculations/corruption-index`;
+                return `${urlPrefix}/select-organization`;
+            },
         },
         watch: {
             detailLeft(_detailLeft) {
@@ -412,6 +478,10 @@
                     gaugeValue = _detailLeft.corruptionIndex.result;
                 }
                 this.initTachometer(elementId, textElementid, gaugeValue);
+
+                this.initTooltipCorruptionIndex();
+                this.initTooltipTotals();
+                this.initTooltipContracts();
             },
             detailRight(_detailRight) {
                 let elementId = 'gauge-graph-right';
@@ -422,6 +492,10 @@
                     gaugeValue = _detailRight.corruptionIndex.result;
                 }
                 this.initTachometer(elementId, textElementid, gaugeValue);
+
+                this.initTooltipCorruptionIndex();
+                this.initTooltipTotals();
+                this.initTooltipContracts();
             },
         },
         mounted() {
@@ -443,6 +517,23 @@
                 target: otherOrganizationId,
                 url: url,
             });
+
+
+            this.initTooltipCorruptionIndex();
+            this.initTooltipTotals();
+            this.initTooltipContracts();
+//            $(document).ready(function () {
+////                const templateTotales = document.getElementById('help-tooltip-totales');
+//                const templateTotalesContent = document.getElementById('help-tooltip-totales-content');
+//                tippy('#totales-tooltip', {
+//                    allowHTML: true,
+//                    placement: "top",
+//                    content: templateTotalesContent.innerHTML,
+//                    arrow: true,
+//                    animation: "fade",
+//                    distance: 15
+//                });
+//            });
 
 
 

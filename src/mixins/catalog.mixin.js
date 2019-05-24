@@ -28,7 +28,9 @@ export default {
             computed: {
                 ...mapState({
                     docs: state => state[storeModule].docs,
-                    selectedDocId: state => state[storeModule].selectedDocId, //used to delete
+                    selectedDocId: state => state[storeModule].selectedDocId,
+                    isEditingTable: state => state[storeModule].isEditingTable,
+                    isEditing: state => state[storeModule].isEditing,
                 })
             },
             methods: {
