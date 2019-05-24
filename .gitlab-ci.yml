@@ -56,36 +56,35 @@ prod:
 
       function docker_build() {
         case ${CI_COMMIT_REF_SLUG} in
-        "master")
-        cat <<EOF > .env.production
-        API_HOST=$API_HOST_BETA
-        API_PORT=$API_PORT_BETA
-        VUE_APP_API_HOST=$VUE_APP_API_HOST_BETA
-        VUE_APP_API_PORT=$VUE_APP_API_PORT_BETA
-        EOF
+          master)
+            cat <<EOF > .env.production
+            API_HOST=$API_HOST_BETA
+            API_PORT=$API_PORT_BETA
+            VUE_APP_API_HOST=$VUE_APP_API_HOST_BETA
+            VUE_APP_API_PORT=$VUE_APP_API_PORT_BETA
+            EOF
 
-        docker build \
-          --iidfile imageid.txt \
-          --pull -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
-        docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+            docker build \
+              --iidfile imageid.txt \
+              --pull -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
+            docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+            ;;
 
-        ;;
+          *)
+            cat <<EOF > .env.production
+            API_HOST=$API_HOST_PROD
+            API_PORT=$API_PORT_PROD
+            VUE_APP_API_HOST=$VUE_APP_API_HOST_PROD
+            VUE_APP_API_PORT=$VUE_APP_API_PORT_PROD
+            EOF
 
-        *)
-        cat <<EOF > .env.production
-        API_HOST=$API_HOST_PROD
-        API_PORT=$API_PORT_PROD
-        VUE_APP_API_HOST=$VUE_APP_API_HOST_PROD
-        VUE_APP_API_PORT=$VUE_APP_API_PORT_PROD
-        EOF
-
-        docker build \
-          --iidfile imageid.txt \
-          --pull -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
-        docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
-        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} ${CI_REGISTRY_IMAGE}:latest
-        docker push ${CI_REGISTRY_IMAGE}:latest
-        ;;
+            docker build \
+              --iidfile imageid.txt \
+              --pull -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
+            docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+            docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} ${CI_REGISTRY_IMAGE}:latest
+            docker push ${CI_REGISTRY_IMAGE}:latest
+            ;;
       }
 
       function deploy_prod() {
