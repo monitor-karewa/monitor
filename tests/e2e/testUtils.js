@@ -38,6 +38,9 @@ module.exports = {
         },
         elementWithPlaceholder: function (element, text) {
             return `//${element}[@placeholder="${text}"]`;
+        },
+        elementWithTitle: function (element, title) {
+            return `//${element}[@title="${title}"]`;
         }
     }
 };

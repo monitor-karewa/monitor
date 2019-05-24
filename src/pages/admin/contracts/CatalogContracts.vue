@@ -114,7 +114,7 @@
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
-                               :placeholder="$t('contracts.new.period.placeholder')"
+                               :placeholder="$t('contracts.new.contract-id.placeholder')"
                                v-model="entry.contractId">
                         <label class="fg-label">{{$t('contracts.new.contract-id.label')}}
                             <small></small>
@@ -182,7 +182,7 @@
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input datepicker" id="announcementDate"
-                               :placeholder="$t('contracts.new.announcementDate.placeholder')"
+                               :placeholder="$t('contracts.new.announcementDate.convocatoria.placeholder')"
                                v-model="entry.announcementDate">
                         <label class="fg-label">{{$t('contracts.new.announcementDate.label')}}
                             <small></small>
@@ -381,7 +381,7 @@
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
-                               :placeholder="$t('contracts.new.min-amount.placeholder')"
+                               :placeholder="$t('contracts.new.total-amount.placeholder')"
                                v-model="entry.totalAmount">
                         <label class="fg-label">{{$t('contracts.new.total-amount.label')}}
                             <small></small>
