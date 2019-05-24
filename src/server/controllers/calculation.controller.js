@@ -22,7 +22,7 @@ let displayFormEnumDict/* = require('./../models/calculation.model').displayForm
 const Contract = require('./../models/contract.model').Contract;
 const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
-const variables = require('./../components/variablesSeed').variables;
+const getVariables = require('./../components/variablesSeed').getVariables;
 const async = require('async');
 const math = require('mathjs');
 const { each } = require('async/each');
@@ -47,7 +47,7 @@ exports.index = (req, res, next) => {
  * @param res
  */
 exports.getVariables = (req, res) => {
-  return res.json(variables);
+  return res.json(getVariables());
 };
 
 /**
@@ -121,8 +121,6 @@ exports.list = (req, res, next) => {
                         message: res.__('general.error.unexpected-error')
                     });
                 }
-                console.log('result.docs', result.docs);
-
                 return res.json({
                     errors: false,
                     message: "",
@@ -444,7 +442,6 @@ exports.save = (req, res, next) => {
                                 ...qNotDeleted
                             };
 
-                            console.log('query', query);
                             Calculation.updateMany({
                                 _id: {$ne: calculation._id},
                                 ...qNotDeleted
@@ -615,7 +612,7 @@ let replaceVariableForValue = function(regex, expression, value = 0){
 
 let calculateAndValidateFormula = function(req, cache, calculation, options, callback){
 
-    let {done, calls, i, resultsMap} = cache;
+    // let {done, calls, i, resultsMap} = cache;
 
     if (typeof calculation === 'string' || calculation instanceof mongoose.Types.ObjectId) {
         Calculation.findOne(
@@ -654,7 +651,10 @@ let  processCalculation = function(req, cache, calculation, options = {}, mainCa
     let {done, calls, i, resultsMap} = cache;
 
     // console.log("calculation", calculation);
-    if(resultsMap[calculation.abbreviation] != undefined){
+    
+    let variables = getVariables();
+
+    if(resultsMap[calculation.abbreviation]){
         let result = {
             abbreviation: calculation.abbreviation,
             results : resultsMap[calculation.abbreviation]
@@ -693,8 +693,6 @@ let  processCalculation = function(req, cache, calculation, options = {}, mainCa
                 query = {...query, ...qByOrganization};
             }
 
-            console.log('calculation.name', calculation.name);
-            console.log('query', query);
 
             if (Object.keys(query).length) {
                 queryArray.unshift({$match: query});
@@ -769,7 +767,6 @@ let  processCalculation = function(req, cache, calculation, options = {}, mainCa
                     });
             } else {
                 try {
-                    console.log('calculation.formula.expression', calculation.formula.expression);
                     finalValue = math.eval(calculation.formula.expression);
                     finalValue = convertResultAccordingToScale(calculation, finalValue);
                     let result = {

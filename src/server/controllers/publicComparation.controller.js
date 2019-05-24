@@ -14,6 +14,8 @@ const moment = require('moment');
 const calculateAndValidateFormula = require('./../controllers/calculation.controller').calculateAndValidateFormula;
 const logger = require('./../components/logger').instance;
 
+// const variables = require('./../components/variablesSeed').variables;
+
 exports.corruptionIndex = (req, res, next) => {
     let id = req.query.id;
 
@@ -85,6 +87,7 @@ exports.corruptionIndex = (req, res, next) => {
 };
 
 exports.detail = (req, res, next) => {
+
     const URL_DETAIL_SUFFIX = "/public-api/comparations/detail/?id=";
     let id = req.query.id;
     let url = req.query.url;
