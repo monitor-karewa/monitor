@@ -85,6 +85,7 @@ prod:
             docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} ${CI_REGISTRY_IMAGE}:latest
             docker push ${CI_REGISTRY_IMAGE}:latest
             ;;
+        esac  
       }
 
       function deploy_prod() {
