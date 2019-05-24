@@ -38,7 +38,7 @@ heroku:
 
 prod:
   stage:           deploy
-  image:           alpine
+  image:           docker:stable
   extends:         .devops
   services:
     - docker:dind
