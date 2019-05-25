@@ -6,7 +6,7 @@ module.exports = {
     beforeEach: utils.middlewares.beforeEach,
 
 
-    'Providers': function (browser) {
+    'Calculations': function (browser) {
 
         browser
 
@@ -93,7 +93,7 @@ module.exports = {
 
 
             //----- EDITAR MEDIANTE LOS BOTONES DE CADA REGISTRO -------------
-          /*  .moveToElement(utils.xpath.elementWithClass("div","table-buttons-hover"),5,5)
+            .moveToElement(utils.xpath.elementWithClass("div","table-buttons-hover"),5,5)
 
             .assert.visible(utils.xpath.elementWithClass("div","table-buttons-hover"))
             .execute(function(){
@@ -104,10 +104,10 @@ module.exports = {
             })
             .pause(500)
             .assert.visible(utils.xpath.elementWithText("label", "Notas del cálculo"))
-            .setValue(utils.xpath.elementWithPlaceholder("input","Introduce las notas adicionales del cálculo"), "Calculo editado mediante pruebas automatizadas")
+            .setValue(utils.xpath.elementWithPlaceholder("input","Introduce las notas adicionales"), "Calculo editado mediante pruebas automatizadas")
             .pause(1000)
             .click('//button[contains(text(), "Agregar")]')
-*/
+            .pause(5000)
 
             //----- ELIMINAR MEDIANTE LOS BOTONES DE CADA REGISTRO -------------
             .moveToElement(utils.xpath.elementWithClass("div","table-buttons-hover"),5,5)
@@ -127,7 +127,7 @@ module.exports = {
 
 
 
-            .pause(1000)
+            .pause(5000)
             .end();
     }
 
