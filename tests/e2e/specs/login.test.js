@@ -30,7 +30,7 @@ module.exports = {
             // .assert.visible('//label[contains(text(),"Contraseña")]')
             // .assert.visible('//a[contains(text(), "INICIAR SESIÓN")]')
             
-            
+        /*
             .assert.containsText(utils.xpath.body(), "Bienvenido a")
 
             .waitForElementVisible('//a[text()="Administrar"]', 1000)
@@ -58,5 +58,7 @@ module.exports = {
             .assert.containsText('/html[1]/body[1]', 'Por favor selecciona una Organización para continuar.')
         
             .end();
+
+         */
     }
 };
