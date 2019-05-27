@@ -1,75 +1,97 @@
-[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://gitlab.com/karewa/monitor.git)
-
-
 # Monitor Karewa Web
 
-**Repository name**: *monitor-web*
+Bienvenido a Monitor Karewa Web
 
-Welcome to Monitor Karewa Web!
+Este proyecto busca presentar información pública de contrataciones realiazadas por instituciones públicas, a través de 
+una plataforma accesible y de código abierto que puede ser usada por instituciones locales, estatales y nacionales en 
+México.
 
-This project aims to present public information regarding contracts made by the government to citizens, through an
-accessible open source platform able to be used by local, state and national government levels in Mexico.
+Nuestros principales objetivos son los siguientes:
+- Código libre - Extender el alcance de la plataforma a través de un repositorio de código abierto y orientado a la comunidad.
+- Replicabilidad - Permitir a cualquier institución pública tener su propia instancia, ofreciendo herramientas y guías en como hacerlo.
+- Usabilidad - Empoderar a los ciudadanos con una plataforma accesible desde cualquier lugar, con un enfoque en la accesibilidad y experiencia de usuario.
+ 
+ # Implementación rápida (sin configuración)
+ 
+ Puedes crear una nueva instancia de Monitor Karewa en Heroku usando el siguiente botón. Recuerda antes [crear una cuenta gratuita en Heroku](https://signup.heroku.com/).
+ 
+ [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://gitlab.com/karewa/monitor.git)
+ 
 
-Our main objectives are as follows:
-- Open Source - Extend the platform's reach through an open source & community-oriented codebase.
-- Replicable - Allow any interested form or level of government and institution to host their own instance, while offering tools and guides on how to do so.
-- Usability - Empower and enable all citizens with a universally-accessible platform, with a focus on accessibility and user experience.
+## Plataforma
 
-## Application
+La plataforma usa las siguientes tecnologías:
 
-The application uses the following underlying technologies:
-
-- **Languages**: Javascript, Pug (formerly Jade) and basic web technologies (CSS, HTML)
-- **Platform**: NodeJS
-- **Request handling**: ExpressJS
-- **Database**: MongoDB
+- **Lenguajes**: Javascript, Pug (antes Jade), CSS, HTML
+- **Platformas**: NodeJS, VueJS
+- **Manejo de peticiones**: ExpressJS
+- **Base de datos**: MongoDB
 - **ODM**: Mongoose
 
-To install the custom yoeman generator for catalogs run
+
+Repositorio en GitLab: https://gitlab.com/karewa/monitor
+
+Repositorio GitHub (mirror): https://github.com/monitor-karewa/monitor
+
+Guía de usuario: https://gitlab.com/karewa/monitor/wikis/home
+
+
+# Instalación (desarrollo)
+
+Decargar el proyecto y ejecutar el siguiente comando para instalar las dependencias desde la carpeta raíz:
+
+    `npm install`
+
+## Servidor
+
+Para correr el servidor:
+
+    `npm start`
+
+El servidor estará disponible en el puerto 3000 (por defecto).
+
+Para correr el servidor en un puerto distinto:
+    `PORT=3001 npm start`
+    
+    
+La configuración del servidor está disponible en el archivo `/src/server/config/config.js`
+
+## Cliente
+
+Para correr el cliente:
+
+    `npm run serve`
+
+El cliente estará disponible en el puerto 8080 (por defecto).
+
+La dirección de la API y otras variables de entorno se encuentran definidos en el archivo `.env.development`
+
+## Compilación para producción
+
+Compilar y minificar cliente para producción
+
+    `npm run build`
+
+Correr servidor en modo producción
+
+    `NODE_ENV=production npm start`
+
+
+## Generador de catálogos
+
+Para instalar el generador de yeoman personalizado para generar catálogos base:
 
     npm link ./generators/generator-mkw
 
-To create a catalog run the command
+Para crear el catálogo:
 
     yo generator-mkw:catalog
 
-Then input the name of the catalog and the generator will create the models, controllers and routes for the catalog
+Después introduce el nombre del catálogo y el generador creará los archivos base de modelo, controlador y rutas.
+> **Nota**: Es necesario agregar las rutas a la configuración del servidor y personalizar el modelo
 
 
-# Client
-
-## Project setup
-```
-npm install
-```
-
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
-
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
-
-
-
-
-# Configuracion
+# Configuracion avanzada de servidor
 
 ## CREAR INSTANCIA EN GOOGLE Y CONFIGURACIÓN DE DOCKER COMPOSE
 
@@ -77,9 +99,9 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 1. Después de haber iniciado sesión en nuestro proyecto GCP.
 2. Antes de crear una instancia asegurar de que exista el firewall habilitado de "default-allow-ssh". Para poder entrar por ssh. En dado caso de no tener, crear la regla aplicando para todas las instancias de la siguiente manera:
  1. Seleccionar el recurso "Firewall rules", dentro de "VPC network". Del menú de la izquierda.
- <center><img src="./docsPasoParaFirewall.png" height="200" width="250"></center>
+ <center><img src="./docs/PasoParaFirewall.png" height="200" width="250"></center>
  2. Seleccionar "CREATE FIREWALL RULE".
- <center><img src="./docsPasoSeleccionarFirewall.png" height="30" width="300"></center>
+ <center><img src="./docs/PasoSeleccionarFirewall.png" height="30" width="300"></center>
  3. Hacer la configuración general para firewall.
   1. Agregar nombre a Firewall.
   2. Dirección de trafico "ingress".
@@ -87,11 +109,11 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
   4. En "source filter", debe ser 0.0.0.0/0, para que se puedas entrar de diferentes ip.
   5. En "Protocol and ports" debe ser por tcp y puerto 22.
   Al final damos "create".
- <center><img src="./docsPasoConfigFirewall.png" height="350" width="300"></center>
+ <center><img src="./docs/PasoConfigFirewall.png" height="350" width="300"></center>
 2. Seleccionar el recurso "VM Instances", dentro de "Compute Engine". Del menú de la izquierda.
-<center><img src="./docs1.PasoSeleccionVMInstances.png" height="310" width="250"></center>
+<center><img src="./docs/1.PasoSeleccionVMInstances.png" height="310" width="250"></center>
 3. Seleccionar "CREATE INSTANCE".
-<center><img src="./docs2.PasoSeleccionCreateInstance.png" height="50" width="700"></center>
+<center><img src="./docs/2.PasoSeleccionCreateInstance.png" height="50" width="700"></center>
 4. Dentro de este se abrirá la opción para poder configurar la instancia. Configurando de la siguiente manera:
  1. Introducir nombre de instancia.
  2. Introducir región y zona de instancia. Esto toma efecto solo sobre el data center seleccionado. Como recomendación para seleccionar el adecuado seleccionar el mas cercano a los usuarios.
@@ -100,15 +122,15 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
  5. Seleccionar permitir trafico por HTTP y HTTPS.  Si se permite acceso por http y https es para que cualquier servicio que trabaje sobre estos protocolos en la "instancia VM" funcione hacia el exterior. Para configurar otros puertos se debe configurar tu propia regla de firewall, como se hizo en el paso 2.
  6. Para finalizar seleccionamos "Create".
 
-<center><img src="./docs3.PasoConfiguracionInstance.png" height="350" width="250"></center>
+<center><img src="./docs/3.PasoConfiguracionInstance.png" height="350" width="250"></center>
 
 7. Seleccionar el recurso "External IP addresses", dentro de "VPC network". Del menú de la izquierda
 
-  <center><img src="./docs4.PasoSeleccionarExternalIp.png" height="200" width="250"></center>
+  <center><img src="./docs/4.PasoSeleccionarExternalIp.png" height="200" width="250"></center>
 
 8. Seleccionar "RESERVE STATIC ADDRESS"
 
-<center><img src="./docs5.PasoSeleccionarReservaIP.png" height="50" width="700"></center>
+<center><img src="./docs/5.PasoSeleccionarReservaIP.png" height="50" width="700"></center>
 
 9. Configurar la ip externa de la siguiente manera:
  1. Dar un nombre identificable a tu ip externa.
@@ -118,7 +140,7 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
  5. Seleccionar "Reserve".
 
 
-<center><img src="./docs6.PasoConfiguracionIp.png" height="300" width="300"></center>
+<center><img src="./docs/6.PasoConfiguracionIp.png" height="300" width="300"></center>
 
 5. Una vez creado la instancia y reservada la ip, la llave ssh debe de estar previamente configurada para que se asigne sola a la instancia.
 
