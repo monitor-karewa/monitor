@@ -2,7 +2,7 @@
     <div>
         <AdminMainSection>
             <BackButton/>
-            <CatalogHeader :singular="'Cálculo'" :plural="'Cálculo'"/>
+            <CatalogHeader :singular="'Cálculo'" :plural="'Cálculo'" :storeModule="storeModule"/>
             <EditableTable
                     :docs="docs"
                     :tableColumns="tableColumns"
@@ -198,9 +198,9 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownInput"
                                  x-placement="bottom-end">
                                 <ul>
-                                    <li @click="setDisplayForm('NORMAL')">Normal</li>
-                                    <li @click="setDisplayForm('AMOUNT')">Cantidad</li>
-                                    <li @click="setDisplayForm('PERCENTAGE')">Porcentaje</li>
+                                    <li @click="setDisplayForm('NORMAL')" class="c-pointer">Normal</li>
+                                    <li @click="setDisplayForm('AMOUNT')" class="c-pointer">Cantidad</li>
+                                    <li @click="setDisplayForm('PERCENTAGE')" class="c-pointer">Porcentaje</li>
                                 </ul>
                             </div>
                         </div>
@@ -208,25 +208,33 @@
                 </div>
 
                 <div class="vertical-center">
-                    <div class="form-group fg-float basic-select w-70 m-r-30 p-t-0 m-b-0">
-                        <div class="fg-line">
-                            <select @change="addToFormula($event)" v-model="variableSelected" class="form-control select selectpicker" data-live-search="true"
-                                    data-live-search-placeholder="Search placeholder"
-                                    title="Agregar variable">
-                                <optgroup label="GENERAL">
-                                    <option :value="item.abbreviation" v-for="item in variablesObj">{{item.name}}</option>
-                                </optgroup>
-                                <optgroup label="Otros Cálculos">
-                                    <option :value="calculation.abbreviation" v-for="calculation in calculations">{{'('+calculation.abbreviation+') '+calculation.name}}</option>
-                                </optgroup>
-                            </select>
+                    <div class="row w-100">
+                        <div class="col-sm-8">
+                            <div class="form-group fg-float basic-select p-t-0 m-b-0">
+                                <div class="fg-line">
+                                    <select @change="addToFormula($event)" v-model="variableSelected" class="form-control select selectpicker" data-live-search="true"
+                                            data-live-search-placeholder="Buscar variable"
+                                            title="Agregar variable">
+                                        <optgroup label="GENERAL">
+                                            <option :value="item.abbreviation" v-for="item in variablesObj" style="white-space: normal;">{{item.name}}</option>
+                                        </optgroup>
+                                        <optgroup label="Otros Cálculos">
+                                            <option :value="calculation.abbreviation" v-for="calculation in calculations">{{'('+calculation.abbreviation+') '+calculation.name}}</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+                            
                         </div>
-                    </div>
-                    <div class="mini-buttons">
-                        <button type="button" class="mini-btn p-0" @click="addToFormula('+')"><span class="f-25 m-t--5 align-middle">+</span></button>
-                        <button type="button" class="mini-btn p-0" @click="addToFormula('*')"><span class="f-30 align-middle">*</span></button>
-                        <button type="button" class="mini-btn p-0" @click="addToFormula('-')"><span class="f-25 m-t--5 align-middle">-</span></button>
-                        <button type="button" class="mini-btn m-r-0" @click="addToFormula('/')">/</button>
+                        <div class="col-sm-4 vertical-center">
+                            <div class="mini-buttons">
+                                <button type="button" class="mini-btn p-0" @click="addToFormula('+')"><span class="f-25 m-t--5 align-middle">+</span></button>
+                                <button type="button" class="mini-btn p-0" @click="addToFormula('*')"><span class="f-30 align-middle">*</span></button>
+                                <button type="button" class="mini-btn p-0" @click="addToFormula('-')"><span class="f-25 m-t--5 align-middle">-</span></button>
+                                <button type="button" class="mini-btn m-r-0" @click="addToFormula('/')">/</button>
+                            </div>
+                            
+                        </div>
                     </div>
                 </div>
 
@@ -430,13 +438,17 @@
             },
             addToFormula(element) {
                 if (element) {
-                    this.entry.formula.expression = this.entry.formula.expression || '';
+                    if (!this.entry.formula.expression) {
+                        this.entry.formula.expression = '';   
+                    }
                     if (this.entry.formula.expression.length > 0) {
                         this.entry.formula.expression += " ";
                     }
-                    if (typeof element == "string") {
+                    if (typeof(element) === "string") {
                         this.entry.formula.expression += element;
                     } else { //then it's a variable
+                        this.variableSelected = null;
+                        this.refreshSelect();
                         this.entry.formula.expression += element.target.value;
                         this.addVariablesFromFormulaString();
                     }
@@ -499,6 +511,7 @@
                 // }, 1000, false)
             },
             addVariablesFromFormulaString(){
+                this.validateFormula();
                 if(this.entry.formula && this.entry.formula.expression){
                     this.entry.formula.variables = this.parseVariablesFromFormulaString();
                     this.entry.formula.calculations = this.parseCalculationsFromFormulaString();
@@ -541,9 +554,9 @@
                 touchMap.set($v, setTimeout($v.$touch, 1000))
             },
             clearEntry(){
-                this.entry = {
-                    formula:{}
-                };
+//                this.entry = {
+//                    formula:{}
+//                };
                 this.$v.$reset();
             },
             validateFormula(){
@@ -563,6 +576,11 @@
                 if(this.entry.scale && this.entry.scale.length){
                     this.entry.scale.splice(index, 1);
                 }
+            },
+            refreshSelect() {
+                this.$nextTick(function () {
+                    $('.selectpicker').selectpicker('refresh');
+                })
             }
 
         },
@@ -595,6 +613,7 @@
             });
             bus.$on(storeModule+DOC_START_CREATE, ()=>{
                 this.clearEntry();
+                this.refreshSelect();
             });
             bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
                 this.clearEntry();
@@ -619,6 +638,8 @@
                 tempEntry.scale = entry.scale;
 
                 this.entry = {...tempEntry};
+
+                this.refreshSelect();
             });
         },
         mounted() {

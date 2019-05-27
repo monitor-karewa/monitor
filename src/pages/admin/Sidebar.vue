@@ -20,7 +20,7 @@
                         <div v-if="linkArrayIndex > 0" class="divider"></div>
                         
                         <!--Insertar enlace-->
-                        <router-link v-for="(link, index) in linkArray" v-if="hasAccess(link.permission)" tag="li" :to="link.to" :key="'sidemenu-link-' + linkArrayIndex + '-' + index" exact-active-class="active">
+                        <router-link v-for="(link, index) in linkArray" v-if="hasAccess(link.permission)" tag="li" :to="link.to" :key="'sidemenu-link-' + linkArrayIndex + '-' + index" exact-active-class="active" @click.native="closeSidebar()">
                             <a><i :class="link.icon"></i> {{link.name}} </a>
                         </router-link>
                     </template>
@@ -55,17 +55,9 @@
                 </ul>
             </div>
             <div class="footer-sidebar">
-                <!--<router-link :to="linksFooter.to">-->
-                    <!--<i :class="linksFooter.icon"></i> {{linksFooter.name}}-->
-                <!--</router-link>-->
-
                 <a @click.prevent="logout">
                     <i class="zmdi zmdi-power"></i> Cerrar Sesión
                 </a>
-                <!--<router-link :to="linksFooter.to">-->
-                    <!--<i :class="linksFooter.icon"></i> {{linksFooter.name}}-->
-                <!--</router-link>-->
-                <!--<a href=""><i class="zmdi zmdi-power"></i> Cerrar Sesión </a>-->
             </div>
         </aside>
         <div class="backdrop"></div>
@@ -79,6 +71,8 @@
 <script>
     
     import {mapState} from 'vuex';
+
+    import $ from 'jquery';
     
     export default {
         data () {
@@ -150,6 +144,12 @@
                             icon: "zmdi zmdi-settings",
                             admin: true,
                             permission: "SETTINGS"
+                        },
+                        {
+                            name: "Seleccionar Organización",
+                            to: "/admin/select-organization",
+                            icon: "zmdi zmdi-city",
+                            admin: true
                         }
                     ]
                 ],
@@ -182,6 +182,9 @@
                 }
                 
                 return this.permissions && this.permissions.includes(permission);
+            },
+            closeSidebar () {
+                $('#hideMenu').click();
             }
         },
         onCreate: {

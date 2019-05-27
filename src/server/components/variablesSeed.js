@@ -16,7 +16,7 @@ let getVariables = function() {
                     $group:{_id:null, totalAmount:{ $sum : "$totalOrMaxAmount"}}
                 },
                 {
-                    $project: { _id:0, result: "$totalOrMaxAmount", abbreviation: { $literal:"$MTG" } }
+                    $project: { _id:0, result: "$totalAmount", abbreviation: { $literal:"$MTG" } }
                 }
             ],
             queryDummy:[{
@@ -36,7 +36,7 @@ let getVariables = function() {
                     $group:{_id:null, totalAmount:{ $sum : "$totalOrMaxAmount"}}
                 },
                 {
-                    $project: { _id:0, result: "$totalOrMaxAmount", abbreviation: { $literal:"$MGLP" } }
+                    $project: { _id:0, result: "$totalAmount", abbreviation: { $literal:"$MGLP" } }
                 }
             ],
             queryDummy:[{
@@ -56,7 +56,7 @@ let getVariables = function() {
                     $group:{_id:null, totalAmount:{ $sum : "$totalOrMaxAmount"}}
                 },
                 {
-                    $project: { _id:0, result: "$totalOrMaxAmount", abbreviation: { $literal:"$MGAD" } }
+                    $project: { _id:0, result: "$totalAmount", abbreviation: { $literal:"$MGAD" } }
                 }
             ],
             queryDummy:[{
@@ -77,7 +77,7 @@ let getVariables = function() {
                     $group:{_id:null, totalAmount:{ $sum : "$totalOrMaxAmount"}}
                 },
                 {
-                    $project: { _id:0, result: "$totalOrMaxAmount", abbreviation: { $literal : "$MGIR"}}
+                    $project: { _id:0, result: "$totalAmount", abbreviation: { $literal : "$MGIR"}}
                 }
             ],
             queryDummy:[{
@@ -145,7 +145,7 @@ let getVariables = function() {
                 {$project:{ result : "$myCount", abbreviation : { $literal : "$NCADSM"}}
                 }]
         }),
-        $MTAD: Variable.makeVariable({
+        $NCAD: Variable.makeVariable({
             name:"Numero de contratos bajo adjudicaciones directas",
             description:"Numero de contratos públicos de la organización bajo adjudicaciones directas",
             abbreviation:"$NCAD",
