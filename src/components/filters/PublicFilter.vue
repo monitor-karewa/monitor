@@ -3,7 +3,7 @@
         <div class="filter">
             <div class="filter-container">
                 <input class="input-search" type="text" name="" value="" v-model="query.search"
-                       placeholder="Escribe el nombre del contrato.."/>
+                       :placeholder="placeHolder" />
             </div>
             <button @click="filter" class="filter-btn" type="button" name="button">Buscar</button>
         </div>
@@ -176,6 +176,10 @@
             additionalParams : {
                 type: Object
             },
+            placeHolder: {
+                type: String,
+                default:"Escribe el nombre del contrato.."
+            }
         },
         mounted() {
             this.$nextTick(function () {
