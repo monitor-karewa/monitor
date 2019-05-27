@@ -8,7 +8,7 @@
             <button @click="filter" class="filter-btn" type="button" name="button">Buscar</button>
         </div>
         <div class="m-t-10">
-            <div class="filter-box">
+            <div>
                 <div class="filter">
                     <div class="filter-container row m-0">
                         <div class="form-group fg-float border-select m-0 p-0 col-lg-3 col-6">
