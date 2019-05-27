@@ -6,7 +6,7 @@ module.exports = {
     beforeEach: utils.middlewares.beforeEach,
 
 
-    'Providers': function (browser) {
+    'Settings': function (browser) {
 
         browser
 
@@ -86,7 +86,7 @@ module.exports = {
 
             })
 
-            .pause(7000)
+            .pause(1000)
             .end();
     }
 
