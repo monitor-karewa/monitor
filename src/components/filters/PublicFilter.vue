@@ -118,7 +118,8 @@
                     </button>
                 </div>
             </div>
-        <!--<button id="refresh-selects-button" style="display:none" type="button" @click="refreshSelects">click mee!!!-->
+        <!--Button dummy, do not delete; used to ensure selects are properly shown-->
+        <button id="refresh-selects-button" style="display:none" type="button" @click="refreshSelects">
         </button>
     </div>
 </template>
