@@ -88,10 +88,44 @@ En caso de tener una incidencia que deba ser corregida de forma inmediata es rec
 
 Nota: Ambas ramas están protegidas para que los desarrolladores no puedan realizar cambios directamente sobre ellas y utilicen el protocolo como es debido.
 
-## Agregar funcionalidades
+## Cliente y servidor
 
-//TODO Como agregar:
-// vistas
-// rutas
-// ruta api
-// catalogos
+El proyecto se conforma de dos partes principales: el cliente y el servidor.
+
+Estas partes presentan variaciones en el entorno de desarrollo y de producción.
+
+En entorno de desarrollo, el cliente y el servidor se ejecutan como procesos distintos, para permitir el hot-reloading (actualización automática después de hacer cambios).
+ 
+Ambos se configuran con:
+
+`npm install`
+
+En algunas situaciones, es necesario también instalar `supervisor`.
+
+`npm install -g supervisor`
+
+Para correr el cliente:
+
+`npm run serve`
+
+Para correr el servidor:
+
+`npm start`
+
+Para agregar una funcionalidad, se requiere tomar en cuenta distintos componentes y dónde se van a localizar.
+
+### Cliente
+
+Al agregar una funcionalidad del cliente, se deben agregar los siguientes:
+
+- **Page Vue Component**: una nueva "página" se debe agregar como un nuevo componente de Vue en el directorio de `/src/pages`.
+- **Vue Components**: los componentes usados en la página, se deben agregar como componentes de Vue en el directorio de `/src/components`.
+- **Route**: ruta en la configuración de `vue-router`, disponible en `/src/router.js`.
+- **Store** (optional): flux-based store con `vuex`; se debe agregar un nuevo módulo del store en un archivo con terminación `*.store.js` al directorio `/src/store/modules/`, y después configurarlo a `/src/store/index.js`.
+- **Api** (optional): archivo centralizado con la funcionalidad de comunicación hacia la API (servidor); se debe agregar un nuevo archivo con terminación `*.api.js` al directorio `/src/api/`. 
+
+### Servidor
+
+- **Controller**: un nuevo controlador, con la lógica de manejo de cada ruta del servidor, se debe agregar en un archivo con terminación `*.controller.js` al directorio `/src/server/controllers/`.
+- **Model**: un nuevo modelo con la estructura de base de datos; se debe agregar en un archivo con terminación `*.model.js` al directorio `/src/server/models/`.
+- **Route**: la configuración de rutas se debe agregar con un archivo con terminación `*.routes.js` al directorio `/src/server/routes/`.
