@@ -67,7 +67,7 @@
                     </div>
                     
                     <div class="row">
-                        <div class="col-4 p-l-30 p-r-30">
+                        <div class="col-md-4 col-xs-12 p-l-30 p-r-30 p-b-30">
                             <div class="tacometro-container">
 
                                 <div class="gauge-container">
@@ -94,7 +94,7 @@
                             <!--<a href="" class="btn-stroke button-primary text-unset" tabindex="">¿Cómo se-->
                                 <!--calcula?</a>-->
                         </div>
-                        <div class="col-8">
+                        <div class="col-md-8 col-xs-12">
                             <p class="f-14 c-plain_text principal-font-regular">
                                 <strong class="f-16">¿Qué significa que el índice de riesgo de corrupción sea <span :style="{color: corruptionLevelColor}">{{corruptionLevel}}</span>?</strong>
                                 <br>

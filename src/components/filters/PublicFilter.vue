@@ -3,12 +3,12 @@
         <div class="filter">
             <div class="filter-container">
                 <input class="input-search" type="text" name="" value="" v-model="query.search"
-                       placeholder="Escribe el nombre del contrato.."/>
+                       :placeholder="placeHolder" />
             </div>
             <button @click="filter" class="filter-btn" type="button" name="button">Buscar</button>
         </div>
         <div class="m-t-10">
-            <div class="filter-box">
+            <div>
                 <div class="filter">
                     <div class="filter-container row m-0">
                         <div class="form-group fg-float border-select m-0 p-0 col-lg-3 col-6">
@@ -75,7 +75,7 @@
         </div>
             <div class="col-12">
                 <div class="m-t-20">
-                    <span class="tag-title">Filtros:</span>
+                    <span class="tag-title" v-show="showFilters">Filtros:</span>
                     <div class="tag" v-for="item in query.administrationPeriods">
                                 <span class="">
                                   {{item.administrationPeriod}}
@@ -118,7 +118,8 @@
                     </button>
                 </div>
             </div>
-        <!--<button id="refresh-selects-button" style="display:none" type="button" @click="refreshSelects">click mee!!!-->
+        <!--Button dummy, do not delete; used to ensure selects are properly shown-->
+        <button id="refresh-selects-button" style="display:none" type="button" @click="refreshSelects">
         </button>
     </div>
 </template>
@@ -144,6 +145,17 @@
                     administrativeUnit : undefined
                 }
             }
+        },
+        computed : {
+           showFilters : function(){
+
+           return (this.query.administrationPeriods && this.query.administrationPeriods.length >  0 ) ||
+                      (this.query.fiscalYears && this.query.fiscalYears.length>  0 ) ||
+                      (this.query.trimonths && this.query.trimonths.length>  0 ) ||
+                      (this.query.procedureTypes && this.query.procedureTypes.length >  0 ) ||
+                      (this.query.administrativeUnits && this.query.administrativeUnits.length >  0 );
+
+           }
         },
         props: {
             administrationPeriods: {
@@ -176,6 +188,10 @@
             additionalParams : {
                 type: Object
             },
+            placeHolder: {
+                type: String,
+                default:"Escribe el nombre del contrato.."
+            }
         },
         mounted() {
             this.$nextTick(function () {

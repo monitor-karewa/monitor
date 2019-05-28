@@ -52,4 +52,16 @@ router.post('/save', securityController.validatePermission(Calculation.permissio
  */
 router.post('/delete', securityController.validatePermission(Calculation.permission, 'delete'), calculationController.delete);
 
+/**
+ * GET /delete
+ * Obtains the suppliers available for this contract
+ */
+router.get('/retrieve/suppliers', securityController.validatePermission(Calculation.permission, 'edit'), calculationController.retrieveSuppliers);
+
+/**
+ * GET /delete
+ * Obtains the suppliers available for this contract
+ */
+router.get('/retrieve/administrative-units', securityController.validatePermission(Calculation.permission, 'edit'), calculationController.retrieveAdministrativeUnits);
+
 module.exports = router;

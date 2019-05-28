@@ -2,7 +2,7 @@
     <div>
         <AdminMainSection>
             <BackButton/>
-            <CatalogHeader :singular="'Contrato'" :plural="'Contratos'"/>
+            <CatalogHeader :singular="'Contrato'" :plural="'Contratos'" :store-module="storeModule"/>
             <EditableTable
                     :docs="docs"
                     :tableHeaders="tableHeaders"
@@ -114,7 +114,7 @@
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
-                               :placeholder="$t('contracts.new.period.placeholder')"
+                               :placeholder="$t('contracts.new.contract-id.placeholder')"
                                v-model="entry.contractId">
                         <label class="fg-label">{{$t('contracts.new.contract-id.label')}}
                             <small></small>
@@ -182,7 +182,7 @@
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input datepicker" id="announcementDate"
-                               :placeholder="$t('contracts.new.announcementDate.placeholder')"
+                               :placeholder="$t('contracts.new.announcementDate.convocatoria.placeholder')"
                                v-model="entry.announcementDate">
                         <label class="fg-label">{{$t('contracts.new.announcementDate.label')}}
                             <small></small>
@@ -381,7 +381,7 @@
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
-                               :placeholder="$t('contracts.new.min-amount.placeholder')"
+                               :placeholder="$t('contracts.new.total-amount.placeholder')"
                                v-model="entry.totalAmount">
                         <label class="fg-label">{{$t('contracts.new.total-amount.label')}}
                             <small></small>
@@ -680,34 +680,34 @@
                                         /* Materia */
                     category: "",
                     /* Administracion */
-                    administrationPeriod: "2019-2020",
-                    fiscalYear: "2019",
-                    period: "1o 2019",
-                    contractId : "BESTID123",
-                    partida: "UNICA",
+                    administrationPeriod: "",
+                    fiscalYear: "",
+                    period: "",
+                    contractId : "",
+                    partida: "",
                     procedureState: undefined,
-                    announcementUrl: "www.anouncementURL.com",
-                    announcementDate:  "02/02/2020",
-                    servicesDescription: "This is a good contract service",
-                    clarificationMeetingDate: "03/03/2020",
-                    clarificationMeetingJudgmentUrl: "www.meetup.com",
-                    presentationProposalsDocUrl: "docs.google.com/veryimportantdoc",
+                    announcementUrl: "",
+                    announcementDate:  "",
+                    servicesDescription: "",
+                    clarificationMeetingDate: "",
+                    clarificationMeetingJudgmentUrl: "",
+                    presentationProposalsDocUrl: "",
                     organizerAdministrativeUnit: {},
                     applicantAdministrativeUnit: {},
                     administrativeUnitType: {},
-                    contractNumber: "Number12312322222222",
-                    contractDate: "04/04/2020",
+                    contractNumber: "",
+                    contractDate: "",
                     contractType: "",
-                    totalAmount: 4000,
-                    minAmount: 3000,
-                    maxAmount: 150200,
-                    totalOrMaxAmount: "250100",
-                    contractUrl: "web.whatsapp.com",
+                    totalAmount: 0,
+                    minAmount: 0,
+                    maxAmount: 0,
+                    totalOrMaxAmount: "",
+                    contractUrl: "",
                     areaInCharge: {},
-                    updateDate: "03/03/2020",
-                    notes : "Note-ice me senpai",
-                    karewaNotes: "Notas karewaii",
-                    informationDate: "03/03/2020",
+                    updateDate: "",
+                    notes : "",
+                    karewaNotes: "",
+                    informationDate: "",
                     limitExceeded: false,
                     amountExceeded: 0
                 },

@@ -11,6 +11,7 @@
                         <template v-if="currentDataLoadInfo && currentDataLoadInfo.uploadedBy && hasAccessToDataLoad">
                             <div class="side-right">
                                 <p>Tienes una carga de <strong>datos pendiente</strong></p>
+                                {{currentDataLoadInfo}}
                                 <small>Comenzada por: <strong>{{currentDataLoadInfo.uploadedBy}}</strong></small>
                             </div>
                             <router-link to="admin/data-load/current" class="btn-raised button-accent">Continuar</router-link>

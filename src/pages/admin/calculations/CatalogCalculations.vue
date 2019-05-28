@@ -2,7 +2,7 @@
     <div>
         <AdminMainSection>
             <BackButton/>
-            <CatalogHeader :singular="'Cálculo'" :plural="'Cálculo'"/>
+            <CatalogHeader :singular="'Cálculo'" :plural="'Cálculo'" :storeModule="storeModule"/>
             <EditableTable
                     :docs="docs"
                     :tableColumns="tableColumns"
@@ -198,9 +198,9 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownInput"
                                  x-placement="bottom-end">
                                 <ul>
-                                    <li @click="setDisplayForm('NORMAL')">Normal</li>
-                                    <li @click="setDisplayForm('AMOUNT')">Cantidad</li>
-                                    <li @click="setDisplayForm('PERCENTAGE')">Porcentaje</li>
+                                    <li @click="setDisplayForm('NORMAL')" class="c-pointer">Normal</li>
+                                    <li @click="setDisplayForm('AMOUNT')" class="c-pointer">Cantidad</li>
+                                    <li @click="setDisplayForm('PERCENTAGE')" class="c-pointer">Porcentaje</li>
                                 </ul>
                             </div>
                         </div>
@@ -208,25 +208,33 @@
                 </div>
 
                 <div class="vertical-center">
-                    <div class="form-group fg-float basic-select w-70 m-r-30 p-t-0 m-b-0">
-                        <div class="fg-line">
-                            <select @change="addToFormula($event)" v-model="variableSelected" class="form-control select selectpicker" data-live-search="true"
-                                    data-live-search-placeholder="Search placeholder"
-                                    title="Agregar variable">
-                                <optgroup label="GENERAL">
-                                    <option :value="item.abbreviation" v-for="item in variablesObj">{{item.name}}</option>
-                                </optgroup>
-                                <optgroup label="Otros Cálculos">
-                                    <option :value="calculation.abbreviation" v-for="calculation in calculations">{{'('+calculation.abbreviation+') '+calculation.name}}</option>
-                                </optgroup>
-                            </select>
+                    <div class="row w-100">
+                        <div class="col-sm-8">
+                            <div class="form-group fg-float basic-select p-t-0 m-b-0">
+                                <div class="fg-line">
+                                    <select @change="addToFormula($event)" v-model="variableSelected" class="form-control select selectpicker" data-live-search="true"
+                                            data-live-search-placeholder="Buscar variable"
+                                            title="Agregar variable">
+                                        <optgroup label="GENERAL">
+                                            <option :value="item.abbreviation" v-for="item in variablesObj" style="white-space: normal;">{{item.name}}</option>
+                                        </optgroup>
+                                        <optgroup label="Otros Cálculos">
+                                            <option :value="calculation.abbreviation" v-for="calculation in calculations">{{'('+calculation.abbreviation+') '+calculation.name}}</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+
                         </div>
-                    </div>
-                    <div class="mini-buttons">
-                        <button type="button" class="mini-btn p-0" @click="addToFormula('+')"><span class="f-25 m-t--5 align-middle">+</span></button>
-                        <button type="button" class="mini-btn p-0" @click="addToFormula('*')"><span class="f-30 align-middle">*</span></button>
-                        <button type="button" class="mini-btn p-0" @click="addToFormula('-')"><span class="f-25 m-t--5 align-middle">-</span></button>
-                        <button type="button" class="mini-btn m-r-0" @click="addToFormula('/')">/</button>
+                        <div class="col-sm-4 vertical-center">
+                            <div class="mini-buttons">
+                                <button type="button" class="mini-btn p-0" @click="addToFormula('+')"><span class="f-25 m-t--5 align-middle">+</span></button>
+                                <button type="button" class="mini-btn p-0" @click="addToFormula('*')"><span class="f-30 align-middle">*</span></button>
+                                <button type="button" class="mini-btn p-0" @click="addToFormula('-')"><span class="f-25 m-t--5 align-middle">-</span></button>
+                                <button type="button" class="mini-btn m-r-0" @click="addToFormula('/')">/</button>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
 
@@ -256,12 +264,118 @@
                             <!--{{formulaValidation}}-->
                         <!--</p>-->
                     <!--</div>-->
-                    <div class="vertical-center m-b-20" v-for="variable in entry.formula.variables">
-                        <span class="w-15 m-r-10"><strong class="c-accent f-12">{{variable.abbreviation}}　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</strong></span>
-                        <div class="floating-text-form">
-                            <h1>{{variable.name}}</h1>
-                            <p class="m-b-0"> {{variable.description}}</p>
+                    <div class="row vertical-center m-b-20" v-for="variable in entry.formula.variables">
+                        <div class="col-md-6">
+
+                            <span class="w-15 m-r-10"><strong class="c-accent f-12">{{variable.abbreviation}}　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</strong></span>
+                            <div class="floating-text-form">
+                                <h1>{{variable.name}}</h1>
+                                <p class="m-b-0"> {{variable.description}}</p>
+                            </div>
                         </div>
+
+
+                        <div class="col-md-6">
+                                <div class="col-12 col-md-12 m-b-30">
+                                    <a @click="addRowFilter(variable.abbreviation)" class="btn-stroke button-accent"><i class="zmdi zmdi-plus"></i> Agregar Filtro </a>
+                                </div>
+                        </div>
+
+                        <div class="col-md-12 col-lg-12 row form-group fg-float subtitle p-t-0 m-t-20" v-for="(filter, indexFilter ) in entry.filters" v-show="filter.variableAbbreviation == variable.abbreviation">
+                            <div class="col-md-3 col-lg-4 m-t-10" >
+                                <div class="fg-line">
+                                    <select v-model="filter.propertyName" class="form-control select selectpicker"
+                                            data-live-search="true"
+                                            :title="'Propiedad...'"
+                                            data-live-search-placeholder="Realiza una búsqueda.."
+                                            @change="changePropertyName($event,indexFilter)"
+                                    >
+                                        <option v-for="(options, index) in filtersOptions" :value="options.propertyName"> {{$t(options.i18n)}}</option>
+                                    </select>
+                                    <label class="fg-label m-t-10" >
+                                        <small></small>
+                                        <strong>Propiedad del filtro</strong>
+                                    </label>
+                                </div>
+
+                            </div>
+                            <div class="col-md-3 col-lg-3 m-t-10">
+                                <div class="fg-line">
+                                    <select v-model="filter.operator" class="form-control select selectpicker"
+                                            data-live-search="true"
+                                            :title="'Operador...'"
+                                            data-live-search-placeholder="Selecciona el operador de tu preferencia.."
+                                    >
+                                        <option v-for="operator in operatorsOptions" :value="operator.value"> {{operator.displayName}}</option>
+                                    </select>
+                                    <label class="fg-label m-t-10" >
+                                        <small></small>
+                                        <strong>Operador del filtro</strong>
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+
+
+                            <div class="col-md-3 col-lg-3 m-t-10" v-show="filter.propertyType == 'REF' && filter.onModel == 'Supplier'">
+                                <div class="fg-line">
+                                    <select v-model="filter.reference" class="form-control select selectpicker"
+                                            data-live-search="true"
+                                            :title="'Proveedores...'"
+                                            data-live-search-placeholder="Selecciona al proveedor..."
+                                    >
+                                        <option v-for="refs in suppliers" :value="refs._id"> {{refs.name}}</option>
+                                    </select>
+                                    <label class="fg-label m-t-10" >
+                                        <small></small>
+                                        <strong>Valor del filtro</strong>
+                                    </label>
+                                </div>
+
+                            </div>
+                            <div class="col-md-3 col-lg-3 m-t-10" v-show="filter.propertyType == 'REF' && filter.onModel == 'AdministrativeUnit'">
+                                <div class="fg-line">
+                                    <select v-model="filter.reference" class="form-control select selectpicker"
+                                            data-live-search="true"
+                                            :title="'U.Administrativas...'"
+                                            data-live-search-placeholder="Selecciona la U. Administrativa..."
+                                    >
+                                        <option v-for="refs in administrativeUnits" :value="refs._id"> {{refs.name}}</option>
+                                    </select>
+
+                                    <label class="fg-label m-t-10" >
+                                        <small></small>
+                                        <strong>Valor del filtro</strong>
+                                    </label>
+                                </div>
+
+                            </div>
+
+
+
+
+                            <div class="col-md-3 col-lg-3 m-t-10" v-show="filter.propertyType !== 'REF'">
+                                <div class="fg-line">
+                                    <input type="number" class="form-control fg-input"
+                                           step="0.01" placeholder="$0.0"
+                                           :placeholder="$t('contracts.new.contract-number.placeholder')"
+                                           v-model="filter.value"/>
+                                    <label class="fg-label m-t-10" >
+                                        <small></small>
+                                        <strong>Valor del filtro</strong>
+                                    </label>
+                                </div>
+
+                            </div>
+                            <div class="col-md-2 col-lg-2">
+                                <a href="" class="btn-circle-icon" @click.prevent="removeRowFromFilters(indexFilter)"><i class="zmdi zmdi-minus"></i></a>
+                            </div>
+
+
+                        </div>
+
                     </div>
                     <div class="vertical-center m-b-20" v-for="calculation in entry.formula.calculations">
                         <span class="w-15 m-r-10"><strong class="c-accent f-12">{{calculation.abbreviation}}　&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</strong></span>
@@ -270,6 +384,8 @@
                             <p class="m-b-0"> {{calculation.description}}</p>
                         </div>
                     </div>
+
+
                 </div>
 
 
@@ -301,6 +417,9 @@
                 <button v-show="isEditing" type="submit" class="btn-raised button-accent m-l-15">Actualizar</button>
             </div>
 
+
+            <button id="refresh-selects-button" style="display:none" type="button" @click="refreshSelectsFilter()">click mee!!!
+            </button>
 
         </modalEntry>
 
@@ -369,7 +488,8 @@
                     locked:false,
                     administrationPeriod:'',
                     hasPercentScale:false,
-                    scale:[]
+                    scale:[],
+                    filters:[]
                 },
                 defaultPercentScale:[
                     { min:0, max:33, value:2.67 },
@@ -379,7 +499,73 @@
                 errors : {
                     flag : false,
                     invalidVariables : []
-                }
+                },
+                operatorsOptions: [
+                    {
+                        value:'EQUAL',
+                        displayName:"Igual que"
+                    },
+                    {
+                        value:'GREATER',
+                        displayName:"Mayor que"
+                    },
+                    {
+                        value:'GREATER_EQUAL',
+                        displayName:"Mayor o igual que"
+                    },
+                    {
+                        value:'LESS',
+                        displayName:"Menor que"
+                    },
+                    {
+                        value:'LESS_EQUAL',
+                        displayName:"Menor o igual que"
+                    },
+                    {
+                        value:'NOT_EQUAL',
+                        displayName:"Diferente que"
+                    }
+                ],
+                filtersOptions : [
+                    {
+                        propertyName:'totalAmount',
+                        propertyType:'NUMBER',
+                        i18n:'contracts.new.total-or-max-amount.label'
+                    },
+                    {
+                        propertyName:'minAmount',
+                        propertyType:'NUMBER',
+                        i18n:'contracts.new.min-amount.label'
+                    },
+                    {
+                        propertyName:'maxAmount',
+                        propertyType:'NUMBER',
+                        i18n:'contracts.new.max-amount.label'
+                    },
+                    {
+                        propertyName:'totalOrMaxAmount',
+                        propertyType:'NUMBER',
+                        i18n:'contracts.new.total-or-max-amount.sub-label'
+                    },
+                    {
+                        propertyName:'supplier',
+                        propertyType:'REF',
+                        onModel:'Supplier',
+                        i18n:'suppliers.supplier'
+                    },
+                    {
+                        propertyName:'organizerAdministrativeUnit',
+                        propertyType:'REF',
+                        onModel:'AdministrativeUnit',
+                        i18n:'contracts.organizerAdministrativeUnit'
+                    },
+                    {
+                        propertyName:'applicantAdministrativeUnit',
+                        propertyType:'REF',
+                        onModel:'AdministrativeUnit',
+                        i18n:'contracts.applicantAdministrativeUnit'
+                    }
+                ]
 
             }
         },
@@ -430,13 +616,17 @@
             },
             addToFormula(element) {
                 if (element) {
-                    this.entry.formula.expression = this.entry.formula.expression || '';
+                    if (!this.entry.formula.expression) {
+                        this.entry.formula.expression = '';
+                    }
                     if (this.entry.formula.expression.length > 0) {
                         this.entry.formula.expression += " ";
                     }
-                    if (typeof element == "string") {
+                    if (typeof(element) === "string") {
                         this.entry.formula.expression += element;
                     } else { //then it's a variable
+                        this.variableSelected = null;
+                        this.refreshSelect();
                         this.entry.formula.expression += element.target.value;
                         this.addVariablesFromFormulaString();
                     }
@@ -499,6 +689,7 @@
                 // }, 1000, false)
             },
             addVariablesFromFormulaString(){
+                this.validateFormula();
                 if(this.entry.formula && this.entry.formula.expression){
                     this.entry.formula.variables = this.parseVariablesFromFormulaString();
                     this.entry.formula.calculations = this.parseCalculationsFromFormulaString();
@@ -541,13 +732,13 @@
                 touchMap.set($v, setTimeout($v.$touch, 1000))
             },
             clearEntry(){
-                this.entry = {
-                    formula:{}
-                };
+//                this.entry = {
+//                    formula:{}
+//                };
                 this.$v.$reset();
             },
             validateFormula(){
-                this.$store.dispatch(`${storeModule}/validateFormula`, {formula: this.entry.formula, abbreviation : this.entry.abbreviation, hasPercentScale:this.entry.hasPercentScale, scale:this.entry.scale});
+                this.$store.dispatch(`${storeModule}/validateFormula`, {formula: this.entry.formula, abbreviation : this.entry.abbreviation, hasPercentScale:this.entry.hasPercentScale, scale:this.entry.scale, filters:this.entry.filters});
             },
             assignPercentScale(){
                 if(this.entry.hasPercentScale){
@@ -563,8 +754,54 @@
                 if(this.entry.scale && this.entry.scale.length){
                     this.entry.scale.splice(index, 1);
                 }
-            }
+            },
+            refreshSelect() {
+                this.$nextTick(function () {
+                    $('.selectpicker').selectpicker('refresh');
+                })
+            },
+            addRowFilter(abbreviation){
+                this.entry.filters.push({variableAbbreviation:abbreviation});
+                this.refreshSelectPicker(200);
+            },
+            changePropertyName(event,indexFilter){
+                let self = this;
+                if(event.target.value === "" || indexFilter ===""){
+                    return;
+                }
 
+                let propertyName = event.target.value;
+                let selectedFilterOption = this.filtersOptions.find((element) => {
+                    return element.propertyName == propertyName
+                });
+                    this.$set(self.entry.filters[indexFilter], 'propertyName', selectedFilterOption.propertyName);
+                    this.$set(self.entry.filters[indexFilter], 'propertyType', selectedFilterOption.propertyType);
+                    this.$set(self.entry.filters[indexFilter], 'onModel', selectedFilterOption.onModel);
+
+
+                this.refreshSelectPicker(200);
+
+
+            },
+            removeRowFromFilters(index){
+                if(this.entry.filters && this.entry.filters.length){
+                    this.entry.filters.splice(index, 1);
+                }
+            },
+            refreshSelectPicker(miliseconds){
+                setTimeout(function(){
+                    window.$('.selectpicker').selectpicker();
+                    window.$('.selectpicker').selectpicker('refresh');
+                    $('.selectpicker').selectpicker();
+                    $('.selectpicker').selectpicker('refresh');
+                },miliseconds);
+            },
+
+            refreshSelectsFilter(){
+                let dummyAbbr;
+                this.addRowFilter(dummyAbbr);
+                this.entry.filters.pop();
+            }
         },
         created() {
             bus.$on(storeModule + DOC_UPDATED, () => {
@@ -587,6 +824,7 @@
                 this.entry.administrationPeriod = '';
                 this.entry.hasPercentScale = false;
                 this.entry.scale = [];
+                this.entry.filters = [];
                 $('#ModalEntry').modal('hide');
                 this.$store.dispatch (`${storeModule}/clearFormErrors`);
                 this.$v.$reset();
@@ -595,6 +833,7 @@
             });
             bus.$on(storeModule+DOC_START_CREATE, ()=>{
                 this.clearEntry();
+                this.refreshSelect();
             });
             bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
                 this.clearEntry();
@@ -616,16 +855,44 @@
                 tempEntry.locked = entry.locked;
                 tempEntry.administrationPeriod = entry.administrationPeriod;
                 tempEntry.hasPercentScale = entry.hasPercentScale;
-                tempEntry.scale = entry.scale;
+                tempEntry.scale = [];
+                tempEntry.filters = [];
+                if(entry.scale){
+                    entry.scale.forEach((item) => {
 
-                this.entry = {...tempEntry};
+
+                        let scaleEntry = Object.assign({},item);
+                        tempEntry.scale.push(scaleEntry);
+                    })
+                }
+
+                if(entry.filters){
+                    entry.filters.forEach((item) => {
+                        let filterEntry = Object.assign({},item);
+                        tempEntry.filters.push(filterEntry);
+                    })
+                }
+
+                this.entry =  {...tempEntry};
+
+
+                this.$nextTick(function () {
+                    setTimeout(function () {
+                        $("#refresh-selects-button").click();
+                    },1000);
+
+                });
+                this.refreshSelect();
             });
         },
         mounted() {
             window.$(document).ready(function () {
+
                 window.$('.selectpicker').selectpicker();
+                window.$('.selectpicker').selectpicker('refresh');
 
                 $('.selectpicker').selectpicker();
+                $('.selectpicker').selectpicker('refresh');
 
                 $('#toast-danger').click(function () {
                     tShow("Hubo un error en el proceso. Intenta de nuevo", 'danger');
@@ -665,7 +932,9 @@
                 variables: state => state[storeModule].variables,
                 calculations: state => state[storeModule].calculations,
                 formulaValidation: state => state[storeModule].formulaValidation,
-                formulaValidated: state => state[storeModule].formulaValidated
+                formulaValidated: state => state[storeModule].formulaValidated,
+                suppliers: state => state[storeModule].suppliers,
+                administrativeUnits: state => state[storeModule].administrativeUnits,
             }),
             ...mapGetters(
                     storeModule , ['variablesObj','calculationsForFormula','formErrors']
@@ -674,6 +943,8 @@
         beforeMount(){
             this.$store.dispatch(`${storeModule}/fetchVariables`);
             this.$store.dispatch(`${storeModule}/fetchCalculations`);
+            this.$store.dispatch(`${storeModule}/getSuppliers`);
+            this.$store.dispatch(`${storeModule}/getAdministrativeUnits`);
         },
     }
 </script>

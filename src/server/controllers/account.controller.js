@@ -137,7 +137,7 @@ exports.resetPassword = (req, res, next) => {
                 }
                 
                 var emailClient = new EmailClient(user.email, "Monitor Karewa | Restablecer contraseña", req);
-                emailClient.sendResetPasswordEmail(user, token);
+                emailClient.sendResetPasswordEmail(user, token, false);
                 return res.json({
                     error: false
                 });

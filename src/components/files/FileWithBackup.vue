@@ -17,13 +17,13 @@
     
     
                     <div class="modal-body d-flex">
-                        <div class="col-xs-6">
+                        <div class="col-sm-6">
                             <button v-if="url && url.length" class="btn-raised xs button-accent"><i class="zmdi zmdi-download"></i>
                                 <a :href="url" class="c-white" target="_blank">{{$t('general.files.backup.original-download')}}</a>
                             </button>
                             <small v-if="!url || !url.length">{{$t('general.files.backup.original-unavailable')}}</small>
                         </div>
-                        <div class="col-xs-6 p-l-40">
+                        <div class="col-sm-6 p-l-40">
                             <button v-if="urlBackup && urlBackup.length" class="btn-raised xs button-accent"><i class="zmdi zmdi-download"></i>
                                 <a :href="baseUrl + '/public-api/files/download/' + urlBackup" target="_blank">{{$t('general.files.backup.backup-download')}}</a>
                             </button>
