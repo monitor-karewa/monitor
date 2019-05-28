@@ -37,13 +37,13 @@ heroku:
     - master
 
 prod:
-  stage:           deploy
+  stage:           release
   image:           alpine
   extends:         .devops
   script:
     - deploy_prod
   only:
-    - tags
+    - master
 
 
 .devops:
