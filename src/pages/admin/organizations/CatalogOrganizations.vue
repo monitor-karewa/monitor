@@ -27,7 +27,7 @@
                 </div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre" v-model="$v.entry.shortName.$model">
+                        <input type="text" class="form-control fg-input" placeholder="Introduce el nombre corto" v-model="$v.entry.shortName.$model">
                         <label class="fg-label">Nombre corto de la organización
                             <small></small>
                             <br>
