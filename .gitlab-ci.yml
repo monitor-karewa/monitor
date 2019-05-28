@@ -60,8 +60,8 @@ prod:
       API_HOST=$API_HOST_BETA \n \
       API_PORT=$API_PORT_BETA \n \
       VUE_APP_API_HOST=$VUE_APP_API_HOST_BETA \n \
-      VUE_APP_API_PORT=$VUE_APP_API_PORT_BETA" \
-      > .env.production
+      VUE_APP_API_PORT=$VUE_APP_API_PORT_BETA" > .env.production
+            cat .env.production
 
             docker build \
               --iidfile imageid.txt \
@@ -71,11 +71,11 @@ prod:
 
           *)
             echo " \
-          API_HOST=$API_HOST_PROD \n \
-          API_PORT=$API_PORT_PROD \n \
-          VUE_APP_API_HOST=$VUE_APP_API_HOST_PROD \n \
-          VUE_APP_API_PORT=$VUE_APP_API_PORT_PROD" \
-          > .env.production
+      API_HOST=$API_HOST_PROD \n \
+      API_PORT=$API_PORT_PROD \n \
+      VUE_APP_API_HOST=$VUE_APP_API_HOST_PROD \n \
+      VUE_APP_API_PORT=$VUE_APP_API_PORT_PROD" > .env.production
+            cat .env.production
 
             docker build \
               --iidfile imageid.txt \
