@@ -56,12 +56,12 @@ prod:
       function docker_build() {
         case ${CI_COMMIT_REF_SLUG} in
           master)
-            echo " \
+            echo -e " \
       API_HOST=$API_HOST_BETA \n \
       API_PORT=$API_PORT_BETA \n \
       VUE_APP_API_HOST=$VUE_APP_API_HOST_BETA \n \
-      VUE_APP_API_PORT=$VUE_APP_API_PORT_BETA" \
-      > .env.production
+      VUE_APP_API_PORT=$VUE_APP_API_PORT_BETA" > .env.production
+            cat .env.production
 
             docker build \
               --iidfile imageid.txt \
@@ -70,12 +70,12 @@ prod:
             ;;
 
           *)
-            echo " \
-          API_HOST=$API_HOST_PROD \n \
-          API_PORT=$API_PORT_PROD \n \
-          VUE_APP_API_HOST=$VUE_APP_API_HOST_PROD \n \
-          VUE_APP_API_PORT=$VUE_APP_API_PORT_PROD" \
-          > .env.production
+            echo -e " \
+      API_HOST=$API_HOST_PROD \n \
+      API_PORT=$API_PORT_PROD \n \
+      VUE_APP_API_HOST=$VUE_APP_API_HOST_PROD \n \
+      VUE_APP_API_PORT=$VUE_APP_API_PORT_PROD" > .env.production
+            cat .env.production
 
             docker build \
               --iidfile imageid.txt \
@@ -95,12 +95,9 @@ prod:
         echo -e "Host karewa\n\tHostName $KAREWA_HOST_PROD\n\tPort $KAREWA_PORT_PROD\n\tUser $KAREWA_USER_PROD\nStrictHostKeyChecking no\n\n" > ~/.ssh/config
         eval `ssh-agent -s`
         ssh-add ~/.ssh/id_rsa
-        echo -e "ssh -C karewa 'docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}'"
-        ssh -C karewa 'docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}'
-        echo -e "ssh -C karewa 'docker-compose up -d'"
-        ssh -C karewa 'docker-compose up -d'
-        echo -e "ssh -C karewa 'docker image prune -f'"
-        ssh -C karewa 'docker image prune -f'
+        ssh -t karewa "docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}"
+        ssh -t karewa "docker-compose up -d"
+        ssh -t karewa "docker image prune -f"
       }
 
       function heroku_deploy() {
