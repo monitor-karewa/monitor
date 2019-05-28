@@ -11,7 +11,7 @@ WORKDIR /usr/src/app
 COPY package*.json /usr/src/app/
 
 RUN npm install -s --no-progress
-RUN npm install -s --no-progress -g @vue/cli supervisor
+RUN npm install -s --no-progress -g @vue/cli pm2
 
 COPY . /usr/src/app
 
