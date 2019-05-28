@@ -1,8 +1,13 @@
 const mongoose = require('mongoose');
+const async = require('async');
 const Schema = mongoose.Schema;
+const md5 = require('md5');
 
 const { check, validationResult } = require('express-validator/check');
-const Contracts = require("./contract.model").Contract;
+const {Contracts, CONTRACT_VALIDATION_REGEX_DICT} = require("./contract.model");
+const deletedSchema = require('./../models/schemas/deleted.schema');
+
+let calculateAndValidateFormula/* = require('./../controllers/calculation.controller').calculateAndValidateFormula*/;
 
 const pluginCreatedUpdated = require('mongoose-createdat-updatedat');
 const mongoosePagination = require('mongoose-paginate');
@@ -10,6 +15,8 @@ const math = require('mathjs');
 
 const permissions = require('./../components/permissions');
 const utils = require('./../components/utils');
+const logger = require('./../components/logger').instance;
+
 
 const typeEnumDict = {
     'GENERAL': [
@@ -105,11 +112,6 @@ const ScaleSchema = new Schema({
 });
 
 const FormulaSchema = new Schema({
-    locked: {
-        type: Boolean,
-        required: true,
-        default: false
-    },
     expression: {
         type: String,
         required: true
@@ -165,10 +167,15 @@ const FilterSchema = new Schema({
 });
 
 CalculationSchema.add({
-        organization: {
-            type: Schema.Types.ObjectId,
-            ref: 'Organization',
-            required: true
+        // organization: {
+        //     type: Schema.Types.ObjectId,
+        //     ref: 'Organization',
+        //     required: true
+        // },
+        locked: {
+            type: Boolean,
+            required: [true, "Por favor indica si el cálculo corresponde al índice de riesgo de corrupción o no."],
+            default: false
         },
         name: {
             type: String,
@@ -210,15 +217,36 @@ CalculationSchema.add({
         },
         hasPercentScale : {
             type : Boolean,
-            required : true,
+            required: [true, "Por favor activa o desactiva la escala al cálculo."],
             default : false
         },
         scale:[ScaleSchema],
-        filters:[FilterSchema]
+        filters:[FilterSchema],
+        hash: {
+            type: String,
+            required: true,
+            default: '#'
+        },
+        administrationPeriod: {
+            type: String,
+            required: false,
+            match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.ADMINISTRATION), 'El campo Administración no cumple con el formato esperado. Ejemplo: 2017-2019']
+        },
+        administrationPeriodFromYear: {
+            type: Number,
+            required: false,
+            default: 2016
+        },
+        administrationPeriodToYear: {
+            type: Number,
+            required: false,
+            default: 2018
+        },
+        deleted: require("./schemas/deleted.schema").Deleted
 
     }
 );
-    CalculationSchema.delete = require("./schemas/deleted.schema").Deleted;
+    // CalculationSchema.delete = require("./schemas/deleted.schema").Deleted;
 
 //Agregar createdAt, modifiedAt automáticamente
 CalculationSchema.plugin(pluginCreatedUpdated);
@@ -282,6 +310,81 @@ CalculationSchema.statics.expressValidator = function() {
     ]
 };
 
+CalculationSchema.statics.getEnabledCalculations = function(req, cache, currentOrganizationId, callback) {
+    if (currentOrganizationId && typeof('currentOrganizationId').toLowerCase() === 'string') {
+        currentOrganizationId = mongoose.Types.ObjectId(currentOrganizationId);
+    }
+    
+    let qNotDeleted = deletedSchema.qNotDeleted();
+
+    this.find({
+        ...qNotDeleted,
+        enabled: true,
+        locked: false,
+    }).exec((err, calculations) => {
+
+        if (err) {
+            logger.error(err, req, 'calculation.model#getEnabledCalculations', 'Error trying to query enabled calculations');
+            return callback(null, []);
+        }
+        
+        async.mapSeries(calculations, (calculation, callback) => {
+
+            let query = {};
+
+            // if (calculation.type === 'CONTRACT') {
+            //     query = {organization: currentOrganizationId};
+            // }
+            // console.log('\n\ncalculation.name', calculation.name);
+            // console.log('calculation.type', calculation.type);
+            // console.log('query', query);
+
+            calculateAndValidateFormula(req, cache, calculation._id, {currentOrganizationId: currentOrganizationId}, (err, result) => {
+                
+                
+                let resultObj = calculation.toObject();
+                
+                if (result && result.value) {
+                    resultObj.result = result.value;
+                } else {
+                    resultObj.result = 0;
+                }
+
+                return callback(null, resultObj);
+            });
+
+        }, (err, results) => {
+            if (err) {
+                logger.error(err, req, 'calculation.model#getEnabledCalculations', 'Error trying to transform enabled calculations');
+            }
+
+            results = results || [];
+
+            return callback(null, results);
+        })
+    });
+};
+
+
+CalculationSchema.statics.qAdministrationPeriodFromYearToYear = function({administrationPeriodFromYear, administrationPeriodToYear}) {
+    return {
+        administrationPeriodFromYear: {$gte: administrationPeriodFromYear},
+        administrationPeriodToYear: {$lte: administrationPeriodToYear},
+    };
+};
+
+CalculationSchema.pre('save', function (next) {
+    let calculation = this;
+    let hashValue = '';
+    
+    hashValue += calculation.formula.expression;
+    hashValue += (calculation.hasPercentScale + '');
+    hashValue += (calculation.scale + '');
+    
+    calculation.hash = md5(hashValue);
+    next();
+});
+
 const Calculation = mongoose.model('Calculation', CalculationSchema);
 
 module.exports = {
@@ -293,3 +396,5 @@ module.exports = {
     displayFormEnum,
     displayFormEnumDict
 };
+
+calculateAndValidateFormula = require('./../controllers/calculation.controller').calculateAndValidateFormula;

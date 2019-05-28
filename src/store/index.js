@@ -15,6 +15,7 @@ import adminHomeStore from '@/store/modules/adminHomeStore.store';
 import accounts from '@/store/modules/accounts.store';
 import settings from '@/store/modules/settings.store';
 
+
 //user
 import userHomeStore from '@/store/modules/userHomeStore.store';
 
@@ -27,6 +28,7 @@ import visitasMonitorChart from '@/store/modules/adminCharts/monitorVisitasChart
 import visitasRutasChart from '@/store/modules/adminCharts/visitasRutasChart.store';
 import publicComparationsStore from '@/store/modules/publicComparations.store';
 import publicResourcesStore from '@/store/modules/publicResources.store';
+import contactStore from '@/store/modules/contact.store';
 
 
 import actions from '@/store/actions';
@@ -64,6 +66,7 @@ export default new Vuex.Store({
         publicContracts : publicContractsStore,
         publicComparations : publicComparationsStore,
         publicResources: publicResourcesStore,
+        contact : contactStore
     },
     state: state,
     actions: actions,

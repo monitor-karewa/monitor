@@ -27,7 +27,7 @@
                         </router-link>
                     </li>
                       <li>
-                          <router-link to="/">
+                          <router-link to="/calculations/corruption-index">
                               Índice de corrupción
                           </router-link>
                       </li>
@@ -35,7 +35,7 @@
                   <div class="col-6">
                         <li><router-link to="/comparations">Comparar monitores</router-link></li>
                         <li><router-link to="/resources">Recursos</router-link></li>
-                        <li><router-link to="/">Administrar</router-link></li>
+                        <li><router-link to="/login">Administrar</router-link></li>
                   </div>
 
                   </div>

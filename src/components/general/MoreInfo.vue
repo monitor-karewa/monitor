@@ -11,7 +11,7 @@
                 <img class="img-fluid" src="@/assets/images/Cards/home-vector.svg" alt=""/>
                 <div>
                     <p>Consulta la lista de todos los proveedores.</p>
-                    <router-link to="/suppliers" class="link-to" tabindex="">
+                    <router-link to="/suppliers" class="link-to c-accent" tabindex="">
                         Ver Proveedores <i class="zmdi zmdi-chevron-right"></i>
                     </router-link>
                 </div>

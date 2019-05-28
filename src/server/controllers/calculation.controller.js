@@ -3,21 +3,28 @@ const logger = require('./../components/logger').instance;
 const utils = require('./../components/utils');
 const mongoose = require('mongoose');
 
-const {
-    Calculation,
+// const {
+//     Calculation,
+//
+//     typeEnum,
+//     typeEnumDict,
+//
+//     displayFormEnum,
+//     displayFormEnumDict
+// } = require('./../models/calculation.model');
 
-    typeEnum,
-    typeEnumDict,
+let Calculation/* = require('./../models/calculation.model').Calculation*/;
+let typeEnum/* = require('./../models/calculation.model').typeEnum*/;
+let typeEnumDict/* = require('./../models/calculation.model').typeEnumDict*/;
+let displayFormEnum/* = require('./../models/calculation.model').displayFormEnum*/;
+let displayFormEnumDict/* = require('./../models/calculation.model').displayFormEnumDict*/;
 
-    displayFormEnum,
-    displayFormEnumDict
-} = require('./../models/calculation.model');
-const Contracts = require('./../models/contract.model').Contract;
+const Contract = require('./../models/contract.model').Contract;
 const Organization = require('./../models/organization.model').Organization;
 const Supplier = require('./../models/supplier.model').Supplier;
 const AdministrativeUnit = require('./../models/administrativeUnit.model').AdministrativeUnit;
 const deletedSchema = require('./../models/schemas/deleted.schema');
-const variables = require('./../components/variablesSeed').variables;
+const getVariables = require('./../components/variablesSeed').getVariables;
 const async = require('async');
 const math = require('mathjs');
 const { each } = require('async/each');
@@ -42,7 +49,7 @@ exports.index = (req, res, next) => {
  * @param res
  */
 exports.getVariables = (req, res) => {
-  return res.json(variables);
+  return res.json(getVariables());
 };
 
 /**
@@ -95,8 +102,8 @@ exports.list = (req, res, next) => {
     }
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    let qByOrganization = Organization.qByOrganization(req);
-    query = {...query, ...qNotDeleted, ...qByOrganization};
+    // let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...qNotDeleted/*, ...qByOrganization*/};
 
 
     Calculation
@@ -116,7 +123,6 @@ exports.list = (req, res, next) => {
                         message: res.__('general.error.unexpected-error')
                     });
                 }
-
                 return res.json({
                     errors: false,
                     message: "",
@@ -281,6 +287,10 @@ exports.validateFormula = (req, res, next) => {
     let calculation = {
         formula: req.body.formula,
         abbreviation : abbreviation,
+        locked : req.body.locked,
+        administrationPeriod : req.body.administrationPeriod,
+        administrationPeriodFromYear: Contract.parseAdministrationPeriodFromYear(req.body.administrationPeriod),
+        administrationPeriodToYear: Contract.parseAdministrationPeriodToYear(req.body.administrationPeriod),
         hasPercentScale : req.body.hasPercentScale,
         scale : req.body.scale || [],
         filters : req.body.filters || [],
@@ -302,7 +312,7 @@ exports.validateFormula = (req, res, next) => {
 
     exploreCalculationTree(cache, calculation, function (validTree) {
         if (validTree) {
-            calculateAndValidateFormula(cache, calculation, (err, results) => {
+            calculateAndValidateFormula(req, cache, calculation, {}, (err, results) => {
                 if(results && (isNaN(results.value) || results.value == Number.Infinity)){
                     return res.json({error:true, message:req.__('calculations.formula.infinity.error'), err:err });
                 }
@@ -368,8 +378,8 @@ exports.save = (req, res, next) => {
     if (id) {
         //Update
         let qById = {_id: id};
-        let qByOrganization = Organization.qByOrganization(req);
-        let query = {...qById, ...qByOrganization};
+        // let qByOrganization = Organization.qByOrganization(req);
+        let query = {...qById/*, ...qByOrganization*/};
 
         Calculation
             .findOne(query)
@@ -388,11 +398,21 @@ exports.save = (req, res, next) => {
                 calculation.abbreviation = req.body.abbreviation;
                 calculation.type = req.body.type;
                 calculation.enabled = req.body.enabled;
+                calculation.displayForm = req.body.displayForm;
+                // calculation.locked = false;
                 calculation.notes = req.body.notes;
                 //  Formula stuff
                 calculation.formula = req.body.formula;
                 calculation.scale = req.body.scale;
+
                 calculation.filters = req.body.filters;
+
+                calculation.locked = req.body.locked;
+                calculation.administrationPeriod= req.body.administrationPeriod;
+
+                calculation.administrationPeriodFromYear = Contract.parseAdministrationPeriodFromYear(req.body.administrationPeriod);
+                calculation.administrationPeriodToYear = Contract.parseAdministrationPeriodToYear(req.body.administrationPeriod);
+                
                 calculation.hasPercentScale = req.body.hasPercentScale;
 
                 let calculationObjectIds = [];
@@ -405,7 +425,8 @@ exports.save = (req, res, next) => {
                     if(formulaValidation.error){
                         return res.json({error: true, message: req.__('calculations.formula.syntax.error'), err:formulaValidation.err})
                     }
-                    calculation.save((err, savedCalculation) => {
+
+                calculation.save((err, savedCalculation) => {
                         if (err) {
                             let errors = [];
                             if(err.code == 11000){
@@ -421,6 +442,23 @@ exports.save = (req, res, next) => {
                                 errors:errors
                             });
                         }
+                        if (calculation.locked) {
+                            let qNotDeleted = deletedSchema.qNotDeleted();
+                            let query = {
+                                _id: {$ne: calculation._id},
+                                ...qNotDeleted
+                            };
+
+                            Calculation.updateMany({
+                                _id: {$ne: calculation._id},
+                                ...qNotDeleted
+                            }, {
+                                $set: {"locked": false}
+                            }).exec((err) => {
+                                
+                            });
+                        }
+                        
                         if(calculation.hasPercentScale) {
                             calculation.scale = calculation.scale.sort(function(a, b) {
                                 if(a.max > b.max){
@@ -459,7 +497,7 @@ exports.save = (req, res, next) => {
         //Create
 
         let calculation = new Calculation({
-            organization: Organization.currentOrganizationId(req),
+            // organization: Organization.currentOrganizationId(req),
             name : req.body.name,
             description : req.body.description,
             type : req.body.type,
@@ -469,6 +507,10 @@ exports.save = (req, res, next) => {
             notes : req.body.notes,
             scale : req.body.scale,
             filter : req.body.filter,
+            locked : req.body.locked,
+            administrationPeriod : req.body.administrationPeriod,
+            administrationPeriodFromYear: Contract.parseAdministrationPeriodFromYear(req.body.administrationPeriod),
+            administrationPeriodToYear: Contract.parseAdministrationPeriodToYear(req.body.administrationPeriod),
             hasPercentScale : req.body.hasPercentScale,
         });
 
@@ -501,6 +543,19 @@ exports.save = (req, res, next) => {
                     "errors":errors
                 });
             }
+
+            if (calculation.locked) {
+                let qNotDeleted = deletedSchema.qNotDeleted();
+                Calculation.updateMany({
+                    // _id: {$ne: calculation._id},
+                    ...qNotDeleted
+                }, {
+                    $set: {"locked": false}
+                }).exec((err) => {
+
+                });
+            }
+            
             if(calculation.hasPercentScale) {
                 calculation.scale = calculation.scale.sort(function(a, b) {
                     if(a.max > b.max){
@@ -649,9 +704,9 @@ let replaceVariableForValue = function(regex, expression, value = 0){
 
 
 
-let calculateAndValidateFormula = function(cache, calculation, callback){
+let calculateAndValidateFormula = function(req, cache, calculation, options, callback){
 
-    let {done, calls, i, resultsMap} = cache;
+    // let {done, calls, i, resultsMap} = cache;
 
     if (typeof calculation === 'string' || calculation instanceof mongoose.Types.ObjectId) {
         Calculation.findOne(
@@ -662,11 +717,11 @@ let calculateAndValidateFormula = function(cache, calculation, callback){
                 console.log("Error Finding calculation");
             } else {
                 calculation = res;
-                processCalculation(cache, calculation, callback)
+                processCalculation(req, cache, calculation, options, callback)
             }
         });
     } else {
-        processCalculation(cache, calculation, callback)
+        processCalculation(req, cache, calculation, options, callback)
     }
 };
 
@@ -686,11 +741,14 @@ let convertResultAccordingToScale = function(calculation, result = 0){
     return result
 };
 
-let  processCalculation = function(cache, calculation, mainCallback){
+let  processCalculation = function(req, cache, calculation, options = {}, mainCallback){
     let {done, calls, i, resultsMap} = cache;
 
     // console.log("calculation", calculation);
-    if(resultsMap[calculation.abbreviation] != undefined){
+    
+    let variables = getVariables();
+
+    if(resultsMap[calculation.abbreviation]){
         let result = {
             abbreviation: calculation.abbreviation,
             results : resultsMap[calculation.abbreviation]
@@ -712,11 +770,35 @@ let  processCalculation = function(cache, calculation, mainCallback){
 
 
         calculation.formula.variables.forEach((item) => {
+            let queryArray = variables[item.abbreviation].query;
             let filters = calculation.filters.filter(f => { return f.variableAbbreviation == item.abbreviation });
             let matchQuery = buildAggregateQuerysFromFilters(filters);
-            let query = variables[item.abbreviation].query;
-            query[0].$match = {...query[0].$match, ...matchQuery};
-            aggregatePromises.queries.push(Contracts.aggregate(variables[item.abbreviation].query));
+            
+            let query = {};
+            
+            if (options.query) {
+                query = {...query, ...options.query};
+            }
+
+            //Check if calculation is filtered by organization, even if it's the corruption index
+            if (/*!calculation.locked && */calculation.type === 'CONTRACT') {
+                let qByOrganization;
+                if (options.currentOrganizationId) {
+                    qByOrganization = {organization: options.currentOrganizationId};
+                } else {
+                    qByOrganization = Organization.qByOrganization(req);
+                }
+                query = {...query, ...qByOrganization, ...matchQuery};
+            }
+
+
+            if (Object.keys(query).length) {
+                queryArray.unshift({$match: query});
+            }
+
+            let aggregate = Contract.aggregate(variables[item.abbreviation].query);
+
+            aggregatePromises.queries.push(aggregate);
             aggregatePromises.abbreviation.push(item.abbreviation);
         });
         let finalValue = 0;
@@ -744,7 +826,7 @@ let  processCalculation = function(cache, calculation, mainCallback){
                 let variablesToReplace = [];
                 async.each(innerCalculations,
                     function (calculation, AsyncEachCallback) {
-                        calculateAndValidateFormula(cache, calculation, function (err, res) {
+                        calculateAndValidateFormula(req, cache, calculation, options, function (err, res) {
                             if (err) {
                                 AsyncEachCallback(err);
                             } else {
@@ -755,6 +837,7 @@ let  processCalculation = function(cache, calculation, mainCallback){
                     }
                     , function(err){
                         if(err){
+                            logger.error(err, req, 'calculation.controller#processCalculation', 'Error trying to process innerCalculations');
                             return mainCallback({ error:true, message:'calculations.formula.unexpected.error', err:err});
                         } else {
                             try {
@@ -769,11 +852,13 @@ let  processCalculation = function(cache, calculation, mainCallback){
 
                                 let result = {
                                     abbreviation: calculation.abbreviation,
-                                    value : finalValue
+                                    value : finalValue,
+                                    displayForm : calculation.displayForm,
                                 };
                                 resultsMap[calculation.abbreviation] = finalValue;
                                 return mainCallback(null, result);
                             } catch(err) {
+                                logger.error(err, req, 'calculation.controller#processCalculation', 'Error trying to replace variables with their values');
                                 return mainCallback({error:true, message:'calculations.formula.unexpected.error', err:err});
                             }
                         }
@@ -784,19 +869,23 @@ let  processCalculation = function(cache, calculation, mainCallback){
                     finalValue = convertResultAccordingToScale(calculation, finalValue);
                     let result = {
                         abbreviation: calculation.abbreviation,
-                        value : finalValue
+                        value : finalValue,
+                        displayForm : calculation.displayForm,
                     };
                     resultsMap[calculation.abbreviation] = finalValue;
                     return mainCallback(null, result);
                 } catch(err) {
+                    logger.error(err, req, 'calculation.controller#processCalculation', 'Error trying to process value for calculation without inner calculations.');
                     return mainCallback({error:true, message:'calculations.formula.unexpected.error', err:err});
                 }
             }
         }).catch((errors) => {
+            logger.error(errors, req, 'calculation.controller#processCalculation', 'Error querying calculations.');
             return mainCallback({error:true, message:'calculations.formula.unexpected.error', err:errors});
         });
 
     } catch(err) {
+        logger.error(err, req, 'calculation.controller#processCalculation', 'Error trying to process calculation result');
         return mainCallback({error:true, message:'calculations.formula.unexpected.error', err:err});
 
     }
@@ -817,8 +906,8 @@ exports.delete = (req, res, next) => {
     query["_id"] = req.body._id;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    let qByOrganization = Organization.qByOrganization(req);
-    query = {...query, ...qNotDeleted, ...qByOrganization};
+    // let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...qNotDeleted/*, ...qByOrganization*/};
     
     Calculation
         .find(query)
@@ -937,3 +1026,11 @@ exports.retrieveAdministrativeUnits = (req, res, next) => {
             }
         );
 };
+
+
+Calculation = require('./../models/calculation.model').Calculation;
+typeEnum = require('./../models/calculation.model').typeEnum;
+typeEnumDict = require('./../models/calculation.model').typeEnumDict;
+displayFormEnum = require('./../models/calculation.model').displayFormEnum;
+displayFormEnumDict = require('./../models/calculation.model').displayFormEnumDict;
+

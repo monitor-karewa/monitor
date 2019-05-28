@@ -25,6 +25,7 @@
                 this.$store.commit(`${this.$props.storeModule}/SET_DOC_ID`, this.$props.entry.id);
             },
             editEvent(){
+                this.$store.commit(`${this.$props.storeModule}/SET_EDIT`, true);
                 //fix to pass the entry through the state and manage the state & vuelidate
                 $('.selectpicker').selectpicker();
                 $('.selectpicker').selectpicker('refresh');

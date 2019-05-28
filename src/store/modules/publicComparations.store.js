@@ -15,7 +15,8 @@ const state = {
         totals: {},
         counts: {},
     },
-    corruptionIndex: {}
+    corruptionIndex: {},
+    calculationsInfo: []
 };
 
 const getters = {
@@ -53,9 +54,8 @@ const actions = {
     LOAD_CORRUPTION_INDEX ({commit}, {id}) {
         let query = `?id=${id}`;
         apiPublicComparations.corruptionIndex({query}, (result) => {
-            commit('SET_CORRUPTION_INDEX', {
-                corruptionIndex: result.data.data, 
-            });
+            // console.log('result.data.data', result.data.data);
+            commit('SET_CORRUPTION_INDEX', result.data.data);
         }, (err) => {
             tShow(i18n.t('comparations.public.load.corruption-index.error'), 'danger');
         });
@@ -80,9 +80,12 @@ const mutations = {
         detail = detail || {};
         state.detailRight = detail;
     },
-    SET_CORRUPTION_INDEX (state, {corruptionIndex}) {
+    SET_CORRUPTION_INDEX (state, {corruptionIndex, calculationsInfo}) {
         corruptionIndex = corruptionIndex || {};
+
+        calculationsInfo = calculationsInfo || [];
         state.corruptionIndex = corruptionIndex;
+        state.calculationsInfo = calculationsInfo;
     }
 };
 

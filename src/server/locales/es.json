@@ -40,5 +40,6 @@
 	"LIMIT_EXCEEDED": "No excedido",
 	"OPEN": "Abierto",
 	"NORMAL": "Normal",
-	"link.not.valid": "link.not.valid"
+	"link.not.valid": "link.not.valid",
+	"general.error.delete": "general.error.delete"
 }

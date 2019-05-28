@@ -8,10 +8,10 @@
             <button @click="filter" class="filter-btn" type="button" name="button">Buscar</button>
         </div>
         <div class="m-t-10">
-            <div class="filter-box">
+            <div>
                 <div class="filter">
                     <div class="filter-container row m-0">
-                        <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
+                        <div class="form-group fg-float border-select m-0 p-0 col-lg-3 col-6">
                             <div class="fg-line m-0">
                                 <select v-model="temp.administrationPeriod" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar administración"
@@ -56,7 +56,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group fg-float border-select m-0 p-0 col-lg-4 col-6">
+                        <div class="form-group fg-float border-select m-0 p-0 col-lg-3 col-6">
                             <div class="fg-line m-0">
                                 <select v-model="temp.administrativeUnit" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar administrativa"
@@ -118,7 +118,8 @@
                     </button>
                 </div>
             </div>
-        <button id="refresh-selects-button" style="display:none" type="button" @click="refreshSelects">click mee!!!
+        <!--Button dummy, do not delete; used to ensure selects are properly shown-->
+        <button id="refresh-selects-button" style="display:none" type="button" @click="refreshSelects">
         </button>
     </div>
 </template>

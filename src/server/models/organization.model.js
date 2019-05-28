@@ -70,6 +70,14 @@ organizationSchema = mongoose.Schema({
         type: String,
         default: ""
     },
+    address: {
+        type: String,
+        default: ""
+    },
+    schedule: {
+        type: String,
+        default: ""
+    },
     deleted: require("./schemas/deleted.schema").Deleted
 });
 

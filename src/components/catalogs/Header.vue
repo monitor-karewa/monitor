@@ -30,6 +30,9 @@
         },
         methods : {
             resetModal(){
+
+                this.$store.commit(`${this.$props.storeModule}/SET_EDIT`, false);
+                
                 //HACK find a better way to execute this
                 window.$('.selectpicker').selectpicker();
                 window.$('.selectpicker').selectpicker('refresh');

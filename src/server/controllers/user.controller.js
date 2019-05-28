@@ -170,7 +170,7 @@ exports.save = (req, res, next) => {
 
             //Send an email to set password
             let emailClient = new EmailClient(user.email, "Monitor Karewa | Bienvenido a la plataforma", req);
-            emailClient.sendResetPasswordEmail(user, token);
+            emailClient.sendResetPasswordEmail(user, token, true);
 
             return res.json({
                 "error": false,
@@ -251,7 +251,19 @@ exports.delete = (req, res, next) => {
 
     let query = {};
 
-    query["_id"] = req.body._id;
+    let _id = req.body._id;
+    query["_id"] = _id;
+
+    console.log('req.user', req.user);
+
+    if (_id === req.user._id.toString()) {
+    // if (true) {
+        return res.json({
+            error: true,
+            message: req.__('general.error.delete')
+        });
+    }
+    
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     //Users are not bound by organization
@@ -265,7 +277,7 @@ exports.delete = (req, res, next) => {
             if (err) {
                 logger.error(req, err, 'user.controller#delete', 'Error al realizar count de User');
                 return res.json({
-                    errors: true,
+                    error: true,
                     message: req.__('general.error.delete')
                 });
             }
@@ -273,7 +285,7 @@ exports.delete = (req, res, next) => {
             if (count === 0) {
                 logger.error(req, err, 'user.controller#delete', 'Error al intentar borrar User; el registro no existe o ya fue borrado anteriormente');
                 return res.json({
-                    errors: true,
+                    error: true,
                     message: req.__('general.error.not-exists-or-already-deleted')
                 });
             }
@@ -294,7 +306,7 @@ exports.delete = (req, res, next) => {
                 if (err) {
                     logger.error(req, err, 'user.controller#delete', 'Error al borrar User.');
                     return res.json({
-                        errors: true,
+                        error: true,
                         message: req.__('general.error.delete')
                     });
                 }

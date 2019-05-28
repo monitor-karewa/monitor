@@ -22,7 +22,7 @@
                             <div class="filter">
                                 <div class="filter-container">
                                     <input class="input-search" type="text" name="" v-model="search"
-                                           placeholder="Buscar usuarios"/>
+                                           placeholder="Busca Monitores o ingresa una dirección de un Monitor externo" @keyup.enter="searchOrganizations(search)"/>
                                 </div>
                                 <button class="filter-btn" type="button" name="button" @click="searchOrganizations(search)">Buscar</button>
                             </div>
@@ -63,11 +63,11 @@
                         </div>
 
 
-                        <p class="f-14 c-plain_text principal-font-regular">
+                        <p class="f-14 c-plain_text principal-font-regular" v-show="comparations && comparations.length">
                             <strong class="principal-font-semibold">Comparaciones Recientes</strong>
                         </p>
 
-                        <div class="row">
+                        <div class="row" v-show="comparations && comparations.length">
                             <div class="col-12 col-md-4 col-lg-3" v-for="comparation in comparations">
                                 <div class="card-compare">
                                     <img class="img-fluid" src="@/assets/images/Cards/bgm-karewa.png" alt="Karewa"/>
@@ -76,7 +76,7 @@
                                              alt="Logo"/>
                                         <div>
                                             <small>Monitor</small>
-                                            <label>{{comparation.targetName}}</label>
+                                            <label :style="{color: comparation.color}">{{comparation.targetName}}</label>
                                         </div>
                                     </div>
                                     <small>{{comparation.targetName}}</small>
@@ -209,7 +209,7 @@
             }
         },
         mounted() {
-            this.$store.dispatch(`${organizationsStoreModule}/LOAD_ORGANIZATIONS`);
+            this.$store.dispatch(`${organizationsStoreModule}/LOAD_ORGANIZATIONS`, {});
             this.$store.dispatch(`${organizationsStoreModule}/LOAD_COMPARATIONS`);
         }, methods : {
             searchOrganizations(search){

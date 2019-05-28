@@ -65,6 +65,7 @@ const publicContractRoutes = require('./src/server/routes/publicContract.routes'
 const publicComparationRoutes = require('./src/server/routes/publicComparation.routes');
 const publicResourceRoutes = require('./src/server/routes/publicResource.routes');
 const landingRoutes = require('./src/server/routes/landing.routes');
+const contactRoutes= require('./src/server/routes/contact.routes');
 
 // Controllers
 const securityController = require('./src/server/controllers/security.controller');
@@ -186,7 +187,8 @@ module.exports = app => {
     app.use('/public-api/comparations', publicComparationRoutes);
     app.use('/public-api/resources', publicResourceRoutes);
     app.use('/public-api/landing', landingRoutes);
-    
+    app.use('/public-api/contact', contactRoutes);
+
     // ======================
     // Session initialization
     // ======================

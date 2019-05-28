@@ -1,10 +1,10 @@
 FROM node:8.16.0-alpine AS builder
 
-ENV API_HOST=https://beta.monitorkarewa.org
-ENV API_PORT=443
 ENV NPM_CONFIG_LOGLEVEL=error
 ENV NODE_VERBOSE=false
 ENV NODE_MODULES_CACHE=true
+
+RUN env
 
 WORKDIR /usr/src/app
 

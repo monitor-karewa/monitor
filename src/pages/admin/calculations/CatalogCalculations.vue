@@ -2,13 +2,13 @@
     <div>
         <AdminMainSection>
             <BackButton/>
-            <CatalogHeader :singular="'Cálculo'" :plural="'Cálculo'"/>
+            <CatalogHeader :singular="'Cálculo'" :plural="'Cálculo'" :storeModule="storeModule"/>
             <EditableTable
                     :docs="docs"
                     :tableColumns="tableColumns"
                     :store-module="storeModule"
                     :singular="'Cálculo'"
-                    :plural="'Cálculos'"
+                    :plural="'Cálculos'" :hideEditButton="true"
             />
         </AdminMainSection>
 
@@ -56,8 +56,8 @@
                         <div class="checkbox">
                             <input type="checkbox" value="" v-model="entry.enabled">
                             <i class="input-helper"></i>
-                            <span>{{$t('users.new.enabled.checkbox-label')}} </span>
-                            <p class="fg-label "> {{$t('users.new.enabled.label')}}
+                            <span>{{$t('calculations.enabled')}} </span>
+                            <p class="fg-label "> {{$t('calculations.enabled.label')}}
                                 <small></small>
                                 <br>
                             </p>
@@ -65,7 +65,40 @@
                     </div>
                 </div>
 
-                <div class="form-group fg-float subtitle">
+
+                <div class="floating-text-form">
+                    <h1>Cálculo corresponde a Índice de riesgo de corrupción</h1>
+                </div>
+                <div class="form-group fg-float dropdown-inside m-t-10 p-t-0">
+                    <div class="fg-line basic-input">
+                        <div class="toggle-switch col-12">
+                            <div class="switch-border"></div>
+                            <input id="locked" type="checkbox" hidden="hidden" v-model="entry.locked" @change="assignPercentScale($event)">
+                            <label for="locked" class="ts-helper"></label>
+                        </div>
+                    </div>
+                </div>
+
+                <!--administrationPeriod-->
+                <div class="form-group fg-float subtitle" v-show="entry.locked">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input"
+                               :placeholder="$t('calculations.administration-period.placeholder')"
+                               v-model="entry.administrationPeriod"
+                               @input="delayTouch($v.entry.administrationPeriod)">
+                        <label class="fg-label">{{$t('calculations.administration-period.label')}}
+                            <small></small>
+                            <br>
+                            <strong>{{$t('calculations.administration-period.sub-label')}}</strong>
+                        </label>
+                    </div>
+                    <span v-if="$v.entry.administrationPeriod.$invalid  && $v.entry.administrationPeriod.$dirty && !$v.entry.administrationPeriod.validAdministrationPeriod"
+                          class="c-error">{{$t(regExpErrorMessage, {field:$t('calculations.new.administration-period.label'), example:'2016-2018' })}}</span>
+                    <!--<span v-if="$v.entry.administrationPeriod.$invalid  && $v.entry.administrationPeriod.$dirty && !$v.entry.administrationPeriod.required"-->
+                          <!--class="c-error">{{$t(requiredErrorMessage, {field:$t('calculations.administration-period.label')})}}</span>-->
+                </div>
+
+                <div class="form-group fg-float subtitle" v-show="!entry.locked">
                     <div class="fg-line basic-input">
                         <div class="input-radio-check col-md-12 p-0">
                             <div class=" check-container col-md-6">
@@ -104,8 +137,8 @@
                     <div class="row m-b-30">
                         <div class="col-md-6">
                             <div class="floating-text-form">
-                                <h1>Escala de porcentajes</h1>
-                                <p>Establece la escala para determinar la calificación del indicador</p>
+                                <h1>Escala de valores</h1>
+                                <p>Establece la escala para determinar el valor del cálculo</p>
                             </div>
                         </div>
                         <div class="col-md-6">
@@ -120,7 +153,7 @@
                                    v-model="scale.min">
                             <label class="fg-label m-t-10" v-if="index === 0">
                                 <small></small>
-                                <strong>Min(%)</strong>
+                                <strong>Min</strong>
                             </label>
                         </div>
                         <span class="w-10 m-r-10"><strong class="c-accent f-12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-</strong></span>
@@ -129,7 +162,7 @@
                                    v-model="scale.max">
                             <label class="fg-label m-t-10" v-if="index === 0">
                                 <small></small>
-                                <strong>Max(%)</strong>
+                                <strong>Max</strong>
                             </label>
                         </div>
                         <span class="w-10 m-r-10"><strong class="c-accent f-12">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;=</strong></span>
@@ -138,7 +171,7 @@
                                    v-model="scale.value">
                             <label class="fg-label m-t-10" v-if="index === 0">
                                 <small></small>
-                                <strong>Calificación</strong>
+                                <strong>Valor</strong>
                             </label>
                         </div>
                         <div class="col-md-2">
@@ -165,9 +198,9 @@
                             <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownInput"
                                  x-placement="bottom-end">
                                 <ul>
-                                    <li @click="setDisplayForm('NORMAL')">Normal</li>
-                                    <li @click="setDisplayForm('AMOUNT')">Cantidad</li>
-                                    <li @click="setDisplayForm('PERCENTAGE')">Porcentaje</li>
+                                    <li @click="setDisplayForm('NORMAL')" class="c-pointer">Normal</li>
+                                    <li @click="setDisplayForm('AMOUNT')" class="c-pointer">Cantidad</li>
+                                    <li @click="setDisplayForm('PERCENTAGE')" class="c-pointer">Porcentaje</li>
                                 </ul>
                             </div>
                         </div>
@@ -175,25 +208,33 @@
                 </div>
 
                 <div class="vertical-center">
-                    <div class="form-group fg-float basic-select w-70 m-r-30 p-t-0 m-b-0">
-                        <div class="fg-line">
-                            <select @change="addToFormula($event)" v-model="variableSelected" class="form-control select selectpicker" data-live-search="true"
-                                    data-live-search-placeholder="Search placeholder"
-                                    title="Agregar variable">
-                                <optgroup label="GENERAL">
-                                    <option :value="item.abbreviation" v-for="item in variablesObj">{{item.name}}</option>
-                                </optgroup>
-                                <optgroup label="Otros Cálculos">
-                                    <option :value="calculation.abbreviation" v-for="calculation in calculations">{{'('+calculation.abbreviation+') '+calculation.name}}</option>
-                                </optgroup>
-                            </select>
+                    <div class="row w-100">
+                        <div class="col-sm-8">
+                            <div class="form-group fg-float basic-select p-t-0 m-b-0">
+                                <div class="fg-line">
+                                    <select @change="addToFormula($event)" v-model="variableSelected" class="form-control select selectpicker" data-live-search="true"
+                                            data-live-search-placeholder="Buscar variable"
+                                            title="Agregar variable">
+                                        <optgroup label="GENERAL">
+                                            <option :value="item.abbreviation" v-for="item in variablesObj" style="white-space: normal;">{{item.name}}</option>
+                                        </optgroup>
+                                        <optgroup label="Otros Cálculos">
+                                            <option :value="calculation.abbreviation" v-for="calculation in calculations">{{'('+calculation.abbreviation+') '+calculation.name}}</option>
+                                        </optgroup>
+                                    </select>
+                                </div>
+                            </div>
+
                         </div>
-                    </div>
-                    <div class="mini-buttons">
-                        <button type="button" class="mini-btn p-0" @click="addToFormula('+')"><span class="f-25 m-t--5 align-middle">+</span></button>
-                        <button type="button" class="mini-btn p-0" @click="addToFormula('*')"><span class="f-30 align-middle">*</span></button>
-                        <button type="button" class="mini-btn p-0" @click="addToFormula('-')"><span class="f-25 m-t--5 align-middle">-</span></button>
-                        <button type="button" class="mini-btn m-r-0" @click="addToFormula('/')">/</button>
+                        <div class="col-sm-4 vertical-center">
+                            <div class="mini-buttons">
+                                <button type="button" class="mini-btn p-0" @click="addToFormula('+')"><span class="f-25 m-t--5 align-middle">+</span></button>
+                                <button type="button" class="mini-btn p-0" @click="addToFormula('*')"><span class="f-30 align-middle">*</span></button>
+                                <button type="button" class="mini-btn p-0" @click="addToFormula('-')"><span class="f-25 m-t--5 align-middle">-</span></button>
+                                <button type="button" class="mini-btn m-r-0" @click="addToFormula('/')">/</button>
+                            </div>
+
+                        </div>
                     </div>
                 </div>
 
@@ -372,7 +413,8 @@
                 </div>
                 <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar
                 </button>
-                <button type="submit" class="btn-raised button-accent m-l-15">Agregar</button>
+                <button v-show="!isEditing" type="submit" class="btn-raised button-accent m-l-15">Agregar</button>
+                <button v-show="isEditing" type="submit" class="btn-raised button-accent m-l-15">Actualizar</button>
             </div>
 
 
@@ -424,6 +466,7 @@
                     {label: 'calculations.type', field: 'type', visible: true, type:"i18n" },
                     {label: 'calculations.formula.expression', field: 'formula.expression', visible: true, type:"highlight" },
                     {label: 'calculations.enabled', field: 'enabled', type:"boolean", visible: true},
+                    {label: 'calculations.locked', field: 'locked', type:"boolean", visible: true},
                     {label: 'calculations.notes', field: 'notes', visible: true},
                     {label: 'general.created-at', field: 'createdAt', type: 'Date', visible: true}
                 ],
@@ -442,6 +485,8 @@
                     },
                     displayForm : "NORMAL",
                     notes: "",
+                    locked:false,
+                    administrationPeriod:'',
                     hasPercentScale:false,
                     scale:[],
                     filters:[]
@@ -541,6 +586,15 @@
                         return (/^\${2}[A-Z0-9]{1,7}$/).test(value);
                     }
                 },
+                administrationPeriod: {
+//                    required,
+                    validAdministrationPeriod: (value) => {
+                        if (value == null || value == undefined || value == "") {
+                            return true
+                        }
+                        return (/^[12][0-9]{3}-[12][0-9]{3}$/).test(value);
+                    }
+                },
                 type: {
                     required,
                 }
@@ -562,12 +616,17 @@
             },
             addToFormula(element) {
                 if (element) {
+                    if (!this.entry.formula.expression) {
+                        this.entry.formula.expression = '';
+                    }
                     if (this.entry.formula.expression.length > 0) {
                         this.entry.formula.expression += " ";
                     }
-                    if (typeof element == "string") {
+                    if (typeof(element) === "string") {
                         this.entry.formula.expression += element;
                     } else { //then it's a variable
+                        this.variableSelected = null;
+                        this.refreshSelect();
                         this.entry.formula.expression += element.target.value;
                         this.addVariablesFromFormulaString();
                     }
@@ -630,6 +689,7 @@
                 // }, 1000, false)
             },
             addVariablesFromFormulaString(){
+                this.validateFormula();
                 if(this.entry.formula && this.entry.formula.expression){
                     this.entry.formula.variables = this.parseVariablesFromFormulaString();
                     this.entry.formula.calculations = this.parseCalculationsFromFormulaString();
@@ -695,6 +755,11 @@
                     this.entry.scale.splice(index, 1);
                 }
             },
+            refreshSelect() {
+                this.$nextTick(function () {
+                    $('.selectpicker').selectpicker('refresh');
+                })
+            },
             addRowFilter(abbreviation){
                 this.entry.filters.push({variableAbbreviation:abbreviation});
                 this.refreshSelectPicker(200);
@@ -741,6 +806,7 @@
         created() {
             bus.$on(storeModule + DOC_UPDATED, () => {
                 $('#ModalEntry').modal('hide');
+                tShow('El cálculo se ha actualizado correctamente', 'success');
                 this.$store.dispatch (`${storeModule}/clearFormErrors`);
                 this.clearEntry();
             });
@@ -754,6 +820,8 @@
                 this.entry.enabled= "";
                 this.entry.notes= "";
                 this.entry.abbreviation= "";
+                this.entry.locked = false;
+                this.entry.administrationPeriod = '';
                 this.entry.hasPercentScale = false;
                 this.entry.scale = [];
                 this.entry.filters = [];
@@ -765,6 +833,7 @@
             });
             bus.$on(storeModule+DOC_START_CREATE, ()=>{
                 this.clearEntry();
+                this.refreshSelect();
             });
             bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
                 this.clearEntry();
@@ -783,6 +852,8 @@
                 tempEntry.displayForm = entry.displayForm;
                 tempEntry.notes = entry.notes;
                 tempEntry.abbreviation = entry.abbreviation;
+                tempEntry.locked = entry.locked;
+                tempEntry.administrationPeriod = entry.administrationPeriod;
                 tempEntry.hasPercentScale = entry.hasPercentScale;
                 tempEntry.scale = [];
                 tempEntry.filters = [];
@@ -811,6 +882,7 @@
                     },1000);
 
                 });
+                this.refreshSelect();
             });
         },
         mounted() {
@@ -846,6 +918,14 @@
                 }
                 if(!this.$v.entry.abbreviation.validAbbreviation){
                     return "calculations.validation.abbreviation"
+                }
+            },
+            administrationPeriodMessage(){
+                if(!this.$v.entry.administrationPeriod.required){
+                    return "calculation.validation.required";
+                }
+                if(!this.$v.entry.administrationPeriod.validAdministrationPeriod){
+                    return "calculations.validation.administrationPeriod"
                 }
             },
             ...mapState({

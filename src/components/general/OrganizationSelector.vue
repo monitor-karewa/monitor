@@ -11,7 +11,7 @@
                 <br/>
 
                 <div class="row">
-                    <div class="col-12 col-md-4 col-lg-3" v-for="organization in organizations">
+                    <div class="col-12 col-sm-6 col-xl-3" v-for="organization in organizations">
                         <div class="card-compare">
                             <img class="img-fluid" src="@/assets/images/Cards/bgm-karewa.png" alt="Karewa"/>
                             <div class="logo-full">
@@ -60,7 +60,32 @@
 //        },
         beforeMount() {
 //            this.$store.dispatch(`${storeModule}/list`);
-            this.$store.dispatch(`${storeModule}/LOAD_ORGANIZATIONS`);
+            
+            let autoSelectOrganizationId = this.$route.query.autoSelectOrganization;
+
+            let callback = null;
+            if (autoSelectOrganizationId) {
+                callback = () => {
+                    
+                    let autoSelectOrganization = null;
+                    if (this.organizations && this.organizations.length) {
+                        this.organizations.forEach((organization) => {
+                            if (organization._id && organization._id.toString() === autoSelectOrganizationId) {
+                                autoSelectOrganization = organization;
+                            }
+                        });
+                    }
+
+                    if (autoSelectOrganization) {
+                        console.log('autoSelectOrganization', autoSelectOrganization);
+                        this.selectOrganization(autoSelectOrganization);
+                    }
+                };
+            }
+
+            this.$store.dispatch(`${storeModule}/LOAD_ORGANIZATIONS`, {callback: callback});
+
+
         },
         computed: {
             ...mapState({

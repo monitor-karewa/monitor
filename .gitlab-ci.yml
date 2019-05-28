@@ -2,20 +2,23 @@ stages:
   - release
   - deploy
 
-# build:
-#   stage:         release
-#   image:         docker:stable
-#   extends:       .devops
-#   services:
-#     - docker:dind
-#   variables:
-#     DOCKER_HOST: tcp://docker:2375
-#     DOCKER_DRIVER: overlay2
-#   script:
-#     - docker_build
-#   artifacts:
-#     paths:
-#       - imageid.txt
+build:
+  stage:           release
+  image:           docker:stable
+  extends:         .devops
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST:   tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+  script:
+    - docker_build
+  artifacts:
+    paths:
+      - imageid.txt
+  only:
+    - master
+    - tags
 
 heroku:
   stage:           deploy
@@ -26,8 +29,23 @@ heroku:
   variables:
     DOCKER_HOST:   tcp://docker:2375
     DOCKER_DRIVER: overlay2
+    GIT_STRATEGY:  none
   script:
     - heroku_deploy
+  only:
+    - master
+
+prod:
+  stage:           deploy
+  image:           alpine
+  extends:         .devops
+  variables:
+    GIT_STRATEGY:  none
+  script:
+    - deploy_prod
+  only:
+    - tags
+
 
 .devops:
   before_script:
@@ -37,17 +55,54 @@ heroku:
       }
 
       function docker_build() {
-        docker build --iidfile imageid.txt --pull -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
+        case ${CI_COMMIT_REF_SLUG} in
+        "master")
+        cat <<EOF > .env.production
+        API_HOST=$API_HOST_BETA
+        API_PORT=$API_PORT_BETA
+        VUE_APP_API_HOST=$VUE_APP_API_HOST_BETA
+        VUE_APP_API_PORT=$VUE_APP_API_PORT_BETA
+        EOF
+        ;;
+
+        docker build \
+          --iidfile imageid.txt \
+          --pull -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
         docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+        *)
+        cat <<EOF > .env.production
+        API_HOST=$API_HOST_PROD
+        API_PORT=$API_PORT_PROD
+        VUE_APP_API_HOST=$VUE_APP_API_HOST_PROD
+        VUE_APP_API_PORT=$VUE_APP_API_PORT_PROD
+        EOF
+
+        docker build \
+          --iidfile imageid.txt \
+          --pull -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
+        docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} ${CI_REGISTRY_IMAGE}:latest
+        docker push ${CI_REGISTRY_IMAGE}:latest
+        ;;
+      }
+
+      function deploy_prod() {
+        apk add --update openssh-client
+        mkdir -p ~/.ssh
+        echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        echo -e "Host karewa\n\tHostName $KAREWA_HOST_PROD\n\tPort $KAREWA_PORT_PROD\n\tUser $KAREWA_USER_PROD\nStrictHostKeyChecking no\n\n" > ~/.ssh/config
+        eval `ssh-agent -s`
+        ssh-add ~/.ssh/id_rsa
+        ssh -C karewa docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
+        ssh -C karewa docker-compose up -d
+        ssh -C karewa docker image prune -f
       }
 
       function heroku_deploy() {
         apk add --update --no-cache curl
-        # docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
-        # docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} ${HEROKU_REGISTRY}
-        ###
-        docker build --iidfile imageid.txt --pull -t ${HEROKU_REGISTRY} .
-        ###
+        docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} ${HEROKU_REGISTRY}
         docker login -u _ -p ${HEROKU_API_KEY} registry.heroku.com
         docker push ${HEROKU_REGISTRY}
         curl \
