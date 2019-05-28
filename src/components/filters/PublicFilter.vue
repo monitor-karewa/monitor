@@ -75,7 +75,7 @@
         </div>
             <div class="col-12">
                 <div class="m-t-20">
-                    <span class="tag-title">Filtros:</span>
+                    <span class="tag-title" v-show="showFilters">Filtros:</span>
                     <div class="tag" v-for="item in query.administrationPeriods">
                                 <span class="">
                                   {{item.administrationPeriod}}
@@ -145,6 +145,17 @@
                     administrativeUnit : undefined
                 }
             }
+        },
+        computed : {
+           showFilters : function(){
+
+           return (this.query.administrationPeriods && this.query.administrationPeriods.length >  0 ) ||
+                      (this.query.fiscalYears && this.query.fiscalYears.length>  0 ) ||
+                      (this.query.trimonths && this.query.trimonths.length>  0 ) ||
+                      (this.query.procedureTypes && this.query.procedureTypes.length >  0 ) ||
+                      (this.query.administrativeUnits && this.query.administrativeUnits.length >  0 );
+
+           }
         },
         props: {
             administrationPeriods: {
