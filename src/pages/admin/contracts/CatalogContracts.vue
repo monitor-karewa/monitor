@@ -2,7 +2,7 @@
     <div>
         <AdminMainSection>
             <BackButton/>
-            <CatalogHeader :singular="'Contrato'" :plural="'Contratos'"/>
+            <CatalogHeader :singular="'Contrato'" :plural="'Contratos'" :store-module="storeModule"/>
             <EditableTable
                     :docs="docs"
                     :tableHeaders="tableHeaders"
