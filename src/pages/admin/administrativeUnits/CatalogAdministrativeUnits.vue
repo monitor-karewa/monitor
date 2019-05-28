@@ -2,7 +2,7 @@
     <div>
         <AdminMainSection>
             <BackButton />
-            <CatalogHeader :singular="'Unidad Administrativa'" :plural="'Unidades Administrativas'" />
+            <CatalogHeader :singular="'Unidad Administrativa'" :plural="'Unidades Administrativas'" :store-module="storeModule" />
             <EditableTable
                     :docs="docs"
                     :tableHeaders="tableHeaders"
@@ -111,7 +111,7 @@
         validations: {
             entry: {
                 name: {required},
-                notes: {required}
+                notes: {/*required*/}
             }
         },
         computed:{

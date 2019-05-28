@@ -110,6 +110,7 @@
                                 :trimonths="trimonths"
                                 :administrationPeriods="administrationPeriods"
                                 :procedureTypes="procedureTypes"
+                                :placeHolder="'Escribe el nombre del proveedor...'"
                         >
 
                         </PublicFilter>

@@ -226,7 +226,7 @@ DataLoadSchema.statics.dataLoadInfo = function (currentOrganizationId, callback)
                         dataLoadInfo.current = {
                             _id: currentDataLoad._id,
                             summary: currentDataLoad.summary,
-                            uploadedBy: `${currentUploadedBy.name} ${currentUploadedBy.lastName}`,
+                            uploadedBy: `${currentUploadedBy.name || ''} ${currentUploadedBy.lastName || ''}`,
                             createdAt: currentDataLoad.createdAt
                         };
                     }
@@ -235,7 +235,7 @@ DataLoadSchema.statics.dataLoadInfo = function (currentOrganizationId, callback)
                     if (recentDataLoad) {
                         let recentUploadedBy = recentDataLoad.uploadedBy || {};
                         dataLoadInfo.recent = {
-                            recentUploadedBy: `${recentUploadedBy.name} ${recentUploadedBy.lastName}`,
+                            recentUploadedBy: `${recentUploadedBy.name || ''} ${recentUploadedBy.lastName || ''}`,
                             recentConfirmedAt: recentDataLoad.confirmedAt
                         };
                     }

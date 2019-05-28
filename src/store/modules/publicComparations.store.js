@@ -54,7 +54,7 @@ const actions = {
     LOAD_CORRUPTION_INDEX ({commit}, {id}) {
         let query = `?id=${id}`;
         apiPublicComparations.corruptionIndex({query}, (result) => {
-            console.log('result.data.data', result.data.data);
+            // console.log('result.data.data', result.data.data);
             commit('SET_CORRUPTION_INDEX', result.data.data);
         }, (err) => {
             tShow(i18n.t('comparations.public.load.corruption-index.error'), 'danger');

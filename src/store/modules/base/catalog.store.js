@@ -5,6 +5,7 @@ import i18n from '@/plugins/i18n';
 
 export default function (api, storeName) {
     const state = {
+        storeModule: storeName,
         docs: [],
         docsUpdated :[],
         pagination: {
@@ -73,7 +74,7 @@ export default function (api, storeName) {
                     // commit('updateDocs', {
                     //     docs: result.data.data.docs
                     // });
-                    console.log('result.data.data', result.data.data);
+                    // console.log('result.data.data', result.data.data);
                     commit('updateDocs', result.data.data);
                 },
                 (error) => {

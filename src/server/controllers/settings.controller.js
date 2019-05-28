@@ -59,10 +59,12 @@ exports.changeSettings = (req, res, next) => {
     let description = req.body.description;
     let contactLocation = req.body.contactLocation;
     let contactEmail = req.body.contactEmail;
+    let address = req.body.address;
+    let schedule = req.body.schedule;
 
     let currentOrganizationId = Organization.currentOrganizationId(req);
     
-    let update = {title, description, contactLocation, contactEmail};
+    let update = {title, description, contactLocation, contactEmail, address, schedule};
 
     Organization.updateOne({_id: currentOrganizationId}, {$set: update}, {}, (err) => {
         if (err) {

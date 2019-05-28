@@ -28,6 +28,8 @@ let AdministrativeUnitSchema = new Schema({
     deleted: require("./schemas/deleted.schema").Deleted
 });
 
+
+
 //Agregar createdAt, modifiedAt automáticamente
 AdministrativeUnitSchema.plugin(pluginCreatedUpdated);
 

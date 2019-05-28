@@ -66,6 +66,15 @@ Vue.use(Router);
 
 let router = new Router({
     mode : 'history',
+    scrollBehavior (to, from, savedPosition) {
+        if (savedPosition) {
+            //When handling a back button click, go to the previous scrolled position
+            return savedPosition
+        } else {
+            //Scroll to top
+            return { x: 0, y: 0 }
+        }
+    },
     routes: [
         {
             path: '/select-organization',

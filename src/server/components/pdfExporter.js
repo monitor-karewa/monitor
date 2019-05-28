@@ -278,24 +278,33 @@ class PDFTable {
 
     transformDocs(req){
         let values = [];
-        if(Array.isArray(this.docs)){
-            this.docs.forEach((item, index)=>{
-                values = [];
+
+            if(Array.isArray(this.docs)){
+                this.docs.forEach((item, index)=>{
+                    values = [];
+                    this.tableMetadata.forEach((meta)=>{
+                        if(item[meta.propName]){
+                            let value = meta.childPropName ? item[meta.propName][meta.childPropName] : item[meta.propName];
+                            value = meta.i18n ? req.__(value) : value;
+                            values.push({text:this._formatValue(value, meta.format), style:meta.rowStyle});
+                        } else {
+                            values.push({text:"", style:meta.rowStyle});
+                        }
+                    });
+                    this.body.push(values);
+                });
+            } else {
                 this.tableMetadata.forEach((meta)=>{
-                    let value = meta.childPropName ? item[meta.propName][meta.childPropName] : item[meta.propName];
-                    value = meta.i18n ? req.__(value) : value
-                    values.push({text:this._formatValue(value, meta.format), style:meta.rowStyle});
+                    if(this.docs[meta.propName]){
+                        let value = meta.childPropName ? this.docs[meta.propName][meta.childPropName] : this.docs[meta.propName];
+                        value = meta.i18n ? req.__(value) : value;
+                        values.push({text:this._formatValue(value, meta.format), style:meta.rowStyle});
+                    } else {
+                        values.push({text:"", style:meta.rowStyle});
+                    }
                 });
                 this.body.push(values);
-            });
-        } else {
-            this.tableMetadata.forEach((meta)=>{
-                let value = meta.childPropName ? this.docs[meta.propName][meta.childPropName] : this.docs[meta.propName];
-                value = meta.i18n ? req.__(value) : value
-                values.push({text:this._formatValue(value, meta.format), style:meta.rowStyle});
-            });
-            this.body.push(values);
-        }
+            }
 
         return this;
     }

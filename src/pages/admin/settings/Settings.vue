@@ -89,11 +89,27 @@
                                         <div class="col-12 col-md-6">
                                             <div class="form-group fg-float">
                                                 <div v-show="!editEnabled" class="fg-line basic-input">
-                                                    <p>{{settings.contactLocation}}</p>
-                                                    <label class="fg-label">Descripción de formulario de contacto</label>
+                                                    <p>{{settings.description}}</p>
+                                                    <label class="fg-label">Descripción</label>
                                                 </div>
                                                 <div v-show="editEnabled" class="fg-line basic-input">
-                                                    <textarea v-model.trim="localSettings.contactLocation" type="text" class="form-control fg-input"
+                                                    <textarea v-model.trim="localSettings.description" type="text"
+                                                              class="form-control fg-input"
+                                                              placeholder="Aquí podrás obtener información sobre los procedimientos de licitaciones para comparar la compra, renta y contratación de serviciosque se realizan en el Monitor Karewa."></textarea>
+                                                    <label class="fg-label">Descripción</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group fg-float">
+                                                <div v-show="!editEnabled" class="fg-line basic-input">
+                                                    <p>{{settings.contactLocation}}</p>
+                                                    <label class="fg-label">Descripción de formulario de
+                                                        contacto</label>
+                                                </div>
+                                                <div v-show="editEnabled" class="fg-line basic-input">
+                                                    <textarea v-model.trim="localSettings.contactLocation" type="text"
+                                                              class="form-control fg-input"
                                                               placeholder="Edita la dirección de correo de donde recibirás la información  de la gente que te contacte."></textarea>
                                                     <label class="fg-label">Descripción de formulario contacto</label>
                                                 </div>
@@ -106,7 +122,8 @@
                                                     <label class="fg-label">Descripción</label>
                                                 </div>
                                                 <div v-show="editEnabled" class="fg-line basic-input">
-                                                    <textarea v-model.trim="localSettings.description" type="text" class="form-control fg-input"
+                                                    <textarea v-model.trim="localSettings.description" type="text"
+                                                              class="form-control fg-input"
                                                               placeholder="Aquí podrás obtener información sobre los procedimientos de licitaciones para comparar la compra, renta y contratación de serviciosque se realizan en el Monitor Karewa."></textarea>
                                                     <label class="fg-label">Descripción</label>
                                                 </div>
@@ -115,13 +132,27 @@
                                         <div class="col-12 col-md-6">
                                             <div class="form-group fg-float">
                                                 <div v-show="!editEnabled" class="fg-line basic-input">
-                                                    <p>{{settings.contactEmail}}</p>
-                                                    <label class="fg-label">Correo de contacto</label>
+                                                    <p>{{settings.address}}</p>
+                                                    <label class="fg-label">Dirección</label>
                                                 </div>
                                                 <div v-show="editEnabled" class="fg-line basic-input">
-                                                    <input v-model.trim="localSettings.contactEmail" type="text" class="form-control fg-input"
-                                                           placeholder="Ingresa el correo de contacto">
-                                                    <label class="fg-label">Correo de contacto</label>
+                                                    <textarea v-model.trim="localSettings.address" type="text"
+                                                              class="form-control fg-input"
+                                                              placeholder="Se usará para generar el mapa de localización"></textarea>
+                                                    <label class="fg-label">Dirección</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group fg-float">
+                                                <div v-show="!editEnabled" class="fg-line basic-input">
+                                                    <p>{{settings.schedule}}</p>
+                                                    <label class="fg-label">Horario</label>
+                                                </div>
+                                                <div v-show="editEnabled" class="fg-line basic-input">
+                                                    <input v-model.trim="localSettings.schedule" type="text" class="form-control fg-input"
+                                                           placeholder="i.e. Lunes a Viernes de 9:30am a 5:00pm">
+                                                    <label class="fg-label">Horario</label>
                                                 </div>
                                             </div>
                                         </div>
@@ -251,6 +282,8 @@
                     description: '',
                     contactLocation: '',
                     contactEmail: '',
+                    schedule: '',
+                    address: '',
                 },
                 coverFileRef: 'coverFile',
                 coverFile: null,
@@ -368,6 +401,8 @@
                 this.localSettings.description = val.description || '';
                 this.localSettings.contactLocation = val.contactLocation || '';
                 this.localSettings.contactEmail = val.contactEmail || '';  
+                this.localSettings.address = val.address|| '';
+                this.localSettings.schedule = val.schedule || '';
             },
             handleCoverFileUpload() {
 
