@@ -1,6 +1,7 @@
 let Variable = require('./variablesManager');
 
 
+
 let getVariables = function() {
     return {
         //  Manejo de Contrataciones
@@ -176,6 +177,9 @@ let getVariables = function() {
                     $match : {}
                 },
                 {
+                    $group: { _id:"$supplier" }
+                },
+                {
                     $count: "noSuppliers"
                 },
                 {
@@ -194,7 +198,6 @@ let getVariables = function() {
             query:[
                 {
                     $match : {
-
                     }
                 },
                 {
@@ -323,7 +326,6 @@ let getVariables = function() {
                 {$project:{ result : "$myCount", abbreviation : { $literal : "$NPEPCP"}}
                 }]
         }),
-
         // Transparencia
         $NCDPT: Variable.makeVariable({
             name:"Número de contratos disponibles en el Portal de Transparencia",
@@ -403,7 +405,7 @@ let getVariables = function() {
                 }]
         }),
         addOrganizationFilter : function(abbreviation,idOrganization){
-            this[abbreviation].query[0].match["organizerAdministrativeUnit"] = idOrganization
+            this[abbreviation].query[0].match["organization"] = idOrganization
         }
     };
 };

@@ -8,7 +8,9 @@ const state = {
     variables:{},
     calculations:[],
     formulaValidation : {},
-    formulaValidated : false
+    formulaValidated : false,
+    suppliers : [],
+    administrativeUnits : []
 };
 
 const getters = {
@@ -21,6 +23,18 @@ const getters = {
 };
 
 const actions = {
+    getAdministrativeUnits({commit}){
+        calculationsApi.retrieveAdministrativeUnits({},
+            (result) => {
+                commit('SET_ADMINISTRATIVE_UNITS', result.data.data.docs)
+            })
+    },
+    getSuppliers({commit}){
+        calculationsApi.retrieveSuppliers({},
+            (result)=>{
+                commit('SET_SUPPLIERS', result.data.data.docs);
+            })
+    },
     fetchVariables({commit}){
         calculationsApi.getVariables({}, (results) => {
             commit("SET_VARIABLES",results.data);
@@ -61,6 +75,12 @@ const mutations = {
     SET_FORMULA_VALIDATION(state,result){
         state.formulaValidation = result;
         state.formulaValidated = true;
+    },
+    SET_ADMINISTRATIVE_UNITS (state, administrativeUnits) {
+        state.administrativeUnits = administrativeUnits;
+    },
+    SET_SUPPLIERS(state, suppliers){
+        state.suppliers = suppliers;
     },
     clearFormulaValidation(state){
         state.formulaValidated = false;

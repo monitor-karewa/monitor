@@ -39,5 +39,15 @@ export default {
         return axios.get(`${base.baseUrl}/api/${namespace}/formula/evaluate`,)
             .then(onSuccess)
             .catch(onError);
+    },
+    retrieveSuppliers: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/api/${namespace}/retrieve/suppliers`,   params )
+            .then(onSuccess)
+            .catch(onError);
+    },
+    retrieveAdministrativeUnits: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/api/${namespace}/retrieve/administrative-units`,   params )
+            .then(onSuccess)
+            .catch(onError);
     }
 }
