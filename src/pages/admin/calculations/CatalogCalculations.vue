@@ -370,7 +370,7 @@
 
                             </div>
                             <div class="col-md-2 col-lg-2">
-                                <a href="" class="btn-circle-icon" @click.prevent="removeRowFromFilters(index)"><i class="zmdi zmdi-minus"></i></a>
+                                <a href="" class="btn-circle-icon" @click.prevent="removeRowFromFilters(indexFilter)"><i class="zmdi zmdi-minus"></i></a>
                             </div>
 
 
