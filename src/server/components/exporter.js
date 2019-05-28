@@ -214,40 +214,48 @@ class ExcelExporter extends Exporter {
             }
         });
 
-        params.docs.forEach((doc, index) => {
+        try {
+            params.docs.forEach((doc, index) => {
 
-            let rowIndex = this.rowIndexes.CONTENT_START + index + 1; //base 1, offset from content start
-            
-            let propNames = Object.keys(doc);
+                let rowIndex = this.rowIndexes.CONTENT_START + index + 1; //base 1, offset from content start
 
-            propNames.forEach((propName) => {
-                let cellIndex = cellIndexByPropName[propName];
-    
-                if (cellIndex) {
+                let propNames = Object.keys(doc);
 
-                    let format = formatByPropName[propName] || 'string';
-                    let options = optionsByPropName[propName];
-                    let value = options.childPropName ? doc[propName][options.childPropName] : doc[propName];
-                    value = options.i18n && value ? req.__(value) : value;
+                propNames.forEach((propName) => {
+                    let cellIndex = cellIndexByPropName[propName];
 
+                    if (cellIndex) {
 
-                    switch(format) {
-                        case 'currency':
-                            sheet.getRow(rowIndex).getCell(cellIndex).numFmt = '"$"#,##0.00;[Red]\-"$"#,##0.00';
-                            sheet.getRow(rowIndex).getCell(cellIndex).value = value;
-                            break;
-                        case 'date':
-                            sheet.getRow(rowIndex).getCell(cellIndex).value = moment(value).format('DD/MM/YYYY');
-                            break;
-                        case 'string':
+                        let format = formatByPropName[propName] || 'string';
+                        let options = optionsByPropName[propName];
+                        let value = "";
+                        if(doc[propName]){
+                            value = options.childPropName ? doc[propName][options.childPropName] : doc[propName];
+                            value = options.i18n && value ? req.__(value) : value;
+                        } else {
+                            value = "";
+                        }
 
-                        default:
-                            sheet.getRow(rowIndex).getCell(cellIndex).value = value;
+                        switch(format) {
+                            case 'currency':
+                                sheet.getRow(rowIndex).getCell(cellIndex).numFmt = '"$"#,##0.00;[Red]\-"$"#,##0.00';
+                                sheet.getRow(rowIndex).getCell(cellIndex).value = value;
+                                break;
+                            case 'date':
+                                sheet.getRow(rowIndex).getCell(cellIndex).value = moment(value).format('DD/MM/YYYY');
+                                break;
+                            case 'string':
+
+                            default:
+                                sheet.getRow(rowIndex).getCell(cellIndex).value = value;
+                        }
                     }
-                }
+                });
+
             });
-            
-        });
+        } catch(err){
+            console.log("err", err);
+        }
 
         res.setHeader('Content-Type', 'application/vnd.openxmlformats');
         res.setHeader("Content-Disposition", "attachment; filename=" + `${params.fileName}-${formattedDate}.xlsx`);
