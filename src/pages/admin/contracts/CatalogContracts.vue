@@ -1014,7 +1014,7 @@
             bus.$on(storeModule + DOC_START_EDIT, (entry) => {
                     this.clearEntry();
                     this.entry._id = entry._id;
-                    this.entry.supplier = entry.supplier;
+                    this.entry.supplier = {...entry.supplier};
 //                    this.entry.supplier.name = entry.supplier.name;
                     this.entry.administrativeUnit = entry.administrativeUnit;
                     this.entry.procedureType = entry.procedureType;
@@ -1031,8 +1031,8 @@
                     this.entry.clarificationMeetingDate = entry.clarificationMeetingDate;
                     this.entry.clarificationMeetingJudgmentUrl = entry.clarificationMeetingJudgmentUrl;
                     this.entry.presentationProposalsDocUrl = entry.presentationProposalsDocUrl;
-                    this.entry.organizerAdministrativeUnit = entry.organizerAdministrativeUnit;
-                    this.entry.applicantAdministrativeUnit = entry.applicantAdministrativeUnit;
+                    this.entry.organizerAdministrativeUnit = {...entry.organizerAdministrativeUnit};
+                    this.entry.applicantAdministrativeUnit = {...entry.applicantAdministrativeUnit};
                     this.entry.administrativeUnitType = entry.administrativeUnitType;
                     this.entry.contractNumber = entry.contractNumber;
                     this.entry.contractDate = entry.contractDate;
@@ -1042,7 +1042,7 @@
                     this.entry.maxAmount = entry.maxAmount;
                     this.entry.totalOrMaxAmount = entry.totalOrMaxAmount;
                     this.entry.contractUrl = entry.contractUrl;
-                    this.entry.areaInCharge = entry.areaInCharge;
+                    this.entry.areaInCharge = {...entry.areaInCharge};
                     this.entry.updateDate = entry.updateDate;
                     this.entry.notes  = entry.notes;
                     this.entry.karewaNotes = entry.karewaNotes;
