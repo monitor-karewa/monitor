@@ -1,8 +1,10 @@
+const mongoose = require('mongoose');
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 
 const Supplier = require('./../models/supplier.model').Supplier;
 const Organization = require('./../models/organization.model').Organization;
+const Contract = require('./../models/contract.model').Contract;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const { validationResult } = require('express-validator/check');
@@ -249,30 +251,45 @@ exports.delete = (req, res, next) => {
                     message: req.__('general.error.not-exists-or-already-deleted')
                 });
             }
-
-            Supplier.update(
-                query,
-                {
-                    $set: {
-                        deleted: {
-                            user: req.user ? req.user._id : null,
-                            isDeleted: true,
-                            date: new Date()
-                        }
-                    }
-                },
-                {multi: false}
-            ).exec((err) => {
+            
+            let usedQuery = {supplier: mongoose.Types.ObjectId(req.body._id), ...qNotDeleted};            
+            
+            Contract.find(usedQuery).count().exec((err, countUses) => {
                 if (err) {
-                    logger.error(req, err, 'supplier.controller#delete', 'Error al borrar Supplier.');
+                    logger.error(req, err, 'supplier.controller#delete', 'Error al buscar Contracts que usen al Supplier.');
+                }
+                
+                if (countUses) {
                     return res.json({
                         errors: true,
-                        message: req.__('general.error.delete')
+                        message: req.__('general.error.in-use')
                     });
                 }
-                return res.json({
-                    error: false,
-                    message: req.__('general.success.deleted')
+                
+                Supplier.update(
+                    query,
+                    {
+                        $set: {
+                            deleted: {
+                                user: req.user ? req.user._id : null,
+                                isDeleted: true,
+                                date: new Date()
+                            }
+                        }
+                    },
+                    {multi: false}
+                ).exec((err) => {
+                    if (err) {
+                        logger.error(req, err, 'supplier.controller#delete', 'Error al borrar Supplier.');
+                        return res.json({
+                            errors: true,
+                            message: req.__('general.error.delete')
+                        });
+                    }
+                    return res.json({
+                        error: false,
+                        message: req.__('general.success.deleted')
+                    });
                 });
             });
         });

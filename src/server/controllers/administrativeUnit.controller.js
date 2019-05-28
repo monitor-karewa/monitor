@@ -1,9 +1,11 @@
+const mongoose = require('mongoose');
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 const utils = require('./../components/utils');
 
 const AdministrativeUnit = require('./../models/administrativeUnit.model').AdministrativeUnit;
 const Organization = require('./../models/organization.model').Organization;
+const Contract = require('./../models/contract.model').Contract;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const { validationResult } = require('express-validator/check');
@@ -252,29 +254,49 @@ exports.delete = (req, res, next) => {
             }
 
 
-            AdministrativeUnit.update(
-                query,
-                {
-                    $set: {
-                        deleted: {
-                            user: req.user ? req.user._id : null,
-                            isDeleted: true,
-                            date: new Date()
-                        }
-                    }
-                },
-                {multi: false}
-            ).exec((err) => {
+            let id = mongoose.Types.ObjectId(req.body._id);
+            let usedQuery = {...qNotDeleted, $or: [
+                {organizerAdministrativeUnit: id},
+                {applicantAdministrativeUnit: id},
+                {areaInCharge: id},
+            ]};
+
+            Contract.find(usedQuery).count().exec((err, countUses) => {
                 if (err) {
-                    logger.error(req, err, 'administrativeUnit.controller#delete', 'Error al borrar AdministrativeUnit.');
+                    logger.error(req, err, 'supplier.controller#delete', 'Error al buscar Contracts que usen al Supplier.');
+                }
+
+                if (countUses) {
                     return res.json({
                         errors: true,
-                        message: req.__('general.error.delete')
+                        message: req.__('general.error.in-use')
                     });
                 }
-                return res.json({
-                    error: false,
-                    message: req.__('general.success.deleted')
+                
+                AdministrativeUnit.update(
+                    query,
+                    {
+                        $set: {
+                            deleted: {
+                                user: req.user ? req.user._id : null,
+                                isDeleted: true,
+                                date: new Date()
+                            }
+                        }
+                    },
+                    {multi: false}
+                ).exec((err) => {
+                    if (err) {
+                        logger.error(req, err, 'administrativeUnit.controller#delete', 'Error al borrar AdministrativeUnit.');
+                        return res.json({
+                            errors: true,
+                            message: req.__('general.error.delete')
+                        });
+                    }
+                    return res.json({
+                        error: false,
+                        message: req.__('general.success.deleted')
+                    });
                 });
             });
         });
