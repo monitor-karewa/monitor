@@ -4,6 +4,7 @@
 	"general.success.deleted": "general.success.deleted",
 	"general.success.updated": "general.success.updated",
 	"general.error.not-exists-or-already-deleted": "general.error.not-exists-or-already-deleted",
+	"general.error.in-use": "general.error.in-use",
 	"general.error.save": "Ocurrio un error al intentar guardar el registro",
 	"data-load.error.upload": "Ocurrió un error al procesar el archivo. Por favor intenta nuevamente.",
 	"data-load.error.upload.data-load-in-progress": "data-load.error.upload.data-load-in-progress",
