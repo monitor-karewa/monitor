@@ -199,7 +199,11 @@
         
         mounted(){
             bus.$on('dataLoad/CURRENT_DATA_LOAD_INFO_LOADED', ({dataLoadInfo})=>{
+                console.log('dataLoadInfo', dataLoadInfo);
+                console.log('dataLoadInfo.current', dataLoadInfo.current);
+                console.log('this._inactive', this._inactive);
                 if (!this._inactive && dataLoadInfo.current) {
+                    console.log('redirecting... for some reason');
                     this.redirectToCurrent();
                 }
             });

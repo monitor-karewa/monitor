@@ -165,6 +165,7 @@ export default {
     "general.app.description": "Aquí podrás obtener información sobre los procedimientos de licitaciones para consultar la compra, renta y contratación de servicios que se realizan en el Municipio de Chihuahua.",
     "general.app.name.html-strong": "Monitor <strong>Karewa</strong>",
     "general.back": "Atrás",
+    "general.close": "Cerrar",
     "general.created-at": "Fecha de creación",
     "general.modal-editable-table.title":"Guardar Registros",
     "general.modal-editable-table.message":"Se modificaran {docsUpdatedLength} registros",
@@ -182,6 +183,12 @@ export default {
     "general.files.backup.original-download":"Descargar (original)",
     "general.files.backup.backup-unavailable":"Respaldo no disponible",
     "general.files.backup.backup-download":"Descargar (respaldo)",
+    "general.modal-alert.download.title":"Descargar datos",
+    "general.modal-alert.download.message":"Estás a punto de descargar los datos aplicando los filtros seleccionados.",
+    "general.modal-alert.download.question":"¿Estás seguro de continuar con esta acción?",
+    "general.modal-alert.download.all":"Descargar lista completa",
+    "general.modal-alert.download.filtered":"Descargar datos filtrados",
+    "general.modal.wait.message":"Tu documento se descargará en un momento...",
 
     "calculations.calculation": "Cálculo| Cálculos",
 
@@ -191,6 +198,9 @@ export default {
     "accounts.login.info.redirecting": "Por favor inicia sesión para continuar.",
     "accounts.organization.info.redirecting": "Por favor selecciona una Organización para continuar.",
     "accounts.logout.success": "Tu sesión se ha cerrado correctamente.",
+    "accounts.password.updated.error": "No fue posible restablecer tu contraseña. Por favor intenta nuevamente.",
+    "accounts.password.updated.token-invalid": "Este enlace ha expirado o no es válido. Por favor intenta recuperar tu contraseña nuevamente.",
+    "accounts.password.updated.success": "Tu contraseña se ha actualizado correctamente. Por favor inicia sesión nuevamente.",
     
     //Suppliers
     "suppliers.supplier": "Proveedor | Proveedores",
@@ -207,6 +217,7 @@ export default {
     "suppliers.rfc": "RFC",
     "suppliers.notes": "Notas",
     "suppliers.public.load.error": "La información de Proveedores no se encuentra disponible en este momento.",
+    "suppliers.detail.description": "Aquí podrás encontrar la lista de todos los contratos del proveedor ",
 
 
     //Organizations
@@ -448,15 +459,21 @@ export default {
     "calculations.name" : "Nombre",
     "calculations.type" : "Tipo",
     "calculations.description" : "Descripción",
-    "calculations.enabled" : "Habilitado",
+    "calculations.enabled" : "Mostrar resultado",
+    "calculations.enabled.label" : "Mostrar resultado a usuarios",
+    "calculations.locked" : "Corresponde a Índice de Riesgo",
     "calculations.notes" : "Notas",
     "calculation.new.calculation-type.label": "Tipo de cálculo",
     "calculation.new.calculation-type.sub-label": "Selecciona el tipo de Cálculo",
-    "calculation.new.calculation-type.radio-button.general": "General",
-    "calculation.new.calculation-type.radio-button.contract": "Contrato",
+    "calculation.new.calculation-type.radio-button.general": "General (global)",
+    "calculation.new.calculation-type.radio-button.contract": "Contratos de la organización actual (filtrado)",
     "calculation.validation.required":"El campo {field} del Cálculo es requerido",
     "calculations.validation.classification":"El valor para la Clasificación del Recurso no es válido",
     "calculations.validation.abbreviation":"Debe comenzar con $$, ser valores alfanúmericos y tener mínimo 3 y máximo 8 caractéres",
+    "calculations.validation.administrationPeriod":"Debe seguir el formato ####-####",
+    "calculations.administration-period.placeholder" : "2016-2018",
+    "calculations.administration-period.label" : "Periodo de Administración",
+    "calculations.administration-period.sub-label" : "A continuación escribe el periodo de administración",
     "GENERAL" : "General",
     "CONTRACT" : "Contrato",
     "PERCENTAGE" : "Porcentaje",

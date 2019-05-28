@@ -33,5 +33,11 @@ router.post('/detail', publicSupplierController.detail);
  */
 router.get('/download/:format', publicSupplierController.download);
 
+/**
+ * GET /download/:format
+ * Export/download Suppliers
+ */
+router.get('/download-detail/:id/:format', publicSupplierController.downloadDetail);
+
 
 module.exports = router;

@@ -3,6 +3,7 @@
 Place all your universal useful code here to help others (;
 ==================================================*/
 
+const moment = require('moment');
 
 
 const _A_ACCENT = "[AÀÁÂÃÄÅÆaàáâãäå]";
@@ -277,7 +278,63 @@ const utils =  {
                 },
             },
         );
-    }
+    },
+
+    /**
+     * Revisa si un objeto corresponde a un String.
+     * @param obj {object} objeto a revisar
+     * @returns {boolean} indicando si corresponde o no a un String
+     */
+    isString(obj) {
+        return obj !== undefined && obj !== null && typeof(obj) === 'string';
+    },
+
+    /**
+     * Intenta parsear una fecha a partir de un timestamp. Si el timestamp recibido no es válido, entonces esta función
+     * devuelve el valor original recibido.
+     * @param timestamp {number|string} a parsear
+     * @returns {Date|null} fecha resultado del parsing o null si no es posible leer el timestamp
+     */
+    dateFromTimestamp(timestamp) {
+        let momentDate = null;
+        if (utils.isDefined(timestamp)) {
+            //We have to ensure it's a valid timestamp (numbers only)
+            if (utils.isNumber(timestamp)) {
+                let timestampAsStr = timestamp.toString();
+
+                //Ignore numbers after decimal point, to check if millis or seconds
+                let hasDecimals = timestampAsStr.match("\\.");
+                if (hasDecimals) {
+                    timestampAsStr = timestampAsStr.substring(0, timestampAsStr.indexOf("."));
+                }
+                let digitsCount = timestampAsStr.length;
+
+                //If more than 12 digits, the timestamp is read as millis. Else it's read as seconds
+                if (digitsCount > 12) {
+                    //Read as millis
+                    momentDate = moment(timestamp);
+                } else {
+                    //Read as seconds
+                    momentDate = moment.unix(timestamp);
+                }
+            } else if (utils.isString(timestamp)) {
+                try {
+                    let timestampAsNumber = Number(timestamp);
+                    return utils.dateFromTimestamp(timestampAsNumber);
+                } catch (err) {
+                    //Could not convert to number
+                    //WARNING: Circular dependency error if logger is used
+                    // logger.error(null, null, 'utils#dateFromTimestamp', 'Could not parse timestamp as String: %j', timestamp);c
+                    console.log('utils#dateFromTimestamp: Error trying to convert timestamp to number', err);
+                }
+            }
+        }
+        if (utils.isDefined(momentDate)) {
+            return momentDate._d;
+        } else {
+            return null;
+        }
+    },
 
 };
 

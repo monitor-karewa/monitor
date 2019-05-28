@@ -1,5 +1,8 @@
 <template>
     <section class="client-content">
+        <!-- MODAL AUTO DISMISS-->
+        <ModalAutoDismiss :message="$t('general.modal.wait.message')" ></ModalAutoDismiss>
+
         <div class="neutral-width">
 
             <!--<div class="col-12 p-0 m-t-20 m-b-20 d-flex">-->
@@ -21,10 +24,50 @@
                 <div class="card d-flex">
                     <div class="floating-title-panel">
                         <h1>Índice de Riesgo de Corrupción</h1>
+
+                        <div class="side-right d-flex">
+                            <a @click="copyUrlToClipBoard()" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
+                                    class="zmdi zmdi-share"></i> Compartir</a>
+
+                            <div class="dropdown p-l-10">
+                                <button class="btn-raised button-accent text-capi m-l-10" type="button" id="dropdownDownloadOptions"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="zmdi zmdi-download"></i> DESCARGAR DATOS DEl ÍNDICE DE CORRUPCIÓN
+
+                                </button>
+                                <div class="dropdown-menu dropdown-options dropdown-menu-right"
+                                     aria-labelledby="dropdownDownloadOptions">
+                                    <span>Descargar datos con formato:</span>
+                                    <div class="container-dropdown">
+                                        <a class="dropdown-item" @click.prevent="downloadFile('pdf')" target="_blank">
+                                            <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-pdf.svg"
+                                                 alt="Empty"/>
+                                        </a>
+                                        <a class="dropdown-item" @click.prevent="downloadFile('xls')">
+                                            <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-xls.svg"
+                                                 alt="Empty"/>
+                                        </a>
+                                        <a class="dropdown-item" @click.prevent="downloadFile('json')">
+                                            <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-json.svg"
+                                                 alt="Empty"/>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
+
+
+
+                            <!--<button class="btn-raised button-accent text-capi m-l-10" data-toggle="modal"-->
+                            <!--data-target="#modalAlertSuccess" tabindex=""><i class="zmdi zmdi-download"></i>-->
+                            <!--DESCARGAR DATOS DEL PROVEEDOR-->
+                            <!--</button>-->
+                        </div>
+
                     </div>
                     
                     <div class="row">
-                        <div class="col-4 p-l-30 p-r-30">
+                        <div class="col-md-4 col-xs-12 p-l-30 p-r-30 p-b-30">
                             <div class="tacometro-container">
 
                                 <div class="gauge-container">
@@ -51,7 +94,7 @@
                             <!--<a href="" class="btn-stroke button-primary text-unset" tabindex="">¿Cómo se-->
                                 <!--calcula?</a>-->
                         </div>
-                        <div class="col-8">
+                        <div class="col-md-8 col-xs-12">
                             <p class="f-14 c-plain_text principal-font-regular">
                                 <strong class="f-16">¿Qué significa que el índice de riesgo de corrupción sea <span :style="{color: corruptionLevelColor}">{{corruptionLevel}}</span>?</strong>
                                 <br>
@@ -65,10 +108,34 @@
                                 <br>
                                  Se calcula analizando el número de adjudicaciones directas contra el número de invitaciones al proveedor y de licitaciones públicas. En adición, se toman en cuenta diferentes variables para generar un índice exacto.
 
-                                <!--Si deseas conocer más al respecto, dirígete a nuestras recursos haciendo clic aquí.-->
+                                Si deseas conocer más sobre la plataforma, dirígete a nuestras recursos haciendo <router-link to="/resources">clic aquí</router-link>.
+
                             </p>
+                            <a data-toggle="modal" data-target="#corruption-index-modal" class="btn-stroke button-primary text-unset" tabindex="">¿Cómo se
+                                calcula?</a>
+                            <ModalCorruptionIndexHow id="corruption-index-modal"/>
                         </div>
                     </div>
+
+                    <PanelOtherCalculations :calculationsInfo="calculationsInfo"/>
+
+                    <!--<div class="panel-table m-t-50" v-show="calculationsInfo && calculationsInfo.length">-->
+                        <!--<div class="row m-0 p-b-20">-->
+                            <!--<span class="border-lines col-12">-->
+                                <!--<label>Otros cálculos</label>-->
+                            <!--</span>-->
+                            <!--<template v-for="(calculationInfo) in calculationsInfo">-->
+                                <!--<div class="col-6 p-l-20 p-r-20 p-t-20">-->
+                                    <!--<p class="f-12 c-plain_text principal-font-medium text-upper d-block m-b-0"> {{calculationInfo.name}} - {{calculationInfo.description}}</p>-->
+                                <!--</div>-->
+                                <!--<div class="col-6 p-l-20 p-r-20 p-t-20">-->
+                                    <!--<p class="f-16 c-plain_text principal-font-bold text-upper text-align-c d-block m-b-0">-->
+                                        <!--{{calculationInfo.result | currency}}-->
+                                    <!--</p>-->
+                                <!--</div>-->
+                            <!--</template>-->
+                        <!--</div>-->
+                    <!--</div>-->
                 </div>
             </div>
 
@@ -83,6 +150,10 @@
 <script>
 
     import MoreInfo from '@/components/general/MoreInfo';
+    import ModalAutoDismiss from '@/components/catalogs/ModalAutoDismiss.vue';
+    import ModalCorruptionIndexHow from '@/components/modals/ModalCorruptionIndexHow';
+    
+    import PanelOtherCalculations from '@/components/panels/PanelOtherCalculations';
 
     import {Gauge} from 'gaugeJS';
     import {mapState} from 'vuex';
@@ -124,7 +195,10 @@
             }
         },
         components: {
-            MoreInfo
+            MoreInfo,
+            ModalAutoDismiss,
+            ModalCorruptionIndexHow,
+            PanelOtherCalculations,
         },
         methods: {
             initTachometer(elementId, textElementId, value) {
@@ -135,6 +209,22 @@
                 gauge.setTextField(document.getElementById(textElementId));
 
                 gauge.set(value);
+            },
+            copyUrlToClipBoard(){
+                const tempTextArea = document.createElement('textarea');
+                tempTextArea.value =  window.location.href;
+                document.body.appendChild(tempTextArea);
+                tempTextArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempTextArea);
+                tShow('Se ha copiado el enlace correctamente', 'info');
+
+            },
+
+            downloadFile(format){
+                $('#modalAutoDismiss').modal('show');
+                this.$store.dispatch(`${storeModule}/downloadFile`, { format, id : this.currentOrganization._id});
+
             }
         },
         watch: {
@@ -148,6 +238,7 @@
         computed: {
             ...mapState({
                 corruptionIndex: state => state[storeModule].corruptionIndex,
+                calculationsInfo: state => state[storeModule].calculationsInfo,
                 currentOrganization: state => state.currentOrganization,
             }),
             tachometerValue() {

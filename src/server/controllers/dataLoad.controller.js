@@ -3,10 +3,45 @@ const mongoose = require('mongoose');
 const ContractExcelReader = require('./../components/dataLoader').ContractExcelReader;
 const ContractExcelWriter = require('./../components/dataLoader').ContractExcelWriter;
 const DataLoad = require('./../models/dataLoad.model').DataLoad;
+const DataLoadDetail = require('./../models/dataLoadDetail.model').DataLoadDetail;
 const Organization = require('./../models/organization.model').Organization;
 
-const logger = require('./../components/logger').instance;
+const {
 
+    procedureTypesEnumDict,
+    procedureTypesEnum,
+    getProcedureTypesEnumObject,
+
+    categoryEnumDict,
+    categoryEnum,
+    getCategoryEnumObject,
+
+    procedureStateEnumDict,
+    procedureStateEnum,
+    getProcedureStateEnumObject,
+
+    administrativeUnitTypeEnumDict,
+    administrativeUnitTypeEnum,
+    getAdministrativeUnitTypeEnumObject,
+
+    limitExceededEnumDict,
+    limitExceededEnum,
+    getLimitExceededEnumObject,
+
+    contractTypeEnumDict,
+    contractTypeEnum,
+    getContractTypeEnumObject,
+
+    CONTRACT_VALIDATION_REGEX_DICT
+} = require('./../models/contract.model');
+
+const logger = require('./../components/logger').instance;
+const utils = require('./../components/utils');
+
+
+function _getPageFromReq(req) {
+    return Number(req.query.page) || 1;
+}
 
 /**
  * Carga un archivo con información a ser procesada.
@@ -59,7 +94,7 @@ exports.upload = (req, res, next) => {
             
             try {
                 reader.readBuffer(req.file.buffer)
-                    .then((dataLoad) => {
+                    .then(({dataLoad, details}) => {
                         // console.log('dataLoad', dataLoad);
                         
                         //Assign filename
@@ -68,7 +103,7 @@ exports.upload = (req, res, next) => {
                         //Assign current user
                         dataLoad.uploadedBy = currentUserId;
                         
-                        dataLoad.summary = DataLoad.getSummary(dataLoad);
+                        dataLoad.summary = DataLoad.getSummary(dataLoad, details);
                         
                         dataLoad.save((err) => {
                             if (err) {
@@ -160,9 +195,17 @@ exports.downloadValidations = (req, res, next) => {
                     data: null
                 });
             }
-            
-            new ContractExcelWriter(dataLoad)
-                .sendFileAsDownload(req, res);
+
+            DataLoadDetail.find({dataLoad: dataLoad._id})
+                .exec((err, details) => {
+                    details = details || [];
+                    
+                    let dataLoadObj = dataLoad.toObject();
+                    dataLoadObj.details = details;
+                    
+                    new ContractExcelWriter(dataLoadObj)
+                        .sendFileAsDownload(req, res);
+                });
 
             // return res.json({
             //     error: false,
@@ -186,55 +229,191 @@ exports.beforeUpload = upload.single('file');
 exports.current = (req, res, next) => {
     let currentOrganizationId = Organization.currentOrganizationId(req);
 
+    let page = _getPageFromReq(req);
+    let search = req.query.search;
+    
+    let showNoIssues = req.query.showNoIssues === 'true';
+    let showSkipped = req.query.showSkipped === 'true';
+    let showErrors = req.query.showErrors === 'true';
+    
+    let paginateOptions = {
+        page: page,
+        limit: 10,
+        // sortBy: {
+        //     total: -1
+        // }
+    };
+
     DataLoad
         .findOne({
             organization: currentOrganizationId,
             confirmed: false,
             'deleted.isDeleted': {'$ne': true}
         })
-        .populate({
-            path: 'uploadedBy',
-            model: 'User',
-            select: 'name lastName'
-        })
-        .populate({
-            path: 'details',
-            model: 'DataLoadDetail'
-        })
-        .exec((err, dataLoad) => {
+        .exec((err, currentDataLoad) => {
             if (err) {
-                logger.error(err, req, 'dataLoad.controller#currentInfo', 'Error trying to fetch current DataLoad info');
+                logger.error(err, req, 'dataLoad.controller#currentInfo', 'Error trying to fetch current DataLoad');
             }
 
-            if (!dataLoad) {
+            if (!currentDataLoad) {
                 return res.json({
                     error: false,
                     data: null
                 });
             }
 
-            return res.json({
-                error: false,
-                data: /*{
-                    filename: dataLoad.filename,
-                    data: dataLoad.data,
-                    uploadedBy: `${dataLoad.uploadedBy.name} ${dataLoad.uploadedBy.lastName}`,
-                    createdAt: dataLoad.createdAt
-                }*/DataLoad.toJson(dataLoad)
+
+            let query = {};
+            let orBuilder = [];
+            let andBuilder = [];
+            let orArray = [];
+
+
+            if (search) {
+                let queryAsRegex = utils.toAccentsRegex(search, "gi");
+
+                orArray = [
+                    {'data.administration.value': queryAsRegex},
+                    {'data.fiscalYear.value': queryAsRegex},
+                    {'data.period.value': queryAsRegex},
+                    {'data.contractId.value': queryAsRegex},
+                    {'data.partida.value': queryAsRegex},
+                    {'data.announcementUrl.value': search}, //non-regex for urls
+                    {'data.servicesDescription.value': queryAsRegex},
+                    {'data.clarificationMeetingJudgmentUrl.value': search}, //non-regex for urls
+                    {'data.presentationProposalsDocUrl.value': search}, //non-regex for urls
+                    {'data.supplierName.value': queryAsRegex},
+                    {'data.supplierRfc.value': queryAsRegex},
+                    {'data.organizerAdministrativeUnit.value': queryAsRegex},
+                    {'data.applicantAdministrativeUnit.value': queryAsRegex},
+                    {'data.contractNumber.value': queryAsRegex},
+                    {'data.contractUrl.value': search}, //non-regex for urls
+                    {'data.areaInCharge.value': queryAsRegex},
+                    {'data.notes.value': queryAsRegex},
+                    {'data.karewaNotes.value': queryAsRegex},
+                    
+                    
+                    //Also try search in original value for enum fields (input by user)
+                    {'data.procedureType.value': queryAsRegex},
+                    {'data.category.value': queryAsRegex},
+                    {'data.procedureState.value': queryAsRegex},
+                    {'data.administrativeUnitType.value': queryAsRegex},
+                    {'data.contractType.value': queryAsRegex},
+                ];
+
+
+                let procedureTypeEnumQueryAsRegexStr = utils.enumSearchRegexString(search, procedureTypesEnum, procedureTypesEnumDict);
+                if (procedureTypeEnumQueryAsRegexStr && procedureTypeEnumQueryAsRegexStr.length) {
+                    orArray.push(
+                        {'data.procedureType.valueToSaveOverride': new RegExp(procedureTypeEnumQueryAsRegexStr)}
+                    );
+                }
+
+                let categoryEnumQueryAsRegexStr = utils.enumSearchRegexString(search, categoryEnum, categoryEnumDict);
+                if (categoryEnumQueryAsRegexStr && categoryEnumQueryAsRegexStr.length) {
+                    orArray.push(
+                        {'data.category.valueToSaveOverride': new RegExp(categoryEnumQueryAsRegexStr)}
+                    );
+                }
+
+                let procedureStateEnumQueryAsRegexStr = utils.enumSearchRegexString(search, procedureStateEnum, procedureStateEnumDict);
+                if (procedureStateEnumQueryAsRegexStr && procedureStateEnumQueryAsRegexStr.length) {
+                    orArray.push(
+                        {'data.procedureState.valueToSaveOverride': new RegExp(procedureStateEnumQueryAsRegexStr)}
+                    );
+                }
+
+                let administrativeUnitTypeEnumQueryAsRegexStr = utils.enumSearchRegexString(search, administrativeUnitTypeEnum, administrativeUnitTypeEnumDict);
+                if (administrativeUnitTypeEnumQueryAsRegexStr && administrativeUnitTypeEnumQueryAsRegexStr.length) {
+                    orArray.push(
+                        {'data.administrativeUnitType.valueToSaveOverride': new RegExp(administrativeUnitTypeEnumQueryAsRegexStr)}
+                    );
+                }
+
+                let contractTypeTypeEnumQueryAsRegexStr = utils.enumSearchRegexString(search, contractTypeEnum, contractTypeEnumDict);
+                if (contractTypeTypeEnumQueryAsRegexStr && contractTypeTypeEnumQueryAsRegexStr.length) {
+                    orArray.push(
+                        {'data.contractType.valueToSaveOverride': new RegExp(contractTypeTypeEnumQueryAsRegexStr)}
+                    );
+                }
+
+            }
+            
+            //Note: complex filter logic ahead
+            if (showSkipped) {
+                //Show means do not filter in this case
+            } else {
+                query = {...query, 'data.summary.skipRow': false};
+            }
+
+            if (showErrors) {
+                //Show means do not filter in this case
+            } else {
+                query = {...query, 'data.summary.hasErrors': false};
+            }
+
+            if (showNoIssues) {
+                //Show means do not filter in this case
+            } else {
+                //Hide contracts without issues, i.e. show contracts with issues
+                //So we filter contracts with at least one issue-related field with true
+                orArray.push({'data.summary.skipRow': true});
+                orArray.push({'data.summary.hasErrors': true});
+                orArray.push({'data.summary.hasInfos': true});
+            }
+
+            //$or requires a non-empty array
+            if (orArray.length) {
+                query = {
+                    ...query,
+                    $or: orArray
+                };
+                
+            }
+
+            query = {dataLoad: currentDataLoad._id, ...query};
+
+            let aggregate = DataLoadDetail.aggregate([
+                {
+                    $match: query
+                }
+            ]);
+            
+            
+            DataLoadDetail.aggregatePaginate(aggregate, paginateOptions, (err, dataLoadDetails, pageCount, itemCount) => {
+                if (err) {
+                    logger.error(err, req, 'dataLoad.controller#currentInfo', 'Error trying to fetch current DataLoad info');
+                }
+        
+                if (!dataLoadDetails) {
+                    return res.json({
+                        error: false,
+                        data: null
+                    });
+                }
+
+                let dataLoadWithDetails = DataLoad.toJson(currentDataLoad);
+                dataLoadWithDetails.details = dataLoadDetails;
+                
+                return res.json({
+                    error: false,
+                    data: /*{
+                     filename: dataLoad.filename,
+                     data: dataLoad.data,
+                     uploadedBy: `${dataLoad.uploadedBy.name} ${dataLoad.uploadedBy.lastName}`,
+                     createdAt: dataLoad.createdAt
+                     }*/{
+                        doc: dataLoadWithDetails,
+                        pagination: {
+                            total: itemCount,
+                            page: page,
+                            pages: pageCount 
+                        }
+                    }
+                });
             });
         });
-};
 
-
-exports.currentInfo = (req, res, next) => {
-    let currentOrganizationId = Organization.currentOrganizationId(req);
-
-    DataLoad.dataLoadInfo(currentOrganizationId, (err, dataLoadInfo) => {
-        return res.json({
-            error: false,
-            data: dataLoadInfo
-        });
-    });
 
     // DataLoad
     //     .findOne({
@@ -247,51 +426,44 @@ exports.currentInfo = (req, res, next) => {
     //         model: 'User',
     //         select: 'name lastName'
     //     })
+    //     .populate({
+    //         path: 'details',
+    //         model: 'DataLoadDetail'
+    //     })
     //     .exec((err, dataLoad) => {
     //         if (err) {
     //             logger.error(err, req, 'dataLoad.controller#currentInfo', 'Error trying to fetch current DataLoad info');
     //         }
     //
-    //
-    //         DataLoad
-    //             .findOne({
-    //                 organization: currentOrganizationId,
-    //                 confirmed: true,
-    //                 'deleted.isDeleted': {'$ne': true}
-    //             })
-    //             .populate({
-    //                 path: 'uploadedBy',
-    //                 model: 'User',
-    //                 select: 'name lastName'
-    //             })
-    //             .sort({
-    //                 modifiedAt: -1
-    //             })
-    //             .exec((err, recentDataLoad) => {
-    //                
-    //                 let data = {};
-    //
-    //                 if (dataLoad) {
-    //                     data.current = {
-    //                         uploadedBy: `${dataLoad.uploadedBy.name} ${dataLoad.uploadedBy.lastName}`,
-    //                         createdAt: dataLoad.createdAt
-    //                     };
-    //                 }
-    //                
-    //                 if (recentDataLoad) {
-    //                     data.recent = {
-    //                         recentUploadedBy: `${recentDataLoad.uploadedBy.name} ${recentDataLoad.uploadedBy.lastName}`,
-    //                         recentConfirmedAt: recentDataLoad.confirmedAt
-    //                     };
-    //                 }
-    //                 return res.json({
-    //                     error: false,
-    //                     data: data
-    //                 });
+    //         if (!dataLoad) {
+    //             return res.json({
+    //                 error: false,
+    //                 data: null
     //             });
-    //        
+    //         }
+    //
+    //         return res.json({
+    //             error: false,
+    //             data: /*{
+    //                 filename: dataLoad.filename,
+    //                 data: dataLoad.data,
+    //                 uploadedBy: `${dataLoad.uploadedBy.name} ${dataLoad.uploadedBy.lastName}`,
+    //                 createdAt: dataLoad.createdAt
+    //             }*/DataLoad.toJson(dataLoad)
+    //         });
     //     });
-    
+};
+
+
+exports.currentInfo = (req, res, next) => {
+    let currentOrganizationId = Organization.currentOrganizationId(req);
+
+    DataLoad.dataLoadInfo(currentOrganizationId, (err, dataLoadInfo) => {
+        return res.json({
+            error: false,
+            data: dataLoadInfo
+        });
+    });
 };
 
 exports.cancelCurrent = (req, res, next) => {
@@ -378,39 +550,42 @@ exports.confirmCurrent = (req, res, next) => {
                 });
             }
 
-            DataLoad.confirm(dataLoad, (err, confirmResults) => {
-                console.log('confirmResults', confirmResults);
 
-                if (err) {
-                    return res.json({
-                        error: true,
-                        data: null
-                    });
-                }
-                
-                DataLoad.dataLoadInfo(currentOrganizationId, (err, dataLoadInfo) => {
-                    if (err) {
-                        logger.error(err, req, 'dataLoad.controller#currentInfo', 'Error trying to fetch current DataLoad info');
-                    }
-                    
-                    //To ensure no race conditions from reloading from the database, the current DataLoad is forced as undefined
-                    dataLoadInfo.current = null;
-                    
-                    return res.json({
-                        error: false,
-                        data: dataLoadInfo
+            DataLoadDetail.find({dataLoad: dataLoad._id})
+                .exec((err, details) => {
+                    details = details || [];
+
+                    DataLoad.confirm(dataLoad, details, (err, confirmResults) => {
+                        console.log('confirmResults', confirmResults);
+        
+                        if (err) {
+                            return res.json({
+                                error: true,
+                                data: null
+                            });
+                        }
+                        
+                        DataLoad.dataLoadInfo(currentOrganizationId, (err, dataLoadInfo) => {
+                            if (err) {
+                                logger.error(err, req, 'dataLoad.controller#currentInfo', 'Error trying to fetch current DataLoad info');
+                            }
+                            
+                            //To ensure no race conditions from reloading from the database, the current DataLoad is forced as undefined
+                            dataLoadInfo.current = null;
+                            
+                            return res.json({
+                                error: false,
+                                data: dataLoadInfo
+                            });
+                        });
                     });
                 });
-
-
-            });
-
         });
 };
 
 let appRoot = require('app-root-path');
 
 exports.downloadPlantilla = (req, res, next) => {
-    let file = appRoot.path + '/app/public/sources/plantilla.xlsx';
+    let file = appRoot.path + '/src/server/public/sources/plantilla.xlsx';
     res.download(file);
 };

@@ -4,9 +4,6 @@ const express = require('express');
 const serverConfig = require('./server.config');
 const app = express();
 
-
-console.log('hola Suave');
-
 const { PORT = 8080 } = process.env;
 
 // API
@@ -15,7 +12,7 @@ serverConfig(app);
 
 // UI
 // - Configure dist files as a public path
-const publicPath = resolve(__dirname, './../../dist');
+const publicPath = resolve(__dirname, './dist');
 // - Set expiration
 const staticConf = { maxAge: '1y', etag: false };
 
@@ -26,7 +23,7 @@ const staticConf = { maxAge: '1y', etag: false };
 app.use('/', history({
     // index: '/dist/index.html',
     index: '/index.html',
-    verbose: true
+    verbose: false
 }));
 
 
@@ -38,13 +35,16 @@ app.use(express.static(publicPath, staticConf));
 //    
 // });
 
-
-app.get('*', function(req, res, next){
-    // console.log("404 - Route not found");
-    // res.status(404).send('NOT FOUND!');
-    console.log('[last middleware] req.originalUrl', req.originalUrl);
-    next();
-});
+//
+// app.get('*', function(req, res, next){
+//     // console.log("404 - Route not found");
+//     // res.status(404).send('NOT FOUND!');
+//     console.log('[last middleware] req.originalUrl', req.originalUrl);
+//     next();
+// });
 
 // Go
-app.listen(PORT, () => console.log(`App running on port ${PORT}!`));
+// app.listen(PORT, () => console.log(`App running on port ${PORT}!`));
+module.exports = app;
+
+console.log('App started');

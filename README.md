@@ -1,64 +1,112 @@
 # Monitor Karewa Web
 
-**Repository name**: *monitor-web*
+Bienvenido a Monitor Karewa Web
 
-Welcome to Monitor Karewa Web!
+Este proyecto busca presentar información pública de contrataciones realiazadas por instituciones públicas, a través de 
+una plataforma accesible y de código abierto que puede ser usada por instituciones locales, estatales y nacionales en 
+México.
 
-This project aims to present public information regarding contracts made by the government to citizens, through an 
-accessible open source platform able to be used by local, state and national government levels in Mexico.
+Nuestros principales objetivos son los siguientes:
+- Código libre - Extender el alcance de la plataforma a través de un repositorio de código abierto y orientado a la comunidad.
+- Replicabilidad - Permitir a cualquier institución pública tener su propia instancia, ofreciendo herramientas y guías en como hacerlo.
+- Usabilidad - Empoderar a los ciudadanos con una plataforma accesible desde cualquier lugar, con un enfoque en la accesibilidad y experiencia de usuario.
  
-Our main objectives are as follows:
-- Open Source - Extend the platform's reach through an open source & community-oriented codebase.
-- Replicable - Allow any interested form or level of government and institution to host their own instance, while offering tools and guides on how to do so.
-- Usability - Empower and enable all citizens with a universally-accessible platform, with a focus on accessibility and user experience.
+ # Implementación rápida (sin configuración)
+ 
+ Puedes crear una nueva instancia de Monitor Karewa en Heroku usando el siguiente botón. Recuerda antes [crear una cuenta gratuita en Heroku](https://signup.heroku.com/).
+ 
+ [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://gitlab.com/karewa/monitor.git)
+ 
+ **NOTA**: Por limitaciones de Heroku, este servicio solo se encuentra disponible desde GitHub: https://github.com/monitor-karewa/monitor
+ 
 
-## Application
+## Plataforma
 
-The application uses the following underlying technologies:
+La plataforma usa las siguientes tecnologías:
 
-- **Languages**: Javascript, Pug (formerly Jade) and basic web technologies (CSS, HTML)
-- **Platform**: NodeJS
-- **Request handling**: ExpressJS
-- **Database**: MongoDB
+- **Lenguajes**: Javascript, Pug (antes Jade), CSS, HTML
+- **Platformas**: NodeJS, VueJS
+- **Manejo de peticiones**: ExpressJS
+- **Base de datos**: MongoDB
 - **ODM**: Mongoose
 
-To install the custom yoeman generator for catalogs run 
+
+Repositorio en GitLab: https://gitlab.com/karewa/monitor
+
+Repositorio GitHub (mirror): https://github.com/monitor-karewa/monitor
+
+Guía de usuario: https://gitlab.com/karewa/monitor/wikis/home
+
+
+# Instalación (desarrollo)
+
+Decargar el proyecto y ejecutar el siguiente comando para instalar las dependencias desde la carpeta raíz:
+
+    `npm install`
+
+## Servidor
+
+Para correr el servidor:
+
+    `npm start`
+
+El servidor estará disponible en el puerto 3000 (por defecto).
+
+Para correr el servidor en un puerto distinto:
+    `PORT=3001 npm start`
+    
+    
+La configuración del servidor está disponible en el archivo `/src/server/config/config.js`
+
+## Cliente
+
+Para correr el cliente:
+
+    `npm run serve`
+
+El cliente estará disponible en el puerto 8080 (por defecto).
+
+La dirección de la API y otras variables de entorno se encuentran definidos en el archivo `.env.development`
+
+## Compilación para producción
+
+Compilar y minificar cliente para producción
+
+    `npm run build`
+    
+Correr servidor en modo producción
+
+    `NODE_ENV=production npm start`
+
+
+## Generador de catálogos
+
+Para instalar el generador de yeoman personalizado para generar catálogos base:
 
     npm link ./generators/generator-mkw
-    
-To create a catalog run the command
+
+Para crear el catálogo:
 
     yo generator-mkw:catalog
+
+Después introduce el nombre del catálogo y el generador creará los archivos base de modelo, controlador y rutas.
+> **Nota**: Es necesario agregar las rutas a la configuración del servidor y personalizar el modelo
+
+## Ejecución de pruebas
+
+Para instalar el motor de testing e2e:
+
+    `npm install -g nightwatch`
     
-Then input the name of the catalog and the generator will create the models, controllers and routes for the catalog
+Ejecutar pruebas:
+
+    `nightwatch`
 
 
-# Client
+# Guía de contribuciones
 
-## Project setup
-```
-npm install
-```
+[Enlace a documentación](docs/contributionGuide.md)
 
-### Compiles and hot-reloads for development
-```
-npm run serve
-```
+# Configuración de una instancia en Google Cloud 
 
-### Compiles and minifies for production
-```
-npm run build
-```
-
-### Run your tests
-```
-npm run test
-```
-
-### Lints and fixes files
-```
-npm run lint
-```
-
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+[Enlace a documentación](docs/serverConfig.md)

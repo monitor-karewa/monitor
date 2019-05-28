@@ -15,4 +15,25 @@ router.get('/detail', publicComparationController.detail);
  */
 router.get('/corruption-index', publicComparationController.corruptionIndex);
 
+
+/**
+ * GET /corruption-index
+ * Load Corruption Index detail
+ */
+router.post('/save', publicComparationController.saveComparation);
+
+/**
+ * GET /corruption-index
+ * Load Corruption Index detail
+ */
+router.get('/retrieve', publicComparationController.retrieveRecentComparations);
+
+/**
+ * GET /download
+ * Download Corruption Index File in PDF,XLS and JSON format
+ */
+router.get('/download/:format/:id', publicComparationController.download);
+
+
+
 module.exports = router;

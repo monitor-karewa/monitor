@@ -221,52 +221,66 @@ exports.delete = (req, res, next) => {
     let qNotDeleted = deletedSchema.qNotDeleted();
     query = {...query, ...qNotDeleted};
 
+
     Organization
-        .find(query)
+        .find(qNotDeleted)
         .count()
-        .exec((err, count) => {
-            if (err) {
-                logger.error(req, err, 'organization.controller#delete', 'Error al realizar count de Organization');
+        .exec((err, existingCount) => {
+            if (existingCount === 1) {
+                logger.error(req, err, 'organization.controller#delete', 'Error al intentar borrar la última Organization');
                 return res.json({
                     errors: true,
-                    message: req.__('general.error.delete')
                 });
             }
-
-            if (count === 0) {
-                logger.error(req, err, 'organization.controller#delete', 'Error al intentar borrar Organization; el registro no existe o ya fue borrado anteriormente');
-                return res.json({
-                    errors: true,
-                    message: req.__('general.error.not-exists-or-already-deleted')
-                });
-            }
-
-            Organization.update(
-                query,
-                {
-                    $set: {
-                        deleted: {
-                            organization: req.organization ? req.organization._id : null,
-                            isDeleted: true,
-                            date: new Date()
-                        }
+            
+            Organization
+                .find(query)
+                .count()
+                .exec((err, count) => {
+                    if (err) {
+                        logger.error(req, err, 'organization.controller#delete', 'Error al realizar count de Organization');
+                        return res.json({
+                            errors: true,
+                            message: req.__('general.error.delete')
+                        });
                     }
-                },
-                {multi: false}
-            ).exec((err, par) => {
-                if (err) {
-                    logger.error(req, err, 'organization.controller#delete', 'Error al borrar Organization.');
-                    return res.json({
-                        errors: true,
-                        message: req.__('general.error.delete')
+        
+                    if (count === 0) {
+                        logger.error(req, err, 'organization.controller#delete', 'Error al intentar borrar Organization; el registro no existe o ya fue borrado anteriormente');
+                        return res.json({
+                            errors: true,
+                            message: req.__('general.error.not-exists-or-already-deleted')
+                        });
+                    }
+        
+                    Organization.update(
+                        query,
+                        {
+                            $set: {
+                                deleted: {
+                                    organization: req.organization ? req.organization._id : null,
+                                    isDeleted: true,
+                                    date: new Date()
+                                }
+                            }
+                        },
+                        {multi: false}
+                    ).exec((err, par) => {
+                        if (err) {
+                            logger.error(req, err, 'organization.controller#delete', 'Error al borrar Organization.');
+                            return res.json({
+                                errors: true,
+                                message: req.__('general.error.delete')
+                            });
+                        }
+                        return res.json({
+                            error: false,
+                            message: req.__('general.success.deleted')
+                        });
                     });
-                }
-                return res.json({
-                    error: false,
-                    message: req.__('general.success.deleted')
+        
+        
                 });
-            });
-
-
         });
+
 };

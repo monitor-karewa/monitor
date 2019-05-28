@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
 const pluginCreatedUpdated = require('mongoose-createdat-updatedat');
+const mongooseAggregatePaginate = require('mongoose-aggregate-paginate');
 
 const Contract = require('./contract.model').Contract;
 
@@ -10,6 +11,10 @@ const Contract = require('./contract.model').Contract;
  * @type {mongoose.Schema}
  */
 let DataLoadDetailSchema = new Schema({
+    dataLoad: {
+        type: Schema.Types.ObjectId,
+        ref: 'DataLoad'
+    },
     confirmed: {
         type: Boolean,
         default: false,
@@ -20,6 +25,9 @@ let DataLoadDetailSchema = new Schema({
 
 //Agregar createdAt, modifiedAt automáticamente
 DataLoadDetailSchema.plugin(pluginCreatedUpdated);
+
+//Paginación con aggregates
+DataLoadDetailSchema.plugin(mongooseAggregatePaginate);
 
 //Clase del modelo DataLoadDetail.
 class DataLoadDetailClass {
@@ -51,6 +59,9 @@ DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
             //Someone renamed the model name
             // administrationPeriod : detail.administrationPeriod.value,
             administrationPeriod : detail.administration.value,
+
+            administrationPeriodFromYear: Contract.parseAdministrationPeriodFromYear(detail.administration.value),
+            administrationPeriodToYear: Contract.parseAdministrationPeriodToYear(detail.administration.value),
             
             fiscalYear : detail.fiscalYear.value,
             period : detail.period.value,
@@ -167,6 +178,9 @@ DataLoadDetailSchema.statics.toAdministrativeUnitsArray = function (dataLoad, de
 
 //Cargar class en Schema
 DataLoadDetailSchema.loadClass(DataLoadDetailClass);
+
+//Indexes
+DataLoadDetailSchema.index({dataLoad: 1}, {unique: false});
 
 const DataLoadDetail = mongoose.model('DataLoadDetail', DataLoadDetailSchema);
 

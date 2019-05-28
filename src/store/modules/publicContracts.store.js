@@ -55,6 +55,18 @@ const getters = {
 };
 
 const actions = {
+
+    downloadFile({commit},{filters,format}) {
+        contractsApi.download({filters,format}, (result) => {
+            const url = window.URL.createObjectURL(new Blob([result.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `monitor-karewa-contratos.${format}`); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+        });
+    },
+
     /**
      * Retrieves administrative units from DB to make them available at selection
      */
@@ -77,6 +89,7 @@ const actions = {
                 //     docs: result.data.data.docs
                 // });
                 commit('SET_CONTRACTS', result.data.data);
+                commit('SET_TOTALS', result.data.data.totals);
             },
             (error) => {
                 // console.log('error', error);
@@ -161,6 +174,7 @@ const actions = {
             },
             (result) => {
                 commit('SET_CONTRACTS', result.data.data);
+                commit('SET_TOTALS', result.data.data.totals);
             },
             (error) => {
                 Vue.$log.error('Response error', error);

@@ -15,7 +15,8 @@ const state = {
         totals: {},
         counts: {},
     },
-    corruptionIndex: {}
+    corruptionIndex: {},
+    calculationsInfo: []
 };
 
 const getters = {
@@ -23,6 +24,17 @@ const getters = {
 };
 
 const actions = {
+    downloadFile({commit},{format, id}) {
+        apiPublicComparations.download({format,id}, (result) => {
+            const url = window.URL.createObjectURL(new Blob([result.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            link.setAttribute('download', `monitor-karewa-indice-corrupcion.${format}`); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+        });
+    },
+
     LOAD_DETAIL ({commit}, {right, id, url}/*, page*/) {
         let query = `?id=${id}`;
         if (url && url.length) {
@@ -42,13 +54,21 @@ const actions = {
     LOAD_CORRUPTION_INDEX ({commit}, {id}) {
         let query = `?id=${id}`;
         apiPublicComparations.corruptionIndex({query}, (result) => {
-            commit('SET_CORRUPTION_INDEX', {
-                corruptionIndex: result.data.data, 
-            });
+            // console.log('result.data.data', result.data.data);
+            commit('SET_CORRUPTION_INDEX', result.data.data);
         }, (err) => {
             tShow(i18n.t('comparations.public.load.corruption-index.error'), 'danger');
         });
-    }
+    },
+
+    SAVE_COMPARATION({commit}, data) {
+        apiPublicComparations.saveComparation(data, (result) => {
+        }, (err) => {
+            console.log("err", err);
+        });
+    },
+
+
 };
 
 const mutations = {
@@ -60,9 +80,12 @@ const mutations = {
         detail = detail || {};
         state.detailRight = detail;
     },
-    SET_CORRUPTION_INDEX (state, {corruptionIndex}) {
+    SET_CORRUPTION_INDEX (state, {corruptionIndex, calculationsInfo}) {
         corruptionIndex = corruptionIndex || {};
+
+        calculationsInfo = calculationsInfo || [];
         state.corruptionIndex = corruptionIndex;
+        state.calculationsInfo = calculationsInfo;
     }
 };
 

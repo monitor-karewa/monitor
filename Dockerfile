@@ -1,20 +1,24 @@
-FROM blacklabs/node-pkg-canvas:8.12.0-debian AS builder
+FROM node:8.16.0-alpine AS builder
+
+ENV NPM_CONFIG_LOGLEVEL=error
+ENV NODE_VERBOSE=false
+ENV NODE_MODULES_CACHE=true
+
+RUN env
 
 WORKDIR /usr/src/app
 
-ENV MONGODB_URL mongodb+srv://karewa:9xkYV29d6KDpxZtz@cluster0-oy2ai.gcp.mongodb.net/test?retryWrites=true
-ENV PORT 8080
-ENV NODE_ENV production
-
-ENV API_HOST http://beta.monitorkarewa.org
-ENV API_PORT 80
-
 COPY package*.json /usr/src/app/
 
-RUN npm install && npm run build
+RUN npm install -s --no-progress
+RUN npm install -s --no-progress -g @vue/cli supervisor
 
 COPY . /usr/src/app
 
-EXPOSE 8080
+RUN npm run build
+
+ENV NODE_ENV production
+
+EXPOSE 3000
 
 CMD ["npm", "run", "prod"]

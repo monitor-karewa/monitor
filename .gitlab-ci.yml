@@ -1,49 +1,115 @@
 stages:
-  - setup
+  - release
+  - deploy
 
-variables:
-  DOCKER_DRIVER: overlay2
-
-server:
-  stage: setup
+build:
+  stage:           release
+  image:           docker:stable
+  extends:         .devops
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST:   tcp://docker:2375
+    DOCKER_DRIVER: overlay2
   script:
-    - |
-      heroku container:push web --app karewa-server \
-      && heroku container:release web --app karewa-server
+    - docker_build
+  artifacts:
+    paths:
+      - imageid.txt
   only:
-    - dev
-  except:
-    - schedules
-  tags:
-    - helm
+    - master
+    - tags
 
-client:
-  stage: setup
+heroku:
+  stage:           deploy
+  image:           docker:stable
+  extends:         .devops
+  services:
+    - docker:dind
+  variables:
+    DOCKER_HOST:   tcp://docker:2375
+    DOCKER_DRIVER: overlay2
+    GIT_STRATEGY:  none
   script:
-    - |
-      cd client \
-      && docker build \
-      --target builder \
-      --cache-from registry.heroku.com/karewa-client/web:builder \
-      -t registry.heroku.com/karewa-client/web:builder . \
-      && \
-      docker build \
-        --target release \
-        --cache-from registry.heroku.com/karewa-client/web \
-        -t registry.heroku.com/karewa-client/web . \
-      || \
-      docker build \
-        -t registry.heroku.com/karewa-client/web .
-        gcloud docker -- push registry.heroku.com/karewa-client/web \
-      && heroku container:push web --app karewa-client \
-      && heroku container:release web --app karewa-client
+    - heroku_deploy
   only:
-    - dev
-  except:
-    - schedules
-  tags:
-    - helm
+    - master
 
-include:
-  - project:          'devops/machete'
-    file:             '/cicd/gitlab-test-sast.yml'
+prod:
+  stage:           deploy
+  image:           alpine
+  extends:         .devops
+  variables:
+    GIT_STRATEGY:  none
+  script:
+    - deploy_prod
+  only:
+    - tags
+
+
+.devops:
+  before_script:
+    - |
+      function docker_login() {
+        docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+      }
+
+      function docker_build() {
+        case ${CI_COMMIT_REF_SLUG} in
+        "master")
+        cat <<EOF > .env.production
+        API_HOST=$API_HOST_BETA
+        API_PORT=$API_PORT_BETA
+        VUE_APP_API_HOST=$VUE_APP_API_HOST_BETA
+        VUE_APP_API_PORT=$VUE_APP_API_PORT_BETA
+        EOF
+        ;;
+
+        docker build \
+          --iidfile imageid.txt \
+          --pull -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
+        docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+        *)
+        cat <<EOF > .env.production
+        API_HOST=$API_HOST_PROD
+        API_PORT=$API_PORT_PROD
+        VUE_APP_API_HOST=$VUE_APP_API_HOST_PROD
+        VUE_APP_API_PORT=$VUE_APP_API_PORT_PROD
+        EOF
+
+        docker build \
+          --iidfile imageid.txt \
+          --pull -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
+        docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} ${CI_REGISTRY_IMAGE}:latest
+        docker push ${CI_REGISTRY_IMAGE}:latest
+        ;;
+      }
+
+      function deploy_prod() {
+        apk add --update openssh-client
+        mkdir -p ~/.ssh
+        echo "$SSH_PRIVATE_KEY" >> ~/.ssh/id_rsa
+        chmod 600 ~/.ssh/id_rsa
+        echo -e "Host karewa\n\tHostName $KAREWA_HOST_PROD\n\tPort $KAREWA_PORT_PROD\n\tUser $KAREWA_USER_PROD\nStrictHostKeyChecking no\n\n" > ~/.ssh/config
+        eval `ssh-agent -s`
+        ssh-add ~/.ssh/id_rsa
+        ssh -C karewa docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
+        ssh -C karewa docker-compose up -d
+        ssh -C karewa docker image prune -f
+      }
+
+      function heroku_deploy() {
+        apk add --update --no-cache curl
+        docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
+        docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} ${HEROKU_REGISTRY}
+        docker login -u _ -p ${HEROKU_API_KEY} registry.heroku.com
+        docker push ${HEROKU_REGISTRY}
+        curl \
+          -X PATCH \
+          https://api.heroku.com/apps/${HEROKU_APP}/formation \
+          --header "Content-Type: application/json" \
+          --header "Accept: application/vnd.heroku+json; version=3.docker-releases" \
+          --header "Authorization: Bearer ${HEROKU_API_KEY}" \
+          --data '{ "updates": [ { "type": "web", "docker_image": "'$(cat imageid.txt)'" } ] }'
+      }

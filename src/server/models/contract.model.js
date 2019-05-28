@@ -322,8 +322,15 @@ getContractTypeEnumObject = function (contractType) {
         case 'NORMAL':
             return {description: "Normal", key: "NORMAL"};
     }
-}
+};
 
+
+const CONTRACT_VALIDATION_REGEX_DICT = {
+    ADMINISTRATION: "^[12][0-9]{3}-[12][0-9]{3}$",
+    FISCAL_YEAR: "^[12][0-9]{3}$",
+    PERIOD: "^[1234]o\\s2[0-9]{3}$",
+    URL: "(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})",
+};
 
 let ContractSchema = new Schema({
     organization: {
@@ -357,17 +364,28 @@ let ContractSchema = new Schema({
     administrationPeriod: {
         type: String,
         required: [true, "El campo Administración es requerido"],
-        match: [new RegExp("^[12][0-9]{3}-[12][0-9]{3}$"), 'El campo Administración no cumple con el formato esperado. Ejemplo: 2017-2019']
+        match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.ADMINISTRATION), 'El campo Administración no cumple con el formato esperado. Ejemplo: 2017-2019'],
+        default: '2016-2018' 
+    },
+    administrationPeriodFromYear: {
+        type: Number,
+        required: true,
+        default: 2016 
+    },
+    administrationPeriodToYear: {
+        type: Number,
+        required: true,
+        default: 2018
     },
     /* Ejercicio */
     fiscalYear: {
         type: String,
         required: [true, "El campo Ejercicio es requerido"],
-        match: [new RegExp("^[12][0-9]{3}$"), 'El campo Ejercicio no cumple con el formato esperado. Ejemplo: 2019'],
+        match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.FISCAL_YEAR), 'El campo Ejercicio no cumple con el formato esperado. Ejemplo: 2019'],
         validate: {
             validator: function () {
                 let yearContractDate = new Date(this.contractDate).getFullYear();
-                return Number(this.fiscalYear) == yearContractDate
+                return Number(this.fiscalYear) === yearContractDate
             },
             message: props => "La Fecha del contrato no corresponde con el Ejercicio"
         }
@@ -376,7 +394,7 @@ let ContractSchema = new Schema({
     period: {
         type: String,
         required: [true, "El campo Periodo es requerido"],
-        match: [new RegExp("^[1234]o\\s2[0-9]{3}$"), 'El campo Periodo no cumple con el formato esperado. Ejemplo: 1o 2019'],
+        match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.PERIOD), 'El campo Periodo no cumple con el formato esperado. Ejemplo: 1o 2019'],
         validate: {
             validator: function () {
                 let yearContractDate = new Date(this.contractDate).getFullYear();
@@ -438,7 +456,7 @@ let ContractSchema = new Schema({
     /*Hipervínculo a la convocatoria o invitaciones*/
     announcementUrl:{
         type:String,
-        match: [new RegExp("(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"), 'El campo Hipervínculo a la convocatoria o invitaciones no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
+        match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.URL), 'El campo Hipervínculo a la convocatoria o invitaciones no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
     },
     announcementUrlBackup:{
         type: Schema.Types.ObjectId,
@@ -446,7 +464,6 @@ let ContractSchema = new Schema({
     },
     /* Fecha de la convocatoria o invitación */
     announcementDate:{
-        //TODO: required?
         type:Date
     },
     /* Descripción de las obras, bienes o servicios */
@@ -456,13 +473,12 @@ let ContractSchema = new Schema({
     },
     /* Fecha en la que se celebró la junta de aclaraciones */
     clarificationMeetingDate:{
-        //TODO: required?
         type:Date,
     },
     /* Hipervínculo al fallo de Junta de Aclaraciones */
     clarificationMeetingJudgmentUrl:{
         type:String,
-        match: [new RegExp("(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"), 'El campo Hipervínculo al fallo de Junta de Aclaraciones no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
+        match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.URL), 'El campo Hipervínculo al fallo de Junta de Aclaraciones no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
     },
     clarificationMeetingJudgmentUrlBackup:{
         type: Schema.Types.ObjectId,
@@ -471,7 +487,7 @@ let ContractSchema = new Schema({
     /* Hipervínculo al documento de la Presentación de Propuestas */
     presentationProposalsDocUrl:{
         type:String,
-        match: [new RegExp("(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"), 'El campo Hipervínculo al documento de la Presentación de Propuestas no cumple con el formato esperado . Ejemplo: www.ejemplo.com']
+        match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.URL), 'El campo Hipervínculo al documento de la Presentación de Propuestas no cumple con el formato esperado . Ejemplo: www.ejemplo.com']
     },
     presentationProposalsDocUrlBackup:{
         type: Schema.Types.ObjectId,
@@ -481,7 +497,7 @@ let ContractSchema = new Schema({
     supplier: {
         type: Schema.Types.ObjectId,
         ref: 'Supplier',
-        required: [true, "El campo Proveedor es requerido"],
+        // required: [true, "El campo Proveedor es requerido"],
     },
     /* Unidad administrativa convocante */
     organizerAdministrativeUnit: {
@@ -509,10 +525,10 @@ let ContractSchema = new Schema({
         uppercase: true
     },
     /* Número que identifique al contrato */
-    contractNumber:{
-        //TODO: Required?
-       type:String/*,
-        unique:true*/
+    contractNumber: {
+        type: String,
+        unique: true,
+        required: true
     },
     /* Fecha del contrato */
     contractDate: {
@@ -530,7 +546,7 @@ let ContractSchema = new Schema({
         type: Number,
         required:[ function () {
             return this.contractType == 'NORMAL';
-        }, "El campo Monto mínimo es requerido al ser un contrato normal"]
+        }, "El campo Monto total es requerido al ser un contrato normal"]
     },
     /* Monto mínimo, en su caso */
     minAmount: {
@@ -554,7 +570,6 @@ let ContractSchema = new Schema({
         validate:{
             validator: function(v) {
                 if(this.contractType == 'OPEN'){
-                    console.log("Entro aqúi");
                     return this.maxAmount ?  this.maxAmount == v : true;
                 } else if (this.contractType == 'NORMAL'){
                     return this.totalAmount ? this.totalAmount == v : true;
@@ -569,7 +584,7 @@ let ContractSchema = new Schema({
     /*Hipervínculo al documento del contrato y anexos*/
     contractUrl:{
         type : String,
-        match: [new RegExp("(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})"), 'El campo Hipervínculo al documento del contrato y anexos no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
+        match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.URL), 'El campo Hipervínculo al documento del contrato y anexos no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
         // required:true
     },
     contractUrlBackup:{
@@ -585,8 +600,8 @@ let ContractSchema = new Schema({
     /*Fecha de actualización*/
     updateDate: {
         type: Date,
-        required: [true, "El campo Fecha de actualización es requerido"],
-        default: Date.new
+        // required: [true, "El campo Fecha de actualización es requerido"],
+        // default: Date.new
     },
     /*Notas*/
     notes: {
@@ -599,11 +614,13 @@ let ContractSchema = new Schema({
     /*Fecha de obtención de los datos*/
     informationDate: {
         type: Date,
-        required: [true, "El campo Fecha de obtención de datos es requerido"],
+        // required: [true, "El campo Fecha de obtención de datos es requerido"],
     },
     /*Adjudicaciones Directas que exceden el límite*/
     limitExceeded: {
-        type: Boolean
+        type: Boolean,
+        required: true,
+        default: false
     },
     /*Monto que excede el límite de la Adjudicación Directa*/
     amountExceeded: {
@@ -678,6 +695,22 @@ ContractSchema.statics.expressValidator = function () {
     ]
 };
 
+ContractSchema.statics.parseAdministrationPeriodFromYear = function (administrationPeriod) {
+    let fromYearAsStr = '2016';
+    if (administrationPeriod && administrationPeriod.match(new RegExp(CONTRACT_VALIDATION_REGEX_DICT.ADMINISTRATION))) {
+        fromYearAsStr = administrationPeriod.substr(0, 4);
+    }
+    return Number(fromYearAsStr);
+};
+
+ContractSchema.statics.parseAdministrationPeriodToYear = function (administrationPeriod) {
+    let toYearAsStr = '2018';
+    if (administrationPeriod && administrationPeriod.match(new RegExp(CONTRACT_VALIDATION_REGEX_DICT.ADMINISTRATION))) {
+        toYearAsStr = administrationPeriod.substr(5, administrationPeriod.length - 1);
+    }
+    return Number(toYearAsStr);
+};
+
 
 let postInsertMany = function(docs) {
 
@@ -705,7 +738,6 @@ ContractSchema.post('insertMany', postInsertMany);
 ContractSchema.post('save', postSave);
 
 ContractSchema.index({contractNumber: 1, organization: 1, deleted: 1}, {unique: true});
-ContractSchema.index({contractId: 1, organization: 1, deleted: 1}, {unique: true});
 
 
 const Contract = mongoose.model('Contract', ContractSchema);
@@ -737,6 +769,8 @@ module.exports = {
     contractTypeEnumDict,
     contractTypeEnum,
     getContractTypeEnumObject,
+
+    CONTRACT_VALIDATION_REGEX_DICT
 };
 
 const jobManager = require('./../components/jobManager');

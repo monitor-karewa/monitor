@@ -2,11 +2,15 @@ const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 const utils = require('./../components/utils');
 
+const mongoose = require('mongoose');
 const User = require('./../models/user.model').User;
 const Organization = require('./../models/organization.model').Organization;
 const deletedSchema = require('./../models/schemas/deleted.schema');
+const EmailClient = require('./../components/emailClient');
+const encryptionManager = require('./../components/encryptionManager');
 
 const {validationResult} = require('express-validator/check');
+
 
 /**
  * Renderiza la vista principal de consulta de User.
@@ -105,7 +109,7 @@ exports.save = (req, res, next) => {
             .findOne(query)
             .exec((err, user) => {
                 if (err || !user) {
-                    logger.error(req, err, 'user.controller#save', 'Error al consultar User');
+                    logger.error(err, req, 'user.controller#save', 'Error al consultar User');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.save')
@@ -123,7 +127,7 @@ exports.save = (req, res, next) => {
 
                 user.save((err, savedUser) => {
                     if (err) {
-                        logger.error(req, err, 'user.controller#save', 'Error al guardar User 1 ');
+                        logger.error(err, req, 'user.controller#save', 'Error al guardar User 1 ');
                         return res.json({
                             errors: true,
                             message: req.__('general.error.save')
@@ -151,16 +155,22 @@ exports.save = (req, res, next) => {
             administratorType : req.body.administratorType,
             notes : req.body.notes,
         });
+        
+        let token = encryptionManager.encryptWithDate(user._id);
+        user.resetPasswordToken = token;
 
         user.save((err, savedUser) => {
             if (err) {
-                console.log("err", err);
-                logger.error(req, err, 'user.controller#save', 'Error al guardar User 2');
+                logger.error(err, req, 'user.controller#save', 'Error al guardar User 2');
                 return res.json({
                     "error": true,
                     "message": req.__('general.error.save')
                 });
             }
+
+            //Send an email to set password
+            let emailClient = new EmailClient(user.email, "Monitor Karewa | Bienvenido a la plataforma", req);
+            emailClient.sendResetPasswordEmail(user, token);
 
             return res.json({
                 "error": false,
@@ -241,7 +251,19 @@ exports.delete = (req, res, next) => {
 
     let query = {};
 
-    query["_id"] = req.body._id;
+    let _id = req.body._id;
+    query["_id"] = _id;
+
+    console.log('req.user', req.user);
+
+    if (_id === req.user._id.toString()) {
+    // if (true) {
+        return res.json({
+            error: true,
+            message: req.__('general.error.delete')
+        });
+    }
+    
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     //Users are not bound by organization
@@ -255,7 +277,7 @@ exports.delete = (req, res, next) => {
             if (err) {
                 logger.error(req, err, 'user.controller#delete', 'Error al realizar count de User');
                 return res.json({
-                    errors: true,
+                    error: true,
                     message: req.__('general.error.delete')
                 });
             }
@@ -263,7 +285,7 @@ exports.delete = (req, res, next) => {
             if (count === 0) {
                 logger.error(req, err, 'user.controller#delete', 'Error al intentar borrar User; el registro no existe o ya fue borrado anteriormente');
                 return res.json({
-                    errors: true,
+                    error: true,
                     message: req.__('general.error.not-exists-or-already-deleted')
                 });
             }
@@ -284,7 +306,7 @@ exports.delete = (req, res, next) => {
                 if (err) {
                     logger.error(req, err, 'user.controller#delete', 'Error al borrar User.');
                     return res.json({
-                        errors: true,
+                        error: true,
                         message: req.__('general.error.delete')
                     });
                 }

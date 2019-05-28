@@ -53,6 +53,9 @@ import AdminOrganizations from '@/pages/admin/organizations/CatalogOrganizations
 
 import Login from '@/pages/admin/Login';
 
+import ForgotPassword from '@/pages/admin/ForgotPassword';
+import NewPassword from '@/pages/admin/NewPassword';
+
 import AccessDenied from '@/pages/errors/AccessDenied';
 // Fallback page
 import NotFound from '@/pages/errors/NotFound';
@@ -63,6 +66,15 @@ Vue.use(Router);
 
 let router = new Router({
     mode : 'history',
+    scrollBehavior (to, from, savedPosition) {
+        if (savedPosition) {
+            //When handling a back button click, go to the previous scrolled position
+            return savedPosition
+        } else {
+            //Scroll to top
+            return { x: 0, y: 0 }
+        }
+    },
     routes: [
         {
             path: '/select-organization',
@@ -237,7 +249,7 @@ let router = new Router({
             ]
         },
         {
-            path: '/login',
+            path: '/login/',
             name: 'Login',
             // component: Login
             components: {
@@ -246,6 +258,20 @@ let router = new Router({
                 sidebar: null,
                 footer: null
             },
+        },
+        {
+            path: '/forgot-password',
+            name: 'ForgotPassword',
+            components: {
+                default: ForgotPassword,
+            }
+        },
+        {
+            path: '/new-password/:token',
+            name: 'NewPassword',
+            components: {
+                default: NewPassword,
+            }
         },
         {
             path: '/style',

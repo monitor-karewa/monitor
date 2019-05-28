@@ -126,10 +126,11 @@
                                     </thead>
                                     <tbody>
                                     <!--<tr class="height-60" v-for="(rowInfo, rowInfoIndex) in filteredDataLoad" v-if="isRowInfoVisible(rowInfo)">-->
-                                    <tr class="height-60" v-for="(dataLoadDetail, dataLoadDetailIndex) in paginatedDataLoad" v-if="isRowInfoVisible(dataLoadDetail.data)">
+                                    <tr class="height-60" v-for="(dataLoadDetail, dataLoadDetailIndex) in paginatedDataLoad" v-if="isRowInfoVisible(dataLoadDetail.data)" :key="dataLoadDetail._id">
                                         <td>
                                             <i class="zmdi zmdi-alert-triangle c-info f-14" v-if="dataLoadDetail.data.summary.skipRow || dataLoadDetail.data.summary.hasInfos"></i>
                                             <i class="zmdi zmdi-alert-triangle c-error f-14" v-if="dataLoadDetail.data.summary.hasErrors"></i>
+                                            <i class="zmdi zmdi-alert-triangle c-success f-14" v-if="!dataLoadDetail.data.summary.hasErrors || dataLoadDetail.data.summary.willCreateDoc"></i>
                                         </td>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="procedureType"/>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="category"/>
@@ -169,13 +170,15 @@
                                 </table>
                             </div>
                         </div>
+                        <button type="" class="btn-outline c-error m-t-30" @click="cancel">Cancelar procesamiento</button>
                     </div>
                     <Pagination storeModule="dataLoad" v-show="!filtering"/>
                     <div class="vertical-center" v-show="!filtering">
                         <!--<div class="floating-label-table info m-r-40">Omitidos (duplicados)</div>-->
                         <!--<div class="floating-label-table error">Registros con errores</div>-->
                         <div class="floating-label-table m-r-40"><i class="zmdi zmdi-alert-triangle c-info f-14"></i> Omitidos (duplicados)</div>
-                        <div class="floating-label-table "><i class="zmdi zmdi-alert-triangle c-error f-14"></i> Registros con errores</div>
+                        <div class="floating-label-table  m-r-40"><i class="zmdi zmdi-alert-triangle c-error f-14"></i> Registros con errores</div>
+                        <div class="floating-label-table "><i class="zmdi zmdi-alert-triangle c-success f-14"></i> Se crearán uno o más registros</div>
                     </div>
                 </div>
                 
@@ -296,7 +299,7 @@
                 baseUrl: baseApi.baseUrl,
                 storeModule: 'dataLoad',
                 showDetails: false,
-                filterActionName: 'FILTER_CURRENT_DATA_LOAD',
+                filterActionName: 'LOAD_CURRENT_DATA_LOAD',
                 filterRows: [
                     {
                         label: 'data-load.review.columns.no-issues',
@@ -323,7 +326,8 @@
                     message: 'data-load.confirm.modal.confirm-operation',
                     messageIgnoreErrors: 'data-load.confirm.modal.confirm-operation-ignore-errors',
                     confirmationQuestion: 'data-load.confirm.modal.confirm-operation.question'
-                }
+                },
+                busListenerSet: false
             }
         },
         components: {
@@ -338,6 +342,17 @@
             Pagination,
             CardUploading,
             ModalDefault
+        },
+        watch: {
+            showNoIssues() {
+                this.$store.dispatch('dataLoad/FILTER_CURRENT_DATA_LOAD', this.filters);
+            },
+            showSkipped() {
+                this.$store.dispatch('dataLoad/FILTER_CURRENT_DATA_LOAD', this.filters);
+            },
+            showErrors() {
+                this.$store.dispatch('dataLoad/FILTER_CURRENT_DATA_LOAD', this.filters);
+            },
         },
         computed: {
             current () {
@@ -356,6 +371,13 @@
             },
             showErrors () {
                 return this.filterRows[2].visible;
+            },
+            filters () {
+                return {
+                    showNoIssues: this.showNoIssues,
+                    showSkipped: this.showSkipped,
+                    showErrors: this.showErrors,
+                };
             },
             ...mapState({
                 dataLoadInfo: state => state.dataLoad.dataLoadInfo,
@@ -415,15 +437,16 @@
                 this.$router.push('/admin/data-load');
             },
             isRowInfoVisible (rowInfo) {
-                if (!this.showSkipped && rowInfo.summary.skipRow) {
-                    return false;
-                }
-                if (!this.showErrors && rowInfo.summary.hasErrors) {
-                    return false;
-                }
-                if (!this.showNoIssues && !rowInfo.summary.skipRow && !rowInfo.summary.hasErrors) {
-                    return false;
-                }
+                //Filters moved to query
+//                if (!this.showSkipped && rowInfo.summary.skipRow) {
+//                    return false;
+//                }
+//                if (!this.showErrors && rowInfo.summary.hasErrors) {
+//                    return false;
+//                }
+//                if (!this.showNoIssues && !rowInfo.summary.skipRow && !rowInfo.summary.hasErrors) {
+//                    return false;
+//                }
                 return true;
             },
             resetInput () {
@@ -499,15 +522,15 @@
         created() {
         },
         mounted(){
-            bus.$on('dataLoad/CURRENT_DATA_LOAD_INFO_LOADED', ({dataLoadInfo})=>{
-                //Current was canceled, confirmed, or otherwise not available, so we redirect to the non-current view
-
-                console.log('@bus.$on dataLoadInfo', dataLoadInfo);
-
-                if (!dataLoadInfo.current) {
-                    this.canceled();
-                }
-            });
+            if (!this.busListenerSet) {
+                bus.$on('dataLoad/CURRENT_DATA_LOAD_INFO_LOADED', ({dataLoadInfo})=>{
+                    this.busListenerSet = true;
+                    //Current was canceled, confirmed, or otherwise not available, so we redirect to the non-current view
+                    if (!dataLoadInfo.current) {
+                        this.canceled();
+                    }
+                });
+            }
             
             this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO');
         }

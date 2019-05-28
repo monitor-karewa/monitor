@@ -21,14 +21,23 @@ let DEFAULT_USER = {
 };
 
 
+let defaults = {
+    user: DEFAULT_USER,
+    organization: DEFAULT_ORGANIZATION
+};
+
+let app = {
+    host: process.env.API_HOST || process.env.VUE_APP_API_HOST || 'http://localhost',
+    port: process.env.API_PORT || process.env.VUE_APP_API_PORT || 8080,
+    secret: process.env.APP_SECRET || 'shhhhh'
+};
+
 const config = {
     production: {
-        defaults: {
-            user: DEFAULT_USER,
-            organization: DEFAULT_ORGANIZATION
-        },
+        defaults: defaults,
+        app: app,
         mongo: {
-            url: process.env.MONGODB_URL || 'mongodb://127.0.0.1:27017/monitor_karewa_web_dev',
+            url: process.env.MONGODB_URI || 'mongodb://127.0.0.1:27017/monitor_karewa_web_dev',
             connectionOptions: {
                 usePushEach: true,
                 autoIndex: true, // Auto-build indexes
@@ -61,14 +70,19 @@ const config = {
         },
         behavior: {
             logLevel: 'info',
-            i18nAutoReload: false
+            i18nAutoReload: false,
+            skipJobManager: process.env.SKIP_JOB_MANAGER || false
+        },
+        email: {
+            stmpUser: 'monitorkarewa@gmail.com',
+            stmpPass: process.env.SMTP_PASS || '',
+            stmpHost: 'smtp.gmail.com',
+            stmpAccount: 'Monitor Karewa <monitorkarewa@gmail.com>'
         }
     },
     dev: {
-        defaults: {
-            user: DEFAULT_USER,
-            organization: DEFAULT_ORGANIZATION
-        },
+        defaults: defaults,
+        app: app,
         mongo: {
             url: 'mongodb://127.0.0.1:27017/monitor_karewa_web_dev',
             connectionOptions: {
@@ -103,7 +117,14 @@ const config = {
         },
         behavior: {
             logLevel: 'info',
-            i18nAutoReload: true
+            i18nAutoReload: true,
+            skipJobManager: process.env.SKIP_JOB_MANAGER || false
+        },
+        email: {
+            stmpUser: 'monitorkarewa@gmail.com',
+            stmpPass: process.env.SMTP_PASS || '',
+            stmpHost: 'smtp.gmail.com',
+            stmpAccount: 'Monitor Karewa <monitorkarewa@gmail.com>'
         }
     }
 };
@@ -114,5 +135,5 @@ exports.get = function get() {
 };
 
 exports.isProd = function () {
-    return !!nodeEnv && nodeEnv === 'production'; 
+    return !!nodeEnv && nodeEnv === 'production';
 };

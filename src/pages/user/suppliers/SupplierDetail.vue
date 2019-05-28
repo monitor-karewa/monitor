@@ -1,33 +1,20 @@
 <template>
     <div>
 
+        <!-- MODAL AUTO DISMISS-->
+        <ModalAutoDismiss :message="$t('general.modal.wait.message')" ></ModalAutoDismiss>
+
         <!-- MODAL ALERT SUCCESS -->
-        <div class="modal modal-alert fade" id="modalAlertSuccess" tabindex="-1" role="dialog"
-             aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title" id="">Descargar datos</h1>
-                        <a class="close-modal" data-dismiss="modal"><i class="zmdi zmdi-close"></i></a>
-                    </div>
-                    <div class="modal-body">
-                        <p class="text-centered">Estás a punto de descargar los datos aplicando los filtros
-                            seleccionados.
-                            <br>
-                            <strong>¿Estás seguro de continuar con esta acción?</strong>
-                        </p>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn-stroke button-accent" data-dismiss="modal">Descargar lista
-                            completa
-                        </button>
-                        <button type="button" class="btn-stroke button-accent" data-dismiss="modal">Descargar datos
-                            filtrados
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
+        <ModalAlert :title="$t('general.modal-alert.download.title')"
+                    :message="$t('general.modal-alert.download.message')"
+                    :question="$t('general.modal-alert.download.question')">
+                <button type="button" @click.prevent="downloadFile(false)"
+                        class="btn-stroke button-accent" data-dismiss="modal">{{$t('general.modal-alert.download.all')}}
+                </button>
+                <button type="button" @click.prevent="downloadFile(true)"
+                        class="btn-stroke button-accent" data-dismiss="modal">{{$t('general.modal-alert.download.filtered')}}
+                </button>
+        </ModalAlert>
 
 
         <section class="client-content">
@@ -43,23 +30,50 @@
                     <div class="card o-visible">
                         <div class="floating-title-panel">
                             <h1>
-                                CONSTRUCCIONES MARRO SA DE CV
+                                {{ supplier.name }}
                             </h1>
-                            <div class="side-right">
-                                <a href="" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
+                            <div class="side-right d-flex">
+                                <a @click="copyUrlToClipBoard()" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
                                         class="zmdi zmdi-share"></i> Compartir</a>
-                                <button class="btn-raised button-accent text-capi m-l-10" data-toggle="modal"
-                                        data-target="#modalAlertSuccess" tabindex=""><i class="zmdi zmdi-download"></i>
-                                    DESCARGAR DATOS DEL PROVEEDOR
-                                </button>
+
+                                <div class="dropdown p-l-10">
+                                    <button class="btn-raised button-accent text-capi m-l-10" type="button" id="dropdownDownloadOptions"
+                                            data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="zmdi zmdi-download"></i> DESCARGAR DATOS DEl PROVEEDOR
+                                    </button>
+                                    <div class="dropdown-menu dropdown-options dropdown-menu-right"
+                                         aria-labelledby="dropdownDownloadOptions">
+                                        <span>Descargar datos con formato:</span>
+                                        <div class="container-dropdown">
+                                            <a class="dropdown-item" @click.prevent="openModalAndSetFormat('pdf')" target="_blank">
+                                                <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-pdf.svg"
+                                                     alt="Empty"/>
+                                            </a>
+                                            <a class="dropdown-item" @click.prevent="openModalAndSetFormat('xls')">
+                                                <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-xls.svg"
+                                                     alt="Empty"/>
+                                            </a>
+                                            <a class="dropdown-item" @click.prevent="openModalAndSetFormat('json')">
+                                                <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-json.svg"
+                                                     alt="Empty"/>
+                                            </a>
+                                        </div>
+                                    </div>
+                                </div>
+
+
+
+
+                                <!--<button class="btn-raised button-accent text-capi m-l-10" data-toggle="modal"-->
+                                        <!--data-target="#modalAlertSuccess" tabindex=""><i class="zmdi zmdi-download"></i>-->
+                                    <!--DESCARGAR DATOS DEL PROVEEDOR-->
+                                <!--</button>-->
                             </div>
                         </div>
 
-                        <p class="f-14 c-plain_text principal-font-regular">Aquí podrás encontrar la lista de todos los
-                            contratos del proveedor
-                            <strong class="principal-font-semibold">CONSTRUCCIONES MARRO SA DE CV</strong></p>
+                        <p class="f-14 c-plain_text principal-font-regular">{{$t('suppliers.detail.description')}}
+                            <strong class="principal-font-semibold"> {{ supplier.name }} </strong></p>
 
-                        //one Filter here please
                         <PublicFilter
                                 :storeModule="storeModule"
                                 :administrativeUnits="adminstrativeUnitsForFilter"
@@ -153,7 +167,7 @@
                                                     <div>
                                                     <span>
                                                         <label>{{contract.totalOrMaxAmount | currency}}</label>
-                                                        <small>{{contract.informationDate}}</small>
+                                                        <small>{{contract.informationDate | moment}}</small>
                                                     </span>
                                                         <router-link :to="'/contracts/' + contract._id" class="btn-stroke xs button-primary">
                                                             Ver más
@@ -251,7 +265,7 @@
                                                 <div>
                                                     <span>
                                                         <label>{{contract.totalOrMaxAmount | currency}}</label>
-                                                        <small>{{contract.informationDate}}</small>
+                                                        <small>{{contract.informationDate | moment}}</small>
                                                     </span>
                                                     <router-link :to="'/contracts/' + contract._id" class="btn-stroke xs button-primary">
                                                         Ver más
@@ -292,12 +306,15 @@
 
 <script>
     import MoreInfo from '@/components/general/MoreInfo';
+    import moment from 'moment';
     
     import {mapState} from 'vuex';
     
     const storeModule = 'publicSuppliers';
     import PublicFilter from '@/components/filters/PublicFilter.vue';
-    
+    import ModalAutoDismiss from '@/components/catalogs/ModalAutoDismiss.vue';
+    import ModalAlert from '@/components/catalogs/ModalAlert.vue';
+
     export default {
         data() {
             return {
@@ -340,11 +357,14 @@
                 ],
                 storeModule : storeModule,
                 supplierId : undefined,
+                format: ""
             }
         },
         components: {
             MoreInfo,
-            PublicFilter
+            PublicFilter,
+            ModalAutoDismiss,
+            ModalAlert
         },
         computed: {
             ...mapState({
@@ -353,7 +373,8 @@
                 fiscalYears: state => state[storeModule].fiscalYears,
                 trimonths: state => state[storeModule].trimonths,
                 administrationPeriods: state => state[storeModule].administrationPeriods,
-                procedureTypes: state => state[storeModule].procedureTypes
+                procedureTypes: state => state[storeModule].procedureTypes,
+                lastQuery: state => state[storeModule].lastQuery,
             }),
             supplier() {
                 return this.detail.supplier || {};
@@ -371,7 +392,29 @@
                 return this.detail.noBid || [];
             },
         },
-        methods: {},
+        methods: {
+            copyUrlToClipBoard(){
+                const tempTextArea = document.createElement('textarea');
+                tempTextArea.value =  window.location.href;
+                document.body.appendChild(tempTextArea);
+                tempTextArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempTextArea);
+                tShow('Se ha copiado el enlace correctamente', 'info');
+
+            },
+            // modalAutoDismiss
+            openModalAndSetFormat(format){
+                this.format = format;
+                $('#modalAlertSuccess').modal('show');
+            },
+            downloadFile(withFilters){
+                $('#modalAutoDismiss').modal('show');
+                let filters = withFilters ? this.lastQuery : {};
+                this.$store.dispatch('publicSuppliers/downloadFile', {format:this.format,filters,isDetail:true, id:this.supplier._id});
+
+            }
+        },
         created() {
         },
         beforeMount() {
@@ -384,6 +427,16 @@
             this.$store.dispatch(`${storeModule}/getTrimonths`,this.supplierId);
             this.$store.dispatch(`${storeModule}/getAdministrationPeriods`,this.supplierId);
             this.$store.dispatch(`${storeModule}/getProcedureTypes`,this.supplierId);
+        },
+        filters: {
+            moment: function (date) {
+                moment.locale('es');
+                if(!date){
+                    return
+                }
+                return moment(date).format('DD MMMM YYYY')
+            }
         }
+
     }
 </script>

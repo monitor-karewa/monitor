@@ -39,10 +39,10 @@ let DataLoadSchema = new Schema({
     filename: {
         
     },
-    details: [{
-        type: Schema.Types.ObjectId,
-        ref: 'DataLoadDetail'
-    }],
+    // details: [{
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'DataLoadDetail'
+    // }],
     summary: {
         newContractsCount: {
             type: Number,
@@ -91,13 +91,13 @@ DataLoadSchema.statics.toJson = function (dataLoad) {
     return {
         _id: dataLoad._id,
         filename: dataLoad.filename,
-        details: dataLoad.details,
+        // details: dataLoad.details,
         uploadedBy: `${uploadedBy.name} ${uploadedBy.lastName}`,
         createdAt: dataLoad.createdAt
     };
 };
 
-DataLoadSchema.statics.getSummary = function (dataLoad) {
+DataLoadSchema.statics.getSummary = function (dataLoad, details) {
     //TODO: Calculate summary
 
     let newContractsCount = 0;
@@ -113,7 +113,7 @@ DataLoadSchema.statics.getSummary = function (dataLoad) {
     let addedSuppliers = {};
     let addedAdministrativeUnits = {};
 
-    dataLoad.details.forEach((dataLoadDetail) => {
+    details.forEach((dataLoadDetail) => {
 
         let rowInfo = dataLoadDetail.data;
         if (rowInfo.summary.hasErrors) {
@@ -226,7 +226,7 @@ DataLoadSchema.statics.dataLoadInfo = function (currentOrganizationId, callback)
                         dataLoadInfo.current = {
                             _id: currentDataLoad._id,
                             summary: currentDataLoad.summary,
-                            uploadedBy: `${currentUploadedBy.name} ${currentUploadedBy.lastName}`,
+                            uploadedBy: `${currentUploadedBy.name || ''} ${currentUploadedBy.lastName || ''}`,
                             createdAt: currentDataLoad.createdAt
                         };
                     }
@@ -235,7 +235,7 @@ DataLoadSchema.statics.dataLoadInfo = function (currentOrganizationId, callback)
                     if (recentDataLoad) {
                         let recentUploadedBy = recentDataLoad.uploadedBy || {};
                         dataLoadInfo.recent = {
-                            recentUploadedBy: `${recentUploadedBy.name} ${recentUploadedBy.lastName}`,
+                            recentUploadedBy: `${recentUploadedBy.name || ''} ${recentUploadedBy.lastName || ''}`,
                             recentConfirmedAt: recentDataLoad.confirmedAt
                         };
                     }
@@ -246,8 +246,8 @@ DataLoadSchema.statics.dataLoadInfo = function (currentOrganizationId, callback)
         });
 };
 
-DataLoadSchema.statics.confirm = function (dataLoad, confirmCallback) {
-    let details = dataLoad.details || [];
+DataLoadSchema.statics.confirm = function (dataLoad, details, confirmCallback) {
+    details = dataLoad.details || [];
     
     async.map(details, (detail, callback) => {
         
