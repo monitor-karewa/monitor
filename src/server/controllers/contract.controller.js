@@ -140,7 +140,7 @@ exports.list = (req, res, next) => {
     utils.addLookupRefToAggregatePipeline(aggregate, AdministrativeUnit, 'administrativeUnit');
     utils.addLookupRefToAggregatePipeline(aggregate, AdministrativeUnit, 'organizerAdministrativeUnit');
     utils.addLookupRefToAggregatePipeline(aggregate, AdministrativeUnit, 'areaInCharge');
-    utils.addLookupRefToAggregatePipeline(aggregate, AdministrativeUnit, 'applicantAdministrativeUnitUnit');
+    utils.addLookupRefToAggregatePipeline(aggregate, AdministrativeUnit, 'applicantAdministrativeUnit');
     
     aggregate.append({
         "$match": query
@@ -179,7 +179,7 @@ exports.list = (req, res, next) => {
             docAsObjWithVirtuals.administrativeUnit = doc.administrativeUnit;
             docAsObjWithVirtuals.organizerAdministrativeUnit = doc.organizerAdministrativeUnit;
             docAsObjWithVirtuals.areaInCharge = doc.areaInCharge;
-            docAsObjWithVirtuals.applicantAdministrativeUnitUnit = doc.applicantAdministrativeUnitUnit;
+            docAsObjWithVirtuals.applicantAdministrativeUnit = doc.applicantAdministrativeUnit;
             
             docsWithVirtualsAndRefs.push(docAsObjWithVirtuals);
         }
