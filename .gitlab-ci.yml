@@ -56,7 +56,7 @@ prod:
       function docker_build() {
         case ${CI_COMMIT_REF_SLUG} in
           master)
-            echo " \
+            echo -e " \
       API_HOST=$API_HOST_BETA \n \
       API_PORT=$API_PORT_BETA \n \
       VUE_APP_API_HOST=$VUE_APP_API_HOST_BETA \n \
@@ -70,7 +70,7 @@ prod:
             ;;
 
           *)
-            echo " \
+            echo -e " \
       API_HOST=$API_HOST_PROD \n \
       API_PORT=$API_PORT_PROD \n \
       VUE_APP_API_HOST=$VUE_APP_API_HOST_PROD \n \
