@@ -170,7 +170,7 @@ exports.save = (req, res, next) => {
 
             //Send an email to set password
             let emailClient = new EmailClient(user.email, "Monitor Karewa | Bienvenido a la plataforma", req);
-            emailClient.sendResetPasswordEmail(user, token);
+            emailClient.sendResetPasswordEmail(user, token, true);
 
             return res.json({
                 "error": false,

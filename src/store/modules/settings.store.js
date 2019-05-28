@@ -7,6 +7,8 @@ const state = {
         description: '',
         contactLocation: '',
         contactEmail: '',
+        address: '',
+        schedule: ''
     }
 };
 
@@ -32,7 +34,6 @@ const actions = {
                 'Content-Type': 'multipart/form-data'
             }
         }, (result) => {
-            console.log('result', result);
             if (result.data && !result.data.error && result.data.data) {
                 tShow(i18n.t('settings.change-cover.update.success'), 'danger');
                 session.set('currentOrganizationCover', result.data.data.cover);
@@ -46,8 +47,8 @@ const actions = {
         });
     },
     
-    CHANGE_SETTINGS ({commit}, {session, title, description, contactLocation, contactEmail}) {
-        settingsApi.changeSettings({title, description, contactLocation, contactEmail}, (result) => {
+    CHANGE_SETTINGS ({commit}, {session, title, description, contactLocation, contactEmail, address, schedule}) {
+        settingsApi.changeSettings({title, description, contactLocation, contactEmail, address, schedule}, (result) => {
             if (result.data && !result.data.error && result.data.data) {
                 tShow(i18n.t('settings.change-settings.update.success'), 'success');
 
@@ -87,11 +88,13 @@ const actions = {
 };
 
 const mutations = {
-    SETTINGS_UPDATED (state, {title, description, contactLocation, contactEmail}) {
+    SETTINGS_UPDATED (state, {title, description, contactLocation, contactEmail, address, schedule}) {
         state.settings.title = title;
         state.settings.description = description;
         state.settings.contactLocation = contactLocation;
         state.settings.contactEmail = contactEmail;
+        state.settings.address = address;
+        state.settings.schedule= schedule;
     }
 };
 
