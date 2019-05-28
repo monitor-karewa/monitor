@@ -95,12 +95,9 @@ prod:
         echo -e "Host karewa\n\tHostName $KAREWA_HOST_PROD\n\tPort $KAREWA_PORT_PROD\n\tUser $KAREWA_USER_PROD\nStrictHostKeyChecking no\n\n" > ~/.ssh/config
         eval `ssh-agent -s`
         ssh-add ~/.ssh/id_rsa
-        echo -e "ssh -C karewa 'docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}'"
-        ssh -C karewa 'docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}'
-        echo -e "ssh -C karewa 'docker-compose up -d'"
-        ssh -C karewa 'docker-compose up -d'
-        echo -e "ssh -C karewa 'docker image prune -f'"
-        ssh -C karewa 'docker image prune -f'
+        ssh karewa 'docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}'
+        ssh karewa 'docker-compose up -d'
+        ssh karewa 'docker image prune -f'
       }
 
       function heroku_deploy() {
