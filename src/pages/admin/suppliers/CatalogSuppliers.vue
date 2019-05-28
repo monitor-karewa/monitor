@@ -20,7 +20,7 @@
             <div>
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.name.placeholder')" v-model="entry.name" />
+                        <input type="text" class="form-control fg-input" :placeholder="$t('suppliers.new.name.placeholder')" v-model="entry.name"  @input="delayTouch($v.entry.name)"/>
                         <label class="fg-label">{{$t('suppliers.new.name.label')}}
                             <small></small>
                             <br/>
@@ -130,7 +130,13 @@
                 name: {
                     required,
                     minLength: minLength(2),
-                    maxLength: maxLength(100)
+                    maxLength: maxLength(100),
+                    validName: (value) => {
+                        if (value == null || value === undefined || value === "") {
+                            return true
+                        }
+                        return (/^[A-Z\sÑ]+$/).test(value);
+                    }
                 },
                 rfc: {
                     required,
@@ -148,9 +154,16 @@
                if(!this.$v.entry.name.required){
                    return "El nombre del Proveedor es requerido"
                }
-               if(!this.$v.entry.name.minLength || !this.$v.entry.name.maxLength){
-                   return `Debe estar entre ${this.$v.entry.name.$params.minLength.min} y ${this.$v.entry.name.$params.maxLength.max}`
+               if(!this.$v.entry.name.minLength){
+                   return `La longitud mínima es ${this.$v.entry.name.$params.minLength.min} caracteres`
                }
+               if(!this.$v.entry.name.maxLength){
+                   return `La longitud mínima es ${this.$v.entry.name.$params.minLength.min} caracteres`
+               }
+
+               if(!this.$v.entry.name.validName){
+                    return "El nombre debe estar en mayúsculas y no debe contener tildes ni caracteres especiales"
+                }
             },
             rfcErrorMessage(){
                if(!this.$v.entry.rfc.required){
@@ -201,10 +214,13 @@
             bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
                 this.clearEntry();
                 this.entry._id = entry._id;
+
                 this.entry.name = entry.name;
                 this.$v.entry.name.$touch();
+
                 this.entry.rfc = entry.rfc;
                 this.$v.entry.rfc.$touch();
+
                 this.entry.notes = entry.notes;
             });
             bus.$on(storeModule+DOC_UPDATED, ()=>{
