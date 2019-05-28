@@ -49,6 +49,13 @@ const displayFormEnumDict = {
     ],
 };
 
+
+const propertiesEnum = ['totalAmount','minAmount','maxAmount','totalOrMaxAmount','supplier','organizerAdministrativeUnit','applicantAdministrativeUnit']
+const operatorEnum = ['EQUAL','GREATER','GREATER_EQUAL','LESS','LESS_EQUAL','NOT_EQUAL'];
+const typesEnum = ['REF','STRING','NUMBER'];
+const variablesEnum =  ["$MTG", "$MGLP", "$MGAD", "$MGIR", "$NTC", "$NCSF", "$MADEM", "$MTAD", "$NTP", "$NPEPE", "$NP80E", "$NPEPCP", "$NCDPT", "$NIDPT", "$NCPJA", "$NFXXVII"];
+
+
 const displayFormEnum = Object.keys(displayFormEnumDict);
 
 
@@ -114,6 +121,49 @@ const FormulaSchema = new Schema({
     }
 });
 
+const FilterSchema = new Schema({
+    variableAbbreviation:{
+        type:String,
+        enum:variablesEnum,
+        required:[true, 'No se asigno la abreviación de la variable al filtro']
+    },
+    propertyName:{
+        type:String,
+        enum:propertiesEnum,
+        required:[true, 'No se agrego la propiedad al filtro']
+    },
+    propertyType:{
+        type:String,
+        enum:typesEnum,
+        required:[true, 'El filtro no cuenta con tipo de propiedad']
+    }, //Add validator for every type of filter (normalProperty, references)
+    operator:{
+        type:String,
+        required:[true, 'No se agrego el operador al filtro'],
+        default:'EQUAL',
+        enum:operatorEnum
+    },
+    onModel:{
+        type:String,
+        required:function () {
+            return this.propertyType == 'REF'
+        }
+    },
+    reference:{
+        type: Schema.Types.ObjectId,
+        refPath:'onModel',
+        required:[ function(){
+            return this.propertyType == 'REF'
+        }, 'No se selecciono la opción del filtro']
+    },
+    value:{
+        type:String,
+        required:[function(){
+            return this.propertyType !== 'REF'
+        }, 'No se selecciono el valor del filtro']
+    }
+});
+
 CalculationSchema.add({
         organization: {
             type: Schema.Types.ObjectId,
@@ -163,7 +213,9 @@ CalculationSchema.add({
             required : true,
             default : false
         },
-        scale:[ScaleSchema]
+        scale:[ScaleSchema],
+        filters:[FilterSchema]
+
     }
 );
     CalculationSchema.delete = require("./schemas/deleted.schema").Deleted;
@@ -182,7 +234,6 @@ class CalculationClass {
 
     validateFormula() {
         console.log("formula", this.formula);
-        // $NPEPE +
         try {
             if (this.formula && this.formula.expression) {
                 let regex = "\\${1,2}[A-Z0-9]+";
@@ -190,7 +241,7 @@ class CalculationClass {
                 let value = math.eval(newExpression);
                 return  {error: false, isValid: true};
             } else {
-                console.log("skhjdfbgkhsh guabeh bguha");
+                return { error: true, isValid: false}
             }
 
         } catch (err) {

@@ -15,7 +15,7 @@ let variables = {
               $group:{_id:null, totalAmount:{ $sum : "$totalOrMaxAmount"}}
           },
           {
-              $project: { _id:0, result: "$totalOrMaxAmount", abbreviation: { $literal:"$MTG" } }
+              $project: { _id:0, result: "$totalAmount", abbreviation: { $literal:"$MTG" } }
           }
       ],
       queryDummy:[{
@@ -35,7 +35,7 @@ let variables = {
               $group:{_id:null, totalAmount:{ $sum : "$totalOrMaxAmount"}}
           },
           {
-              $project: { _id:0, result: "$totalOrMaxAmount", abbreviation: { $literal:"$MGLP" } }
+              $project: { _id:0, result: "$totalAmount", abbreviation: { $literal:"$MGLP" } }
           }
       ],
       queryDummy:[{
@@ -55,7 +55,7 @@ let variables = {
               $group:{_id:null, totalAmount:{ $sum : "$totalOrMaxAmount"}}
           },
           {
-              $project: { _id:0, result: "$totalOrMaxAmount", abbreviation: { $literal:"$MGAD" } }
+              $project: { _id:0, result: "$totalAmount", abbreviation: { $literal:"$MGAD" } }
           }
       ],
       queryDummy:[{
@@ -76,7 +76,7 @@ let variables = {
               $group:{_id:null, totalAmount:{ $sum : "$totalOrMaxAmount"}}
           },
           {
-              $project: { _id:0, result: "$totalOrMaxAmount", abbreviation: { $literal : "$MGIR"}}
+              $project: { _id:0, result: "$totalAmount", abbreviation: { $literal : "$MGIR"}}
           }
       ],
       queryDummy:[{
@@ -173,6 +173,9 @@ let variables = {
       query:[
           {
               $match : {}
+          },
+          {
+              $group: { _id:"$supplier" }
           },
           {
               $count: "noSuppliers"
@@ -402,7 +405,7 @@ let variables = {
       }]
   }),
   addOrganizationFilter : function(abbreviation,idOrganization){
-      this[abbreviation].query[0].match["organizerAdministrativeUnit"] = idOrganization
+      this[abbreviation].query[0].match["organization"] = idOrganization
   }
 };
 

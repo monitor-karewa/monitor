@@ -14,6 +14,8 @@ const {
 } = require('./../models/calculation.model');
 const Contracts = require('./../models/contract.model').Contract;
 const Organization = require('./../models/organization.model').Organization;
+const Supplier = require('./../models/supplier.model').Supplier;
+const AdministrativeUnit = require('./../models/administrativeUnit.model').AdministrativeUnit;
 const deletedSchema = require('./../models/schemas/deleted.schema');
 const variables = require('./../components/variablesSeed').variables;
 const async = require('async');
@@ -280,7 +282,8 @@ exports.validateFormula = (req, res, next) => {
         formula: req.body.formula,
         abbreviation : abbreviation,
         hasPercentScale : req.body.hasPercentScale,
-        scale : req.body.scale || []
+        scale : req.body.scale || [],
+        filters : req.body.filters || [],
     };
 
     //restarts value for validating tree
@@ -389,7 +392,9 @@ exports.save = (req, res, next) => {
                 //  Formula stuff
                 calculation.formula = req.body.formula;
                 calculation.scale = req.body.scale;
+                calculation.filters = req.body.filters;
                 calculation.hasPercentScale = req.body.hasPercentScale;
+
                 let calculationObjectIds = [];
                 for (let i = 0; i < calculation.formula.calculations.length; i++) {
                     calculationObjectIds.push(mongoose.Types.ObjectId(calculation.formula.calculations[i]._id));
@@ -463,12 +468,14 @@ exports.save = (req, res, next) => {
             abbreviation : req.body.abbreviation,
             notes : req.body.notes,
             scale : req.body.scale,
+            filter : req.body.filter,
             hasPercentScale : req.body.hasPercentScale,
         });
 
 
         //Formula stuff
         calculation.formula = req.body.formula;
+
         let calculationObjectIds = [];
         for (let i = 0; i < calculation.formula.calculations.length; i++) {
             calculationObjectIds.push(mongoose.Types.ObjectId(calculation.formula.calculations[i]._id));
@@ -528,6 +535,92 @@ exports.save = (req, res, next) => {
 
 
     }
+};
+
+let buildAggregateQuerysFromFilters = function(filters){
+    //$AND
+    let query = {};
+    let filtersMap = {};
+
+    filters.forEach((filter) => {
+        if(filtersMap[filter.propertyName] && filtersMap[filter.propertyName].count){
+            filtersMap[filter.propertyName].count = filtersMap[filter.propertyName].count + 1;
+        } else {
+            filtersMap[filter.propertyName] = {
+                count:1
+            }
+        }
+    });
+
+
+    filters.forEach((filter) => {
+       let matchFilter = {};
+
+       if(filtersMap[filter.propertyName].count > 1){
+           let logicalOperator = filter.propertyType == 'REF' ? '$or' : '$and';
+           if(filtersMap[filter.propertyName].logicalObj){
+               matchFilter = _createMatchFilter(filter);
+               filtersMap[filter.propertyName].logicalObj[logicalOperator].push(matchFilter)
+           } else {
+               filtersMap[filter.propertyName].logicalObj = {};
+               filtersMap[filter.propertyName].logicalObj[logicalOperator] = [];
+               matchFilter = _createMatchFilter(filter);
+               filtersMap[filter.propertyName].logicalObj[logicalOperator].push(matchFilter)
+           }
+           query = {...query, ...filtersMap[filter.propertyName].logicalObj}
+
+       } else {
+           matchFilter = _createMatchFilter(filter);
+           query = {...query, ...matchFilter}
+       }
+    });
+    return query
+};
+
+let _parseValue = function(value,type){
+    switch (type){
+        case 'REF':
+            return mongoose.Types.ObjectId(value);
+            break;
+        case 'NUMBER':
+            return Number(value);
+            break;
+        case 'STRING':
+            return String(value);
+            break;
+        default:
+            return String(value);
+    }
+};
+
+let _createMatchFilter = function(filter){
+    let matchFilter = {};
+    matchFilter[filter.propertyName] = {};
+    matchFilter[filter.propertyName][_getOperator(filter.operator)] = filter.propertyType == 'REF' ? _parseValue(filter.reference, filter.propertyType) : _parseValue(filter.value, filter.propertyType);
+    return matchFilter;
+};
+
+let _getOperator = function(wordOperator){
+   switch (wordOperator){
+       case 'EQUAL':
+           return "$eq";
+           break;
+       case 'GREATER':
+           return "$gt";
+           break;
+       case 'GREATER_EQUAL':
+           return "$gte";
+           break;
+       case 'LESS':
+           return "$lt";
+           break;
+       case 'LESS_EQUAL':
+           return "$lte";
+           break;
+       case 'NOT_EQUAL':
+           return "$ne";
+           break;
+   }
 };
 
 let validateFormula = function(cache, formula) {
@@ -615,7 +708,14 @@ let  processCalculation = function(cache, calculation, mainCallback){
             queries:[],
             abbreviation:[]
         };
+
+
+
         calculation.formula.variables.forEach((item) => {
+            let filters = calculation.filters.filter(f => { return f.variableAbbreviation == item.abbreviation });
+            let matchQuery = buildAggregateQuerysFromFilters(filters);
+            let query = variables[item.abbreviation].query;
+            query[0].$match = {...query[0].$match, ...matchQuery};
             aggregatePromises.queries.push(Contracts.aggregate(variables[item.abbreviation].query));
             aggregatePromises.abbreviation.push(item.abbreviation);
         });
@@ -769,4 +869,71 @@ exports.delete = (req, res, next) => {
             
             
         });
+};
+
+/**
+ * Queries the possible suppliers fot this contract
+ */
+exports.retrieveSuppliers = (req, res, next) => {
+    let paginationOptions = pagination.getDefaultPaginationOptions(req);
+
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    let qByOrganization = Organization.qByOrganization(req);
+    let query = {...qNotDeleted, ...qByOrganization};
+
+    Supplier
+        .find(
+            query,
+            (err, result) => {
+                if (err) {
+                    logger.error(err, req, 'contract.controller#list', 'Error al consultar lista de Suppliers');
+                    return res.json({
+                        errors: true,
+                        message: res.__('general.error.unexpected-error')
+                    });
+                }
+
+                return res.json({
+                    errors: false,
+                    message: "",
+                    data: {
+                        docs: result,
+                    }
+                });
+            }
+        );
+};
+
+
+/**
+ * Queries the possible suppliers fot this contract
+ */
+exports.retrieveAdministrativeUnits = (req, res, next) => {
+    let paginationOptions = pagination.getDefaultPaginationOptions(req);
+
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    let qByOrganization = Organization.qByOrganization(req);
+    let query = {...qNotDeleted, ...qByOrganization};
+
+    AdministrativeUnit
+        .find(
+            query,
+            (err, result) => {
+                if (err) {
+                    logger.error(err, req, 'contract.controller#list', 'There was an error retrieving the Admiinstrative Units');
+                    return res.json({
+                        errors: true,
+                        message: res.__('general.error.unexpected-error')
+                    });
+                }
+
+                return res.json({
+                    errors: false,
+                    message: "",
+                    data: {
+                        docs: result,
+                    }
+                });
+            }
+        );
 };
