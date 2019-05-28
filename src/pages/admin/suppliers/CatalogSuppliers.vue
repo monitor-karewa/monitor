@@ -158,7 +158,7 @@
                    return `La longitud mínima es ${this.$v.entry.name.$params.minLength.min} caracteres`
                }
                if(!this.$v.entry.name.maxLength){
-                   return `La longitud mínima es ${this.$v.entry.name.$params.minLength.min} caracteres`
+                   return `La longitud máxima es ${this.$v.entry.name.$params.maxLength.max} caracteres`
                }
 
                if(!this.$v.entry.name.validName){
