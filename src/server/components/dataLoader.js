@@ -770,8 +770,10 @@ class ContractExcelReader {
                         };
 
                         obj[linkToField].refLinkedBy.push(refLinkInfo);
-                        sourceFieldInfo = obj[linkToField];
-                        targetFieldInfo = fieldInfo;
+                        // sourceFieldInfo = obj[linkToField];
+                        // targetFieldInfo = fieldInfo;
+                        sourceFieldInfo = fieldInfo;
+                        targetFieldInfo = obj[linkToField];;
                     } else {
                         //Wait for field to be processed
                         obj.pendingRefLinks = obj.pendingRefLinks || {};
@@ -817,7 +819,7 @@ class ContractExcelReader {
                             }
 
                             //Check match
-                            if (linkedDoc[refLinkInfo.shouldMatchField] !== targetFieldInfo.value) {
+                            if (linkedDoc[refLinkInfo.shouldMatchField] !== sourceFieldInfo.value) {
                                 //Current value does not match the linked ref's doc field
                                 sourceFieldInfo.errors.push({
                                     message: `El valor ingresado no coincide con el actualmente registrado [${linkedDoc[refLinkInfo.shouldMatchField]}].`
