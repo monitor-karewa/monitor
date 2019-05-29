@@ -648,6 +648,11 @@ class ContractExcelReader {
                                     if (highestJaccardValue >= JACCARD_VALUE_REF_MATCH_THRESHOLD) {
                                         let index = Number(bestJaccardMatch.source);
                                         doc = docs[index];
+                                        
+                                        //When an exact match was found, other matches don't matter
+                                        if (highestJaccardValue === 1) {
+                                            multipleMatchesErrorMessage = null;
+                                        }
                                     } else {
                                         
                                         //No good match was found
@@ -929,8 +934,10 @@ class ContractExcelReader {
         };
         if (rowInfo.minAmount.value && rowInfo.maxAmount.value) {
             rowInfo.contractType.value = 'OPEN';
+            rowInfo.contractType.valueToSaveOverride = 'OPEN';
         } else {
             rowInfo.contractType.value = 'NORMAL';
+            rowInfo.contractType.valueToSaveOverride = 'NORMAL';
         }
     }
 
@@ -1453,7 +1460,7 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell, 'totalAmount', Number, {
                         required: function (rowInfo, callback) {
                             let isRequired = rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'NORMAL';
-                            let errorMessage = 'El campo Monto mínimo es requerido al ser un contrato normal';
+                            let errorMessage = 'El campo Monto total es requerido al ser un contrato normal';
 
                             return callback(null, isRequired, errorMessage);
                         },
