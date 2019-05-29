@@ -1,19 +1,17 @@
-FROM node:8.16.0-alpine AS builder
+FROM node:8.16.0-alpine
 
 ENV NPM_CONFIG_LOGLEVEL=error
 ENV NODE_VERBOSE=false
 ENV NODE_MODULES_CACHE=true
 
-RUN env
-
 WORKDIR /usr/src/app
 
-COPY package*.json /usr/src/app/
-
-RUN npm install -s --no-progress
 RUN npm install -s --no-progress -g @vue/cli pm2
 
-COPY . /usr/src/app
+COPY package*.json /usr/src/app/
+RUN npm install
+
+COPY . .
 
 RUN npm run build
 
