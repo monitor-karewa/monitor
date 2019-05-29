@@ -698,7 +698,7 @@ let validateFormula = function(cache, formula) {
 
 
 let replaceVariableForValue = function(regex, expression, value = 0){
-    let newExpression = expression.replace(new RegExp(regex,"g"), value);
+    let newExpression = expression.replace(new RegExp(regex + "\\b","g"), value);
     return newExpression;
 };
 
@@ -771,7 +771,7 @@ let  processCalculation = function(req, cache, calculation, options = {}, mainCa
 
         calculation.formula.variables.forEach((item) => {
             let queryArray = variables[item.abbreviation].query;
-            let filters = calculation.filters.filter(f => { return f.variableAbbreviation == item.abbreviation });
+            let filters = calculation.filters ? calculation.filters.filter(f => { return f.variableAbbreviation == item.abbreviation }) : [];
             let matchQuery = buildAggregateQuerysFromFilters(filters);
             
             let query = {};
