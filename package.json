@@ -9,7 +9,7 @@
     "lint": "vue-cli-service lint",
     "dev": "vue-cli-service serve",
     "start": "supervisor -i public ./bin/www",
-    "prod": "NODE_ENV=production pm2 start ./bin/www",
+    "prod": "NODE_ENV=production pm2-runtime process.yml",
     "test:e2e": "vue-cli-service test:e2e"
   },
   "dependencies": {
