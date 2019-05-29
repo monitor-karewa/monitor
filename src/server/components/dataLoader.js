@@ -648,6 +648,11 @@ class ContractExcelReader {
                                     if (highestJaccardValue >= JACCARD_VALUE_REF_MATCH_THRESHOLD) {
                                         let index = Number(bestJaccardMatch.source);
                                         doc = docs[index];
+                                        
+                                        //When an exact match was found, other matches don't matter
+                                        if (highestJaccardValue === 1) {
+                                            multipleMatchesErrorMessage = null;
+                                        }
                                     } else {
                                         
                                         //No good match was found
