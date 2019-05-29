@@ -15,10 +15,73 @@ Card image on corner
             </div>
             <div class="right col-md-9 col-8">
                 <div class="links">
-                    <a href="" class="btn-raised xs button-accent hideresp"><i class="zmdi zmdi-plus"></i> Cargar datos</a>
-                    <a href="" class="btn-circle-icon hideresp m-l-30"><i class="zmdi zmdi-notifications-none"></i></a>
-                    <a href="" class="btn-circle-icon hideresp m-r-30"><i class="zmdi zmdi-settings"></i></a>
-                    <div class="topMenuDropdown dropdown">
+                    <a href="" class="btn-raised xs button-accent hideresp m-r-15"><i class="zmdi zmdi-plus"></i> Cargar datos</a>
+                    <div class="dropdown notifications-btn active">
+                        <button class="btn-circle-icon  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <i class="zmdi zmdi-notifications"></i>
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                            <h6 class="dropdown-header">Notificaciones</h6>
+                            <div class="dropdown-item">
+                                    <div class="user-img">
+                                        <div class="image">
+                                            <img src="@/assets/images/Demo/user-test.jpg" alt="">
+                                        </div>
+                                        <div class="status green">
+
+                                        </div>
+                                    </div>
+                                    <div class="info-container">
+                                        <h3 class="info">¡Se ha completado la carga de datos!</h3>
+                                        <div class="date">21/05/2019</div>
+                                    </div>
+                            </div>
+                            <div class="dropdown-item">
+                                    <div class="user-img">
+                                        <div class="image ">
+                                            <img src="@/assets/images/Demo/user-test.jpg" alt="">
+                                        </div>
+                                        <div class="status blue">
+
+                                        </div>
+                                    </div>
+                                    <div class="info-container">
+                                        <h3 class="info">Se detuvo la carga de datos por parte de <strong>Andrea Gomez</strong></h3>
+                                        <div class="date">21/05/2019</div>
+                                    </div>
+                            </div>
+                            <div class="dropdown-item">
+                                    <div class="user-img">
+                                        <div class="image">
+                                            <img src="@/assets/images/Demo/user-test.jpg" alt="">
+                                        </div>
+                                        <div class="status red">
+
+                                        </div>
+                                    </div>
+                                    <div class="info-container">
+                                        <h3 class="info">¡Se ha completado la carga de datos!</h3>
+                                        <div class="date">21/05/2019</div>
+                                    </div>
+                            </div>
+                            <div class="dropdown-item">
+                                    <div class="user-img">
+                                        <div class="image">
+                                            <img src="@/assets/images/Demo/user-test.jpg" alt="">
+                                        </div>
+                                        <div class="status red">
+
+                                        </div>
+                                    </div>
+                                    <div class="info-container">
+                                        <h3 class="info">¡Se ha completado la carga de datos!</h3>
+                                        <div class="date">21/05/2019</div>
+                                    </div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="#" class="btn-circle-icon hideresp"><i class="zmdi zmdi-settings"></i></a>
+                    <div class="topMenuDropdown dropdown m-l-15">
                         <button class="dropdown-toggle" type="button" id="dropdownUserMenu" data-toggle="dropdown"
                                 aria-haspopup="true" aria-expanded="false">
                             <div>
@@ -29,7 +92,6 @@ Card image on corner
                         </button>
                         <div class="dropdown-menu" aria-labelledby="dropdownUserMenu">
                             <a href="" class="hideresp dropdown-item"> Cargar Datos </a>
-                            <a href="" class="hideresp dropdown-item"> Notificaciones </a>
                             <a href="" class="hideresp dropdown-item active"> Configuración </a>
                         </div>
                     </div>
