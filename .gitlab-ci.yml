@@ -84,7 +84,7 @@ prod:
             docker build \
               --iidfile imageid.txt \
               --pull \
-              --cache-from ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} \
+              --cache-from ${CI_REGISTRY_IMAGE}:master \
               -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
             docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
             docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} ${CI_REGISTRY_IMAGE}:latest
