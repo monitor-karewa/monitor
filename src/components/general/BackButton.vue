@@ -5,7 +5,7 @@
             <!--<br>-->
             <!--Sizes: class:"xs", no class: normal, class:"lg". Remove icon if no need.-->
         <!--</p>-->
-        <a @click="goBack" class="btn-outline"><i class="zmdi zmdi-long-arrow-left"></i> <strong> {{$t('general.back')}} </strong> </a>
+        <a @click="goBack" class="btn-outline goback-btn"><i class="zmdi zmdi-long-arrow-left"></i> <strong> {{$t('general.back')}} </strong> </a>
     </div>
 </template>
 
