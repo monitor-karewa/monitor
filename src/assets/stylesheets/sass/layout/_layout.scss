@@ -1175,6 +1175,32 @@ button {
       .notifications-btn {
         position: relative;
 
+        .empty-state {
+          float: left;
+          display: initial !important;
+          .empty-image {
+            width: 100%;
+            float: left;
+            margin-bottom: 11px;
+            img {
+              max-width: 190px;
+            }
+          }
+          .text {
+            width: 100%;
+            float: left;
+            font-size: 12px;
+            font-weight: 500;
+            font-style: normal;
+            font-stretch: normal;
+            line-height: 2;
+            letter-spacing: normal;
+            text-align: center;
+            color:#6a7296;
+            margin-bottom: 10px;
+          }
+        }
+
         &.active {
           i {
             color: #eb6262;
@@ -1567,6 +1593,7 @@ button {
 .page-view {
 
   .goback-btn {
+    color: rgb(69, 78, 123) !important;
     i {
       margin-right: 12px;
       font-size: 32px;

@@ -78,6 +78,15 @@ Card image on corner
                                         <div class="date">21/05/2019</div>
                                     </div>
                             </div>
+                            <div class="dropdown-item empty-state">
+                                    <div class="empty-image">
+                                        <img src="@/assets/images/Emptystates/empty-state-box.svg" alt="">
+                                    </div>
+                                    <br>
+                                    <div class="text">
+                                        No tienes notificaciones
+                                    </div>
+                            </div>
                         </div>
                     </div>
                     <a href="#" class="btn-circle-icon hideresp"><i class="zmdi zmdi-settings"></i></a>
