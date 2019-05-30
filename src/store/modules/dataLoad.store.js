@@ -167,6 +167,7 @@ const actions = {
             link.setAttribute('download', `monitor-karewa-validaciones-contratos.xlsx`);
             document.body.appendChild(link);
             link.click();
+            bus.$emit('dataLoad/VALIDATIONS_DOWNLOADED');
         });
     },
     DOWNLOAD_PLANTILLA: () => {

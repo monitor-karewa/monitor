@@ -197,8 +197,19 @@
                         <!--<button class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR-->
                             <!--VALIDACIONES-->
                         <!--</button>-->
-                        <a @click.prevent="downloadValidations()" target="_blank" class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR
+                        <a @click.prevent="downloadValidations()" v-if="!loadingValidations" target="_blank" class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR
                             VALIDACIONES
+                        </a>
+
+                        <a  class="btn-stroke button-accent m-0-auto b-shadow-none btn-loading" v-if="loadingValidations">
+                            <div class="m-r-10">
+                                <svg class="spinner" width="17px" height="17px" viewBox="0 0 66 66"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33"
+                                            cy="33" r="30"></circle>
+                                </svg>
+                            </div>
+                            Descargando...
                         </a>
                     </div>
                     <div class="card">
@@ -329,7 +340,8 @@
                     messageIgnoreErrors: 'data-load.confirm.modal.confirm-operation-ignore-errors',
                     confirmationQuestion: 'data-load.confirm.modal.confirm-operation.question'
                 },
-                busListenerSet: false
+                busListenerSet: false,
+                loadingValidations: false
             }
         },
         components: {
@@ -518,6 +530,7 @@
                 //noop
             },
             downloadValidations() {
+                this.loadingValidations = true;
                 this.$store.dispatch('dataLoad/DOWNLOAD_VALIDATIONS');
             },
         },
@@ -532,6 +545,10 @@
                         this.canceled();
                     }
                 });
+                bus.$on('dataLoad/VALIDATIONS_DOWNLOADED',()=>{
+                    this.loadingValidations = false;
+                })
+
             }
             
             this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO');
