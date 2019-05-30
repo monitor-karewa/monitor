@@ -45,6 +45,8 @@ const mutations = {
     },
     SET_NOTIFICATION_DATA:(state, {data}) =>{
         state.notifications = data.data;
+        console.log("data");
+        console.log(data);
     }
 };
 

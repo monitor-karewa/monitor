@@ -127,7 +127,8 @@ exports.infoValues= (req, res, next) => {
 exports.notifications= (req, res, next) => {
     let qNotDeleted = deletedSchema.qNotDeleted();
     let qByOrganization = Organization.qByOrganization(req);
-    let query = {...qByOrganization, ...qNotDeleted};
+    let currentUserId = req.user._id;
+    let query = {...qByOrganization, ...qNotDeleted, seenUsers:{$nin:[currentUserId]}};
     Notification
         .find(query)
         .exec((err, notifications) => {
