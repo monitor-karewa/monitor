@@ -248,7 +248,7 @@ DataLoadSchema.statics.dataLoadInfo = function (currentOrganizationId, callback)
 };
 
 DataLoadSchema.statics.confirm = function (dataLoad, details, confirmCallback) {
-    details = dataLoad.details || [];
+    details = details || [];
     
     async.map(details, (detail, callback) => {
         
