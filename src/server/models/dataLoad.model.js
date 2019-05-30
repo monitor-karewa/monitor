@@ -227,7 +227,8 @@ DataLoadSchema.statics.dataLoadInfo = function (currentOrganizationId, callback)
                             _id: currentDataLoad._id,
                             summary: currentDataLoad.summary,
                             uploadedBy: `${currentUploadedBy.name || ''} ${currentUploadedBy.lastName || ''}`,
-                            createdAt: currentDataLoad.createdAt
+                            createdAt: currentDataLoad.createdAt,
+                            fileName :currentDataLoad.filename
                         };
                     }
                     

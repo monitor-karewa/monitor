@@ -18,9 +18,9 @@
         <template v-if="format === 'date'">
             {{info.value | moment}}
         </template>
-        <i class="zmdi zmdi-alert-triangle c-error f-14" :class="tippyErrorsClassName" v-if="hasErrors"></i>
-        <i class="zmdi zmdi-alert-triangle c-info f-14" :class="tippyInfosClassName" v-if="hasInfos"></i>
-        <i class="zmdi zmdi-alert-triangle c-success f-14" :class="tippyCreateDocClassName" v-if="willCreateDoc"></i>
+        <i class="zmdi zmdi-alert-circle c-error f-16" :class="tippyErrorsClassName" v-if="hasErrors"></i>
+        <i class="zmdi zmdi-alert-circle c-info f-16" :class="tippyInfosClassName" v-if="hasInfos"></i>
+        <i class="zmdi zmdi-check-circle c-success f-16" :class="tippyCreateDocClassName" v-if="willCreateDoc"></i>
     </td>
 </template>
 
@@ -111,19 +111,19 @@
                 if (!this.hasErrors) {
                     return '';
                 }
-                return this.info.errors.map(e => `<span class="f-14"><i class="zmdi zmdi-alert-triangle c-error f-14"></i> ${e.message}</span>`).join('<br/>\n');
+                return this.info.errors.map(e => `<span class="f-14"><i class="zmdi zmdi-alert-circle c-error f-16"></i> ${e.message}</span>`).join('<br/>\n');
             },
             tippyInfosContent() {
                 if (!this.hasInfos) {
                     return '';
                 }
-                return this.info.infos.map(e => `<span class="f-14"><i class="zmdi zmdi-alert-triangle c-info f-14"></i> ${e.message}</span>`).join('<br/>\n');
+                return this.info.infos.map(e => `<span class="f-14"><i class="zmdi zmdi-alert-circle c-info f-16"></i> ${e.message}</span>`).join('<br/>\n');
             },
             tippyCreateDocContent() {
                 if (!this.willCreateDoc) {
                     return '';
                 }
-                return `<span class="f-14"><i class="zmdi zmdi-alert-triangle c-success f-14"></i> Se creará un nuevo registro</span>`;
+                return `<span class="f-14"><i class="zmdi zmdi-check-circle c-success f-16"></i> Se creará un nuevo registro</span>`;
             }
         },
         props: {
