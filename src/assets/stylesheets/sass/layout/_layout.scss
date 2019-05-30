@@ -490,9 +490,12 @@ button {
 /* END CARDS */
 
 .container-footer {
-  position: fixed;
+  position: absolute;
+  width: 100%;
+  padding: 0 !important;
+  // position: fixed;
   bottom: 0;
-  padding: 30px 60px 30px 300px;
+  // padding: 30px 60px 30px 300px;
   width: 100%;
   left: 0;
   display: inline-grid;
@@ -1574,19 +1577,42 @@ button {
 
 
 /* MAIN CONTAINER */
+
+.contract-section {
+  .modal {
+    .modal-dialog {
+      width: 90%;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      .modal-content {
+        min-height: 600px;
+        height: 90vh;
+        max-height: 90vh;
+        overflow: auto;
+        .modal-body {
+          max-height: initial;
+        }
+      }
+    }
+  }
+}
 #main #content {
   position: fixed;
   overflow-y: scroll;
   overflow-x: hidden;
   height: 100%;
   width: 100%;
-  padding: 85px 60px 75px 300px;
+  padding: 85px 60px 30px 300px;
 
   .container {
     padding: 0;
     margin: 0;
     width: 100%;
     max-width: 100%;
+    padding-bottom: 30px;
+    position: relative;
+    min-height: 100%;
   }
 }
 

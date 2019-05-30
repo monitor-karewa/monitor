@@ -116,7 +116,7 @@
 
 
             <div class="row m-b-50 m-t-80">
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-4 d-grid">
                     <div class="card-img-corner">
                         <h1>Configuración</h1>
                         <p>Aquí puedes configurar tu logo, colores, descripción de tu organización…</p>
@@ -127,7 +127,7 @@
                         <img class="img-fluid" src="@/assets/images/Cards/corner-setting.svg" alt=""/>
                     </div>
                 </div>
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-4 d-grid">
                     <div class="card-img-corner">
                         <h1>Contratos</h1>
                         <p>Aquí puedes crear nuevos contratos o editarlos …</p>
@@ -138,7 +138,7 @@
                         <img class="img-fluid" src="@/assets/images/Cards/corner-document.svg" alt=""/>
                     </div>
                 </div>
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-4 d-grid">
                     <div class="card-img-corner">
                         <h1>Registra tus proveedores</h1>
                         <p>Aquí puedes registrar tus nuevos proveedores o editarlos…</p>
