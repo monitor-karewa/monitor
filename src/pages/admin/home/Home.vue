@@ -244,7 +244,7 @@
         },
         mounted() {
             if (this.hasAccessToDataLoad) {
-                this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO');
+                this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO', true);
                 this.$store.dispatch('adminHomeStore/LOAD_GENERAL_INFO_DASHBOARD');
             }
             $(document).ready(function () {

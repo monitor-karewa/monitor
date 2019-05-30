@@ -17,7 +17,7 @@ const actions = {
     LOAD_GENERAL_INFO_DASHBOARD: ({commit}) => {
         dashboardApi.getCurrentInfo({}, (response) => {
             if (!response.data.error && response.data && response.data.data) {
-                commit('SET_CURRENT_DATA_LOAD_INFO', {data: response.data.data});
+                commit('SET_CURRENT_DATA_LOAD_INFO_DASHBOARD', {data: response.data.data});
             }
         }, (err) => {
             //Error trying to load current data load info
@@ -26,7 +26,7 @@ const actions = {
 }
 
 const mutations = {
-    SET_CURRENT_DATA_LOAD_INFO: (state, {data}) =>{
+    SET_CURRENT_DATA_LOAD_INFO_DASHBOARD: (state, {data}) =>{
         state.visitsCount = data.visitsCount;
         state.contractsCount = data.contractsCount;
         state.proveedoresCount = data.proveedoresCount;
