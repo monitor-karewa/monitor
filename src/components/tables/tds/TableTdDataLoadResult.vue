@@ -5,6 +5,10 @@
             'c-info': hasInfos,
             'c-success': willCreateDoc
         }">
+        <i class="zmdi zmdi-alert-circle c-error f-16" :class="tippyErrorsClassName" v-if="hasErrors"></i>
+        <i class="zmdi zmdi-alert-circle c-info f-16" :class="tippyInfosClassName" v-if="hasInfos"></i>
+        <i class="zmdi zmdi-check-circle c-success f-16" :class="tippyCreateDocClassName" v-if="willCreateDoc"></i>
+        &nbsp
         <template v-if="!format || format === 'string'">
             <span :class="tippyTooltipClassName">{{info.value | ellipsify}}</span>
         </template>
@@ -18,9 +22,6 @@
         <template v-if="format === 'date'">
             {{info.value | moment}}
         </template>
-        <i class="zmdi zmdi-alert-circle c-error f-16" :class="tippyErrorsClassName" v-if="hasErrors"></i>
-        <i class="zmdi zmdi-alert-circle c-info f-16" :class="tippyInfosClassName" v-if="hasInfos"></i>
-        <i class="zmdi zmdi-check-circle c-success f-16" :class="tippyCreateDocClassName" v-if="willCreateDoc"></i>
     </td>
 </template>
 
