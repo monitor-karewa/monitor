@@ -282,6 +282,13 @@
 }
 
 @media screen and (max-width: 991px) {
+
+	.floating-title-panel.big {
+		display: initial;
+		h1 {
+			margin-bottom: 20px !important;
+		}
+	}
 	.container-panel-info {
 		display: flex;
 		flex-wrap: wrap;
