@@ -2,7 +2,9 @@
     <div>
         <AdminMainSection>
             <BackButton/>
-            <OrganizationSelector/>
+            <div class="col-12">
+                <OrganizationSelector/>
+            </div>
         </AdminMainSection>
     </div>
 </template>

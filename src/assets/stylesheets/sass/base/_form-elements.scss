@@ -233,6 +233,39 @@ html:not(.ie9) .select.fg-line:before {
 
 .basic-select, .border-select {
 
+  &.scroll-select {
+    
+    .dropdown-menu {
+      padding-top: 0;
+      padding-bottom: 0;
+      border: none;
+      max-height: 250px !important;
+      &.inner {
+        overflow: auto !important;
+
+      &::-webkit-scrollbar {
+        width: 10px;
+        height: 0;
+      }
+    
+      &::-webkit-scrollbar-track {
+        box-shadow: inset 0 0 10px 10px #dadce5;
+        border: solid 3px transparent;
+        border-radius: 10px;
+      }
+    
+      &::-webkit-scrollbar-thumb {
+        box-shadow: inset 0 0 10px 10px #b4b8ca;
+        border: solid 3px transparent;
+        border-radius: 10px;
+      }
+
+      }
+    }
+  }
+  .bs-placeholder {
+    color:#b4b8ca !important;
+  }
   .fg-line {
     border-bottom: 1px solid;
 
@@ -253,10 +286,12 @@ html:not(.ie9) .select.fg-line:before {
         border-color: transparent !important;
         padding-top: 2px;
         padding-bottom: 2px;
+        padding-left: 0;
+
         //margin-top: 6px;
 
         &::after {
-          opacity: 0;
+          // opacity: 0;
         }
         &:focus {
           outline: none !important;
@@ -264,7 +299,7 @@ html:not(.ie9) .select.fg-line:before {
         }
 
         .filter-option {
-          padding: 0 30px 0 15px !important;
+          padding: 0 30px 0 0px !important;
           display: flex;
           align-items: center;
 
@@ -280,6 +315,7 @@ html:not(.ie9) .select.fg-line:before {
         padding-top: 0;
         padding-bottom: 0;
         border: none;
+        
 
         .disabled {
           opacity: 0.6;
@@ -317,9 +353,9 @@ html:not(.ie9) .select.fg-line:before {
         }
 
         .bs-searchbox {
-          padding-top: 10px;
+          padding-top: 5px;
           padding-left: 40px;
-          padding-bottom: 10px;
+          padding-bottom: 5px;
 
           &:before {
             content: '\f1c3';
@@ -327,7 +363,7 @@ html:not(.ie9) .select.fg-line:before {
             position: absolute;
             font-size: 22px;
             left: 15px;
-            top: 7px;
+            top: 9px;
             font-weight: 700;
           }
 
