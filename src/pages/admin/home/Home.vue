@@ -81,7 +81,7 @@
                     <div class="floating-title-table">
                         <h2>Visitas al monitor</h2>
                     </div>
-                    <div class="card min-h-580px h-100">
+                    <div class="card min-h-520px p-b-20 h-100">
                         <div class="switcher-tabs">
                             <div class="tab">
                                 <input checked="" class="checkboxtab" id="checkbox1" v-on:click="changeFilterVisitasMonitor('MONTHS')" name="checkbox-tabs-group"
@@ -108,7 +108,7 @@
                     <div class="floating-title-table">
                         <h2>Información más consultada</h2>
                     </div>
-                    <div class="card min-h-580px h-100">
+                    <div class="card min-h-520px p-b-20 h-100 donut-graph-admin">
                         <VisitasRutasChart></VisitasRutasChart>
                     </div>
                 </div>
