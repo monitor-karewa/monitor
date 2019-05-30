@@ -155,8 +155,8 @@ exports.getCalculationsForFormula = (req, res, next) => {
     // query["field"] = value;
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    let qByOrganization = Organization.qByOrganization(req);
-    query = {...query, ...qNotDeleted, ...qByOrganization};
+    // let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...qNotDeleted/*, ...qByOrganization*/};
 
     Calculation
         .find(

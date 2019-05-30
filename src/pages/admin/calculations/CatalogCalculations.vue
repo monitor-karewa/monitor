@@ -98,7 +98,7 @@
                           <!--class="c-error">{{$t(requiredErrorMessage, {field:$t('calculations.administration-period.label')})}}</span>-->
                 </div>
 
-                <div class="form-group fg-float subtitle" v-show="!entry.locked">
+                <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
                         <div class="input-radio-check col-md-12 p-0">
                             <div class=" check-container col-md-6">
@@ -939,6 +939,19 @@
             ...mapGetters(
                     storeModule , ['variablesObj','calculationsForFormula','formErrors']
             )
+        },
+        watch: {
+            //Refresh selects on variable change
+            variablesObj() {
+                this.$nextTick(() => {
+                    this.refreshSelect();
+                });
+            },
+            calculationsForFormula() {
+                this.$nextTick(() => {
+                    this.refreshSelect();
+                });
+            }
         },
         beforeMount(){
             this.$store.dispatch(`${storeModule}/fetchVariables`);

@@ -483,6 +483,7 @@ export default {
     //DataLoad
     "data-load.title-strong": "Carga de <strong>Datos</strong>",
     "data-load.title.description": "Puedes cargar una plantilla de excel o realizar una carga manual para cada dato.",
+    "data-load.title.current-description": "EL archivo <strong class='f-12 c-accent'>{fileName}</strong> se ha subido correctamente, a continuación puedes ver los resultados de los datos.",
     "data-load.data-load": "Carga Rápida",
     "data-load.data-load.recommended-for": "Recomendada para 20 o más registros",
     "data-load.manual-capture": "Carga Manual",
@@ -506,6 +507,7 @@ export default {
     "data-load.confirm.success": "Se ha confirmado la carga de datos correctamente.",
     "data-load.confirm.error.unexpected": "Ocurrió un error inesperado al intentar confirmar la carga de datos.",
     "data-load.confirm.error.no-data-load-in-progress": "La carga de datos no se encuentra disponible. Por favor recarga la página para actualizar la información.",
+    "data-load.back.button": "Volver a Resultados de Validación",
 
 
     //Calculations

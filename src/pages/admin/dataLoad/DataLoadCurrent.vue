@@ -1,14 +1,14 @@
 <template>
     <div>
         <AdminMainSection>
-            <BackButton />
-            <FloatingTitle title="data-load.title-strong" description="data-load.title.description"/>
+            <BackButton :label="showDetails ? 'data-load.back.button'  : ''" />
+            <FloatingTitle title="data-load.title-strong" description="data-load.title.current-description" :descriptionProp="current.fileName"/>
             <CardUploading v-show="uploading" :loading="uploading" :cancel="cancelUpload"/>
             <div class="row m-0 w-100" v-show="!uploading">
                 <div class="col-12 col-md-8 di-flex" v-if="!showDetails">
                     <div class="card w-100">
                         <div class="floating-text m-b-30">
-                            <h1>Resultados de la validación <!--<strong class="m-l-10 f-12 c-accent">(datos2018.xls)</strong>-->
+                            <h1>Resultados de la validación <strong class="m-l-10 f-12 c-accent">{{`(${current.fileName})`}}</strong>
                             </h1>
                             <p class="m-b-30">Para corregir los registros encontrados con errores, descarga
                                 el archivo generado, realiza las correcciones necesarias y súbelo
@@ -60,7 +60,7 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-md-8" v-if="showDetails">
+                <div class="col-12 col-md-12" v-if="showDetails">
                     <div class="card w-100">
                         <div class="card-header">
 
@@ -88,6 +88,7 @@
                                         <!--<th>Unidad Administrativa Solicitante<i class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>-->
                                         <!--<th class="text-align-r">Monto Total<i class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>-->
                                         <!--<th>Title Header<i class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>-->
+                                        <th></th>
                                         <th></th>
                                         <th>Tipo de procedimiento</th>
                                         <th>Categoría</th>
@@ -127,10 +128,11 @@
                                     <tbody>
                                     <!--<tr class="height-60" v-for="(rowInfo, rowInfoIndex) in filteredDataLoad" v-if="isRowInfoVisible(rowInfo)">-->
                                     <tr class="height-60" v-for="(dataLoadDetail, dataLoadDetailIndex) in paginatedDataLoad" v-if="isRowInfoVisible(dataLoadDetail.data)" :key="dataLoadDetail._id">
+                                        <td>{{dataLoadDetailIndex + 1}}</td>
                                         <td>
-                                            <i class="zmdi zmdi-alert-triangle c-info f-14" v-if="dataLoadDetail.data.summary.skipRow || dataLoadDetail.data.summary.hasInfos"></i>
-                                            <i class="zmdi zmdi-alert-triangle c-error f-14" v-if="dataLoadDetail.data.summary.hasErrors"></i>
-                                            <i class="zmdi zmdi-alert-triangle c-success f-14" v-if="!dataLoadDetail.data.summary.hasErrors || dataLoadDetail.data.summary.willCreateDoc"></i>
+                                            <i class="zmdi zmdi-alert-circle-o c-info f-16" v-if="dataLoadDetail.data.summary.skipRow || dataLoadDetail.data.summary.hasInfos"></i>
+                                            <i class="zmdi zmdi-alert-circle-o c-error f-16" v-if="dataLoadDetail.data.summary.hasErrors"></i>
+                                            <i class="zmdi zmdi-check-circle c-success f-16" v-if="!dataLoadDetail.data.summary.hasErrors && dataLoadDetail.data.summary.willCreateDoc"></i>
                                         </td>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="procedureType"/>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="category"/>
@@ -176,14 +178,14 @@
                     <div class="vertical-center" v-show="!filtering">
                         <!--<div class="floating-label-table info m-r-40">Omitidos (duplicados)</div>-->
                         <!--<div class="floating-label-table error">Registros con errores</div>-->
-                        <div class="floating-label-table m-r-40"><i class="zmdi zmdi-alert-triangle c-info f-14"></i> Omitidos (duplicados)</div>
-                        <div class="floating-label-table  m-r-40"><i class="zmdi zmdi-alert-triangle c-error f-14"></i> Registros con errores</div>
-                        <div class="floating-label-table "><i class="zmdi zmdi-alert-triangle c-success f-14"></i> Se crearán uno o más registros</div>
+                        <div class="floating-label-table m-r-40"><i class="zmdi zmdi-alert-circle-o c-info f-16"></i> Omitidos (duplicados)</div>
+                        <div class="floating-label-table  m-r-40"><i class="zmdi zmdi-alert-circle-o c-error f-16"></i> Registros con errores</div>
+                        <div class="floating-label-table "><i class="zmdi zmdi-check-circle c-success f-16"></i> Se crearán uno o más registros</div>
                     </div>
                 </div>
                 
                 
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-4" v-if="!showDetails">
                     <div class="card">
                         <div class="note-transparent error">
                             <i class="zmdi zmdi-alert-triangle"></i>
@@ -201,7 +203,7 @@
                     </div>
                     <div class="card">
                         <p class="f-12 c-plain_text principal-font-semibold text-align-c d-block m-b-15">
-                            Cargar archivo con correcciones</p>
+                            Cargar archivo con <br/> correcciones</p>
                         <!--<button class="btn-stroke button-accent m-0-auto b-shadow-none">CARGAR-->
                             <!--CORRECCIONES-->
                         <!--</button>-->
