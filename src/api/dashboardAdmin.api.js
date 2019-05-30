@@ -10,6 +10,11 @@ export default {
         return axios.get(`${base.baseUrl}/${namespace}/info-dashboard`, params)
             .then(onSuccess)
             .catch(onError);
-    }
+    },
+    getCurrentNotifications: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/${namespace}/notifications`, params)
+            .then(onSuccess)
+            .catch(onError);
+    },
 
 }

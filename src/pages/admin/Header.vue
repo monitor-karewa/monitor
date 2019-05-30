@@ -53,7 +53,8 @@
         },
         computed: {
             ...mapState({
-                currentUser: state => state.currentUser
+                currentUser: state => state.currentUser,
+                currentGeneralInfoInfo: state => state.adminHomeStore,
             }),
             permissions () {
                 return this.$session.get('permissions') || [];
@@ -69,6 +70,14 @@
                 $('.sidebar').addClass('small-sidebar');
                 $('.backdrop').addClass('active');
             });
+            this.$store.dispatch('adminHomeStore/RELOAD_NOTIFICATIONS');
+        },
+        sockets: {
+            connect: function () {
+            },
+            reloadNotification: function (data) {
+                this.$store.dispatch('adminHomeStore/RELOAD_NOTIFICATIONS');
+            }
         },
         methods: {
             logout () {

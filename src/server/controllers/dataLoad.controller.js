@@ -5,6 +5,7 @@ const ContractExcelWriter = require('./../components/dataLoader').ContractExcelW
 const DataLoad = require('./../models/dataLoad.model').DataLoad;
 const DataLoadDetail = require('./../models/dataLoadDetail.model').DataLoadDetail;
 const Organization = require('./../models/organization.model').Organization;
+const Notification = require('./../models/notification.model').Notification;
 
 const {
 
@@ -96,7 +97,6 @@ exports.upload = (req, res, next) => {
                 reader.readBuffer(req.file.buffer)
                     .then(({dataLoad, details}) => {
                         // console.log('dataLoad', dataLoad);
-                        
                         //Assign filename
                         dataLoad.organization = currentOrganizationId,
                         dataLoad.filename = req.file.originalname;
@@ -119,7 +119,12 @@ exports.upload = (req, res, next) => {
 
 
                             DataLoad.dataLoadInfo(currentOrganizationId, (err, dataLoadInfo) => {
-
+                                let notification = new Notification();
+                                notification.organization = currentOrganizationId;
+                                notification.createdUser = currentUserId;
+                                notification.message = "Se ha iniciado una carga de datos en la organización actual.";
+                                notification.seenUsers.push(currentUserId);
+                                notification.save();
                                 return res.json({
                                     error: false,
                                     //TODO: Success message
@@ -510,7 +515,12 @@ exports.cancelCurrent = (req, res, next) => {
                     //We just canceled/deleted the current DataLoad. To avoid race conditions, we ensure that the dataLoadInfo returned has no "current" value
                     logger.warn(null, req, 'dataLoad.controller#cancelCurrent', 'We just canceled/deleted the current DataLoad. To avoid race conditions, we ensure that the dataLoadInfo returned has no "current" value');
                     dataLoadInfo.current = null;
-                    
+                    let notification = new Notification();
+                    notification.organization = currentOrganizationId;
+                    notification.createdUser = currentUserId;
+                    notification.message = "Se ha cancelado el procesamiento actual de carga de datos de la organización actual";
+                    notification.seenUsers.push(currentUserId);
+                    notification.save();
                     return res.json({
                         error: false,
                         message: req.__('data-load.cancel.success'),
@@ -526,6 +536,7 @@ exports.cancelCurrent = (req, res, next) => {
 exports.confirmCurrent = (req, res, next) => {
 
     let currentOrganizationId = Organization.currentOrganizationId(req);
+    let currentUserId = req.user._id;
     
     DataLoad
         .findOne({
@@ -572,7 +583,12 @@ exports.confirmCurrent = (req, res, next) => {
                             
                             //To ensure no race conditions from reloading from the database, the current DataLoad is forced as undefined
                             dataLoadInfo.current = null;
-                            
+                            let notification = new Notification();
+                            notification.organization = currentOrganizationId;
+                            notification.createdUser = currentUserId;
+                            notification.message = "Se ha finalizado con éxito la carga de datos de la organización actual";
+                            notification.seenUsers.push(currentUserId);
+                            notification.save();
                             return res.json({
                                 error: false,
                                 data: dataLoadInfo

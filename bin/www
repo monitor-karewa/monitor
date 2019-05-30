@@ -28,6 +28,20 @@ app.set('port', port);
  */
 
 var server = http.createServer(app);
+const io = require('socket.io')(server);
+
+// io.adapter(redis({
+//   host: "127.0.0.1",
+//   port:6379
+// }));
+
+
+io.on('connection', function (socket) {
+  console.log("Connected User");
+  socket.on('new_notifications', function() {
+    socket.emit("reloadNotification");
+  });
+})
 
 /**
  * Listen on provided port, on all network interfaces.

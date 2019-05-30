@@ -218,7 +218,7 @@
                 </div>
             </div>
         </AdminMainSection>
-        <ModalDefault id="modal-confirm" :title="$t(modalProperties.title)" :store-module="storeModule" :action="modalProperties.action">
+        <ModalDefault id="modal-confirm" :title="$t(modalProperties.title)" :store-module="storeModule" :action="modalProperties.action" :reload-notifications="true">
             <div class="details-list">
                 <p class="text-centered m-b-20">{{$t(modalMessage, modalMessageParams)}}
                     <br/>
@@ -343,6 +343,10 @@
             CardUploading,
             ModalDefault
         },
+        sockets: {
+            connect: function () {
+            }
+        },
         watch: {
             showNoIssues() {
                 this.$store.dispatch('dataLoad/FILTER_CURRENT_DATA_LOAD', this.filters);
@@ -434,6 +438,7 @@
                 this.$store.dispatch('dataLoad/CANCEL_CURRENT_DATA_LOAD');
             },
             canceled () {
+                this.$socket.emit('new_notifications');
                 this.$router.push('/admin/data-load');
             },
             isRowInfoVisible (rowInfo) {

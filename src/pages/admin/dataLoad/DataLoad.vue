@@ -121,6 +121,10 @@
             CatalogHeader,
             CardUploading
         },
+        sockets: {
+            connect: function () {
+            }
+        },
         filters: {
             moment: function (date) {
                 return moment(date).format('MM/DD/YYYY');
@@ -160,7 +164,6 @@
                 }, (result) => {
                     this.setUploading(false);
                     Vue.$log.info('Response', result);
-                    
                     if (result.data.error) {
                         tShow(this.$t(result.data.message), 'danger');
                         
@@ -169,6 +172,8 @@
                             this.$store.commit('dataLoad/SET_CURRENT_DATA_LOAD_INFO', {dataLoadInfo: result.data.data});
                         }
                     } else {
+                        //Genera procedimiento para checar notificaciones.
+                        this.$socket.emit('new_notifications');
                         this.$store.commit('dataLoad/SET_CURRENT_DATA_LOAD_INFO', {dataLoadInfo: result.data.data});
                     }
                 }, (error) => {

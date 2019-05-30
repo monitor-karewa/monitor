@@ -1,6 +1,7 @@
 const {Organization} = require('./../models/organization.model');
 const {RouteLog} = require('./../models/routeLog.model');
 const {Contract} = require('./../models/contract.model');
+const {Notification} = require('./../models/notification.model');
 const {Supplier} = require('./../models/supplier.model');
 const {AdministrativeUnit} = require('./../models/administrativeUnit.model');
 const {Calculation} = require('./../models/calculation.model');
@@ -121,6 +122,27 @@ exports.infoValues= (req, res, next) => {
             }
         });
     })
+};
+
+exports.notifications= (req, res, next) => {
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    let qByOrganization = Organization.qByOrganization(req);
+    let query = {...qByOrganization, ...qNotDeleted};
+    Notification
+        .find(query)
+        .exec((err, notifications) => {
+            if(err){
+                return res.json({
+                    error: true,
+                    data: []
+                });
+            } else {
+                return res.json({
+                    error: false,
+                    data: notifications
+                });
+            }
+    });
 };
 
 exports.visitsByMonths = (req, res, next) => {
