@@ -19,19 +19,19 @@
                             <h1>
                                 Comparar Monitores
                             </h1>
-                            <div class="filter">
-                                <div class="filter-container">
-                                    <input class="input-search" type="text" name="" v-model="search"
-                                           placeholder="Busca Monitores o ingresa una dirección de un Monitor externo" @keyup.enter="searchOrganizations(search)"/>
-                                </div>
-                                <button class="filter-btn" type="button" name="button" @click="searchOrganizations(search)">Buscar</button>
-                            </div>
                             <div class="side-right">
                                 <a @click="copyUrlToClipBoard()" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
                                         class="zmdi zmdi-share"></i> Compartir</a>
                                 <!--<a href="" class="btn-raised button-accent text-capi m-l-10" tabindex=""><i-->
                                         <!--class="zmdi zmdi-download"></i> Descargar comparación</a>-->
                             </div>
+                        </div>
+                        <div class="filter m-b-20">
+                            <div class="filter-container">
+                                <input class="input-search" type="text" name="" v-model="search"
+                                        placeholder="Busca Monitores o ingresa una dirección de un Monitor externo" @keyup.enter="searchOrganizations(search)"/>
+                            </div>
+                            <button class="filter-btn" type="button" name="button" @click="searchOrganizations(search)">Buscar</button>
                         </div>
 
 
