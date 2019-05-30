@@ -648,6 +648,11 @@ class ContractExcelReader {
                                     if (highestJaccardValue >= JACCARD_VALUE_REF_MATCH_THRESHOLD) {
                                         let index = Number(bestJaccardMatch.source);
                                         doc = docs[index];
+                                        
+                                        //When an exact match was found, other matches don't matter
+                                        if (highestJaccardValue === 1) {
+                                            multipleMatchesErrorMessage = null;
+                                        }
                                     } else {
                                         
                                         //No good match was found
@@ -770,8 +775,10 @@ class ContractExcelReader {
                         };
 
                         obj[linkToField].refLinkedBy.push(refLinkInfo);
-                        sourceFieldInfo = obj[linkToField];
-                        targetFieldInfo = fieldInfo;
+                        // sourceFieldInfo = obj[linkToField];
+                        // targetFieldInfo = fieldInfo;
+                        sourceFieldInfo = fieldInfo;
+                        targetFieldInfo = obj[linkToField];;
                     } else {
                         //Wait for field to be processed
                         obj.pendingRefLinks = obj.pendingRefLinks || {};
@@ -817,7 +824,7 @@ class ContractExcelReader {
                             }
 
                             //Check match
-                            if (linkedDoc[refLinkInfo.shouldMatchField] !== targetFieldInfo.value) {
+                            if (linkedDoc[refLinkInfo.shouldMatchField] !== sourceFieldInfo.value) {
                                 //Current value does not match the linked ref's doc field
                                 sourceFieldInfo.errors.push({
                                     message: `El valor ingresado no coincide con el actualmente registrado [${linkedDoc[refLinkInfo.shouldMatchField]}].`
@@ -927,8 +934,10 @@ class ContractExcelReader {
         };
         if (rowInfo.minAmount.value && rowInfo.maxAmount.value) {
             rowInfo.contractType.value = 'OPEN';
+            rowInfo.contractType.valueToSaveOverride = 'OPEN';
         } else {
             rowInfo.contractType.value = 'NORMAL';
+            rowInfo.contractType.valueToSaveOverride = 'NORMAL';
         }
     }
 
@@ -1350,6 +1359,18 @@ class ContractExcelReader {
                         match: {
                             regexStr: SUPPLIER_VALIDATION_REGEX_DICT.RFC
                         },
+                        required: function (rowInfo, callback) {
+
+                            let supplierNameDefined = rowInfo.supplierName.value && rowInfo.supplierName.value.length;
+                            if (supplierNameDefined && rowInfo.supplierName.shouldCreateDoc) {
+                                let isRequired = true;
+                                let errorMessage = "Este campo es requerido debido a que se creará un nuevo Proveedor.";
+
+                                return callback(null, isRequired, errorMessage);
+                            }
+
+                            return callback(null, false);
+                        },
                         refLink: {
                             linkToField: 'supplierName',
                             shouldMatchField: 'rfc'
@@ -1439,7 +1460,7 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell, 'totalAmount', Number, {
                         required: function (rowInfo, callback) {
                             let isRequired = rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'NORMAL';
-                            let errorMessage = 'El campo Monto mínimo es requerido al ser un contrato normal';
+                            let errorMessage = 'El campo Monto total es requerido al ser un contrato normal';
 
                             return callback(null, isRequired, errorMessage);
                         },
@@ -1679,6 +1700,11 @@ class ContractExcelReader {
                             };
                         });
                         
+                        let currentDataLoadId = newDataLoad._id;
+                        if (_this.idDataLoad) {
+                            currentDataLoadId = _this.idDataLoad;
+                        }
+                        
                         /*
                         if (_this.idDataLoad) {
                             DataLoad
@@ -1705,63 +1731,82 @@ class ContractExcelReader {
                         let dataLoad = new DataLoad({
                             data: objs
                          */
-                        
-                        DataLoadDetail.insertMany(dataLoadDetailsArray, (err, savedDetails) => {
-                            
+
+
+                        //currentDataLoadId
+
+                        DataLoadDetail.find({
+                            dataLoad: currentDataLoadId
+                        }).exec((err, currentDetails) => {
                             if (err) {
-                                logger.error(err, null, 'dataLoader#readBuffer', 'Error trying to save DataLoadDetails in bulk');
+                                logger.error(err, null, 'dataLoader#readBuffer', 'Error trying to query existing DataLoadDetail(s)');
                             }
+                            currentDetails = currentDetails || [];
                             
-                            // dataLoadDetails
-                            // let dataLoadDetailsIds = [];
-                            // if (savedDetails && savedDetails.length) {
-                            //     dataLoadDetailsIds = savedDetails.map((dataLoadDetail) => {
-                            //         return dataLoadDetail._id;
-                            //     });
-                            // }
-
-
-                            if (_this.idDataLoad) {
-                                DataLoad
-                                    .findOne({
-                                        _id: _this.idDataLoad
-                                    })
-                                    .exec((err, dataLoad) => {
-                                        if (err) {
-                                            logger.error(err, null, 'dataLoader#readBuffer', 'Error trying to query existing DataLoad to update its details');
-                                        }
-                                        if (!dataLoad) {
-                                            let dataLoad = new DataLoad({
-                                                // details: dataLoadDetailsIds
-                                                // details: savedDetails
+                            
+                            DataLoadDetail.insertMany(dataLoadDetailsArray, (err, savedDetails) => {
+                                
+                                if (err) {
+                                    logger.error(err, null, 'dataLoader#readBuffer', 'Error trying to save DataLoadDetails in bulk');
+                                }
+                                
+                                // dataLoadDetails
+                                // let dataLoadDetailsIds = [];
+                                // if (savedDetails && savedDetails.length) {
+                                //     dataLoadDetailsIds = savedDetails.map((dataLoadDetail) => {
+                                //         return dataLoadDetail._id;
+                                //     });
+                                // }
+    
+    
+                                if (_this.idDataLoad) {
+                                    DataLoad
+                                        .findOne({
+                                            _id: _this.idDataLoad
+                                        })
+                                        .exec((err, dataLoad) => {
+                                            if (err) {
+                                                logger.error(err, null, 'dataLoader#readBuffer', 'Error trying to query existing DataLoad to update its details');
+                                            }
+                                            if (!dataLoad) {
+                                                logger.error(err, null, 'dataLoader#readBuffer', 'idDataLoad was defined but no DataLoad was found!');
+                                                let dataLoad = new DataLoad({
+                                                    // details: dataLoadDetailsIds
+                                                    // details: savedDetails
+                                                });
+                                                return resolve(dataLoad);
+                                            }
+                                            
+                                            let dataLoadDetailsIds = currentDetails.map((detail) => {
+                                                return mongoose.Types.ObjectId(detail._id);
                                             });
-                                            return resolve(dataLoad);
-                                        }
-                                        
-                                        let dataLoadDetailsIds = (dataLoad.details || []).map((detail) => {
-                                            return mongoose.Types.ObjectId(detail._id);
+    
+                                            DataLoadDetail
+                                                .deleteMany({_id: {$in: dataLoadDetailsIds}})
+                                                .exec((err, results) => {
+                                                    if (err) {
+                                                        logger.error(err, null, 'dataLoader#readBuffer', 'Error trying to delete obsolete DataLoadDetail from db, unused details may me kept in the database.');
+                                                    }
+    
+                                                    logger.debug(null, null, '', 'results (from deletion): %j', results);
+    
+                                                    //Overwrite with new details
+                                                    // dataLoad.details = savedDetails;
+                                                    return resolve({dataLoad: dataLoad, details: savedDetails});
+                                                });
+                                            
                                         });
-
-                                        DataLoadDetail
-                                            .deleteMany({_id: {$in: dataLoadDetailsIds}})
-                                            .exec((err, results) => {
-                                                if (err) {
-                                                    logger.error(err, null, 'dataLoader#readBuffer', 'Error trying to delete obsolete DataLoadDetail from db, unused details may me kept in the database.');
-                                                }
-
-                                                logger.debug(null, null, '', 'results (from deletion): %j', results);
-
-                                                //Overwrite with new details
-                                                // dataLoad.details = savedDetails;
-                                                return resolve({dataLoad: dataLoad, details: savedDetails});
-                                            });
-                                    });
-                            } else {
-                                // newDataLoad.details = savedDetails;
-
-                                return resolve({dataLoad: newDataLoad, details: savedDetails});
-                            }
+                                } else {
+                                    // newDataLoad.details = savedDetails;
+    
+                                    return resolve({dataLoad: newDataLoad, details: savedDetails});
+                                }
+                            });
+                            
+                            
                         });
+                        
+                        
                         
                     });
 

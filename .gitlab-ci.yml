@@ -39,6 +39,8 @@ heroku:
 prod:
   stage:           deploy
   image:           alpine
+  variables:
+    GIT_STRATEGY:  none
   extends:         .devops
   script:
     - deploy_prod
@@ -56,30 +58,34 @@ prod:
       function docker_build() {
         case ${CI_COMMIT_REF_SLUG} in
           master)
-            echo " \
+            echo -e " \
       API_HOST=$API_HOST_BETA \n \
       API_PORT=$API_PORT_BETA \n \
       VUE_APP_API_HOST=$VUE_APP_API_HOST_BETA \n \
-      VUE_APP_API_PORT=$VUE_APP_API_PORT_BETA" \
-      > .env.production
+      VUE_APP_API_PORT=$VUE_APP_API_PORT_BETA" > .env.production
+            cat .env.production
 
             docker build \
               --iidfile imageid.txt \
-              --pull -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
+              --pull \
+              --cache-from ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} \
+              -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
             docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
             ;;
 
           *)
-            echo " \
-          API_HOST=$API_HOST_PROD \n \
-          API_PORT=$API_PORT_PROD \n \
-          VUE_APP_API_HOST=$VUE_APP_API_HOST_PROD \n \
-          VUE_APP_API_PORT=$VUE_APP_API_PORT_PROD" \
-          > .env.production
+            echo -e " \
+      API_HOST=$API_HOST_PROD \n \
+      API_PORT=$API_PORT_PROD \n \
+      VUE_APP_API_HOST=$VUE_APP_API_HOST_PROD \n \
+      VUE_APP_API_PORT=$VUE_APP_API_PORT_PROD" > .env.production
+            cat .env.production
 
             docker build \
               --iidfile imageid.txt \
-              --pull -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
+              --pull \
+              --cache-from ${CI_REGISTRY_IMAGE}:master \
+              -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
             docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
             docker tag ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} ${CI_REGISTRY_IMAGE}:latest
             docker push ${CI_REGISTRY_IMAGE}:latest
@@ -95,9 +101,9 @@ prod:
         echo -e "Host karewa\n\tHostName $KAREWA_HOST_PROD\n\tPort $KAREWA_PORT_PROD\n\tUser $KAREWA_USER_PROD\nStrictHostKeyChecking no\n\n" > ~/.ssh/config
         eval `ssh-agent -s`
         ssh-add ~/.ssh/id_rsa
-        ssh -C karewa 'docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}'
-        ssh -C karewa 'docker-compose up -d'
-        ssh -C karewa 'docker image prune -f'
+        ssh -t karewa "docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}"
+        ssh -t karewa "KAREWA_VERSION=${CI_COMMIT_REF_SLUG} docker-compose up -d"
+        ssh -t karewa "docker image prune -f"
       }
 
       function heroku_deploy() {
