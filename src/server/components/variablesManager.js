@@ -6,6 +6,7 @@ class Variable {
         this.query = variableObj.query || {};
         this.filter = variableObj.filter || {};
         this.result = variableObj.result || 0;
+        this.complexFn = variableObj.complexFn;
     }
 
     static makeVariable(variableObj){

@@ -146,6 +146,26 @@ let getVariables = function() {
                 {$project:{ result : "$myCount", abbreviation : { $literal : "$NCADSM"}}
                 }]
         }),
+        $NAC: Variable.makeVariable({
+            name:"Numero de ampliaciones de contratos",
+            description:"Numero de contratos que se categorizan como ampliacion de contrato",
+            abbreviation:"$NAC",
+            query:[
+                {
+                    $match: { category:'EXTENSION'}
+                },
+                {
+                    $count: "noContracts"
+                },
+                {
+                    $project: { result:"$noContracts", abbreviation: { $literal : "$NAC" } }
+                }
+            ],
+            queryDummy:[{
+                $group:{_id: null, myCount: {$sum: 1 } }},
+                {$project:{ result : "$myCount", abbreviation : { $literal : "$NCADSM"}}
+                }]
+        }),
         $NCAD: Variable.makeVariable({
             name:"Numero de contratos bajo adjudicaciones directas",
             description:"Numero de contratos públicos de la organización bajo adjudicaciones directas",
@@ -229,10 +249,10 @@ let getVariables = function() {
                 {$project:{ result : "$myCount", abbreviation : { $literal : "$NPEPE"}}
                 }]
         }),
-        $NP80E: Variable.makeVariable({
-            name:"Número de proveedores que concentran el 80% del gasto ejercido",
-            description:"Número de proveedores que concentran el 80% del gasto ejercido",
-            abbreviation:"$NP80E",
+        $NPCGE: Variable.makeVariable({
+            name:"Número de proveedores que concentran el 40% del gasto ejercido",
+            description:"Número de proveedores que concentran el 40% del gasto ejercido",
+            abbreviation:"$NPCGE",
             query:[
                 {
                     $match: {}
@@ -254,7 +274,8 @@ let getVariables = function() {
                 },
                 {
                     $addFields:{
-                        resultOfDivition:{ $divide: ["$suppliersAmounts","$totalAmount"]}
+                        resultOfDivition:{ $divide: ["$suppliersAmounts.amount","$totalAmount"]},
+                        isComplex:true
                     }
                 },
                 {
@@ -262,22 +283,22 @@ let getVariables = function() {
                         supplier: "$suppliersAmounts.supplier",
                         amount: "$suppliersAmounts.amount",
                         avgOfTotal : { $multiply:[100, "$resultOfDivition"] },
-                        // total80Percent : { $multiply:["$totalAmount", 0.8]},
-                        isComplex: true,
-                        abbreviation:{ $literal: "$NP80E"}
+                        // total40Percent : { $multiply:["$totalAmount", 0.8]},
+                        isComplex: 1,
+                        abbreviation:{ $literal: "$NPCGE"}
                     }
                 }
             ],
             queryDummy:[{
                 $group:{_id: null, myCount: {$sum: 1 } }},
-                {$project:{ result : "$myCount", abbreviation : { $literal : "$NP80E"}}
+                {$project:{ result : "$myCount", abbreviation : { $literal : "$NPCGE"}}
                 }],
             complexFn: function (docs, abbreviation) {
                 if(docs && docs.length){
-                    // let total80Percent = docs[0].total80Percent;
+                    // let total40Percent = docs[0].total40Percent;
                     let totalSuppliers = 0;
                     let sumAvg = 0;
-                    while(sumAvg < 80){
+                    while(sumAvg < 40){
                         sumAvg += docs[totalSuppliers].avgOfTotal;
                         totalSuppliers++;
                     }
