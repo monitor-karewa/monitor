@@ -91,38 +91,38 @@
                                         <th></th>
                                         <th></th>
                                         <th>Tipo de procedimiento</th>
-                                        <th>Categoría</th>
+                                        <th>Materia</th>
                                         <th>Administración</th>
                                         <th>Ejercicio</th>
-                                        <th>Periodo</th>
-                                        <th>Id del Contrato</th>
+                                        <th>Periodo que se reporta </th>
+                                        <th>ID</th>
                                         <th>Partida</th>
                                         <th>Estado del procedimiento</th>
-                                        <th>Hipervínculo a convocatoria / invitaciones</th>
-                                        <th>Fecha de convocatoria / invitación</th>
-                                        <th>Descripción</th>
-                                        <th>Fecha junta de aclaraciones</th>
+                                        <th>Hipervínculo a la convocatoria o invitaciones</th>
+                                        <th>Fecha de la convocatoria o invitación</th>
+                                        <th>Descripción de las obras, bienes o servicios</th>
+                                        <th>Fecha en la que se celebró la junta de aclaraciones</th>
                                         <th>Hipervínculo al fallo de Junta de Aclaraciones</th>
                                         <th>Hipervínculo al documento de la Presentación de Propuestas</th>
-                                        <th>Nombre del contratista</th>
+                                        <th>Nombre completo del o los contratista(s) elegidos</th>
                                         <th>RFC</th>
                                         <th>Unidad administrativa convocante</th>
                                         <th>Unidad administrativa solicitante</th>
                                         <th>Centralizada / Descentralizada</th>
                                         <th>Número identificador del contrato</th>
                                         <th>Fecha del contrato</th>
-                                        <th>Monto total c/impuestos</th>
-                                        <th>Monto mínimo*</th>
-                                        <th>Monto máximo*</th>
-                                        <th>Monto total / máximo</th>
+                                        <th>Monto total del contrato con impuestos incluidos</th>
+                                        <th>Monto mínimo, en su caso</th>
+                                        <th>Monto máximo, en su caso</th>
+                                        <th>Monto total o Monto máximo, en su caso</th>
                                         <th>Hipervínculo al documento del contrato y anexos</th>
                                         <th>Área responsable de la información</th>
                                         <th>Fecha de actualización</th>
                                         <th>Notas</th>
                                         <th>Notas Monitor Karewa</th>
-                                        <th>Fecha de obtención de datos</th>
-                                        <th>¿Excede límite de adj. directas?</th>
-                                        <th>Monto excedente sobre límite de adj. directa</th>
+                                        <th>Fecha de obtención de los datos</th>
+                                        <th>Adjudicaciones Directas que exceden el límite</th>
+                                        <th>Monto que excede el límite de la Adjudicación Directa</th>
                                     </tr>
                                     </thead>
                                     <tbody>
