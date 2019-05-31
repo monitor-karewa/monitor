@@ -3,14 +3,14 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "serve": "vue-cli-service serve",
-    "build": "NODE_ENV=production SKIP_JOB_MANAGER=true vue-cli-service build --verbose",
-    "test": "vue-cli-service test:e2e --url localhost:8080",
-    "lint": "vue-cli-service lint",
-    "dev": "vue-cli-service serve",
+    "serve": " serve",
+    "build": "NODE_ENV=production SKIP_JOB_MANAGER=true  build --verbose",
+    "test": " test:e2e --url localhost:8080",
+    "lint": " lint",
+    "dev": " serve",
     "start": "supervisor -i public ./bin/www",
-    "prod": "NODE_ENV=production pm2-runtime process.yml",
-    "test:e2e": "vue-cli-service test:e2e"
+    "prod": "NODE_ENV=production node node_modules/pm2/bin/pm2-runtime process.yml",
+    "test:e2e": " test:e2e"
   },
   "dependencies": {
     "acorn-dynamic-import": "^4.0.0",
@@ -51,6 +51,7 @@
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "pdfmake": "^0.1.56",
+    "pm2": "^3.5.1",
     "pug": "2.0.0-beta11",
     "register-service-worker": "^1.6.2",
     "request": "^2.88.0",
