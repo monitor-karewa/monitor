@@ -128,12 +128,8 @@
                                     <tbody>
                                     <!--<tr class="height-60" v-for="(rowInfo, rowInfoIndex) in filteredDataLoad" v-if="isRowInfoVisible(rowInfo)">-->
                                     <tr class="height-60" v-for="(dataLoadDetail, dataLoadDetailIndex) in paginatedDataLoad" v-if="isRowInfoVisible(dataLoadDetail.data)" :key="dataLoadDetail._id">
-                                        <td>{{dataLoadDetailIndex + 1}}</td>
-                                        <td>
-                                            <i class="zmdi zmdi-alert-circle-o c-info f-16" v-if="dataLoadDetail.data.summary.skipRow || dataLoadDetail.data.summary.hasInfos"></i>
-                                            <i class="zmdi zmdi-alert-circle-o c-error f-16" v-if="dataLoadDetail.data.summary.hasErrors"></i>
-                                            <i class="zmdi zmdi-check-circle c-success f-16" v-if="!dataLoadDetail.data.summary.hasErrors && dataLoadDetail.data.summary.willCreateDoc"></i>
-                                        </td>
+                                        <td>{{dataLoadDetail.rowIndex}}</td>
+                                        <TableTdDataLoadStatus :data="dataLoadDetail.data"></TableTdDataLoadStatus>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="procedureType"/>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="category"/>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="administration"/>
@@ -197,8 +193,19 @@
                         <!--<button class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR-->
                             <!--VALIDACIONES-->
                         <!--</button>-->
-                        <a @click.prevent="downloadValidations()" target="_blank" class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR
+                        <a @click.prevent="downloadValidations()" v-if="!loadingValidations" target="_blank" class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR
                             VALIDACIONES
+                        </a>
+
+                        <a  class="btn-stroke button-accent m-0-auto b-shadow-none btn-loading" v-if="loadingValidations">
+                            <div class="m-r-10">
+                                <svg class="spinner" width="17px" height="17px" viewBox="0 0 66 66"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33"
+                                            cy="33" r="30"></circle>
+                                </svg>
+                            </div>
+                            Descargando...
                         </a>
                     </div>
                     <div class="card">
@@ -280,6 +287,7 @@
 //    import TableHeaderButton from '@/components/tables/headers/TableHeaderButton';
     import TableHeaderFilters from '@/components/tables/headers/TableHeaderFilters';
     import TableTdDataLoadResult from '@/components/tables/tds/TableTdDataLoadResult';
+    import TableTdDataLoadStatus from '@/components/tables/tds/TableTdDataLoadStatus';
     import Pagination from '@/components/catalogs/Pagination.vue';
 
     import CardUploading from '@/components/files/CardUploading';
@@ -329,7 +337,8 @@
                     messageIgnoreErrors: 'data-load.confirm.modal.confirm-operation-ignore-errors',
                     confirmationQuestion: 'data-load.confirm.modal.confirm-operation.question'
                 },
-                busListenerSet: false
+                busListenerSet: false,
+                loadingValidations: false
             }
         },
         components: {
@@ -343,7 +352,8 @@
             TableTdDataLoadResult,
             Pagination,
             CardUploading,
-            ModalDefault
+            ModalDefault,
+            TableTdDataLoadStatus
         },
         watch: {
             showNoIssues() {
@@ -518,6 +528,7 @@
                 //noop
             },
             downloadValidations() {
+                this.loadingValidations = true;
                 this.$store.dispatch('dataLoad/DOWNLOAD_VALIDATIONS');
             },
         },
@@ -532,6 +543,10 @@
                         this.canceled();
                     }
                 });
+                bus.$on('dataLoad/VALIDATIONS_DOWNLOADED',()=>{
+                    this.loadingValidations = false;
+                })
+
             }
             
             this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO');

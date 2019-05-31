@@ -56,7 +56,6 @@ const actions = {
     LOAD_CURRENT_DATA_LOAD_INFO: ({commit}, isFromDashboard) => {
         dataLoadApi.getCurrentInfo({}, (response) => {
             if (!response.data.error && response.data && response.data.data) {
-                console.log("dataLoad.store#59");
                 commit('SET_CURRENT_DATA_LOAD_INFO', {dataLoadInfo: response.data.data, isFromDashboard});
                 // commit('SET_PAGE_AND_PAGINATE', {page: 1});
             }
@@ -97,7 +96,6 @@ const actions = {
             if (response.data.error) {
                 tShow(i18n.t(response.data.message), 'danger');
             } else {
-                console.log("dataLoad.store#100");
                 commit('SET_CURRENT_DATA_LOAD_INFO', {dataLoadInfo: response.data.data});
                 tShow(i18n.t(response.data.message), 'success');
             }
@@ -150,7 +148,6 @@ const actions = {
             if (response.data.error) {
                 tShow(i18n.t('data-load.confirm.error.unexpected'), 'danger');
             } else {
-                console.log("dataLoad.store#153");
                 commit('SET_CURRENT_DATA_LOAD_INFO', {dataLoadInfo: response.data.data});
                 // commit('SET_PAGE_AND_PAGINATE', {page: 1});
                 tShow(i18n.t('data-load.confirm.success'), 'success');
@@ -167,6 +164,7 @@ const actions = {
             link.setAttribute('download', `monitor-karewa-validaciones-contratos.xlsx`);
             document.body.appendChild(link);
             link.click();
+            bus.$emit('dataLoad/VALIDATIONS_DOWNLOADED');
         });
     },
     DOWNLOAD_PLANTILLA: () => {
