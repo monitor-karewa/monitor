@@ -359,7 +359,7 @@ let getVariables = function() {
                     $count: "noContracts"
                 },
                 {
-                    $project:{ results:"$noContracts", abbrevation:{ $literal : "$NCPJA" } }
+                    $project:{ results:"$noContracts", abbrevation:{ $literal : "$NCDPT" } }
                 }
             ],
             queryDummy:[{
@@ -378,7 +378,7 @@ let getVariables = function() {
                     $count: "noContracts"
                 },
                 {
-                    $project:{ results:"$noContracts", abbrevation:{ $literal : "$NCPJA" } }
+                    $project:{ results:"$noContracts", abbrevation:{ $literal : "$NIDPT" } }
                 }
             ],
             queryDummy:[{
@@ -417,7 +417,7 @@ let getVariables = function() {
                     $count: "noContracts"
                 },
                 {
-                    $project:{ results:"$noContracts", abbrevation:{ $literal : "$NCPJA" } }
+                    $project:{ results:"$noContracts", abbrevation:{ $literal : "$NFXXVII" } }
                 }
             ],
             queryDummy:[{
