@@ -14,10 +14,10 @@
                                 <input type="file" id="file" :ref="dataFileRef" v-on:change="handleFileUpload()" :accept="fileAccept" />
                             </button>
                         </div>
-                        <!--<div class="floating-text">-->
-                            <!--<h1>¿Cómo funciona?</h1>-->
-                            <!--<a href=""><p><strong class="c-accent">Revisa la guia rápida de uso aquí</strong></p></a>-->
-                        <!--</div>-->
+                        <div class="floating-text">
+                            <h1>¿Cómo funciona?</h1>
+                            <a href="https://gitlab.com/karewa/monitor/wikis/administrador/importador/Importador" target="_blank"><p><strong class="c-accent">Revisa la guia rápida de uso aquí</strong></p></a>
+                        </div>
                         <div class="floating-text">
                             <h1>{{$t('data-load.download-template')}}</h1>
                             <a @click.prevent="downloadPlantilla()" href="" target="_blank"><p><strong class="c-accent">{{$t('data-load.download-template.link')}}</strong></p></a>
@@ -99,16 +99,16 @@
                 return this.allowedMimeTypes.join(',');
             },
             recentConfirmedAt () {
-                if (!this.dataLoadInfo) {
+                if (!this.dataLoadInfo || !this.dataLoadInfo.recent) {
                     return new Date();
                 }
-                return this.dataLoadInfo.recentConfirmedAt || new Date();
+                return this.dataLoadInfo.recent.recentConfirmedAt || new Date();
             },
             recentUploadedBy () {
-                if (!this.dataLoadInfo) {
+                if (!this.dataLoadInfo || !this.dataLoadInfo.recent) {
                     return '';
                 }
-                return this.dataLoadInfo.recentUploadedBy || '';
+                return this.dataLoadInfo.recent.recentUploadedBy || '';
             },
             ...mapState({
                 dataLoadInfo: state => state.dataLoad.dataLoadInfo

@@ -40,6 +40,7 @@ import DataLoadCurrent from '@/pages/admin/dataLoad/DataLoadCurrent';
 import DataLoadIndex from '@/pages/admin/dataLoad/DataLoadIndex';
 import AdminSettings from '@/pages/admin/settings/Settings';
 import SelectOrganization from '@/pages/admin/settings/SelectOrganization';
+import ProfileUsers from '@/pages/admin/users/ProfileUsers';
 
 //Admin-Catalogs
 import AdminHome from '@/pages/admin/home/Home';
@@ -209,6 +210,12 @@ let router = new Router({
                     name: 'AdminUsers',
                     component: AdminUsers
                 },
+                {
+                    path: 'profile',
+                    name: 'ProfileUsers',
+                    component: ProfileUsers
+                },
+
                 {
                     path: 'administrative-units',
                     name: 'AdminAdministrativeUnits',

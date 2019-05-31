@@ -2630,10 +2630,77 @@ Card image on corner
                     <!-- END TOAST -->
 
                     <!-- TOOLTIPS -->
-                    <div class="row m-b-50">
-                        <h1 class="f-20 m-t-0 m-b-10 col-12">Tooltips</h1>
-                        <div class="col-12"></div>
+                    <div class=" m-b-50">
+                        <div class="col-12 card profile">
+                            <h1 class="c-primary f-14 principal-font-bold m-b-30">Imagen de perfil </h1>
+                            <div class="user-info">
+                                <div class="img-profile">
+                                    <img src="@/assets/images/Demo/default.svg" alt="">
+                                </div>
+                                <div class="w-100">
+                                    <div class="form-group fg-float">
+                                        <div class="fg-line basic-input">
+                                            <input type="text" class="form-control fg-input" placeholder="Placeholder">
+                                            <label class="fg-label">
+                                                Input label
+                                                <small>(small text)</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group fg-float">
+                                        <div class="fg-line basic-input">
+                                            <input type="text" class="form-control fg-input" placeholder="Placeholder">
+                                            <label class="fg-label">
+                                                Input label
+                                                <small>(small text)</small>
+                                            </label>
+                                        </div>
+                                    </div>
+                            <div class="col-12">
+                                <a href="" class="btn-stroke button-stroke m-l-5 m-r-5 m-b-15 float-left">CAMBIAR IMAGEN</a>
+                                <div class="float-right">
+                                <a href="" class="btn-stroke button-stroke m-l-5 m-r-5 m-b-15">DESCARTAR CAMBIOS</a>
+                                <a href="" class="btn-raised button-accent m-l-5 m-r-5 m-b-15">GUARDAR CAMBIOS</a>
+                                </div>
+                            </div>
+                                </div>
+                            </div>
+                            <div class="form-group fg-float">
+                                <div class="fg-line basic-input">
+                                    <input type="text" class="form-control fg-input" placeholder="Placeholder">
+                                    <label class="fg-label">
+                                        Input label
+                                        <small>(small text)</small>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group fg-float">
+                                <div class="fg-line basic-input">
+                                    <input type="text" class="form-control fg-input" placeholder="Placeholder">
+                                    <label class="fg-label">
+                                        Input label
+                                        <small>(small text)</small>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="form-group fg-float">
+                                <div class="fg-line basic-input">
+                                    <input type="text" class="form-control fg-input" placeholder="Placeholder">
+                                    <label class="fg-label">
+                                        Input label
+                                        <small>(small text)</small>
+                                    </label>
+                                </div>
+                            </div>
+                            <div class="col-12">
+                                <div class="float-right">
+                                <a href="" class="btn-stroke button-stroke m-l-5 m-r-5 m-b-15">DESCARTAR CAMBIOS</a>
+                                <a href="" class="btn-raised button-accent m-l-5 m-r-5 m-b-15">GUARDAR CAMBIOS</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
+                    
                     <!-- END TOOLTIPS -->
                 </div>
                 <!-- FOOTER ADMIN SECTION -->

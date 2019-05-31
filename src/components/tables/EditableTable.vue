@@ -2,7 +2,7 @@
     <div>
         <div class="row m-0 w-100">
             <div class="col-12">
-                <div class="card w-100">
+                <div class="card w-100 o-initial">
                     <div class="card-header">
                         <TableHeaderSearch :store-module="storeModule"/>
                         <TableHeaderButtonsWrapper>

@@ -282,6 +282,35 @@
 }
 
 @media screen and (max-width: 991px) {
+
+
+.profile {
+  .user-info {
+    display: initial;
+    .img-profile {
+			margin: auto;
+      width: 130px;
+      min-width: 130px;
+      height: 130px;
+			margin-right: auto;
+			margin-bottom: 30px;
+      img {
+        object-fit: contain;
+        height: 100%;
+        width: 100%;
+  
+      }
+    }
+
+  }
+}
+
+	.floating-title-panel.big {
+		display: initial;
+		h1 {
+			margin-bottom: 20px !important;
+		}
+	}
 	.container-panel-info {
 		display: flex;
 		flex-wrap: wrap;

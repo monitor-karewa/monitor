@@ -58,7 +58,9 @@
                     <div class="dropdown-menu" aria-labelledby="dropdownUserMenu">
                         <form>
                             <router-link to="/admin/select-organization" class="dropdown-item c-pointer">Seleccionar Organización</router-link>
+                            <router-link to="/admin/profile" class="dropdown-item c-pointer">Editar Perfil</router-link>
                             <a @click="logout" class="dropdown-item c-pointer">Cerrar sesión</a>
+
                         </form>
                     </div>
                 </div>

@@ -20,7 +20,11 @@ let DataLoadDetailSchema = new Schema({
         default: false,
         required: true
     },
-    data: {}
+    data: {},
+    rowIndex:{
+        type:Number,
+        required:true
+    }
 });
 
 //Agregar createdAt, modifiedAt automáticamente

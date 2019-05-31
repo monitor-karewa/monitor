@@ -56,7 +56,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group fg-float border-select m-0 p-0 col-lg-3 col-6">
+                        <div class="form-group fg-float border-select m-0 p-0 col-lg-3 col-12">
                             <div class="fg-line m-0">
                                 <select v-model="temp.administrativeUnit" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar administrativa"

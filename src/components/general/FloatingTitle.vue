@@ -6,7 +6,9 @@
         <div class="floating-title-form">
             <div class="side-left">
                 <h1 v-html="$t(title)"></h1>
-                <label v-html="$t(description)"></label>
+                <label v-if="!descriptionProp || !descriptionProp.length" v-html="$t(description)"></label>
+                <label v-if="descriptionProp && descriptionProp.length" v-html="$t(description,{fileName:descriptionProp})"></label>
+
             </div>
         </div>
     </div>
@@ -25,7 +27,8 @@
         },
         props: {
             title: String,
-            description: String
+            description: String,
+            descriptionProp: String
         }
     }
 </script>

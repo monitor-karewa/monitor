@@ -22,6 +22,20 @@
 	}
 }
 
+.donut-graph-admin {
+	svg {
+		overflow: initial !important;
+
+	}
+	foreignObject {
+		overflow: initial!important;
+
+	}
+	.apexcharts-legend {
+		bottom: -40px !important;
+	}
+}
+
 .buttons-right {
    display: flex;
    align-items: center;

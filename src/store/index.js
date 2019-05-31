@@ -8,6 +8,7 @@ import administrativeUnits from '@/store/modules/administrativeUnits.store';
 import contracts from '@/store/modules/contracts.store';
 import resources from '@/store/modules/resources.store';
 import users from '@/store/modules/users.store';
+import profileUsers from '@/store/modules/profileUsers.store';
 import calculations from '@/store/modules/calculations.store';
 import organizations from '@/store/modules/organizations.store';
 import dataLoad from '@/store/modules/dataLoad.store';
@@ -54,6 +55,7 @@ export default new Vuex.Store({
         contracts : contracts,
         resources : resources,
         users : users,
+        profileUsers : profileUsers,
         calculations : calculations,
         organizations : organizations,
         dataLoad: dataLoad,
