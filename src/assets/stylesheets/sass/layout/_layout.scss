@@ -1659,6 +1659,29 @@ button {
 }
 /* END MAIN CONTAINER */
 
+.profile {
+  .user-info {
+    display: flex;
+    width: 100%;
+    padding-bottom: 33px;
+    margin-bottom: 30px;
+    border-bottom: solid 1px transparentize(#454e7b, .8 );
+    .img-profile {
+      width: 180px;
+      min-width: 180px;
+      height: 180px;
+      margin-right: 35px;
+      img {
+        object-fit: contain;
+        height: 100%;
+        width: 100%;
+  
+      }
+    }
+
+  }
+}
+
 
 .neutral-width {
   width: 100%;
