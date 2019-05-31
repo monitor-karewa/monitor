@@ -6,8 +6,6 @@ ENV NODE_MODULES_CACHE=true
 
 WORKDIR /usr/src/app
 
-RUN npm install -s --no-progress -g @vue/cli pm2
-
 COPY package*.json /usr/src/app/
 
 RUN npm install
