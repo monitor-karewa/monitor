@@ -129,11 +129,7 @@
                                     <!--<tr class="height-60" v-for="(rowInfo, rowInfoIndex) in filteredDataLoad" v-if="isRowInfoVisible(rowInfo)">-->
                                     <tr class="height-60" v-for="(dataLoadDetail, dataLoadDetailIndex) in paginatedDataLoad" v-if="isRowInfoVisible(dataLoadDetail.data)" :key="dataLoadDetail._id">
                                         <td>{{dataLoadDetailIndex + 1}}</td>
-                                        <td>
-                                            <i class="zmdi zmdi-alert-circle-o c-info f-16" v-if="dataLoadDetail.data.summary.skipRow || dataLoadDetail.data.summary.hasInfos"></i>
-                                            <i class="zmdi zmdi-alert-circle-o c-error f-16" v-if="dataLoadDetail.data.summary.hasErrors"></i>
-                                            <i class="zmdi zmdi-check-circle c-success f-16" v-if="!dataLoadDetail.data.summary.hasErrors && dataLoadDetail.data.summary.willCreateDoc"></i>
-                                        </td>
+                                        <TableTdDataLoadStatus :data="dataLoadDetail.data"></TableTdDataLoadStatus>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="procedureType"/>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="category"/>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="administration"/>
@@ -291,6 +287,7 @@
 //    import TableHeaderButton from '@/components/tables/headers/TableHeaderButton';
     import TableHeaderFilters from '@/components/tables/headers/TableHeaderFilters';
     import TableTdDataLoadResult from '@/components/tables/tds/TableTdDataLoadResult';
+    import TableTdDataLoadStatus from '@/components/tables/tds/TableTdDataLoadStatus';
     import Pagination from '@/components/catalogs/Pagination.vue';
 
     import CardUploading from '@/components/files/CardUploading';
@@ -355,7 +352,8 @@
             TableTdDataLoadResult,
             Pagination,
             CardUploading,
-            ModalDefault
+            ModalDefault,
+            TableTdDataLoadStatus
         },
         watch: {
             showNoIssues() {
