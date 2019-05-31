@@ -92,8 +92,8 @@ let CalculationSchema = new Schema({});
 const ScaleSchema = new Schema({
    min:{
        type: Number,
-       min:[0,"El valor mínimo para el campo Min(%) es 0"],
-       max:[99,"El valor máximo para el campo Max(%) es 99"],
+       // min:[0,"El valor mínimo para el campo Min(%) es 0"],
+       // max:[99,"El valor máximo para el campo Max(%) es 99"],
        validate:{
            validator: function () {
                return this.min < this.max
@@ -103,8 +103,8 @@ const ScaleSchema = new Schema({
    },
    max:{
        type: Number,
-       min:[1, "El valor mínimo para el campo Max(%) es 1"],
-       max:[100, "El valor máximo para el campo Max(%) es 100"]
+       // min:[1, "El valor mínimo para el campo Max(%) es 1"],
+       // max:[100, "El valor máximo para el campo Max(%) es 100"]
    },
    value:{
        type: Number
