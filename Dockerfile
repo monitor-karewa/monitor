@@ -11,7 +11,6 @@ RUN npm install -s --no-progress -g @vue/cli pm2
 COPY package*.json /usr/src/app/
 
 RUN npm install
-RUN npm cache clear
 
 COPY . .
 
