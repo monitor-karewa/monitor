@@ -36,4 +36,24 @@ router.post('/delete', securityController.validatePermission(User.permission, 'd
  */
 router.post('/save-updated-docs', securityController.validatePermission(User.permission, 'edit'),  userController.saveUpdatedDocs);
 
+/**
+ * POST /updateProfile
+ * Guarda cambios en el perfil de usuario
+ */
+router.post('/updateProfileInfo', securityController.checkPermission(User.permission, 'edit'), userController.updateProfileInfo);
+
+
+/**
+ * POST /uploadProfilePicture
+ * Guarda la foto de perfil del usuario
+ */
+router.post('/uploadProfilePicture', securityController.checkPermission(User.permission, 'edit'), userController.beforeUpload, userController.uploadProfilePicture);
+
+
+/**
+ * POST /uploadProfilePicture
+ * Guarda la foto de perfil del usuario
+ */
+router.get('/getProfileInfo', securityController.checkPermission(User.permission, 'edit'), userController.getProfileInfo);
+
 module.exports = router;
