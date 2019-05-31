@@ -144,7 +144,9 @@ const actions = {
     },
     //Confirm current and save to database
     CONFIRM_CURRENT: ({commit}) => {
+        bus.$emit('dataLoad/CONFIRMATION_FINISHED', true);
         dataLoadApi.confirmCurrent({}, (response) => {
+            bus.$emit('dataLoad/CONFIRMATION_FINISHED', false);
             if (response.data.error) {
                 tShow(i18n.t('data-load.confirm.error.unexpected'), 'danger');
             } else {
