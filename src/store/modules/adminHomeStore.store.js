@@ -7,7 +7,8 @@ const state = {
     proveedoresCount : 0,
     unidadesCount : 0,
     calculosCount : 0,
-    notifications: []
+    notifications: [],
+    newNotifications:false
 };
 
 const getters = {
@@ -32,6 +33,13 @@ const actions = {
         }, (err) => {
             commit('SET_NOTIFICATION_DATA', {data: []});
         });
+    },
+    READ_NOTIFICATIONS:({commit}) => {
+        dashboardApi.readNotifications({}, (response) => {
+            commit('SET_NOTIFICATION_READ', {});
+        }, (err) => {
+            // commit('SET_NOTIFICATION_DATA', {data: []});
+        });
     }
 }
 
@@ -44,10 +52,16 @@ const mutations = {
         state.calculosCount = data.calculosCount;
     },
     SET_NOTIFICATION_DATA:(state, {data}) =>{
-        state.notifications = data.data;
-        console.log("data");
-        console.log(data);
-    }
+        state.notifications = data;
+        console.log("state.notifications");
+        console.log(state.notifications);
+        if(state.notifications && state.notifications.length>0){
+            state.newNotifications = true;
+        }
+    },
+    SET_NOTIFICATION_READ:(state, {}) =>{
+        state.newNotifications = false;
+    },
 };
 
 

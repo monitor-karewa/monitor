@@ -145,6 +145,31 @@ exports.notifications= (req, res, next) => {
             }
     });
 };
+exports.readNotifications= (req, res, next) => {
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    let qByOrganization = Organization.qByOrganization(req);
+    let currentUserId = req.user._id;
+    let query = {...qByOrganization, ...qNotDeleted, seenUsers:{$nin:[currentUserId]}};
+    Notification
+        .find(query)
+        .exec((err, notifications) => {
+            if(err){
+                return res.json({
+                    error: true,
+                    data: []
+                });
+            } else {
+                for (let i = 0; i < notifications.length; i++) {
+                    notifications[i].seenUsers.push(currentUserId);
+                    notifications[i].save()
+                }
+                return res.json({
+                    error: false,
+                    data: []
+                });
+            }
+    });
+};
 
 exports.visitsByMonths = (req, res, next) => {
     //Sacar los primeros dos meses

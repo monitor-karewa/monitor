@@ -29,6 +29,10 @@ let NotificationSchema = new Schema({
     seenUsers:{
         type: Array
     },
+    status:{
+        type: String,
+        required: true
+    },
     deleted: require("./schemas/deleted.schema").Deleted
 });
 

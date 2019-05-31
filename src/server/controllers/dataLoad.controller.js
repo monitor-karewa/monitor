@@ -122,8 +122,9 @@ exports.upload = (req, res, next) => {
                                 let notification = new Notification();
                                 notification.organization = currentOrganizationId;
                                 notification.createdUser = currentUserId;
-                                notification.message = "Se ha iniciado una carga de datos en la organización actual.";
+                                notification.message = req.__('data-load-notification.start');
                                 notification.seenUsers.push(currentUserId);
+                                notification.status = 'blue';
                                 notification.save();
                                 return res.json({
                                     error: false,
@@ -518,7 +519,8 @@ exports.cancelCurrent = (req, res, next) => {
                     let notification = new Notification();
                     notification.organization = currentOrganizationId;
                     notification.createdUser = currentUserId;
-                    notification.message = "Se ha cancelado el procesamiento actual de carga de datos de la organización actual";
+                    notification.message = req.__('data-load-notification.cancel') + req.user.fullName;
+                    notification.status = 'red';
                     notification.seenUsers.push(currentUserId);
                     notification.save();
                     return res.json({
@@ -586,7 +588,8 @@ exports.confirmCurrent = (req, res, next) => {
                             let notification = new Notification();
                             notification.organization = currentOrganizationId;
                             notification.createdUser = currentUserId;
-                            notification.message = "Se ha finalizado con éxito la carga de datos de la organización actual";
+                            notification.message = req.__('data-load-notification.success');
+                            notification.status = 'green';
                             notification.seenUsers.push(currentUserId);
                             notification.save();
                             return res.json({

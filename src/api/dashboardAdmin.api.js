@@ -16,5 +16,10 @@ export default {
             .then(onSuccess)
             .catch(onError);
     },
+    readNotifications: (params = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/${namespace}/read-notifications`, params)
+            .then(onSuccess)
+            .catch(onError);
+    }
 
 }
