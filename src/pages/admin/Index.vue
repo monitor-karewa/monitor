@@ -21,10 +21,12 @@
         },
         beforeMount() {
             let isLoggedIn = this.$session.has('jwt');
+            let expireDate = this.$session.get('expireDate');
             let headingToOrganizationSelect = this.$route.path.match(new RegExp('^/admin/select-organization'));
             let hasOrganizationSelected = this.$session.has('currentOrganizationId');
-
-            if (!isLoggedIn) {
+            if (!isLoggedIn || (expireDate != undefined && expireDate < new Date().getTime()/1000 )) {
+                this.$session.remove('jwt');
+                this.$session.remove('expireDate');
                 return this.$router.push(`/login?redirectTo=${this.$route.path}`);
             } else {
                 if (!headingToOrganizationSelect && !hasOrganizationSelected) {
