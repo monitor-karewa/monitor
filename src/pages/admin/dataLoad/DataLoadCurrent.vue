@@ -222,7 +222,17 @@
                     </div>
                     <div class="card">
                         <!--<button class="btn-outline c-warning m-0-auto" data-toggle="modal" data-target="#modal-delete-entry" v-if="hasErrors">IGNORAR ERRORES Y CONTINUAR</button>-->
-                        <button class="btn-outline m-0-auto" :class="{'c-warning': hasErrors, 'c-success': !hasErrors}" data-toggle="modal" data-target="#modal-confirm">{{confirmButtonMessage}}</button>
+                        <button class="btn-outline m-0-auto" :class="{'c-warning': hasErrors, 'c-success': !hasErrors}" data-toggle="modal" data-target="#modal-confirm" v-if="!confirmingDataLoad">{{confirmButtonMessage}}</button>
+                        <a  class="btn-outline button-accent m-0-auto b-shadow-none btn-loading" v-if="confirmingDataLoad">
+                            <div class="m-r-10">
+                                <svg class="spinner" width="17px" height="17px" viewBox="0 0 66 66"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33"
+                                            cy="33" r="30"></circle>
+                                </svg>
+                            </div>
+                            Procesando...
+                        </a>
                     </div>
                 </div>
             </div>
@@ -272,6 +282,7 @@
                 </p>
             </div>
         </ModalDefault>
+        <!--<CardUploading v-show="uploading" :loading="uploading" :cancel="cancelUpload"/>-->
     </div>
 </template>
 
@@ -338,7 +349,8 @@
                     confirmationQuestion: 'data-load.confirm.modal.confirm-operation.question'
                 },
                 busListenerSet: false,
-                loadingValidations: false
+                loadingValidations: false,
+                confirmingDataLoad: false
             }
         },
         components: {
@@ -545,7 +557,10 @@
                 });
                 bus.$on('dataLoad/VALIDATIONS_DOWNLOADED',()=>{
                     this.loadingValidations = false;
-                })
+                });
+                bus.$on('dataLoad/CONFIRMATION_FINISHED',(isConfirming)=>{
+                    this.confirmingDataLoad = isConfirming;
+                });
 
             }
             
