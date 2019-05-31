@@ -128,7 +128,7 @@
                                     <tbody>
                                     <!--<tr class="height-60" v-for="(rowInfo, rowInfoIndex) in filteredDataLoad" v-if="isRowInfoVisible(rowInfo)">-->
                                     <tr class="height-60" v-for="(dataLoadDetail, dataLoadDetailIndex) in paginatedDataLoad" v-if="isRowInfoVisible(dataLoadDetail.data)" :key="dataLoadDetail._id">
-                                        <td>{{dataLoadDetailIndex + 1}}</td>
+                                        <td>{{dataLoadDetail.rowIndex}}</td>
                                         <TableTdDataLoadStatus :data="dataLoadDetail.data"></TableTdDataLoadStatus>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="procedureType"/>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="category"/>

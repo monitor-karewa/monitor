@@ -299,6 +299,7 @@ exports.current = (req, res, next) => {
                     {'data.procedureState.value': queryAsRegex},
                     {'data.administrativeUnitType.value': queryAsRegex},
                     {'data.contractType.value': queryAsRegex},
+                    {'rowIndex': isNaN(search) ? '' : Number(search)},
                 ];
 
 
