@@ -11,7 +11,7 @@
                 <br/>
 
                 <div class="row">
-                    <div class="col-12 col-sm-6 col-xl-3" v-for="organization in organizations">
+                    <div class="d-grid  col-12 col-sm-6 col-xl-3" v-for="organization in organizations">
                         <div class="card-compare">
                             <img class="img-fluid" src="@/assets/images/Cards/bgm-karewa.png" alt="Karewa"/>
                             <div class="logo-full">

@@ -18,7 +18,7 @@
                             <li><a> Administrar </a></li>
                         </ul>
                         <div class="topMenuDropdown dropdown keep-open">
-                            <button class="dropdown-toggle" type="button" id="dropdownMenuTop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <button class="dropdown-toggle d-flex justify-content-center" type="button" id="dropdownMenuTop" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <svg id="hamburguer-icon" class="" xmlns="" width="30" height="30" viewBox="0 0 30 30">
                                     <path class="line line-top" d="M0,9h30"/>
                                     <path class="line line-center" d="M0,15h30"/>
