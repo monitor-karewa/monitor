@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "private": true,
   "scripts": {
-    "serve": " serve",
+    "serve": "node node_modules/@vue/cli-service/bin/vue-cli-service.js serve",
     "build": "NODE_ENV=production SKIP_JOB_MANAGER=true node node_modules/@vue/cli-service/bin/vue-cli-service.js build --verbose",
     "test": "node node_modules/@vue/cli-service/bin/vue-cli-service.js test:e2e --url localhost:8080",
     "lint": "node node_modules/@vue/cli-service/bin/vue-cli-service.js lint",
