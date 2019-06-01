@@ -21,9 +21,9 @@ exports.corruptionIndex = (req, res, next) => {
 
     let qNotDeleted = deletedSchema.qNotDeleted();
     let currentOrganizationId = mongoose.Types.ObjectId(id);
-    let qByOrganization = {"organization": currentOrganizationId};
+    // let qByOrganization = {"organization": currentOrganizationId};
 
-    let query = {...qNotDeleted, ...qByOrganization, locked: true};
+    let query = {...qNotDeleted/*, ...qByOrganization*/, locked: true};
     Calculation
         .findOne(query)
         .lean()
@@ -196,7 +196,7 @@ exports.detail = (req, res, next) => {
 
         async.parallel({
             corruptionIndex: (callback) => {
-                let query = {...qNotDeleted, ...qByOrganization, locked: true};
+                let query = {...qNotDeleted/*, ...qByOrganization*/, locked: true};
                 Calculation
                     .findOne(query)
                     .lean()

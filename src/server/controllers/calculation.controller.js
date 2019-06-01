@@ -714,7 +714,7 @@ let calculateAndValidateFormula = function(req, cache, calculation, options, cal
         ).exec(function (err, res) {
             //Result (callback)
             if(err){
-                console.log("Error Finding calculation");
+                console.log('@calculateAndValidateFormula - err', err);
             } else {
                 calculation = res;
                 processCalculation(req, cache, calculation, options, callback)
@@ -753,7 +753,8 @@ let  processCalculation = function(req, cache, calculation, options = {}, mainCa
             abbreviation: calculation.abbreviation,
             results : resultsMap[calculation.abbreviation]
         };
-        return result;
+        // return result;
+        return mainCallback(null, resultsMap[calculation.abbreviation]);
     }
 
     try {
@@ -766,7 +767,6 @@ let  processCalculation = function(req, cache, calculation, options = {}, mainCa
             queries:[],
             abbreviation:[]
         };
-
 
 
         calculation.formula.variables.forEach((item) => {
@@ -802,6 +802,7 @@ let  processCalculation = function(req, cache, calculation, options = {}, mainCa
             aggregatePromises.abbreviation.push(item.abbreviation);
         });
         let finalValue = 0;
+
         Promise.all(aggregatePromises.queries).then((results) => {
             // { abbreviation : "$NAD", results : 45.44} Estructura Que debe devolver el aggregate
             results.forEach((result, index) => {
@@ -855,7 +856,7 @@ let  processCalculation = function(req, cache, calculation, options = {}, mainCa
                                     value : finalValue,
                                     displayForm : calculation.displayForm,
                                 };
-                                resultsMap[calculation.abbreviation] = finalValue;
+                                resultsMap[calculation.abbreviation] = result;
                                 return mainCallback(null, result);
                             } catch(err) {
                                 logger.error(err, req, 'calculation.controller#processCalculation', 'Error trying to replace variables with their values');
@@ -872,7 +873,7 @@ let  processCalculation = function(req, cache, calculation, options = {}, mainCa
                         value : finalValue,
                         displayForm : calculation.displayForm,
                     };
-                    resultsMap[calculation.abbreviation] = finalValue;
+                    resultsMap[calculation.abbreviation] = result;
                     return mainCallback(null, result);
                 } catch(err) {
                     logger.error(err, req, 'calculation.controller#processCalculation', 'Error trying to process value for calculation without inner calculations.');
