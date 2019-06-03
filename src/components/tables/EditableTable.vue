@@ -16,12 +16,12 @@
                                 <table class="table table-hover form-table">
                                     <thead>
                                     <tr>
-                                        <TableTh :name="$t(column.label)" v-if="column.visible" v-for="column in tableColumns"/>
+                                        <TableTh :name="$t(column.label)" :field="column.field" v-if="column.visible" v-for="column in tableColumns" />
                                         <th></th>
                                     </tr>
                                     </thead>
                                     <tbody>
-                                    <tr v-for="(doc, index) in docs" :key="`doc-${index}`">
+                                    <tr v-for="(doc, index) in orderedDocs" :key="`doc-${index}`">
                                         <td v-for="(column) in tableColumns" v-if="column.visible">
                                             <input v-if="isEditingTable" type="text" class="form-control fg-input"
                                                    :placeholder="doc[column.field]" :value="doc[column.field]"
@@ -133,6 +133,9 @@
 
     import Pagination from '@/components/catalogs/Pagination';
     import moment from 'moment';
+    import orderBy from 'lodash/orderBy';
+
+
 
     import { mapState, mapGetters } from 'vuex';
 
@@ -161,8 +164,18 @@
                 },
                 hideEditButtonResult:function () {
                     return this.$props.hideEditButton;
+                },
+                sortTable: function(state){
+                    return state[this.$props.storeModule].sortTable;
+                },
+            }),
+            orderedDocs(){
+                if(this.sortTable){
+                    return orderBy(this.docs,this.sortTable.sortKey,this.sortTable.order)
+                } else {
+                    return orderBy(this.docs,'createdAt','desc');
                 }
-            })
+            }
         },
         props: {
             'docs': Array,

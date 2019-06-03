@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import App from '@/App.vue';
 import moment from 'moment';
+import orderby from 'lodash/orderBy';
 import BaseApi from '@/api/base.api'
 
 //Logger is used in most places, so it should go before any other plugins/options
@@ -44,6 +45,7 @@ let vue = new Vue({
     i18n,
     moment,
     vuelidate,
+    orderby,
     render: h => h(App)
 }).$mount('#app');
     
