@@ -1,6 +1,7 @@
 export default {
     currentUser: {
-        fullName: ''
+        fullName: '',
+        profilePicture: ''
     },
     currentOrganization: {
         _id: '',

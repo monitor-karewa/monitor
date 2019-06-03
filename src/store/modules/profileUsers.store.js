@@ -18,7 +18,7 @@ const getters = {
 };
 
 const actions = {
-    CHANGE_PICTURE ({commit}, {session, formData}) {
+    CHANGE_PICTURE ({commit}, {session, formData, currentFullName}) {
         usersApi.uploadProfilePicture(formData, {
             headers: {
                 'Content-Type': 'multipart/form-data'
@@ -26,8 +26,12 @@ const actions = {
         }, (result) => {
             if (result.data && !result.data.error && result.data.data) {
                 tShow('Imagen de perfil actualizada', 'info');
-                session.set('currentProfilePicture', result.data.data.profilePicture);
                 commit('SET_PROFILE_PICTURE', result.data.data.profilePicture);
+                let user = {};
+                user.fullName = currentFullName;
+                user.profilePicture = result.data.data.profilePicture;
+                commit('CURRENT_USER', user, {root: true});
+                session.set("userProfilePicture", user.profilePicture);
             } else {
                 tShow('Ocurrió un error cargando la imagen', 'danger');
             }
@@ -43,7 +47,6 @@ const actions = {
         usersApi.getProfileInfo({query}, {
         }, (result) => {
             if (result.data && !result.data.error && result.data.data) {
-                session.set('currentProfilePicture', result.data.data.profilePicture);
                 commit('SET_PROFILE_INFO', result.data.data);
             } else {
                 tShow('Ocurrió un error cargando la imagen', 'danger');

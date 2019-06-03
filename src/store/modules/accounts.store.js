@@ -37,9 +37,8 @@ let actions = {
                     router.push(redirectTo);
                 }
 
-                console.log('user.fullName', user.fullName);
-                
                 _session.set('userFullName', user.fullName);
+                _session.set('userProfilePicture', user.profilePicture);
                 commit('CURRENT_USER', user, {root: true});
             }
         }, (err) => {

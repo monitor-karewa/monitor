@@ -19,12 +19,12 @@
                 <!--<a href="" class="btn-circle-icon hideresp m-r-30"><i class="zmdi zmdi-settings"></i></a>-->
                 <div class="p-l-20 topMenuDropdown dropdown">
                     <button class="dropdown-toggle" type="button" id="dropdownUserMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <div>
-                            <!--<label>Jorge Alejandro Hermosillo Salcido</label>-->
-                            <label>{{currentUser.fullName}}</label>
-                            <span>Admin</span>
-                        </div>
-                        <!--<img class="img-fluid" src="@/assets/images/Demo/user-test.jpg" alt="User" />-->
+                            <div>
+                                <label>{{currentUser.fullName}}</label>
+                                <span>Admin</span>
+                            </div>
+                            <img v-if="currentUser.profilePicture" class="img-fluid" :src="profilePictureUrl" alt="User"/>
+                            <img v-else src="@/assets/images/Demo/default.svg" alt="">
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownUserMenu">
                         <form>
@@ -47,6 +47,7 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import {mapState} from 'vuex';
+    import baseApi from '@/api/base.api';
     
     export default {
         data () {
@@ -55,13 +56,24 @@
         },
         computed: {
             ...mapState({
-                currentUser: state => state.currentUser
+                currentUser: state => state.currentUser,
+                profilePictureUrl : function(){
+                    let url = `${baseApi.baseUrl}/public-api/files/image/${this.currentUser.profilePicture}`;
+                    return url;
+                }
             }),
             permissions () {
                 return this.$session.get('permissions') || [];
             },
             hasAccessToDataLoad() {
                 return this.permissions && this.permissions.includes('CONTRACTS');
+            },
+            coverSrc() {
+                if (this.$session.profilePicture) {
+                    return `${baseApi.baseUrl}/public-api/files/image/${this.$session.profilePicture}`;
+                } else {
+                    return '';
+                }
             }
         },
         components: {

@@ -9,9 +9,9 @@
                         <div class="user-info">
                             <div class="img-profile c-pointer">
                                 <img v-if="profilePictureId"
-                                     :src="'http://localhost:3000/public-api/files/image/'+profilePictureId"
+                                     :src="pictureSource"
                                      class="rounded-circle" @click="promptUpload"/>
-                                <img v-else src="@/assets/images/Demo/default.svg" alt="">
+                                <img v-else src="@/assets/images/Demo/default.svg" alt="" @click="promptUpload">
                             </div>
                             <div class="w-100">
 
@@ -136,6 +136,7 @@
     import {mapState} from 'vuex';
     const touchMap = new WeakMap();
     import { required, minLength, maxLength } from 'vuelidate/lib/validators';
+    import baseApi from '@/api/base.api';
 
     export default {
         data () {
@@ -174,7 +175,13 @@
                 user : (state) => state[storeModule].user,
                 originalData : (state) => state[storeModule].originalData
             }),
-
+            pictureSource() {
+                if (this.profilePictureId) {
+                    return `${baseApi.baseUrl}/public-api/files/image/${this.profilePictureId}`;
+                } else {
+                    return '';
+                }
+            },
             confirmPasswordErrorMessage(){
 
                 return "Las contraseñas deben coincidir"
@@ -264,7 +271,9 @@
 
                 let session = this.$session;
 
-                this.$store.dispatch(`${storeModule}/CHANGE_PICTURE`, {session, formData});
+                let currentFullName = this.$session.get("userFullName");
+
+                this.$store.dispatch(`${storeModule}/CHANGE_PICTURE`, {session, formData, currentFullName});
             },
             updateInfo() {
                 let session = this.$session;
