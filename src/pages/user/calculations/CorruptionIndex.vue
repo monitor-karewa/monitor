@@ -245,7 +245,7 @@
                 return this.corruptionIndex.result || 0;
             },
             corruptionLevel() {
-                if (this.tachometerValue <= 55) {
+                if (this.tachometerValue <= 50) {
                     return 'BAJO'
                 } else if (this.tachometerValue <= 75) {
                     return 'MEDIO'
@@ -254,7 +254,7 @@
                 }
             },
             corruptionProbability() {
-                if (this.tachometerValue <= 55) {
+                if (this.tachometerValue <= 50) {
                     return 'BAJA'
                 } else if (this.tachometerValue <= 75) {
                     return 'MEDIA'
@@ -272,10 +272,8 @@
                 switch(this.corruptionLevel) {
                     case 'ALTO':
                         return RISK_COLORS.HIGH;
-                        break;
                     case 'MEDIO':
                         return RISK_COLORS.MEDIUM;
-                        break;
                     case 'BAJO':
                     default:
                         return RISK_COLORS.LOW;
