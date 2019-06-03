@@ -22,6 +22,10 @@ export default function (api, storeName) {
         isEditingTable : false,
         entrySelected : {},
         formErrors : [],
+        sortTable:{
+            sortKey:'createdAt',
+            order:'desc'
+        }
     };
 
     const getters = {
@@ -46,7 +50,8 @@ export default function (api, storeName) {
             }
             return "";
         },
-        formErrors:  state => state.formErrors
+        formErrors:  state => state.formErrors,
+        sortTable: state => state.sortTable
 
     };
 
@@ -204,6 +209,9 @@ export default function (api, storeName) {
         },
         clearFormErrors({commit}){
             commit('CLEAR_FORM_ERRORS');
+        },
+        sortTableBy({commit},payload){
+            commit('SORT_TABLE_BY', payload);
         }
         // clearSelectedEntry({commit}){
         //     commit('CLEAR_SELECTED_ENTRY');
@@ -255,6 +263,9 @@ export default function (api, storeName) {
         CLEAR_FORM_ERRORS(state){
             state.formErrors = []
         },
+        SORT_TABLE_BY(state, payload){
+            state.sortTable = payload;
+        }
 
         // CLEAR_SELECTED_ENTRY(state){
         //     state.entrySelected = {};
