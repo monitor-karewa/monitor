@@ -1,72 +1,125 @@
 <template>
     <div>
         <AdminMainSection>
-            <BackButton />
+            <BackButton/>
+            <div class=" m-b-50">
+                <div class="col-12 card profile">
+                    <h1 class="c-primary f-14 principal-font-bold m-b-30">Imagen de perfil </h1>
+                    <form @submit.prevent="updateInfo()">
+                        <div class="user-info">
+                            <div class="img-profile c-pointer">
+                                <img v-if="profilePictureId"
+                                     :src="'http://localhost:3000/public-api/files/image/'+profilePictureId"
+                                     class="rounded-circle" @click="promptUpload"/>
+                                <img v-else src="@/assets/images/Demo/default.svg" alt="">
+                            </div>
+                            <div class="w-100">
 
 
-            <form @submit.prevent="updateInfo()">
-                <div class="form-group fg-float">
-                    <div class="fg-line  basic-input">
-                        <input id="name" type="text" class="form-control fg-input" placeholder="Nombre"  v-model="tempUser.name" >
-                        <label class="fg-label">Nombre<!--<small>(small text)</small>--></label>
-                    </div>
-                    <span v-if="$v.tempUser.name.$invalid && $v.tempUser.name.$dirty" class="c-error">{{nameErrorMessage}}</span>
+                                <div class="form-group fg-float">
+                                    <div class="fg-line  basic-input">
+                                        <input id="name" type="text" class="form-control fg-input" placeholder="Nombre"
+                                               v-model="tempUser.name">
+                                        <label class="fg-label">Nombre<!--<small>(small text)</small>--></label>
+                                    </div>
+                                    <span v-if="$v.tempUser.name.$invalid && $v.tempUser.name.$dirty" class="c-error">{{nameErrorMessage}}</span>
+                                </div>
+
+
+                                <div class="form-group fg-float">
+                                    <div class="fg-line  basic-input">
+                                        <input id="lastName" type="text" class="form-control fg-input"
+                                               placeholder="Apellido" value="admin" v-model="tempUser.lastName">
+                                        <label class="fg-label">Apellido<!--<small>(small text)</small>--></label>
+                                    </div>
+                                    <span v-if="$v.tempUser.lastName.$invalid && $v.tempUser.lastName.$dirty"
+                                          class="c-error">{{lastNameErrorMessage}}</span>
+                                </div>
+
+                                <div class="col-12">
+
+                                    <!--<a class="btn-stroke button-stroke m-l-5 m-r-5 m-b-15 float-left" type="file" id="profilePictureInput" name="profilePicture" :ref="pictureRef" v-on:change="handleFileUpload()" :accept="imageAcceptTypes">-->
+                                    <!--{{$t('data-load.upload-file')}}-->
+                                    <!--</a>-->
+
+                                    <button class="btn-stroke button-stroke m-l-5 m-r-5 m-b-15 float-left c-pointer"
+                                            type="button">
+                                        {{$t('data-load.upload-file')}}
+                                        <input type="file" id="profilePictureInput" name="profilePicture"
+                                               :ref="pictureRef"
+                                               v-on:change="handleFileUpload()" :accept="imageAcceptTypes"/>
+                                    </button>
+
+
+                                    <div class="float-right">
+                                        <button type="button" class="btn-stroke button-stroke m-l-5 m-r-5 m-b-15"
+                                                @click="resetData">
+                                            DESCARTAR CAMBIOS
+                                        </button>
+                                        <button type="submit" class="btn-raised button-accent m-l-5 m-r-5 m-b-15">
+                                            GUARDAR
+                                            CAMBIOS
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+
+                    <form @submit.prevent="updatePassword()">
+                        <div class="form-group fg-float">
+                            <div class="fg-line basic-input">
+                                <input type="password" class="form-control fg-input"
+                                       placeholder="Por seguridad, escribe tu contraseña actual" value="admin"
+                                       v-model="tempUser.currentPassword"
+                                       @input="delayTouch($v.tempUser.currentPassword)">
+                                <label class="fg-label">
+                                    Contraseña Actual
+                                    <!--<small>Contraseña con la que inicias sesión actualmente</small>-->
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-group fg-float">
+                            <div class="fg-line basic-input">
+                                <input type="password" class="form-control fg-input"
+                                       placeholder="Escribe una nueva contraseña" value="admin"
+                                       v-model="tempUser.newPassword" @input="delayTouch($v.tempUser.newPassword)">
+                                <label class="fg-label">
+                                    Contraseña Nueva
+                                    <!--<small>Si quieres cambiar tu password, escribe el nuevo aquí</small>-->
+                                </label>
+                            </div>
+                            <span v-if="$v.tempUser.newPassword.$invalid && $v.tempUser.newPassword.$dirty"
+                                  class="c-error">{{newPasswordErrorMessage}}</span>
+                        </div>
+                        <div class="form-group fg-float">
+                            <div class="fg-line basic-input">
+                                <input type="password" class="form-control fg-input"
+                                       placeholder="Confirma tu nueva contraseña" value="admin"
+                                       v-model="tempUser.confirmPassword"
+                                       @input="delayTouch($v.tempUser.confirmPassword)">
+                                <label class="fg-label">
+                                    Confirmar Contraseña
+                                    <!--<small>Confirma tu nuevo password para evitar errores)</small>-->
+                                </label>
+                            </div>
+                            <span v-if="$v.tempUser.confirmPassword.$invalid && $v.tempUser.confirmPassword.$dirty"
+                                  class="c-error">{{confirmPasswordErrorMessage}}</span>
+                        </div>
+
+                        <div class="col-12">
+                            <div class="float-right">
+                                <button type="button" @click="clearPasswordFields"
+                                        class="btn-stroke button-stroke m-l-5 m-r-5 m-b-15">DESCARTAR CAMBIOS
+                                </button>
+                                <button type="submit" class="btn-raised button-accent m-l-5 m-r-5 m-b-15">GUARDAR
+                                    CAMBIOS
+                                </button>
+                            </div>
+                        </div>
+                    </form>
                 </div>
-
-                <div class="form-group fg-float">
-                    <div class="fg-line  basic-input">
-                        <input id="lastName" type="text" class="form-control fg-input" placeholder="Apellido" value="admin" v-model="tempUser.lastName">
-                        <label class="fg-label">Apellido<!--<small>(small text)</small>--></label>
-                    </div>
-                    <span v-if="$v.tempUser.lastName.$invalid && $v.tempUser.lastName.$dirty" class="c-error">{{lastNameErrorMessage}}</span>
-                </div>
-
-
-                <h2> Cambiar contraseña</h2>
-
-                <div class="form-group fg-float">
-                    <div class="fg-line  basic-input">
-                        <input id="password-current" type="password" class="form-control fg-input" placeholder="Por seguridad, escribe tu contraseña actual" value="admin" v-model="tempUser.currentPassword" @input="delayTouch($v.tempUser.currentPassword)">
-                        <label class="fg-label">Contraseña Actual<!--<small>(small text)</small>--></label>
-                    </div>
-                </div>
-
-                <div class="form-group fg-float">
-                    <div class="fg-line  basic-input">
-                        <input id="password-new" type="password" class="form-control fg-input" placeholder="Escribe tu nueva contraseña" value="admin" v-model="tempUser.newPassword" @input="delayTouch($v.tempUser.newPassword)">
-                        <label class="fg-label">Contraseña Nueva<!--<small>(small text)</small>--></label>
-                    </div>
-                    <span v-if="$v.tempUser.newPassword.$invalid && $v.tempUser.newPassword.$dirty" class="c-error">{{newPasswordErrorMessage}}</span>
-                </div>
-
-                <div class="form-group fg-float">
-                    <div class="fg-line  basic-input">
-                        <input id="password-confirm" type="password" class="form-control fg-input" placeholder="Confirma tu nueva contraseña" value="admin" v-model="tempUser.confirmPassword" @input="delayTouch($v.tempUser.confirmPassword)">
-                        <label class="fg-label">Confirmar Contraseña<!--<small>(small text)</small>--></label>
-                    </div>
-                    <span v-if="$v.tempUser.confirmPassword.$invalid && $v.tempUser.confirmPassword.$dirty" class="c-error">{{confirmPasswordErrorMessage}}</span>
-                </div>
-
-
-
-
-                <button type="submit" class="btn-stroke button-accents"> Guardar </button>
-            </form>
-
-            <div class="floating-text m-b-40">
-                <h1>{{$t('data-load.data-load')}}</h1>
-                <p>{{$t('data-load.data-load.recommended-for')}}</p>
-                <button class="btn-stroke button-accent">
-                    {{$t('data-load.upload-file')}}
-                    <input type="file" id="profilePictureInput" name="profilePicture" :ref="pictureRef" v-on:change="handleFileUpload()" :accept="imageAcceptTypes" />
-                </button>
             </div>
-
-            <img v-if="profilePictureId" class="img-fluid" id="profilePictureImg" alt="Cover" :src="'http://localhost:3000/public-api/files/image/'+profilePictureId"/>
-            <img v-else  class="img-fluid" id="image-placeholder" alt="Cover" src="http://localhost:3000/public-api/files/image/5cf0171cee0e802d1731ce90"/>
-
-
-
         </AdminMainSection>
     </div>
 </template>
@@ -88,7 +141,6 @@
         data () {
             return {
                 storeModule: storeModule,
-                userId: "",
                 dataFile: null,
                 allowedImageMimeTypes: [
                     'image/png',
@@ -120,7 +172,7 @@
                         return state[storeModule].user.profilePicture
                 },
                 user : (state) => state[storeModule].user,
-                userLastName : (state) => state[storeModule].user.lastName
+                originalData : (state) => state[storeModule].originalData
             }),
 
             confirmPasswordErrorMessage(){
@@ -145,8 +197,6 @@
                     return "La contraseña debe contener un máximo de 100 caracteres"
                 }
             },
-
-
         },
         watch : {
            user(value){
@@ -218,18 +268,33 @@
             },
             updateInfo() {
                 let session = this.$session;
-                let user = this.tempUser;
-                user.id = this.userId;
-                this.$store.dispatch(`${storeModule}/UPDATE_PROFILE_INFO`, {session, user});
-            }
-        },
+                let user = {};
+                user.name = this.tempUser.name;
+                user.lastName = this.tempUser.lastName;
 
-        setUploading(value) {
-            this.uploading = value;
-        },
-        cancelUpload() {
-            //TODO: cancel
-            this.setUploading(false);
+                this.$store.dispatch(`${storeModule}/UPDATE_PROFILE_INFO`, {session, user});
+            },
+            updatePassword() {
+                let session = this.$session;
+                let user = {};
+                user.currentPassword = this.tempUser.currentPassword;
+                user.newPassword = this.tempUser.newPassword;
+                user.confirmPassword = this.tempUser.confirmPassword;
+
+                this.$store.dispatch(`${storeModule}/UPDATE_PROFILE_INFO`, {session, user});
+            },
+            promptUpload(){
+                $("#profilePictureInput").click();
+            },
+            resetData(){
+                this.tempUser.name = this.originalData.name;
+                this.tempUser.lastName = this.originalData.lastName;
+            },
+            clearPasswordFields(){
+                this.tempUser.currentPassword = "";
+                this.tempUser.newPassword = "";
+                this.tempUser.confirmPassword = "";
+            },
         },
         created(){
         },

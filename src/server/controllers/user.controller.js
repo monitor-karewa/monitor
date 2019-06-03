@@ -371,9 +371,9 @@ exports.updateProfileInfo = function(req, res , next){
 
     let passwordChange = false;
 
-    if(!(req.user._id && req.body.name && req.body.lastName)){
+    if(!(req.user._id && (req.body.name && req.body.lastName) || (req.body.currentPassword && req.body.newPassword ) )){
         return res.json({
-            message : "Por favor inserte todos los campos requeridos",
+            message : "Complete correctamente los datos de la sección",
             error : true
         })
     }
@@ -419,8 +419,12 @@ exports.updateProfileInfo = function(req, res , next){
                 }
             }
 
-            user.name = req.body.name;
-            user.lastName = req.body.lastName;
+            if(req.body.name && req.body.lastName){
+                user.name = req.body.name;
+                user.lastName = req.body.lastName;
+            }
+
+
             if(passwordChange){
                 user.setPassword(req.body.newPassword);
             }
