@@ -14,10 +14,10 @@
                                 <input type="file" id="file" :ref="dataFileRef" v-on:change="handleFileUpload()" :accept="fileAccept" />
                             </button>
                         </div>
-                        <!--<div class="floating-text">-->
-                            <!--<h1>¿Cómo funciona?</h1>-->
-                            <!--<a href=""><p><strong class="c-accent">Revisa la guia rápida de uso aquí</strong></p></a>-->
-                        <!--</div>-->
+                        <div class="floating-text">
+                            <h1>¿Cómo funciona?</h1>
+                            <a href="https://gitlab.com/karewa/monitor/wikis/administrador/importador/Importador" target="_blank"><p><strong class="c-accent">Revisa la guia rápida de uso aquí</strong></p></a>
+                        </div>
                         <div class="floating-text">
                             <h1>{{$t('data-load.download-template')}}</h1>
                             <a @click.prevent="downloadPlantilla()" href="" target="_blank"><p><strong class="c-accent">{{$t('data-load.download-template.link')}}</strong></p></a>
@@ -99,16 +99,16 @@
                 return this.allowedMimeTypes.join(',');
             },
             recentConfirmedAt () {
-                if (!this.dataLoadInfo) {
+                if (!this.dataLoadInfo || !this.dataLoadInfo.recent) {
                     return new Date();
                 }
-                return this.dataLoadInfo.recentConfirmedAt || new Date();
+                return this.dataLoadInfo.recent.recentConfirmedAt || new Date();
             },
             recentUploadedBy () {
-                if (!this.dataLoadInfo) {
+                if (!this.dataLoadInfo || !this.dataLoadInfo.recent) {
                     return '';
                 }
-                return this.dataLoadInfo.recentUploadedBy || '';
+                return this.dataLoadInfo.recent.recentUploadedBy || '';
             },
             ...mapState({
                 dataLoadInfo: state => state.dataLoad.dataLoadInfo
@@ -120,6 +120,10 @@
             FloatingTitle,
             CatalogHeader,
             CardUploading
+        },
+        sockets: {
+            connect: function () {
+            }
         },
         filters: {
             moment: function (date) {
@@ -160,7 +164,6 @@
                 }, (result) => {
                     this.setUploading(false);
                     Vue.$log.info('Response', result);
-                    
                     if (result.data.error) {
                         tShow(this.$t(result.data.message), 'danger');
                         
@@ -169,6 +172,8 @@
                             this.$store.commit('dataLoad/SET_CURRENT_DATA_LOAD_INFO', {dataLoadInfo: result.data.data});
                         }
                     } else {
+                        //Genera procedimiento para checar notificaciones.
+                        this.$socket.emit('new_notifications');
                         this.$store.commit('dataLoad/SET_CURRENT_DATA_LOAD_INFO', {dataLoadInfo: result.data.data});
                     }
                 }, (error) => {

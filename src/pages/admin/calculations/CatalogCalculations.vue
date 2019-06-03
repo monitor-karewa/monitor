@@ -210,7 +210,7 @@
                 <div class="vertical-center">
                     <div class="row w-100">
                         <div class="col-sm-8">
-                            <div class="form-group fg-float basic-select p-t-0 m-b-0">
+                            <div class="form-group fg-float basic-select scroll-select p-t-0 m-b-0">
                                 <div class="fg-line">
                                     <select @change="addToFormula($event)" v-model="variableSelected" class="form-control select selectpicker" data-live-search="true"
                                             data-live-search-placeholder="Buscar variable"

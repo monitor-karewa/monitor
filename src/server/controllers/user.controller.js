@@ -10,6 +10,7 @@ const EmailClient = require('./../components/emailClient');
 const encryptionManager = require('./../components/encryptionManager');
 
 const {validationResult} = require('express-validator/check');
+const File = require('./../models/file.model').File;
 
 
 /**
@@ -254,8 +255,6 @@ exports.delete = (req, res, next) => {
     let _id = req.body._id;
     query["_id"] = _id;
 
-    console.log('req.user', req.user);
-
     if (_id === req.user._id.toString()) {
     // if (true) {
         return res.json({
@@ -301,8 +300,8 @@ exports.delete = (req, res, next) => {
                         }
                     }
                 },
-                {multi: false}
             ).exec((err) => {
+                {multi: false}
                 if (err) {
                     logger.error(req, err, 'user.controller#delete', 'Error al borrar User.');
                     return res.json({
@@ -317,3 +316,159 @@ exports.delete = (req, res, next) => {
             });
         });
 };
+
+var multer  = require('multer');
+var upload = multer();
+
+exports.beforeUpload = upload.single('profilePicture');
+
+
+exports.uploadProfilePicture = function(req, res, next){
+
+    let pictureFileInfo = req.file;
+
+    if (!pictureFileInfo || !req.user._id) {
+        return res.json({
+            error: true
+        });
+    }
+
+    let profilePicture = new File({
+        mimetype: pictureFileInfo.mimetype,
+        size: pictureFileInfo.size,
+        filename: pictureFileInfo.originalname,
+        data: pictureFileInfo.buffer
+    });
+
+    profilePicture.save((err) => {
+        if (err) {
+            logger.error(err, null, 'settings.controller#changeCover', 'Error trying to save cover File for User [%s]', req.user._id);
+        }
+
+        let update = {
+            profilePicture: profilePicture._id
+        };
+
+        let query = {_id: req.user._id};
+        User.updateOne(query, {$set: update}, {}, (err) => {
+            if (err) {
+                logger.error(err, null, 'settings.controller#changeCover', 'Error trying to change profilePicture for User [%s]', req.user._id);
+            }
+
+            return res.json({
+                error: !!err,
+                data: update
+            });
+        });
+    });
+    
+}
+
+
+
+exports.updateProfileInfo = function(req, res , next){
+
+
+    let passwordChange = false;
+
+    if(!(req.user._id && (req.body.name && req.body.lastName) || (req.body.currentPassword && req.body.newPassword ) )){
+        return res.json({
+            message : "Complete correctamente los datos de la sección",
+            error : true
+        })
+    }
+
+    User.findOne({_id: req.user._id})
+        .exec(function (err, user) {
+            if(err){
+                return res.json({
+                    message : err.toString(),
+                    error : true,
+                })
+            }
+
+            if(!user){
+                return res.json({
+                    message : "No se ha encontrado usuario",
+                    error : true,
+                })
+            }
+
+            if(req.body.newPassword){
+                // if(req.body.newPassword.length < 6){
+                //     return res.json({
+                //         message : "La nueva contraseña debe contener al menos 6 caracteres",
+                //         error : true,
+                //     })
+                // }
+
+                if(req.body.newPassword !== req.body.confirmPassword){
+                    return res.json({
+                        message : "Las contraseñas no coinciden",
+                        error : true,
+                    })
+                }
+
+                if(user.verifyPassword(req.body.currentPassword)){
+                    passwordChange = true;
+                } else {
+                    return res.json({
+                        message : "La contraseña actual no es correcta",
+                        error : true,
+                    })
+                }
+            }
+
+            if(req.body.name && req.body.lastName){
+                user.name = req.body.name;
+                user.lastName = req.body.lastName;
+            }
+
+
+            if(passwordChange){
+                user.setPassword(req.body.newPassword);
+            }
+
+            user.save((err, savedUser) => {
+                if (err) {
+                    logger.error(err, req, 'user.controller#save', 'Error al guardar User 1 ');
+                    return res.json({
+                        errors: true,
+                        message: "Error al guardar el usuario"
+                    });
+                }
+
+                return res.json({
+                    errors: false,
+                    message: "Se ha actualizado correctamente",
+                    data: user
+                });
+            });
+        });
+
+}
+
+
+exports.getProfileInfo = function(req, res , next){
+
+    User.findOne({_id: req.user._id}).select("name lastName profilePicture")
+        .exec(function (err, result) {
+
+            if(err){
+                return res.json({
+                    message: "Error al guardar el usuario",
+                    // err: err,
+                    error : true,
+                })
+            }
+
+            return res.json({
+                message : "UNSOPORTED FEATURE : user.controller#uploadProfilePicture",
+                error : false,
+                data : result
+            })
+
+        });
+
+
+}

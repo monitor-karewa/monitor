@@ -71,9 +71,9 @@ exports.login = (req, res, next) => {
         let token = jwt.sign(payload, config.session.options.secret);
         
         let permissions = user.getPermissions();
-        
         let resultUser = {
-            fullName: user.fullName
+            fullName: user.fullName,
+            profilePicture: user.profilePicture
         };
 
         let result = {token, permissions, user: resultUser};

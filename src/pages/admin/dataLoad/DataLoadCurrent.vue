@@ -1,14 +1,14 @@
 <template>
     <div>
         <AdminMainSection>
-            <BackButton />
-            <FloatingTitle title="data-load.title-strong" description="data-load.title.description"/>
+            <BackButton :label="showDetails ? 'data-load.back.button'  : ''" />
+            <FloatingTitle title="data-load.title-strong" description="data-load.title.current-description" :descriptionProp="current.fileName"/>
             <CardUploading v-show="uploading" :loading="uploading" :cancel="cancelUpload"/>
             <div class="row m-0 w-100" v-show="!uploading">
                 <div class="col-12 col-md-8 di-flex" v-if="!showDetails">
                     <div class="card w-100">
                         <div class="floating-text m-b-30">
-                            <h1>Resultados de la validación <!--<strong class="m-l-10 f-12 c-accent">(datos2018.xls)</strong>-->
+                            <h1>Resultados de la validación <strong class="m-l-10 f-12 c-accent">{{`(${current.fileName})`}}</strong>
                             </h1>
                             <p class="m-b-30">Para corregir los registros encontrados con errores, descarga
                                 el archivo generado, realiza las correcciones necesarias y súbelo
@@ -60,7 +60,7 @@
                     </div>
                 </div>
 
-                <div class="col-12 col-md-8" v-if="showDetails">
+                <div class="col-12 col-md-12" v-if="showDetails">
                     <div class="card w-100">
                         <div class="card-header">
 
@@ -89,49 +89,47 @@
                                         <!--<th class="text-align-r">Monto Total<i class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>-->
                                         <!--<th>Title Header<i class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>-->
                                         <th></th>
+                                        <th></th>
                                         <th>Tipo de procedimiento</th>
-                                        <th>Categoría</th>
+                                        <th>Materia</th>
                                         <th>Administración</th>
                                         <th>Ejercicio</th>
-                                        <th>Periodo</th>
-                                        <th>Id del Contrato</th>
+                                        <th>Periodo que se reporta </th>
+                                        <th>ID</th>
                                         <th>Partida</th>
                                         <th>Estado del procedimiento</th>
-                                        <th>Hipervínculo a convocatoria / invitaciones</th>
-                                        <th>Fecha de convocatoria / invitación</th>
-                                        <th>Descripción</th>
-                                        <th>Fecha junta de aclaraciones</th>
+                                        <th>Hipervínculo a la convocatoria o invitaciones</th>
+                                        <th>Fecha de la convocatoria o invitación</th>
+                                        <th>Descripción de las obras, bienes o servicios</th>
+                                        <th>Fecha en la que se celebró la junta de aclaraciones</th>
                                         <th>Hipervínculo al fallo de Junta de Aclaraciones</th>
                                         <th>Hipervínculo al documento de la Presentación de Propuestas</th>
-                                        <th>Nombre del contratista</th>
+                                        <th>Nombre completo del o los contratista(s) elegidos</th>
                                         <th>RFC</th>
                                         <th>Unidad administrativa convocante</th>
                                         <th>Unidad administrativa solicitante</th>
                                         <th>Centralizada / Descentralizada</th>
                                         <th>Número identificador del contrato</th>
                                         <th>Fecha del contrato</th>
-                                        <th>Monto total c/impuestos</th>
-                                        <th>Monto mínimo*</th>
-                                        <th>Monto máximo*</th>
-                                        <th>Monto total / máximo</th>
+                                        <th>Monto total del contrato con impuestos incluidos</th>
+                                        <th>Monto mínimo, en su caso</th>
+                                        <th>Monto máximo, en su caso</th>
+                                        <th>Monto total o Monto máximo, en su caso</th>
                                         <th>Hipervínculo al documento del contrato y anexos</th>
                                         <th>Área responsable de la información</th>
                                         <th>Fecha de actualización</th>
                                         <th>Notas</th>
                                         <th>Notas Monitor Karewa</th>
-                                        <th>Fecha de obtención de datos</th>
-                                        <th>¿Excede límite de adj. directas?</th>
-                                        <th>Monto excedente sobre límite de adj. directa</th>
+                                        <th>Fecha de obtención de los datos</th>
+                                        <th>Adjudicaciones Directas que exceden el límite</th>
+                                        <th>Monto que excede el límite de la Adjudicación Directa</th>
                                     </tr>
                                     </thead>
                                     <tbody>
                                     <!--<tr class="height-60" v-for="(rowInfo, rowInfoIndex) in filteredDataLoad" v-if="isRowInfoVisible(rowInfo)">-->
                                     <tr class="height-60" v-for="(dataLoadDetail, dataLoadDetailIndex) in paginatedDataLoad" v-if="isRowInfoVisible(dataLoadDetail.data)" :key="dataLoadDetail._id">
-                                        <td>
-                                            <i class="zmdi zmdi-alert-triangle c-info f-14" v-if="dataLoadDetail.data.summary.skipRow || dataLoadDetail.data.summary.hasInfos"></i>
-                                            <i class="zmdi zmdi-alert-triangle c-error f-14" v-if="dataLoadDetail.data.summary.hasErrors"></i>
-                                            <i class="zmdi zmdi-alert-triangle c-success f-14" v-if="!dataLoadDetail.data.summary.hasErrors || dataLoadDetail.data.summary.willCreateDoc"></i>
-                                        </td>
+                                        <td>{{dataLoadDetail.rowIndex}}</td>
+                                        <TableTdDataLoadStatus :data="dataLoadDetail.data"></TableTdDataLoadStatus>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="procedureType"/>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="category"/>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="administration"/>
@@ -176,14 +174,14 @@
                     <div class="vertical-center" v-show="!filtering">
                         <!--<div class="floating-label-table info m-r-40">Omitidos (duplicados)</div>-->
                         <!--<div class="floating-label-table error">Registros con errores</div>-->
-                        <div class="floating-label-table m-r-40"><i class="zmdi zmdi-alert-triangle c-info f-14"></i> Omitidos (duplicados)</div>
-                        <div class="floating-label-table  m-r-40"><i class="zmdi zmdi-alert-triangle c-error f-14"></i> Registros con errores</div>
-                        <div class="floating-label-table "><i class="zmdi zmdi-alert-triangle c-success f-14"></i> Se crearán uno o más registros</div>
+                        <div class="floating-label-table m-r-40"><i class="zmdi zmdi-alert-circle-o c-info f-16"></i> Omitidos (duplicados)</div>
+                        <div class="floating-label-table  m-r-40"><i class="zmdi zmdi-alert-circle-o c-error f-16"></i> Registros con errores</div>
+                        <div class="floating-label-table "><i class="zmdi zmdi-check-circle c-success f-16"></i> Se crearán uno o más registros</div>
                     </div>
                 </div>
                 
                 
-                <div class="col-12 col-md-4">
+                <div class="col-12 col-md-4" v-if="!showDetails">
                     <div class="card">
                         <div class="note-transparent error">
                             <i class="zmdi zmdi-alert-triangle"></i>
@@ -195,13 +193,24 @@
                         <!--<button class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR-->
                             <!--VALIDACIONES-->
                         <!--</button>-->
-                        <a @click.prevent="downloadValidations()" target="_blank" class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR
+                        <a @click.prevent="downloadValidations()" v-if="!loadingValidations" target="_blank" class="btn-stroke button-accent m-0-auto b-shadow-none">DESCARGAR
                             VALIDACIONES
+                        </a>
+
+                        <a  class="btn-stroke button-accent m-0-auto b-shadow-none btn-loading" v-if="loadingValidations">
+                            <div class="m-r-10">
+                                <svg class="spinner" width="17px" height="17px" viewBox="0 0 66 66"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33"
+                                            cy="33" r="30"></circle>
+                                </svg>
+                            </div>
+                            Descargando...
                         </a>
                     </div>
                     <div class="card">
                         <p class="f-12 c-plain_text principal-font-semibold text-align-c d-block m-b-15">
-                            Cargar archivo con correcciones</p>
+                            Cargar archivo con <br/> correcciones</p>
                         <!--<button class="btn-stroke button-accent m-0-auto b-shadow-none">CARGAR-->
                             <!--CORRECCIONES-->
                         <!--</button>-->
@@ -213,12 +222,22 @@
                     </div>
                     <div class="card">
                         <!--<button class="btn-outline c-warning m-0-auto" data-toggle="modal" data-target="#modal-delete-entry" v-if="hasErrors">IGNORAR ERRORES Y CONTINUAR</button>-->
-                        <button class="btn-outline m-0-auto" :class="{'c-warning': hasErrors, 'c-success': !hasErrors}" data-toggle="modal" data-target="#modal-confirm">{{confirmButtonMessage}}</button>
+                        <button class="btn-outline m-0-auto" :class="{'c-warning': hasErrors, 'c-success': !hasErrors}" data-toggle="modal" data-target="#modal-confirm" v-if="!confirmingDataLoad">{{confirmButtonMessage}}</button>
+                        <a  class="btn-outline button-accent m-0-auto b-shadow-none btn-loading" v-if="confirmingDataLoad">
+                            <div class="m-r-10">
+                                <svg class="spinner" width="17px" height="17px" viewBox="0 0 66 66"
+                                     xmlns="http://www.w3.org/2000/svg">
+                                    <circle class="path" fill="none" stroke-width="6" stroke-linecap="round" cx="33"
+                                            cy="33" r="30"></circle>
+                                </svg>
+                            </div>
+                            Procesando...
+                        </a>
                     </div>
                 </div>
             </div>
         </AdminMainSection>
-        <ModalDefault id="modal-confirm" :title="$t(modalProperties.title)" :store-module="storeModule" :action="modalProperties.action">
+        <ModalDefault id="modal-confirm" :title="$t(modalProperties.title)" :store-module="storeModule" :action="modalProperties.action" :reload-notifications="true">
             <div class="details-list">
                 <p class="text-centered m-b-20">{{$t(modalMessage, modalMessageParams)}}
                     <br/>
@@ -263,6 +282,7 @@
                 </p>
             </div>
         </ModalDefault>
+        <!--<CardUploading v-show="uploading" :loading="uploading" :cancel="cancelUpload"/>-->
     </div>
 </template>
 
@@ -278,6 +298,7 @@
 //    import TableHeaderButton from '@/components/tables/headers/TableHeaderButton';
     import TableHeaderFilters from '@/components/tables/headers/TableHeaderFilters';
     import TableTdDataLoadResult from '@/components/tables/tds/TableTdDataLoadResult';
+    import TableTdDataLoadStatus from '@/components/tables/tds/TableTdDataLoadStatus';
     import Pagination from '@/components/catalogs/Pagination.vue';
 
     import CardUploading from '@/components/files/CardUploading';
@@ -327,7 +348,9 @@
                     messageIgnoreErrors: 'data-load.confirm.modal.confirm-operation-ignore-errors',
                     confirmationQuestion: 'data-load.confirm.modal.confirm-operation.question'
                 },
-                busListenerSet: false
+                busListenerSet: false,
+                loadingValidations: false,
+                confirmingDataLoad: false
             }
         },
         components: {
@@ -341,7 +364,12 @@
             TableTdDataLoadResult,
             Pagination,
             CardUploading,
-            ModalDefault
+            ModalDefault,
+            TableTdDataLoadStatus
+        },
+        sockets: {
+            connect: function () {
+            }
         },
         watch: {
             showNoIssues() {
@@ -434,6 +462,7 @@
                 this.$store.dispatch('dataLoad/CANCEL_CURRENT_DATA_LOAD');
             },
             canceled () {
+                this.$socket.emit('new_notifications');
                 this.$router.push('/admin/data-load');
             },
             isRowInfoVisible (rowInfo) {
@@ -516,6 +545,7 @@
                 //noop
             },
             downloadValidations() {
+                this.loadingValidations = true;
                 this.$store.dispatch('dataLoad/DOWNLOAD_VALIDATIONS');
             },
         },
@@ -530,6 +560,13 @@
                         this.canceled();
                     }
                 });
+                bus.$on('dataLoad/VALIDATIONS_DOWNLOADED',()=>{
+                    this.loadingValidations = false;
+                });
+                bus.$on('dataLoad/CONFIRMATION_FINISHED',(isConfirming)=>{
+                    this.confirmingDataLoad = isConfirming;
+                });
+
             }
             
             this.$store.dispatch('dataLoad/LOAD_CURRENT_DATA_LOAD_INFO');
