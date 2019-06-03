@@ -50,10 +50,11 @@
       created (){
           let sessionExists = this.$session.exists();
           if (sessionExists) {
-              let token = this.$session.get('jwt');
-              axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
-              let fullName = this.$session.get('userFullName');
-              this.$store.commit('CURRENT_USER', {fullName});
+            let token = this.$session.get('jwt');
+            axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+            let fullName = this.$session.get('userFullName');
+            let picture = this.$session.get('userPicture');
+            this.$store.commit('CURRENT_USER', {fullName, picture});
 
               let _id = this.$session.get('currentOrganizationId');
               axios.defaults.headers.common['X-CURRENT-ORGANIZATION-ID'] = _id;

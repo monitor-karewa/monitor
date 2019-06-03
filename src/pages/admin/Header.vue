@@ -12,19 +12,55 @@
         </div>
         <div class="right col-md-9 col-8">
             <div class="links">
-                <router-link to="/admin/data-load" v-if="hasAccessToDataLoad" class="btn-raised xs button-accent hideresp">
+                <router-link to="/admin/data-load" v-show="hasAccessToDataLoad" class="btn-raised xs button-accent hideresp">
                     <i class="zmdi zmdi-plus"></i> Cargar datos
                 </router-link>
-                <!--<a href="" class="btn-circle-icon hideresp m-l-30"><i class="zmdi zmdi-notifications-none"></i></a>-->
-                <!--<a href="" class="btn-circle-icon hideresp m-r-30"><i class="zmdi zmdi-settings"></i></a>-->
-                <div class="p-l-20 topMenuDropdown dropdown">
+                <div class="dropdown notifications-btn show" :class="{active:currentGeneralInfoInfo.newNotifications}">
+                    <button class="btn-circle-icon  dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" @click="readNotifications">
+                        <i class="zmdi zmdi-notifications"></i>
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <h6 class="dropdown-header">Notificaciones</h6>
+                        <div class="dropdown-item" v-for="(notification, index) in currentGeneralInfoInfo.notifications">
+                            <div class="user-img">
+                                <div class="image">
+                                    <img v-if="notification.createdUser.profilePicture == undefined" src="@/assets/images/Demo/default.svg" alt="User" />
+                                    <img v-if="notification.createdUser.profilePicture != undefined"
+                                         :src="imageSrc(notification.createdUser.profilePicture)"
+                                         alt="Default"/>
+                                </div>
+                                <div :class="'status ' + notification.status">
+
+                                </div>
+                            </div>
+                            <div class="info-container">
+                                <h3 class="info">{{notification.message}}</h3>
+                                <div class="date">{{formatDate(notification.createdAt)}}</div>
+                            </div>
+                        </div>
+                        <div class="dropdown-item empty-state" v-if="currentGeneralInfoInfo.notifications.length === 0">
+                            <div class="empty-image">
+                                <img src="@/assets/images/Emptystates/empty-state-box.svg" alt="">
+                            </div>
+                            <br>
+                            <div class="text">
+                                No tienes notificaciones
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="topMenuDropdown dropdown m-l-15">
                     <button class="dropdown-toggle" type="button" id="dropdownUserMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div>
                             <!--<label>Jorge Alejandro Hermosillo Salcido</label>-->
                             <label>{{currentUser.fullName}}</label>
                             <span>Admin</span>
                         </div>
-                        <!--<img class="img-fluid" src="@/assets/images/Demo/user-test.jpg" alt="User" />-->
+                        <img v-if="currentUser.userPicture == undefined" class="img-fluid" src="@/assets/images/Demo/default.svg" alt="User" />
+                        <img v-if="currentUser.userPicture != undefined" class="img-fluid"
+                             :src="imageSrc(currentUser.userPicture)"
+                             alt="Default"/>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownUserMenu">
                         <form>
@@ -47,15 +83,18 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import {mapState} from 'vuex';
+    import baseApi from '@/api/base.api';
     
     export default {
         data () {
             return {
+                isShowing:false
             }
         },
         computed: {
             ...mapState({
-                currentUser: state => state.currentUser
+                currentUser: state => state.currentUser,
+                currentGeneralInfoInfo: state => state.adminHomeStore,
             }),
             permissions () {
                 return this.$session.get('permissions') || [];
@@ -71,11 +110,49 @@
                 $('.sidebar').addClass('small-sidebar');
                 $('.backdrop').addClass('active');
             });
+            this.$store.dispatch('adminHomeStore/RELOAD_NOTIFICATIONS');
+        },
+        sockets: {
+            connect: function () {
+            },
+            reloadNotification: function (data) {
+                this.$store.dispatch('adminHomeStore/RELOAD_NOTIFICATIONS');
+            }
         },
         methods: {
             logout () {
                 let _session = this.$session;
                 this.$store.dispatch('accounts/LOGOUT', {_session});
+            },
+            formatDate(date){
+                const monthNames = [
+                    "Ene", "Feb", "Mar",
+                    "Abr", "May", "Jun", "Jul",
+                    "Aug", "Sep", "Oct",
+                    "Nov", "Dec"
+                ];
+                if(typeof date === "string"){
+                    date = new Date(date);
+                }
+
+                var day = date.getDate();
+                if(day < 10){
+                    day = "0"+ day;
+                }
+                var monthIndex = date.getMonth();
+                var year = date.getFullYear();
+
+                return day + '/' + monthNames[monthIndex] + '/' + year;
+            },
+            readNotifications () {
+                this.isShowing = !this.isShowing;
+                if(this.currentGeneralInfoInfo.newNotifications){
+                    this.$store.dispatch('adminHomeStore/READ_NOTIFICATIONS');
+                }
+
+            },
+            imageSrc(id) {
+                return `${baseApi.baseUrl}/public-api/files/image/${id}`;
             }
         }
     }
