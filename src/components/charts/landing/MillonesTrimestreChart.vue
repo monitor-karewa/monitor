@@ -62,7 +62,7 @@
                     tooltip: {
                         y: {
                             formatter: function (val) {
-                                return "$ " + val
+                                return val ? '$' + val.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : "";
                             }
                         }
                     }

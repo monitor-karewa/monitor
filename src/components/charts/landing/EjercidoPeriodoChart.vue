@@ -62,7 +62,14 @@
                                 position: 'bottom',
                             }
                         }
-                    }]
+                    }],
+                    tooltip: {
+                        y: {
+                            formatter: function (val) {
+                                return val ? '$' + val.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : "";
+                            }
+                        }
+                    }
                 },
                 publicPorcentage:0,
                 invitationPercentage:0,
@@ -93,7 +100,6 @@
                 } else {
                     data = [0,0,0];
                 }
-
                 return data;
             }
         },
