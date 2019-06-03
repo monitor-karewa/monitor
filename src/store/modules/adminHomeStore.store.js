@@ -53,8 +53,6 @@ const mutations = {
     },
     SET_NOTIFICATION_DATA:(state, {data}) =>{
         state.notifications = data;
-        console.log("state.notifications");
-        console.log(state.notifications);
         if(state.notifications && state.notifications.length>0){
             state.newNotifications = true;
         }
