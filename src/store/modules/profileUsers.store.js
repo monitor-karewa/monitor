@@ -6,6 +6,10 @@ const state = {
         profilePictureId : "",
         name : "",
         lastName : "",
+    },
+    originalData : {
+        name : "",
+        lastName : "",
     }
 };
 
@@ -64,15 +68,13 @@ const actions = {
 const mutations = {
 
     SET_PROFILE_PICTURE(state, profilePictureId){
-        console.log("profilePictureId", profilePictureId);
         state.user.profilePicture = profilePictureId;
     },
 
     SET_PROFILE_INFO(state, user){
         state.user = user;
-        // state.user.name = name;
-        // state.user.lastName = lastName;
-        // state.user.profilePictureId = profilePicture;
+        state.originalData.name = user.name;
+        state.originalData.lastName = user.lastName;
     }
 
 };
