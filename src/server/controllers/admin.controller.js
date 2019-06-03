@@ -131,6 +131,7 @@ exports.notifications= (req, res, next) => {
     let query = {...qByOrganization, ...qNotDeleted, seenUsers:{$nin:[currentUserId]}};
     Notification
         .find(query)
+        .populate('createdUser')
         .exec((err, notifications) => {
             if(err){
                 return res.json({

@@ -24,7 +24,10 @@
                         <div class="dropdown-item" v-for="(notification, index) in currentGeneralInfoInfo.notifications">
                             <div class="user-img">
                                 <div class="image">
-                                    <img src="@/assets/images/Demo/user-test.jpg" alt="">
+                                    <img v-if="notification.createdUser.profilePicture == undefined" src="@/assets/images/Demo/default.svg" alt="User" />
+                                    <img v-if="notification.createdUser.profilePicture != undefined"
+                                         :src="imageSrc(notification.createdUser.profilePicture)"
+                                         alt="Default"/>
                                 </div>
                                 <div :class="'status ' + notification.status">
 
@@ -46,14 +49,18 @@
                         </div>
                     </div>
                 </div>
-                <div class="p-l-20 topMenuDropdown dropdown">
+
+                <div class="topMenuDropdown dropdown m-l-15">
                     <button class="dropdown-toggle" type="button" id="dropdownUserMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         <div>
                             <!--<label>Jorge Alejandro Hermosillo Salcido</label>-->
                             <label>{{currentUser.fullName}}</label>
                             <span>Admin</span>
                         </div>
-                        <!--<img class="img-fluid" src="@/assets/images/Demo/user-test.jpg" alt="User" />-->
+                        <img v-if="currentUser.userPicture == undefined" class="img-fluid" src="@/assets/images/Demo/default.svg" alt="User" />
+                        <img v-if="currentUser.userPicture != undefined" class="img-fluid"
+                             :src="imageSrc(currentUser.userPicture)"
+                             alt="Default"/>
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownUserMenu">
                         <form>
@@ -76,6 +83,7 @@
 <script>
     import catalog from '@/mixins/catalog.mixin';
     import {mapState} from 'vuex';
+    import baseApi from '@/api/base.api';
     
     export default {
         data () {
@@ -142,6 +150,9 @@
                     this.$store.dispatch('adminHomeStore/READ_NOTIFICATIONS');
                 }
 
+            },
+            imageSrc(id) {
+                return `${baseApi.baseUrl}/public-api/files/image/${id}`;
             }
         }
     }
