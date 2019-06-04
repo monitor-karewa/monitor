@@ -649,7 +649,7 @@
             parseVariablesFromFormulaString() {
                 // this.debounce(function () {
                     this.errors.flag = false;
-                    const regex = /\$[A-Z]+/g;
+                    const regex = /\$[A-Z0-9]+/g;
                     let tempVariable;
                     let tempVariables = [];
                     let variablesFound = this.entry.formula.expression.match(regex);
@@ -670,7 +670,7 @@
             parseCalculationsFromFormulaString() {
                 // this.debounce(function () {
                 this.errors.flag = false;
-                const regex = /\$\$[A-Z]+/g;
+                const regex = /\$\$[A-Z0-9]+/g;
                 let tempCalculation;
                 let tempCalculations = [];
                 let calculationsFound = this.entry.formula.expression.match(regex);
