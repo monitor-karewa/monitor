@@ -35,9 +35,8 @@
                         </div>
 
 
-                        <p class="f-14 c-plain_text principal-font-regular">Seleccionar un
-                            monitor con el cual comparar
-                            <strong class="principal-font-semibold">Monito Karewa del Municipio de Chihuahua</strong>
+                        <p class="f-14 c-plain_text principal-font-regular">Selecciona un monitor con el cual comparar
+                            <strong class="principal-font-semibold">{{currentOrganization.name}}</strong>
                         </p>
 
                         <br/>
