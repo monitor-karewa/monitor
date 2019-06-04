@@ -18,15 +18,11 @@
     
                     <div class="modal-body d-flex">
                         <div class="col-sm-6">
-                            <button v-if="url && url.length" class="btn-raised xs button-accent"><i class="zmdi zmdi-download"></i>
-                                <a :href="url" class="c-white" target="_blank">{{$t('general.files.backup.original-download')}}</a>
-                            </button>
+                            <a v-if="url && url.length" :href="url" class="btn-raised xs button-accent c-white" target="_blank"><i class="zmdi zmdi-download"></i> {{$t('general.files.backup.original-download')}}</a>
                             <small v-if="!url || !url.length">{{$t('general.files.backup.original-unavailable')}}</small>
                         </div>
                         <div class="col-sm-6 p-l-40">
-                            <button v-if="urlBackup && urlBackup.length" class="btn-raised xs button-accent"><i class="zmdi zmdi-download"></i>
-                                <a :href="baseUrl + '/public-api/files/download/' + urlBackup" target="_blank">{{$t('general.files.backup.backup-download')}}</a>
-                            </button>
+                            <a v-if="urlBackup && urlBackup.length" :href="baseUrl + '/public-api/files/download/' + urlBackup" class="btn-raised xs button-accent c-white" target="_blank"><i class="zmdi zmdi-download"></i> {{$t('general.files.backup.backup-download')}}</a>
                             <small v-if="!urlBackup || !urlBackup.length">{{$t('general.files.backup.backup-unavailable')}}</small>
                         </div>
                     </div>
