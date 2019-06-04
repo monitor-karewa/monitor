@@ -1,5 +1,5 @@
 <template>
-    <div class="container-footer">
+    <!--div class="container-footer">
         <div>
             <label> Ultima actualización: 27 Mar, 2019 </label>
         </div>
@@ -10,7 +10,7 @@
             <a href="" class="m-r-20"> FAQ </a>
             <a href="" class="m-l-20"> Contact </a>
         </div>
-    </div>
+    </div-->
 </template>
 
 <style>
