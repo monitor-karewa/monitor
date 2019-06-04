@@ -704,10 +704,32 @@
                 }
             },
             displayResult(value) {
+                if (value === undefined || value === null) {
+                    return '---';
+                }
+                let num = Number(value);
                 switch (this.entry.displayForm) {
-                    case 'AMOUNT': return "$" + value;
-                    case 'PERCENTAGE': return value +"%";
-                    case 'NORMAL': return value;
+                    case 'AMOUNT': return '$' + value.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,');
+                    case 'PERCENTAGE':
+                        if(isNaN(num)){
+                            return "0.00%"
+                        }
+                        if(String(num).split('.').length == 2 && String(num).split('.')[1].length >= 4){
+                            return value.toFixed(4) +"%";
+                        } else if(String(num).split('.') < 2){
+                            return value.toFixed(2) +"%";
+                        }
+                        return value +"%";
+                        break;
+                    case 'NORMAL':
+                        if(isNaN(num)){
+                            return 0
+                        }
+                        if(String(num).split('.').length == 2 && String(num).split('.')[1].length >= 4){
+                            return value.toFixed(4) ;
+                        }
+                        return value;
+                        break;
                 }
             },
             debounce: function debounce(func, wait, immediate) {
