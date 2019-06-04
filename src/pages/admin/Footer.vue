@@ -7,7 +7,7 @@
             <!--label> © 2019 Black Labs </label-->
         <!--/div-->
         <!--div-->
-            <!--a href="" class="m-r-20"> FAQ </a>--
+            <!--a href="" class="m-r-20"> FAQ </a-->
             <!--a href="" class="m-l-20"> Contact </a-->
         <!--/div-->
     <!--/div-->
