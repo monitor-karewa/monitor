@@ -43,9 +43,9 @@
                                     </div>
                                 </div>
                                 <!--<a href="" class="btn-stroke button-primary text-unset" tabindex="">Ir a Inicio</a>-->
-                                <router-link v-show="!isExternalCorruptionIndex(detailLeft.corruptionIndex)" :to="getInternalCorruptionIndexHomeUrl(detailLeft.corruptionIndex, detailLeft.organization)" class="btn-stroke button-primary text-unset">Ir a Inicio</router-link>
+                                <router-link v-if="!isExternalCorruptionIndex(detailLeft.corruptionIndex)" :to="getInternalCorruptionIndexHomeUrl(detailLeft.corruptionIndex, detailLeft.organization)" class="btn-stroke button-primary text-unset">Ir a Inicio</router-link>
                                 <!--<a v-show="!isExternalCorruptionIndex(detailLeft.corruptionIndex)" :href="getInternalCorruptionIndexHomeUrl(detailLeft.corruptionIndex, detailLeft.organization)" class="btn-stroke button-primary text-unset" tabindex="">Ir a Inicio</a>-->
-                                <a v-show="isExternalCorruptionIndex(detailLeft.corruptionIndex)" target="_blank" :href="getExternalCorruptionIndexHomeUrl(detailLeft.corruptionIndex, detailLeft.organization)" class="btn-stroke button-primary text-unset" tabindex="">Ir a Inicio</a>
+                                <a v-if="isExternalCorruptionIndex(detailLeft.corruptionIndex)" target="_blank" :href="getExternalCorruptionIndexHomeUrl(detailLeft.corruptionIndex, detailLeft.organization)" class="btn-stroke button-primary text-unset" tabindex="">Ir a Inicio</a>
                             </div>
                             <div class="col-4 p-30">
                                 <div class="logo-full lg">
@@ -55,9 +55,9 @@
                                         <label :style="{color: detailRight.organization.color}">{{detailRight.organization.shortName}}</label>
                                     </div>
                                 </div>
-                                <router-link v-show="!isExternalCorruptionIndex(detailRight.corruptionIndex)" :to="getInternalCorruptionIndexHomeUrl(detailRight.corruptionIndex, detailRight.organization)" class="btn-stroke button-primary text-unset">Ir a Inicio</router-link>
+                                <router-link v-if="!isExternalCorruptionIndex(detailRight.corruptionIndex)" :to="getInternalCorruptionIndexHomeUrl(detailRight.corruptionIndex, detailRight.organization)" class="btn-stroke button-primary text-unset">Ir a Inicio</router-link>
                                 <!--<a v-show="!isExternalCorruptionIndex(detailRight.corruptionIndex)" :href="getInternalCorruptionIndexHomeUrl(detailRight.corruptionIndex, detailRight.organization)" class="btn-stroke button-primary text-unset" tabindex="">Ir a Inicio</a>-->
-                                <a v-show="isExternalCorruptionIndex(detailRight.corruptionIndex)" target="_blank" :href="getExternalCorruptionIndexHomeUrl(detailRight.corruptionIndex, detailRight.organization)" class="btn-stroke button-primary text-unset" tabindex="">Ir a Inicio</a>
+                                <a v-if="isExternalCorruptionIndex(detailRight.corruptionIndex)" target="_blank" :href="getExternalCorruptionIndexHomeUrl(detailRight.corruptionIndex, detailRight.organization)" class="btn-stroke button-primary text-unset" tabindex="">Ir a Inicio</a>
                             </div>
 
 
