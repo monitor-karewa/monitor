@@ -693,6 +693,9 @@
                 if(this.entry.formula && this.entry.formula.expression){
                     this.entry.formula.variables = this.parseVariablesFromFormulaString();
                     this.entry.formula.calculations = this.parseCalculationsFromFormulaString();
+                } else {
+                    this.entry.formula.variables = [];
+                    this.entry.formula.calculations = [];
                 }
             },
             setDisplayForm(value) {
