@@ -1,7 +1,7 @@
 export default {
     CURRENT_USER(state, {fullName, profilePicture}) {
         state.currentUser.fullName = fullName;
-        state.currentUser.profilePicture = profilePicture;
+        state.currentUser.userPicture = profilePicture;
     },
     
     CURRENT_ORGANIZATION(state, {_id, name, shortName, color, theme, cover, title, description, contactLocation, contactEmail}) {

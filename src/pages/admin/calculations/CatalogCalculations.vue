@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="contract-section">
         <AdminMainSection>
             <BackButton/>
             <CatalogHeader :singular="'Cálculo'" :plural="'Cálculo'" :storeModule="storeModule"/>
@@ -732,9 +732,27 @@
                 touchMap.set($v, setTimeout($v.$touch, 1000))
             },
             clearEntry(){
-//                this.entry = {
-//                    formula:{}
-//                };
+                this.entry= {
+                    _id:"",
+                    name: "",
+                    description: "",
+                    abbreviation: "",
+                    type: undefined,
+                    enabled: false,
+                    formula : {
+                        expression : "",
+                        variables : [],
+                        calculations : []
+                    },
+                    displayForm : "NORMAL",
+                    notes: "",
+                    locked:false,
+                    administrationPeriod:'',
+                    hasPercentScale:false,
+                    scale:[],
+                    filters:[]
+                };
+                this.$store.dispatch(`${storeModule}/clearFormulaValidation`);
                 this.$v.$reset();
             },
             validateFormula(){

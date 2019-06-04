@@ -38,7 +38,7 @@ let actions = {
                 }
 
                 _session.set('userFullName', user.fullName);
-                _session.set('userProfilePicture', user.profilePicture);
+                _session.set('userPicture', user.profilePicture);
                 commit('CURRENT_USER', user, {root: true});
             }
         }, (err) => {

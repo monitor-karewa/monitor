@@ -53,7 +53,7 @@
               let token = this.$session.get('jwt');
               axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
               let fullName = this.$session.get('userFullName');
-              let profilePicture = this.$session.get('userProfilePicture');
+              let profilePicture = this.$session.get('userPicture');
               this.$store.commit('CURRENT_USER', {fullName, profilePicture});
 
               let _id = this.$session.get('currentOrganizationId');

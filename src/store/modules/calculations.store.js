@@ -62,6 +62,9 @@ const actions = {
                 tShow(`An error ocurred while trying to validate the formula: ${error}`);
             });
     },
+    clearFormulaValidation({commit}){
+        commit('CLEAR_FORMULA_VALIDATION');
+    }
 
 };
 
@@ -82,7 +85,7 @@ const mutations = {
     SET_SUPPLIERS(state, suppliers){
         state.suppliers = suppliers;
     },
-    clearFormulaValidation(state){
+    CLEAR_FORMULA_VALIDATION(state){
         state.formulaValidated = false;
         state.formulaValidation = {};
     },

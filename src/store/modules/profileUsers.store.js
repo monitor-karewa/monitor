@@ -31,7 +31,7 @@ const actions = {
                 user.fullName = currentFullName;
                 user.profilePicture = result.data.data.profilePicture;
                 commit('CURRENT_USER', user, {root: true});
-                session.set("userProfilePicture", user.profilePicture);
+                session.set("userPicture", user.profilePicture);
             } else {
                 tShow('Ocurrió un error cargando la imagen', 'danger');
             }
