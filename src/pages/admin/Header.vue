@@ -24,10 +24,8 @@
                         <div class="dropdown-item" v-for="(notification, index) in currentGeneralInfoInfo.notifications">
                             <div class="user-img">
                                 <div class="image">
-                                    <img v-if="notification.createdUser.profilePicture == undefined" src="@/assets/images/Demo/default.svg" alt="User" />
-                                    <img v-if="notification.createdUser.profilePicture != undefined"
-                                         :src="imageSrc(notification.createdUser.profilePicture)"
-                                         alt="Default"/>
+                                    <img v-if="currentUser.userPicture" class="img-fluid" :src="profilePictureUrl" alt="User"/>
+                                    <img v-else src="@/assets/images/Demo/default.svg" alt="">
                                 </div>
                                 <div :class="'status ' + notification.status">
 
@@ -52,15 +50,12 @@
 
                 <div class="topMenuDropdown dropdown m-l-15">
                     <button class="dropdown-toggle" type="button" id="dropdownUserMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        <div>
-                            <!--<label>Jorge Alejandro Hermosillo Salcido</label>-->
-                            <label>{{currentUser.fullName}}</label>
-                            <span>Admin</span>
-                        </div>
-                        <img v-if="currentUser.userPicture == undefined" class="img-fluid" src="@/assets/images/Demo/default.svg" alt="User" />
-                        <img v-if="currentUser.userPicture != undefined" class="img-fluid"
-                             :src="imageSrc(currentUser.userPicture)"
-                             alt="Default"/>
+                            <div>
+                                <label>{{currentUser.fullName}}</label>
+                                <span>Admin</span>
+                            </div>
+                            <img v-if="currentUser.userPicture" class="img-fluid" :src="profilePictureUrl" alt="User"/>
+                            <img v-else src="@/assets/images/Demo/default.svg" alt="">
                     </button>
                     <div class="dropdown-menu" aria-labelledby="dropdownUserMenu">
                         <form>
@@ -84,7 +79,7 @@
     import catalog from '@/mixins/catalog.mixin';
     import {mapState} from 'vuex';
     import baseApi from '@/api/base.api';
-    
+
     export default {
         data () {
             return {
@@ -94,6 +89,9 @@
         computed: {
             ...mapState({
                 currentUser: state => state.currentUser,
+                profilePictureUrl : function(){
+                    return `${baseApi.baseUrl}/public-api/files/image/${this.currentUser.userPicture}`;
+                },
                 currentGeneralInfoInfo: state => state.adminHomeStore,
             }),
             permissions () {
@@ -150,9 +148,6 @@
                     this.$store.dispatch('adminHomeStore/READ_NOTIFICATIONS');
                 }
 
-            },
-            imageSrc(id) {
-                return `${baseApi.baseUrl}/public-api/files/image/${id}`;
             }
         }
     }

@@ -71,9 +71,10 @@ exports.login = (req, res, next) => {
         let token = jwt.sign(payload, config.session.options.secret);
         
         let permissions = user.getPermissions();
+        
         let resultUser = {
             fullName: user.fullName,
-            profilePicture: user.profilePicture
+            profilePicture : user.profilePicture
         };
 
         let result = {token, permissions, user: resultUser};
@@ -203,7 +204,6 @@ exports.validToken = (req, res, next) => {
         res.json({error: true, message: "Por favor ingresa tu nueva contraseña."});
     }
 
-    console.log('req.body', req.body);
 
     User.findOne({_id: mongoose.Types.ObjectId(userId), resetPasswordToken: encryptedToken}).exec((err, user) => {
         if (err) {
