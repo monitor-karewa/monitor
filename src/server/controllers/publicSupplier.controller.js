@@ -281,9 +281,12 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
 
     if (req.body && req.body.filters) {
         if (req.body.filters.search && req.body.filters.search.length) {
-            orBuilder.push({contractId: utils.toAccentsRegex(req.body.filters.search, "gi")});
-            orBuilder.push({contractNumber: utils.toAccentsRegex(req.body.filters.search, "gi")});
-            orBuilder.push({servicesDescription: utils.toAccentsRegex(req.body.filters.search, "gi")});
+            
+            let searchRegex = utils.toAccentsRegex(req.body.filters.search, "gi");
+            orBuilder.push({contractId: searchRegex});
+            orBuilder.push({contractNumber: searchRegex});
+            orBuilder.push({servicesDescription: searchRegex});
+            orBuilder.push({'supplier.name': searchRegex});
             andBuilder.push({$or: orBuilder});
             orBuilder = [];
         }
@@ -343,12 +346,39 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
 
     let aggregate = Contract.aggregate([
         {
+            $lookup: {
+                from: Supplier.collection.name,
+                let: { "supplierId": "$supplier" },
+                pipeline: [
+                    {
+                        "$match": {
+                            "$expr": {
+                                "$eq": [ "$_id", "$$supplierId" ] }
+                        }
+                    },
+                    {
+                        "$project": {
+                            "_id": 1,
+                            "name": 1
+                        }
+                    }
+                ],
+                as: "supplier"
+            }
+        },
+        {
+            $unwind: {
+                path: "$supplier",
+                preserveNullAndEmptyArrays: true
+            },
+        },
+        {
             $match: query
         },
         {
             $group: {
-                _id: '$supplier',
-
+                _id: '$supplier._id',
+                supplier: {$first: '$supplier'},
                 contractsCount: {$sum: 1},
                 publicCount: {
                     $sum: {
@@ -407,32 +437,6 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
                 },
                 total: {$sum: "$totalOrMaxAmount"}
             }
-        },
-        {
-            $lookup: {
-                from: Supplier.collection.name,
-                let: { "supplierId": "$_id" },
-                pipeline: [
-                    {
-                        "$match": {
-                            "$expr": {
-                                "$eq": [ "$_id", "$$supplierId" ] }
-                        }
-                    },
-                    {
-                        "$project": {
-                            "name": 1
-                        }
-                    }
-                ],
-                as: "supplier"
-            }
-        },
-        {
-            $unwind: {
-                path: "$supplier",
-                preserveNullAndEmptyArrays: true
-            },
         },
         {
             $project: {
