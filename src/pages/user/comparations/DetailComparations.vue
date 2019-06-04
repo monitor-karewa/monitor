@@ -48,7 +48,7 @@
                                 <a v-if="isExternalCorruptionIndex(detailLeft.corruptionIndex)" target="_blank" :href="getExternalCorruptionIndexHomeUrl(detailLeft.corruptionIndex, detailLeft.organization)" class="btn-stroke button-primary text-unset" tabindex="">Ir a Inicio</a>
                             </div>
                             <div class="col-4 p-30">
-                                <div class="logo-full lg tacometro-container">
+                                <div class="logo-full lg">
                                     <img class="img-fluid" src="@/assets/images/Logos/logo-karewa-xs.png" alt="Logo">
                                     <div>
                                         <small>Monitor</small>
