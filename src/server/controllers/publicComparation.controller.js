@@ -108,7 +108,8 @@ exports.detail = (req, res, next) => {
 
 
     let qNotDeleted = deletedSchema.qNotDeleted();
-    let qByOrganization = {"organization": mongoose.Types.ObjectId(id)};
+    let organizationId = mongoose.Types.ObjectId(id);
+    let qByOrganization = {"organization": organizationId};
     let query = {...qNotDeleted, ...qByOrganization};
 
     Contract.aggregate([
@@ -227,7 +228,7 @@ exports.detail = (req, res, next) => {
 
                         let query = Calculation.qAdministrationPeriodFromYearToYear(corruptionIndex);
 
-                        calculateAndValidateFormula(req, cache, corruptionIndex._id, {query: query}, (err, result) => {
+                        calculateAndValidateFormula(req, cache, corruptionIndex._id, {query: query, currentOrganizationId: organizationId}, (err, result) => {
                             if (err) {
                                 logger.error(err, req, 'publicComparation.controller#detail', 'Error trying to get result for corruption index');
                             }
