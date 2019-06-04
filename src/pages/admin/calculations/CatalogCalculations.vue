@@ -408,8 +408,8 @@
                 </div>
                 <div class="total-footer">
                     <span v-if="formulaValidated && !formulaValidation.error" > RESULTADO: <strong>{{displayResult(formulaValidation.results.value)}}</strong></span>
-                    <p>La vista previa del resultado del cálculo solo está disponible en cálculos
-                        generales</p>
+                    <p v-show="entry.type == 'GENERAL'">La vista previa del resultado se muestra para todos los contratos del monitor </p>
+                    <p v-show="entry.type == 'CONTRACT'">La vista previa del resultado se muestra solamente para los contratos de la organización actual </p>
                 </div>
                 <button type="button" class="btn-stroke button-info_text" data-dismiss="modal">Cancelar
                 </button>
