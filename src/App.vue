@@ -7,7 +7,7 @@
     <router-view name="header"/>
     <router-view name="sidebar"/>
     <router-view/>
-    <!-- <router-view name="footer"/> -->
+    <router-view name="footer"/>
   </div>
 </template>
 
