@@ -430,7 +430,7 @@ exports.save = (req, res, next) => {
                         if (err) {
                             let errors = [];
                             if(err.code == 11000){
-                                errors.push({message:"El campo Número de contrato debe ser único, se encontro otro registro con el mismo valor."})
+                                errors.push({message:"Se encontro otro registro con la misma abreviación de calculo o con el mismo nombre"})
                             }
                             for(let item in err.errors){
                                 errors.push(err.errors[item]);
@@ -531,7 +531,7 @@ exports.save = (req, res, next) => {
             if (err) {
                 let errors = [];
                 if(err.code == 11000){
-                    errors.push({message:"El campo Número de contrato debe ser único, se encontro otro registro con el mismo valor."})
+                    errors.push({message:"Se encontro otro registro con la misma abreviación de calculo o con el mismo nombre"})
                 }
                 for(let item in err.errors){
                     errors.push(err.errors[item]);
