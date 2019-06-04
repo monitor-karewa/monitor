@@ -36,12 +36,11 @@
 <script>
     import MoreInfo from '@/components/general/MoreInfo';
     import MillonesTrimestreChart from '@/components/charts/landing/MillonesTrimestreChart';
-    import EjercidoPeriodoChart from "../../../components/charts/landing/EjercidoPeriodoChart";
+    import EjercidoPeriodoChart from "@/components/charts/landing/EjercidoPeriodoChart";
 
     export default {
         data () {
             return {
-                test: 'Workaround; empty data triggers error on router'
             }
         },
         components: {
