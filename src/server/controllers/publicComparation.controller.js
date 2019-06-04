@@ -90,12 +90,16 @@ exports.detail = (req, res, next) => {
 
     const URL_DETAIL_SUFFIX = "/public-api/comparations/detail/?id=";
     let id = req.query.id;
-    let url = req.query.url;
+    let baseUrl = req.query.url;
+    let url = baseUrl;
 
     if(url && url.length){
         url += URL_DETAIL_SUFFIX + id;
         axios.get(url)
             .then(function (response){
+                if (response.data && response.data.data && response.data.data.corruptionIndex) {
+                    response.data.data.corruptionIndex.url = baseUrl;
+                }
                 return res.json(response.data)
             })
             .catch(error => {
