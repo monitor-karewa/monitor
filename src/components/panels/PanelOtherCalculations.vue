@@ -3,7 +3,7 @@
         <div class="panel-table m-t-50" v-show="showPanel">
             <div class="row m-0 p-b-20">
                             <span class="border-lines col-12">
-                                <label>Otros cálculos</label>
+                                <label>Datos generales</label>
                             </span>
                 <template v-for="(calculationInfo) in calculationsInfo">
                     <div class="col-6 p-l-20 p-r-20 p-t-20">
