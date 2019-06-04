@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="contract-section">
         <AdminMainSection>
             <BackButton/>
             <CatalogHeader :singular="'Cálculo'" :plural="'Cálculo'" :storeModule="storeModule"/>
