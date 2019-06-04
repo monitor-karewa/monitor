@@ -146,6 +146,12 @@
                             permission: "SETTINGS"
                         },
                         {
+                            name: "Editar Perfil",
+                            to: "/admin/profile",
+                            icon: "zmdi zmdi-account-circle",
+                            admin: true
+                        },
+                        {
                             name: "Seleccionar Organización",
                             to: "/admin/select-organization",
                             icon: "zmdi zmdi-city",

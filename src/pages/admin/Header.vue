@@ -12,7 +12,7 @@
         </div>
         <div class="right col-md-9 col-8">
             <div class="links">
-                <router-link to="/admin/data-load" v-show="hasAccessToDataLoad" class="btn-raised xs button-accent hideresp">
+                <router-link to="/admin/data-load" v-show="hasAccessToDataLoad" class="btn-raised xs button-accent">
                     <i class="zmdi zmdi-plus"></i> Cargar datos
                 </router-link>
                 <div class="dropdown notifications-btn show" :class="{active:currentGeneralInfoInfo.newNotifications}">
@@ -47,7 +47,7 @@
                         </div>
                     </div>
                 </div>
-
+                <router-link to="/admin/settings" class="btn-circle-icon hideresp"><i class="zmdi zmdi-settings"></i></router-link>
                 <div class="topMenuDropdown dropdown m-l-15">
                     <button class="dropdown-toggle" type="button" id="dropdownUserMenu" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <div>
