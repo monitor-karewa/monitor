@@ -1,5 +1,5 @@
 <template>
-    <th>{{name}}<i class="zmdi m-l-5 f-16" :class="{'zmdi-caret-down' :sortTable.sortKey != field, 'zmdi-caret-up':sortTable.sortKey == field}" @click="sortBy(field)"></i></th>
+    <th>{{name}}<i class="zmdi m-l-5 f-16" :class="{'zmdi-caret-down' :(sortTable.sortKey != field || sortTable.order == 'desc'), 'zmdi-caret-up':(sortTable.sortKey == field && sortTable.order == 'asc')}" @click="sortBy(field)"></i></th>
 </template>
 
 <style>
