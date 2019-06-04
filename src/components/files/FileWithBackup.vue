@@ -72,7 +72,7 @@
             },
             url: {
                 type: String,
-                required: true
+                required: false
             },
             urlBackup: {
                 type: String
