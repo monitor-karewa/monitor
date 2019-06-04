@@ -14,4 +14,8 @@ router.get('/visits-route', adminController.visitsByRoute);
 
 router.get('/info-dashboard', adminController.infoValues);
 
+router.get('/notifications', adminController.notifications);
+
+router.get('/read-notifications', adminController.readNotifications);
+
 module.exports = router;

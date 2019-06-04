@@ -1,6 +1,7 @@
 import Vue from 'vue';
 import App from '@/App.vue';
 import moment from 'moment';
+import BaseApi from '@/api/base.api'
 
 //Logger is used in most places, so it should go before any other plugins/options
 import /*logger from */'@/plugins/logger';
@@ -8,6 +9,10 @@ import /*logger from */'@/plugins/logger';
 import router from '@/router';
 import store from '@/store';
 import '@/registerServiceWorker';
+import * as io from 'socket.io-client'
+import VueSocketIO from 'vue-socket.io'
+const socket = io(BaseApi.baseUrl);
+
 import i18n from '@/plugins/i18n';
 import vuelidate from '@/plugins/vuelidate';
 import '@/plugins/vueApexChart';
@@ -20,6 +25,18 @@ window.$ = window.jQuery = require('jquery');
 Vue.config.productionTip = false;
 
 export const bus = new Vue();
+
+Vue.use(new VueSocketIO({
+        debug: true,
+        connection: socket, //options object is Optional
+        vuex: {
+            store,
+            actionPrefix: "SOCKET_",
+            mutationPrefix: "SOCKET_"
+        }
+    })
+);
+
 
 let vue = new Vue({
     router,

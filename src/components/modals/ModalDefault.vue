@@ -27,12 +27,20 @@
 
             }
         },
+        sockets: {
+            connect: function () {
+            }
+        },
         methods:{
            confirmAction(){
                if (this.closeOnly) {
                    //Do nothing, only close
                } else {
                    this.$store.dispatch(`${this.$props.storeModule}/${this.$props.action}`);
+                   if(this.reloadNotifications) {
+                        this.$socket.emit('new_notifications');
+                   }
+
                }
            }
         },
@@ -56,6 +64,10 @@
                 type: Boolean,
                 default: false
             },
+            "reloadNotifications": {
+                type: Boolean,
+                default: false
+            }
         }
     }
 </script>

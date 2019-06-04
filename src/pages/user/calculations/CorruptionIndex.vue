@@ -22,7 +22,7 @@
             
             <div class="col-12 p-0">
                 <div class="card d-flex">
-                    <div class="floating-title-panel">
+                    <div class="floating-title-panel big">
                         <h1>Índice de Riesgo de Corrupción</h1>
 
                         <div class="side-right d-flex">

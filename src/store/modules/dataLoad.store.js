@@ -53,10 +53,10 @@ const getters = {
 };
 
 const actions = {
-    LOAD_CURRENT_DATA_LOAD_INFO: ({commit}) => {
+    LOAD_CURRENT_DATA_LOAD_INFO: ({commit}, isFromDashboard) => {
         dataLoadApi.getCurrentInfo({}, (response) => {
             if (!response.data.error && response.data && response.data.data) {
-                commit('SET_CURRENT_DATA_LOAD_INFO', {dataLoadInfo: response.data.data});
+                commit('SET_CURRENT_DATA_LOAD_INFO', {dataLoadInfo: response.data.data, isFromDashboard});
                 // commit('SET_PAGE_AND_PAGINATE', {page: 1});
             }
         }, (err) => {
@@ -144,7 +144,9 @@ const actions = {
     },
     //Confirm current and save to database
     CONFIRM_CURRENT: ({commit}) => {
+        bus.$emit('dataLoad/CONFIRMATION_FINISHED', true);
         dataLoadApi.confirmCurrent({}, (response) => {
+            bus.$emit('dataLoad/CONFIRMATION_FINISHED', false);
             if (response.data.error) {
                 tShow(i18n.t('data-load.confirm.error.unexpected'), 'danger');
             } else {
@@ -164,6 +166,7 @@ const actions = {
             link.setAttribute('download', `monitor-karewa-validaciones-contratos.xlsx`);
             document.body.appendChild(link);
             link.click();
+            bus.$emit('dataLoad/VALIDATIONS_DOWNLOADED');
         });
     },
     DOWNLOAD_PLANTILLA: () => {
@@ -179,9 +182,11 @@ const actions = {
 };
 
 const mutations = {
-    SET_CURRENT_DATA_LOAD_INFO: (state, {dataLoadInfo}) =>{
+    SET_CURRENT_DATA_LOAD_INFO: (state, {dataLoadInfo,isFromDashboard}) =>{
         state.dataLoadInfo = dataLoadInfo;
-        bus.$emit('dataLoad/CURRENT_DATA_LOAD_INFO_LOADED', {dataLoadInfo});
+        if(!isFromDashboard){
+            bus.$emit('dataLoad/CURRENT_DATA_LOAD_INFO_LOADED', {dataLoadInfo});
+        }
     },
     
     SET_CURRENT_DATA_LOAD: (state, {dataLoad, canceled = false}) => {

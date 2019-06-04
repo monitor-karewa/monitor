@@ -70,7 +70,7 @@
                             <h1> Equipo </h1>
                         </div>
                         <div class="about vertical-center">
-                            <div class="w-60 m-r-30 o-x-auto">
+                            <div class="w-60 m-r-30 o-x-auto m-b-20">
                                 <h2 class="title-dot">Consejo:</h2>
                                 <ul class="list-dots">
                                     <li>Javier Mesta Delgado <span>Consejero Presidente</span></li>

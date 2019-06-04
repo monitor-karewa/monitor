@@ -24,5 +24,24 @@ export default {
         return axios.post(`${base.baseUrl}/api/${namespace}/save-updated-docs`,   params )
             .then(onSuccess)
             .catch(onError);
+    },
+
+
+    updateProfileInfo: (params = {}, config = {}, onSuccess, onError) => {
+        return axios.post(`${base.baseUrl}/api/${namespace}/updateProfileInfo`, params)
+            .then(onSuccess)
+            .catch(onError);
+    },
+
+    uploadProfilePicture: (params = {}, config = {}, onSuccess, onError) => {
+        return axios.post(`${base.baseUrl}/api/${namespace}/uploadProfilePicture`, params, config)
+            .then(onSuccess)
+            .catch(onError);
+    },
+
+    getProfileInfo: (params = {}, config = {}, onSuccess, onError) => {
+        return axios.get(`${base.baseUrl}/api/${namespace}/getProfileInfo${params.query || ''}`, params, config)
+            .then(onSuccess)
+            .catch(onError);
     }
 }

@@ -1693,10 +1693,11 @@ class ContractExcelReader {
                             // details: savedDetails
                         });
                         
-                        let dataLoadDetailsArray = objs.map((obj) => {
+                        let dataLoadDetailsArray = objs.map((obj, index) => {
                             return {
                                 dataLoad: _this.idDataLoad || newDataLoad._id,
-                                data: obj
+                                data: obj,
+                                rowIndex:index + 3
                             };
                         });
                         

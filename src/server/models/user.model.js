@@ -69,6 +69,11 @@ let userSchema = mongoose.Schema({
         type: String,
         required: false
     },
+    profilePicture: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'File',
+        required: false
+    },
     deleted: require("./schemas/deleted.schema").Deleted
 });
 

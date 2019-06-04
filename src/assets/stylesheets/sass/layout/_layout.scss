@@ -490,9 +490,12 @@ button {
 /* END CARDS */
 
 .container-footer {
-  position: fixed;
+  position: absolute;
+  width: 100%;
+  padding: 0 !important;
+  // position: fixed;
   bottom: 0;
-  padding: 30px 60px 30px 300px;
+  // padding: 30px 60px 30px 300px;
   width: 100%;
   left: 0;
   display: inline-grid;
@@ -1015,6 +1018,20 @@ button {
       border-color: $grey_2;
     }
   }
+
+  &.big {
+    display: flex;
+    margin-bottom: 48px;
+    h1 {
+      margin-bottom: 0px !important;
+    }
+    .side-right {
+      position: relative;
+      align-items: flex-start;
+
+    }
+
+  }
 }
 
 .form-btn-top {
@@ -1405,13 +1422,16 @@ button {
         align-content: center;
 
         li {
+          justify-content: center;
+          display: flex;
+          align-items: center;
           a {
             position: relative;
             font-size: 14px;
             font-weight: 500;
             line-height: normal;
             text-align: center;
-            margin: 0 15px;
+            margin: 0 5px;
             padding: 0 5px;
 
             &::before {
@@ -1445,6 +1465,7 @@ button {
 
       .topMenuDropdown {
         display: none;
+        position: relative;
 
         .dropdown-toggle {
           width: 45px;
@@ -1462,7 +1483,10 @@ button {
         }
 
         .dropdown-menu {
-          left: -80px !important;
+          left: initial !important;
+          right: 0;
+          top: 32px !important;
+          transform: none !important;
           border: none;
           padding: 0;
           border-radius: 2px;
@@ -1574,19 +1598,42 @@ button {
 
 
 /* MAIN CONTAINER */
+
+.contract-section {
+  .modal {
+    .modal-dialog {
+      width: 90%;
+      max-width: 1200px;
+      margin-left: auto;
+      margin-right: auto;
+      .modal-content {
+        min-height: 600px;
+        height: 90vh;
+        max-height: 90vh;
+        overflow: auto;
+        .modal-body {
+          max-height: initial;
+        }
+      }
+    }
+  }
+}
 #main #content {
   position: fixed;
   overflow-y: scroll;
   overflow-x: hidden;
   height: 100%;
   width: 100%;
-  padding: 85px 60px 75px 300px;
+  padding: 85px 60px 30px 300px;
 
   .container {
     padding: 0;
     margin: 0;
     width: 100%;
     max-width: 100%;
+    padding-bottom: 30px;
+    position: relative;
+    min-height: 100%;
   }
 }
 
@@ -1611,6 +1658,29 @@ button {
   }
 }
 /* END MAIN CONTAINER */
+
+.profile {
+  .user-info {
+    display: flex;
+    width: 100%;
+    padding-bottom: 33px;
+    margin-bottom: 30px;
+    border-bottom: solid 1px transparentize(#454e7b, .8 );
+    .img-profile {
+      width: 180px;
+      min-width: 180px;
+      height: 180px;
+      margin-right: 35px;
+      img {
+        object-fit: contain;
+        height: 100%;
+        width: 100%;
+  
+      }
+    }
+
+  }
+}
 
 
 .neutral-width {
@@ -1902,6 +1972,7 @@ button {
         display: flex;
         align-items: center;
         justify-content: flex-start;
+        cursor: pointer;
         i {
           margin-right: 22px;
           font-size: 18px;

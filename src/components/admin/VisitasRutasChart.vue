@@ -1,7 +1,7 @@
 <template>
     <div>
         <div>
-            <apexchart type=donut :options="chartOptions" :series="customChartData.datasets" />
+            <apexchart height=450 type=donut :options="chartOptions" :series="customChartData.datasets" />
         </div>
     </div>
 </template>

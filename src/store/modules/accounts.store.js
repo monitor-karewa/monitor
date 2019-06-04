@@ -28,6 +28,7 @@ let actions = {
                     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
                     
                     _session.set('jwt', token);
+                    _session.set('expireDate', Math.floor(Date.now() / 1000) + (60 * 60 * 24));
                     _session.set('permissions', permissions);
                     //Permissions are to be set in the session to persist on page reloads
                     // commit('SET_PERMISSIONS', {permissions});
@@ -36,9 +37,8 @@ let actions = {
                     router.push(redirectTo);
                 }
 
-                console.log('user.fullName', user.fullName);
-                
                 _session.set('userFullName', user.fullName);
+                _session.set('userPicture', user.profilePicture);
                 commit('CURRENT_USER', user, {root: true});
             }
         }, (err) => {
