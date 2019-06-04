@@ -3,7 +3,7 @@ import { bus } from '@/main';
 
 const state = {
     user : {
-        profilePictureId : "",
+        profilePicture : "",
         name : "",
         lastName : "",
     },
@@ -26,7 +26,7 @@ const actions = {
         }, (result) => {
             if (result.data && !result.data.error && result.data.data) {
                 tShow('Imagen de perfil actualizada', 'info');
-                commit('SET_PROFILE_PICTURE', result.data.data.profilePicture);
+                 commit('SET_PROFILE_PICTURE', result.data.data.profilePicture);
                 let user = {};
                 user.fullName = currentFullName;
                 user.profilePicture = result.data.data.profilePicture;
@@ -71,6 +71,7 @@ const actions = {
 const mutations = {
 
     SET_PROFILE_PICTURE(state, profilePictureId){
+        state.user = {...state.user};
         state.user.profilePicture = profilePictureId;
     },
 

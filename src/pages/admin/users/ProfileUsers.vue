@@ -14,8 +14,6 @@
                                 <img v-else src="@/assets/images/Demo/default.svg" alt="" @click="promptUpload">
                             </div>
                             <div class="w-100">
-
-
                                 <div class="form-group fg-float">
                                     <div class="fg-line  basic-input">
                                         <input id="name" type="text" class="form-control fg-input" placeholder="Nombre"
@@ -44,7 +42,7 @@
 
                                     <button class="btn-stroke button-stroke m-l-5 m-r-5 m-b-15 float-left c-pointer"
                                             type="button">
-                                        {{$t('data-load.upload-file')}}
+                                        Cambiar imagen
                                         <input type="file" id="profilePictureInput" name="profilePicture"
                                                :ref="pictureRef"
                                                v-on:change="handleFileUpload()" :accept="imageAcceptTypes"/>
@@ -156,7 +154,6 @@
                 tempUser :{
                     name: "",
                     lastName : "",
-                    profilePictureId : "",
                     dummyProperty: "testValue",
                     currentPassword : undefined,
                     newPassword : undefined,

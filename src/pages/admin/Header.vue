@@ -58,8 +58,7 @@
             ...mapState({
                 currentUser: state => state.currentUser,
                 profilePictureUrl : function(){
-                    let url = `${baseApi.baseUrl}/public-api/files/image/${this.currentUser.profilePicture}`;
-                    return url;
+                    return `${baseApi.baseUrl}/public-api/files/image/${this.currentUser.profilePicture}`;
                 }
             }),
             permissions () {
