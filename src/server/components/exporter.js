@@ -86,7 +86,7 @@ class ExcelExporter extends Exporter {
 
         let sheetTotal = workbook.addWorksheet(params.docNamePlural + '-totales');
         let sheetDetail = workbook.addWorksheet(params.docNamePlural + '-detalle');
-        let formattedDate = moment(params.date).format('MM/DD/YYYY');
+        let formattedDate = moment(params.date).format('DD/MM/YYYY');
 
         let cellIndexByHeader = {};
         let cellIndexByPropName = {};
@@ -180,7 +180,7 @@ class ExcelExporter extends Exporter {
         let workbook = new Excel.Workbook();
         let sheet = workbook.addWorksheet(params.docNamePlural);
 
-        let formattedDate = moment(params.date).format('MM/DD/YYYY');
+        let formattedDate = moment(params.date).format('DD/MM/YYYY');
         
         sheet.getRow(this.rowIndexes.INFO).getCell(1).value = params.title;
         sheet.getRow(this.rowIndexes.INFO).getCell(2).value = `Fecha de consulta: ${formattedDate}`;

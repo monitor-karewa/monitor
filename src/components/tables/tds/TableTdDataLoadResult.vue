@@ -47,7 +47,7 @@
                 if (!m.isValid()) {
                     return '';
                 }
-                let formattedDate = m.utc().format('MM/DD/YYYY');
+                let formattedDate = m.utc().format('DD/MM/YYYY');
                 if (!formattedDate) {
                     return '';
                 }

@@ -880,7 +880,7 @@ let downloadPDF = (req, res, { totals, suppliers, filters }) => {
     };
 
     let headers = [{ text:"Monitor Karewa", style:'header'},
-                    {text : moment(new Date()).format('MM/DD/YYYY'), style:'header'}];
+                    {text : moment(new Date()).format('DD/MM/YYYY'), style:'header'}];
 
     new PDFExporter()
         .setFileName('monitor-karewa-proveedores.pdf')
@@ -1028,7 +1028,7 @@ let downloadDetailPDF = (req, res, { supplier, filters }) => {
 
 
     let headers = [{ text:"Monitor Karewa", style:'header'},
-                    {text : moment(new Date()).format('MM/DD/YYYY'), style:'header'}];
+                    {text : moment(new Date()).format('DD/MM/YYYY'), style:'header'}];
 
      new PDFExporter()
         .setFileName('monitor-karewa-proveedores.pdf')
