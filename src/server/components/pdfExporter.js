@@ -318,7 +318,7 @@ class PDFTable {
                 return Number(value).toLocaleString('es-MX', { style: 'currency', currency:'MXN'});
                 break;
             case 'date':
-                return moment(value).format('MM/DD/YYYY');
+                return moment(value).format('DD/MM/YYYY');
                 break;
             default:
                 return value;
