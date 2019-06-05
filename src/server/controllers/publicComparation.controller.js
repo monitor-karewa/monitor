@@ -529,6 +529,7 @@ exports.download = (req, res, next) => {
                         delete corruptionIndex._id;
                         switch(format){
                             case 'xls':
+                                corruptionIndex.result = Math.round(corruptionIndex.result) + "%";
                                 downloadXls(req, res, corruptionIndex);
                                 break;
                             case 'pdf':
