@@ -42,6 +42,7 @@
                                     :administrationPeriods="administrationPeriods"
                                     :procedureTypes="procedureTypes"
                                     :actionName = "'getInfoForChart'"
+                                    :projection = "{search : 0}"
                             >
                             </PublicFilter>
 

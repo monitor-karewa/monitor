@@ -81,6 +81,7 @@
                                 :trimonths="trimonths"
                                 :administrationPeriods="administrationPeriods"
                                 :procedureTypes="procedureTypes"
+
                         >
 
                         </PublicFilter>

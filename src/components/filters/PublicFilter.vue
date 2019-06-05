@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="filter">
+        <div class="filter" v-if="checkIfShown('search')">
             <div class="filter-container">
                 <input class="input-search" type="text" name="" value="" v-model="query.search"
                        :placeholder="placeHolder" />
@@ -10,8 +10,8 @@
         <div class="m-t-10">
             <div>
                 <div class="filter">
-                    <div class="filter-container row m-0">
-                        <div class="form-group fg-float border-select m-0 p-0 col-lg-3 col-6">
+                    <div class="filter-container row m-0" >
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['administrationPeriod']} col-6`" v-if="checkIfShown('administrationPeriod')">
                             <div class="fg-line m-0">
                                 <select v-model="temp.administrationPeriod" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar administración"
@@ -22,7 +22,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['fiscalYear']} col-6`" v-if="checkIfShown('fiscalYear')">
                             <div class="fg-line m-0">
                                 <select v-model="temp.fiscalYear" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar año" title="Por año…" @change="addFilter(query.fiscalYears, temp.fiscalYear)">
@@ -34,7 +34,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['trimonth']} col-6`" v-if="checkIfShown('trimonth')">
                             <div class="fg-line m-0">
                                 <select v-model="temp.trimonth" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar trimestre"
@@ -45,7 +45,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['procedureType']} col-6`" v-if="checkIfShown('procedureType')">
                             <div class="fg-line m-0">
                                 <select v-model="temp.procedureType" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar trimestre"
@@ -56,7 +56,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group fg-float border-select m-0 p-0 col-lg-3 col-12">
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['administrativeUnit']} col-12`" v-if="checkIfShown('administrativeUnit')">
                             <div class="fg-line m-0">
                                 <select v-model="temp.administrativeUnit" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar administrativa"
@@ -64,6 +64,18 @@
                                             <optGroup>
                                                 <option :value="undefined"> Por Unidad...</option>
                                             </optGroup>
+                                    <option v-for="unit in administrativeUnits" :value="unit">{{unit.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['contract']} col-12`" v-if="checkIfShown('contract')">
+                            <div class="fg-line m-0">
+                                <select v-model="temp.administrativeUnit" class="form-control select selectpicker" data-live-search="true"
+                                        data-live-search-placeholder="Buscar administrativa"
+                                        title="Por unidad administrativa…" @change="addFilter(query.administrativeUnits, temp.administrativeUnit)">
+                                    <optGroup>
+                                        <option :value="undefined"> Por Unidad...</option>
+                                    </optGroup>
                                     <option v-for="unit in administrativeUnits" :value="unit">{{unit.name}}</option>
                                 </select>
                             </div>
@@ -125,6 +137,11 @@
 </template>
 
 <script>
+
+    const FIRST_ROW_TOTAL = 1;
+    const SECOND_ROW_TOTAL = 6;
+
+
     export default {
         name: "publicFilter",
         data() {
@@ -143,7 +160,16 @@
                     trimonth : undefined,
                     procedureType : undefined,
                     administrativeUnit : undefined
+                },
+                colSizes : {
+                    administrationPeriod : 2,
+                    fiscalYear : 2,
+                    trimonth : 2,
+                    procedureType : 2,
+                    administrativeUnit : 2,
+                    contract : 2,
                 }
+
             }
         },
         computed : {
@@ -191,6 +217,31 @@
             placeHolder: {
                 type: String,
                 default:"Escribe el nombre del contrato.."
+            },
+            projection : {
+                validator : function (value) {
+                    let thereArePositives = false;
+                    let thereAreFalsities = false;
+
+                    if(value == undefined  || (Object.entries(value).length === 0 && value.constructor === Object)){ //if it's empty
+                        return true;
+                    } else if(Object.keys(value).length > FIRST_ROW_TOTAL + SECOND_ROW_TOTAL){ //if it's "==" won't show any filters
+                        return false;
+                    }
+
+                    const values = Object.values(value);
+                    for (let i = 0; i < values.length; i++){
+                        if(thereArePositives || values[i]){
+                            thereArePositives = true;
+                        } else {
+                            thereAreFalsities = true;
+                        }
+                        if(thereArePositives && thereAreFalsities){
+                            return false;
+                        }
+                    }
+                    return true;
+                }
             }
         },
         mounted() {
@@ -201,6 +252,59 @@
                     },2000);
                 })
             })
+        },
+        beforeMount() {
+
+            if(!(this.$props.projection == undefined  || (Object.entries(this.$props.projection).length === 0 && this.$props.projection.constructor === Object))) { //if it's not  empty
+
+                let truthyProjection = Object.values(this.$props.projection)[0]; //Assuming validation was correct, values must be all false or all true
+                let filtersCount;
+                let leftoverSpace, colSize, colCount;
+                let projectionKeys = Object.keys(this.$props.projection);
+                filtersCount = projectionKeys.length;
+
+
+                if (projectionKeys.includes("search")) {
+                    filtersCount--;
+                }
+                if (!truthyProjection) {
+                    colCount = SECOND_ROW_TOTAL - filtersCount;
+                    for (let i = 0; i < projectionKeys.length; i++) {
+                        delete this.colSizes[projectionKeys[i]];
+                    }
+                } else {
+                    colCount = filtersCount;
+                    this.colSizes = {};
+                    for (let i = 0; i < projectionKeys.length; i++) {
+                        this.colSizes[projectionKeys[i]] = 2;
+                    }
+                }
+
+
+                leftoverSpace = 12 % colCount;
+                let colSizesKeys = Object.keys(this.colSizes);
+                colSize = (12 - leftoverSpace) / colCount;
+
+
+
+                for (let i = 0; i < colSizesKeys.length; i++) {
+                    this.colSizes[colSizesKeys[i]] = colSize;
+                }
+
+
+                if (filtersCount > 6) {
+                    for (let i = 1; i <= leftoverSpace; i++) {
+                        this.colSizes[colSizesKeys[i]]++;
+                    }
+                } else if (leftoverSpace !== 0 && leftoverSpace % 2 === 0) {
+                    this.colSizes[colSizesKeys[0]] += (leftoverSpace / 2);
+                    this.colSizes[colSizesKeys[colSizesKeys.length - 1]] += (leftoverSpace / 2);
+                } else {
+                    this.colSizes[colSizesKeys[0]] += leftoverSpace;
+                }
+
+            }
+
         },
         methods: {
             filter() {
@@ -246,6 +350,21 @@
             },
             removeFilter(array, element){
                 array.splice(array.indexOf(element),1);
+            },
+            checkIfShown(filterKey){
+                if(this.$props.projection == undefined  || (Object.entries(this.$props.projection).length === 0 && this.$props.projection.constructor === Object)) { //if it's empty
+                    return true;
+                }
+                    let truthyProjection;
+                if((Object.entries(this.$props.projection).length === 0 && this.$props.projection.constructor === Object)) { //if it's empty
+                    return true;
+                }
+                truthyProjection = Object.values(this.$props.projection)[0]; //Assuming validation was correct, values must be all false or all true
+
+                if((truthyProjection && this.$props.projection[filterKey]) || (!truthyProjection && !Object.keys(this.$props.projection).includes(filterKey))){
+                    return true;
+                }
+                return false;
             }
         }
     }

@@ -111,6 +111,7 @@
                                 :administrationPeriods="administrationPeriods"
                                 :procedureTypes="procedureTypes"
                                 :placeHolder="'Escribe el nombre del proveedor...'"
+                                :projection = "{search : 1, administrationPeriod : 1, fiscalYear : 1, trimonth : 1, administrativeUnit : 1}"
                         >
 
                         </PublicFilter>
