@@ -53,7 +53,14 @@
                     yaxis: {
                         title: {
                             text: '$ (millones de pesos)'
-                        }
+                        },
+                        labels: {
+                            formatter: function (val) {
+                                return val ? '$' + val.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + 'M' : "";
+                            }
+                        },
+                        min: 1,
+                        tickAmount: 6
                     },
                     fill: {
                         opacity: 1,
@@ -62,7 +69,7 @@
                     tooltip: {
                         y: {
                             formatter: function (val) {
-                                return val ? '$' + val.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : "";
+                                return val ? '$' + val.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ' Millones' : "";
                             }
                         }
                     }

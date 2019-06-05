@@ -310,7 +310,7 @@ export default {
     "contracts.minAmount" : "Cantidad Mínima",
     "contracts.maxAmount" : "Cantidad Máxima",
     "contracts.totalOrMaxAmount" : "Cantidad Total o Máxima",
-    "contracts.contractUrl" : "Enale Contrato",
+    "contracts.contractUrl" : "Enlace Contrato",
     "contracts.areaInCharge" : "Unidad Responsable",
     "contracts.updateDate" : "Fecha de actualización",
 
