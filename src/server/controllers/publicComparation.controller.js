@@ -532,6 +532,7 @@ exports.download = (req, res, next) => {
                                 downloadXls(req, res, corruptionIndex);
                                 break;
                             case 'pdf':
+                                corruptionIndex.result = Math.round(corruptionIndex.result) + "%";
                                 downloadPDF(req, res, corruptionIndex);
                                 break;
                             case 'json':
