@@ -465,11 +465,12 @@ exports.download = (req, res, next) => {
             let query = {...qNotDeleted/*, ...qByOrganization*/, locked: true};
             Calculation
                 .findOne(query)
-                .populate('organization calculations')
+                .populate('organization')
                 // .lean()
                 .exec((err, corruptionIndex) => {
-        
-                    if (err) {
+                corruptionIndex.populate({path:'formula.calculations', model:'Calculation'},(errPopulate,doc)=>{
+                    corruptionIndex = doc;
+                    if (err || errPopulate) {
                         //Error
                         logger.error(err, req, 'publicComparation.controller#corruptionIndex', 'Error trying to find Corruption index');
                         return res.json({
@@ -486,22 +487,22 @@ exports.download = (req, res, next) => {
                     }
         
                     corruptionIndex = corruptionIndex || {};
-                    
+
                     if (corruptionIndex.toObject) {
                         corruptionIndex = corruptionIndex.toObject();
                         corruptionIndex.organization = currentOrganization;
                     }
-        
+
                     corruptionIndex.result = 0;
-        
-        
+
+
                     if (!corruptionIndex._id) {
                         return res.json({
                             error: true,
                             data: corruptionIndex
                         });
                     }
-        
+
                     let cache = {
                         done: [],
                         calls: [],
@@ -510,12 +511,12 @@ exports.download = (req, res, next) => {
                     };
 
                     let query = Calculation.qAdministrationPeriodFromYearToYear(corruptionIndex);
-        
+
                     calculateAndValidateFormula(req, cache, corruptionIndex._id, {query: query}, (err, result) => {
                         if (result && result.value) {
                             corruptionIndex.result = result.value;
                         }
-        
+
                         if (corruptionIndex.result <= 55) {
                             corruptionIndex.corruptionLevel = 'BAJO'
                         } else if (corruptionIndex.result <= 75) {
@@ -523,8 +524,8 @@ exports.download = (req, res, next) => {
                         } else {
                             corruptionIndex.corruptionLevel = 'ALTO'
                         }
-        
-        
+
+
                         delete corruptionIndex._id;
                         switch(format){
                             case 'xls':
@@ -540,7 +541,8 @@ exports.download = (req, res, next) => {
                                 break;
                         }
                     });
-        
+
+                    });
                 });
         });
 
