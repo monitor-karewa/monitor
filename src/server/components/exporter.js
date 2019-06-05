@@ -93,7 +93,7 @@ class ExcelExporter extends Exporter {
         let formatByPropName = {};
         let optionsByPropName = {};
 
-
+        let columnsInfo = [];
         for(let item in excelInfo){
             excelInfo[item].propInfoArray = params.propInfoArray.filter(info => info.sheet == excelInfo[item].sheetNumber);
             excelInfo[item].sheet = excelInfo[item].sheetNumber == 1 ? sheetTotal : sheetDetail;
@@ -102,7 +102,23 @@ class ExcelExporter extends Exporter {
             cellIndexByPropName = {};
             formatByPropName = {};
             optionsByPropName = {};
+            columnsInfo = [];
+            columnsInfo = [
+                { headers: `${params.title}`, key:'indice', width:35},
+                { headers: `Fecha de consulta: ${formattedDate}`, key:'fecha_consulta', width:35},
+                { headers: `Consultado en Monitor Karewa`, key:'fuente', width:35}
+            ];
 
+            excelInfo[item].sheet.getRow(this.rowIndexes.INFO).font = {
+                name: 'Times',
+                size: 14,
+                bold:true
+            };
+            excelInfo[item].sheet.getRow(this.rowIndexes.HEADERS).font = {
+                name: 'Times',
+                size: 10,
+                bold:true
+            };
             excelInfo[item].sheet.getRow(this.rowIndexes.INFO).getCell(1).value = params.title;
             excelInfo[item].sheet.getRow(this.rowIndexes.INFO).getCell(2).value = `Fecha de consulta: ${formattedDate}`;
             excelInfo[item].sheet.getRow(this.rowIndexes.INFO).getCell(3).value = `Consultado en Monitor Karewa`;
@@ -113,8 +129,12 @@ class ExcelExporter extends Exporter {
                     }
                     return value
                 },"Filtrado por :");
+                columnsInfo.push({ key: 'filters', width: 35});
             }
-
+            for(let i = 0; i < excelInfo[item].propInfoArray.length - (columnsInfo.length - 2); i++){
+                columnsInfo.push({ key: `col-${i}`, width: 35});
+            }
+            excelInfo[item].sheet.columns = columnsInfo;
 
 
             excelInfo[item].propInfoArray.forEach((propInfo, index) => {
