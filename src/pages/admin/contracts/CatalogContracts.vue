@@ -347,7 +347,7 @@
                 <!--contractDate-->
                 <div class="form-group fg-float subtitle">
                     <div class="fg-line basic-input">
-                        <input type="text" class="form-control fg-input datepicker" date="contractDate"
+                        <input type="text" class="form-control fg-input datepicker" date="contractDate" id="contractDate"
                                :placeholder="$t('contracts.new.contract-date.placeholder')"
                                v-model="entry.contractDate">
                         <label class="fg-label">{{$t('contracts.new.contract-date.label')}}
@@ -1053,13 +1053,33 @@
                     //     $('.selectpicker').selectpicker('refresh');
                     // })
 
+                    //Update date through the datepicker API to avoid showing hours, minutes, seconds, timezone, etc.
+                    this.$nextTick(() => {
+                        $('#announcementDate').datepicker('update', new Date(entry.announcementDate));
+                        $('#clarificationMeetingDate').datepicker('update', new Date(entry.clarificationMeetingDate));
+                        $('#contractDate').datepicker('update', new Date(entry.contractDate));
+                        $('#updateDate').datepicker('update', new Date(entry.updateDate));
+                        $('#informationDate').datepicker('update', new Date(entry.informationDate));
+                    });
+
             });
         },
         mounted() {
             window.$(document).ready(function () {
-                console.log("quack");
-                console.log("CatalogContracts#");
 
+                window.$.fn.datepicker.dates['es-MX'] = {
+                    days: ["Domingo", "Lunes", "Martes", "Miércoles", "Jueves", "Viernes", "Sábado"],
+                    daysShort: ["Dom", "Lun", "Mar", "Mie", "Jue", "Vie", "Sáb"],
+                    daysMin: ["Do", "Lu", "Ma", "Mi", "Ju", "Vi", "Sa"],
+                    months: ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"],
+                    monthsShort: ["Ene", "Feb", "Mar", "Abr", "May", "Jun", "Jul", "Ago", "Sep", "Oct", "Nov", "Dic"],
+                    today: "Hoy",
+                    clear: "Limpiar",
+                    format: "dd/mm/yyyy",
+                    titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+                    weekStart: 0
+                };
+                
                 window.$('.selectpicker').selectpicker();
                 window.$('.selectpicker').selectpicker('refresh');
 
@@ -1076,18 +1096,22 @@
                     tShow("Complete todos los campos requeridos", 'alert');
                 });
                 $('#toast-success').click(function () {
-                    tShow("Se ha completado el proceso correctamente sadasda adadasd sda dasdasdas dasda dasdasd ad adaspidjdj asoijdas", 'success');
+                    tShow("Se ha completado el proceso correctamente", 'success');
                 });
 
                 $('.datepicker').datepicker({
                     format: 'dd/mm/yyyy',
-                    startDate: '-3d'
+                    autoclose: true,
+                    language: 'es-MX',
                 });
 
             });
 
             $('.datepicker').on('changeDate',  (event) => {
                 this.entry[event.target.id] = event.date;
+                this.$nextTick(() => {
+                    $('#' + event.target.id).datepicker('update', event.date);
+                });
             });
 
         }
