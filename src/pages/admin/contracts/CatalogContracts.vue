@@ -825,29 +825,29 @@
 //                },
 
 
-                 procedureType: {
-                     required
-                 },
+//                 procedureType: {
+//                     required
+//                 },
                 /* Materia */
-                 category: {
-                     required
-                 },
+//                 category: {
+//                     required
+//                 },
                 /* Administracion */
-                 administrationPeriod: {
+//                 administrationPeriod: {
                 //     required,
                 //     minLength: minLength(2),
                 //     maxLength: maxLength(100)
-                 },
+//                 },
                 /* Ejercicio */
-                 fiscalYear: {
+//                 fiscalYear: {
                 //     required
-                 },
+//                 },
                 /* Periodo que se reporta */
-                 period: {
+//                 period: {
                 //     required
                 //     //TODO Regex validation
                 //     // match:new RegExp("^[1234]o\\s2[0-9]{3}$")
-                 },
+//                 },
                 /* ID / Número de Folio o Nomenclatura / Identificador */
                  contractId:{
                 //     required
@@ -860,49 +860,49 @@
                 //     required
                  },
                 /*Hipervínculo a la convocatoria o invitaciones*/
-                 announcementUrl:{
-                 },
+//                 announcementUrl:{
+//                 },
                 /* Fecha de la convocatoria o invitación */
                  announcementDate:{
                  },
                 /* Descripción de las obras, bienes o servicios */
-                 servicesDescription:{
+//                 servicesDescription:{
                 //     required
-                 },
+//                 },
                 /* Fecha en la que se celebró la junta de aclaraciones */
                  clarificationMeetingDate:{
                  },
                 /* Hipervínculo al fallo de Junta de Aclaraciones */
-                 clarificationMeetingJudgmentUrl:{
-                 },
+//                 clarificationMeetingJudgmentUrl:{
+//                 },
                 /* Hipervínculo al documento de la Presentación de Propuestas */
-                 presentationProposalsDocUrl:{
-                 },
+//                 presentationProposalsDocUrl:{
+//                 },
                 /* Proveedor */
                  supplier: {
                 //     required
                  },
                 /* Unidad administrativa convocante */
-                 organizerAdministrativeUnit: {
+//                 organizerAdministrativeUnit: {
                 //     //TODO Learn how to do dynamic validations
                 //     // validator: function(){
                 //     //     return this.administrativeUnitType === 'DESCENTRALIZADA' ? this.organizerAdministrativeUnit == this.applicantAdministrativeUnit : true
                 //     // }
-                 },
+//                 },
                 // /* Unidad administrativa solicitante */
-                 applicantAdministrativeUnit: {
+//                 applicantAdministrativeUnit: {
                 //     required
-                 },
+//                 },
                 // /* Centralizada/Descentralizada */
-                 administrativeUnitType:{
+//                 administrativeUnitType:{
                 //     required
-                 },
+//                 },
                 // /* Número que identifique al contrato */
                  contractNumber:{
                      required
                  },
                 /* Fecha del contrato */
-                 contractDate:{
+//                 contractDate:{
                 //     required
                     //TODO Learn how to do dynamic validations
                     // validator: function(){
@@ -910,11 +910,11 @@
                     //     let fiscalYear = Number(this.fiscalYear);
                     //     return yearContractDate === fiscalYear;
                     // }
-                 },
+//                 },
                 /* Tipo de Contrato */
-                 contractType:{
+//                 contractType:{
                 //     required
-                 },
+//                 },
                 /* Monto total del contrato con impuestos incluidos */
                  totalAmount:{
                  },
@@ -926,18 +926,18 @@
                  },
 
                 /* Monto total o Monto máximo, en su caso */
-                 totalOrMaxAmount:{
+//                 totalOrMaxAmount:{
                 //     required
                     // Si es NORMAL - es el monto total
                     // Si es ABIERTO - es el monto máximo
-                 },
+//                 },
                 /*Hipervínculo al documento del contrato y anexos*/
-                 contractUrl:{
-                 },
+//                 contractUrl:{
+//                 },
                 /*Área responsable de la información*/
-                 areaInCharge:{
+//                 areaInCharge:{
                 //     required
-                 },
+//                 },
                 /*Fecha de actualización*/
                  updateDate:{
                 //     required
