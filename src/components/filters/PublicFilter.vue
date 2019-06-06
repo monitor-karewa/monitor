@@ -68,15 +68,15 @@
                                 </select>
                             </div>
                         </div>
-                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['contract']} col-12`" v-if="checkIfShown('contract')">
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['supplier']} col-12`" v-if="checkIfShown('supplier')">
                             <div class="fg-line m-0">
-                                <select v-model="temp.administrativeUnit" class="form-control select selectpicker" data-live-search="true"
-                                        data-live-search-placeholder="Buscar administrativa"
-                                        title="Por unidad administrativa…" @change="addFilter(query.administrativeUnits, temp.administrativeUnit)">
+                                <select v-model="temp.supplier" class="form-control select selectpicker" data-live-search="true"
+                                        data-live-search-placeholder="Buscar proveedor"
+                                        title="Por proveedor…" @change="addFilter(query.suppliers, temp.supplier)">
                                     <optGroup>
-                                        <option :value="undefined"> Por Unidad...</option>
+                                        <option :value="undefined"> Por Proveedor...</option>
                                     </optGroup>
-                                    <option v-for="unit in administrativeUnits" :value="unit">{{unit.name}}</option>
+                                    <option v-for="supplier in suppliers" :value="supplier">{{supplier.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -129,6 +129,14 @@
                         <i class="zmdi zmdi-close"></i>
                     </button>
                 </div>
+                <div class="tag" v-for="supplier in query.suppliers">
+                    <span class="">
+                      {{supplier.name}}
+                    </span>
+                    <button @click="removeFilter(query.suppliers, supplier)">
+                        <i class="zmdi zmdi-close"></i>
+                    </button>
+                </div>
             </div>
         <!--Button dummy, do not delete; used to ensure selects are properly shown-->
         <button id="refresh-selects-button" style="display:none" type="button" @click="refreshSelects">
@@ -152,14 +160,16 @@
                     trimonths : [],
                     procedureTypes : [],
                     administrativeUnits : [],
-                    search : ""
+                    search : "",
+                    suppliers : []
                 },
                 temp : {
                     administrationPeriod : undefined,
                     fiscalYear : undefined,
                     trimonth : undefined,
                     procedureType : undefined,
-                    administrativeUnit : undefined
+                    administrativeUnit : undefined,
+                    supplier : undefined
                 },
                 colSizes : {
                     administrationPeriod : 2,
@@ -167,7 +177,7 @@
                     trimonth : 2,
                     procedureType : 2,
                     administrativeUnit : 2,
-                    contract : 2,
+                    supplier : 2,
                 }
 
             }
@@ -179,44 +189,60 @@
                       (this.query.fiscalYears && this.query.fiscalYears.length>  0 ) ||
                       (this.query.trimonths && this.query.trimonths.length>  0 ) ||
                       (this.query.procedureTypes && this.query.procedureTypes.length >  0 ) ||
+                      (this.query.suppliers && this.query.suppliers.length >  0 ) ||
                       (this.query.administrativeUnits && this.query.administrativeUnits.length >  0 );
-
            }
         },
         props: {
             administrationPeriods: {
                 type: Array,
-                default: []
+                default: function () {
+                    return []
+                }
             },
             fiscalYears: {
                 type: Array,
-                default: []
+                default: function () {
+                    return []
+                }
             },
             trimonths: {
                 type: Array,
-                default: []
+                default: function () {
+                    return []
+                }
             },
             procedureTypes: {
                 type: Array,
-                default: []
+                default: function () {
+                    return []
+                }
             },
             administrativeUnits: {
                 type: Array,
-                default: []
+                default: function () {
+                    return []
+                }
             },
-            actionName : String,
-            storeModule : {
+            actionName: String,
+            storeModule: {
                 type: String
             },
-            storeModules : {
+            storeModules: {
                 type: Array
             },
-            additionalParams : {
+            additionalParams: {
                 type: Object
             },
             placeHolder: {
                 type: String,
-                default:"Escribe el nombre del contrato.."
+                default: "Escribe el nombre del contrato.."
+            },
+            suppliers: {
+                type: Array,
+                default: function () {
+                    return []
+                }
             },
             projection : {
                 validator : function (value) {
@@ -342,6 +368,8 @@
                     $('.selectpicker').selectpicker('refresh');
             },
             addFilter(array, element){
+                console.log("element", element);
+
                 if(array.indexOf(element) < 0){
                     array.push(element);
                 }

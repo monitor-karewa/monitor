@@ -57,6 +57,14 @@ function _aggregateAmountByPeriods(req, res, callback) {
             orBuilder = [];
         }
 
+        if (filters.suppliers && filters.suppliers.length) {
+            for (let i = 0; i < filters.suppliers.length; i++) {
+                orBuilder.push({supplier: new mongoose.Types.ObjectId(filters.suppliers[i]._id)})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
         if (filters.administrativeUnits && filters.administrativeUnits.length) {
             for (let i = 0; i < filters.administrativeUnits.length; i++) {
                 orBuilder.push({applicantAdministrativeUnit: new mongoose.Types.ObjectId(filters.administrativeUnits[i]._id)})
@@ -126,11 +134,88 @@ function _aggregateAmountByPeriods(req, res, callback) {
 
 function _aggregateAmountByProcedure(req, res, callback) {
 
+
+    let query = {};
+    var orBuilder = [];
+    var andBuilder = [];
+
+    let filters = req.body;
+
+    if (filters) {
+
+        if (filters.search && filters.search.length) {
+            orBuilder.push({contractId: utils.toAccentsRegex(filters.search, "gi")});
+            orBuilder.push({contractNumber: utils.toAccentsRegex(filters.search, "gi")});
+            orBuilder.push({servicesDescription: utils.toAccentsRegex(filters.search, "gi")});
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if (filters.administrationPeriods && filters.administrationPeriods.length) {
+            for (let i = 0; i < filters.administrationPeriods.length; i++) {
+                orBuilder.push({administrationPeriod: filters.administrationPeriods[i].administrationPeriod})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if (filters.fiscalYears && filters.fiscalYears.length) {
+            for (let i = 0; i < filters.fiscalYears.length; i++) {
+                orBuilder.push({fiscalYear: filters.fiscalYears[i].fiscalYear})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if (filters.trimonths && filters.trimonths.length) {
+            for (let i = 0; i < filters.trimonths.length; i++) {
+                orBuilder.push({period: filters.trimonths[i].period})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if (filters.procedureTypes && filters.procedureTypes.length) {
+            for (let i = 0; i < filters.procedureTypes.length; i++) {
+                orBuilder.push({procedureType: filters.procedureTypes[i]})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if (filters.suppliers && filters.suppliers.length) {
+            for (let i = 0; i < filters.suppliers.length; i++) {
+                orBuilder.push({supplier: new mongoose.Types.ObjectId(filters.suppliers[i]._id)})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if (filters.administrativeUnits && filters.administrativeUnits.length) {
+            for (let i = 0; i < filters.administrativeUnits.length; i++) {
+                orBuilder.push({applicantAdministrativeUnit: new mongoose.Types.ObjectId(filters.administrativeUnits[i]._id)})
+                orBuilder.push({organizerAdministrativeUnit: new mongoose.Types.ObjectId(filters.administrativeUnits[i]._id)})
+                orBuilder.push({areaInCharge: new mongoose.Types.ObjectId(filters.administrativeUnits[i]._id)})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
+        if(andBuilder.length){
+            query = {$and : andBuilder};
+        }
+    }
+
+
+    console.log("query", JSON.stringify(query));
+    // {"$and":[{"$or":[{"supplier":"5c9eb68decdaff977f7184d1"
+
     let aggregate = Contract.aggregate([
         {
             $match:{
                 "deleted.isDeleted":false,
-                "organization":Organization.currentOrganizationId(req)
+                "organization":Organization.currentOrganizationId(req),
+                ...query
             }
         },
         {

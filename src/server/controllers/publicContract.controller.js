@@ -581,6 +581,59 @@ exports.retrieveProceudureTypes = (req, res, next) => {
         })
 };
 
+/**
+ * Gets the procedure types of the current contracts
+ */
+exports.retrieveSuppliersForFilter = (req, res, next) => {
+
+    //Filter everything by organization
+    let query = {};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...deletedSchema.qNotDeleted(), ...qByOrganization};
+    if(req.query.supplierId){
+        query.supplier = new mongoose.Types.ObjectId(req.query.supplierId);
+    }
+    //query["field"] = value;
+
+    //let qNotDeleted = deletedSchema.qNotDeleted();
+    //query = {...query, ...qNotDeleted};
+
+    Contract.aggregate([
+            {
+                $match: query
+            },
+            {
+                $group: {
+                    _id: "$supplier"
+                }
+            },
+            {
+                $lookup: {
+                    from: "suppliers",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "supplier"
+                }
+            },
+            {
+                $unwind: "$supplier"
+            },
+            {
+                $replaceRoot: {newRoot: "$supplier"}
+            }
+
+        ]
+    ).exec(function (err, result) {
+            console.log("result", result);
+            return res.json(
+                result
+            )
+        },
+        function (error) {
+            console.log("error", error);
+        })
+};
+
 exports.download = (req, res, next) => {
     let format = req.params.format;
     req.body.filters = JSON.parse(req.query.filters);
