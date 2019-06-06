@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const async = require('async');
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 const utils = require('./../components/utils');
@@ -104,7 +105,7 @@ exports.save = (req, res, next) => {
             .findOne(query)
             .exec((err, administrativeUnit) => {
                 if (err || !administrativeUnit) {
-                    logger.error(req, err, 'administrativeUnit.controller#save', 'Error al consultar AdministrativeUnit');
+                    logger.error(err, req, 'administrativeUnit.controller#save', 'Error al consultar AdministrativeUnit');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.save')
@@ -117,7 +118,13 @@ exports.save = (req, res, next) => {
 
                 administrativeUnit.save((err, savedAdministrativeUnit) => {
                     if (err) {
-                        logger.error(req, err, 'administrativeUnit.controller#save', 'Error al guardar AdministrativeUnit');
+                        logger.error(err, req, 'administrativeUnit.controller#save', 'Error al guardar AdministrativeUnit');
+                        if (err.code === 11000) {
+                            return res.json({
+                                "error": true,
+                                "message": req.__('administrative-units.error.save')
+                            });
+                        }
                         return res.json({
                             errors: true,
                             message: req.__('general.error.save')
@@ -143,7 +150,13 @@ exports.save = (req, res, next) => {
 
         administrativeUnit.save((err, savedAdministrativeUnit) => {
             if (err) {
-                logger.error(req, err, 'administrativeUnit.controller#save', 'Error al guardar AdministrativeUnit');
+                logger.error(err, req, 'administrativeUnit.controller#save', 'Error al guardar AdministrativeUnit');
+                if (err.code === 11000) {
+                    return res.json({
+                        "error": true,
+                        "message": req.__('administrative-units.error.save')
+                    });
+                }
                 return res.json({
                     "error": true,
                     "message": req.__('general.error.save')
@@ -177,7 +190,10 @@ exports.saveUpdatedDocs = (req, res, next) => {
 
     if(docsUpdated){
         try{
-            docsUpdated.forEach((doc) => {
+
+            let errorMessage = null;
+
+            async.each(docsUpdated, (doc, callback) => {
                 let qById = {_id: doc._id};
                 let qByOrganization = Organization.qByOrganization(req);
 
@@ -191,10 +207,25 @@ exports.saveUpdatedDocs = (req, res, next) => {
                         administrativeUnit.save((err) => {
                             if (err) {
                                 logger.error(err, req, 'administrativeUnit.controller#saveUpdatedDocs', 'Error al actualizar lista de AdministrativeUnit');
+                                errorMessage = req.__('general.success.updated-with-errors');
                             }
+                            return callback();
                         });
 
                     });
+                
+            }, (err, results) => {
+                if (errorMessage) {
+                    return res.json({
+                        error:true,
+                        message: errorMessage,
+                    });
+                }
+
+                return res.json({
+                    error:false,
+                    message: req.__('general.success.updated'),
+                });
             });
 
             return res.json({
@@ -204,6 +235,10 @@ exports.saveUpdatedDocs = (req, res, next) => {
 
         } catch(err) {
             logger.error(err, req, 'administrativeUnit.controller#saveUpdatedDocs', 'Error al actualizar lista de AdministrativeUnit');
+            return res.json({
+                error:false,
+                message: req.__('general.error.updated')
+            });
         }
 
     } else {
@@ -238,7 +273,7 @@ exports.delete = (req, res, next) => {
         .count()
         .exec((err, count) => {
             if (err) {
-                logger.error(req, err, 'administrativeUnit.controller#delete', 'Error al realizar count de AdministrativeUnit');
+                logger.error(err, req, 'administrativeUnit.controller#delete', 'Error al realizar count de AdministrativeUnit');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.delete')
@@ -246,7 +281,7 @@ exports.delete = (req, res, next) => {
             }
 
             if (count === 0) {
-                logger.error(req, err, 'administrativeUnit.controller#delete', 'Error al intentar borrar AdministrativeUnit; el registro no existe o ya fue borrado anteriormente');
+                logger.error(err, req, 'administrativeUnit.controller#delete', 'Error al intentar borrar AdministrativeUnit; el registro no existe o ya fue borrado anteriormente');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.not-exists-or-already-deleted')
@@ -263,7 +298,7 @@ exports.delete = (req, res, next) => {
 
             Contract.find(usedQuery).count().exec((err, countUses) => {
                 if (err) {
-                    logger.error(req, err, 'supplier.controller#delete', 'Error al buscar Contracts que usen al Supplier.');
+                    logger.error(err, req, 'supplier.controller#delete', 'Error al buscar Contracts que usen al Supplier.');
                 }
 
                 if (countUses) {
@@ -287,7 +322,7 @@ exports.delete = (req, res, next) => {
                     {multi: false}
                 ).exec((err) => {
                     if (err) {
-                        logger.error(req, err, 'administrativeUnit.controller#delete', 'Error al borrar AdministrativeUnit.');
+                        logger.error(err, req, 'administrativeUnit.controller#delete', 'Error al borrar AdministrativeUnit.');
                         return res.json({
                             errors: true,
                             message: req.__('general.error.delete')

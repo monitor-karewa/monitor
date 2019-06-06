@@ -44,8 +44,12 @@ const actions = {
             tShow(`Hubo un error al cargar las variables: ${error}`);
         });
     },
-    fetchCalculations({commit}){
-        calculationsApi.getCalculationsForFormula({}, (results) => {
+    fetchCalculations({commit}, {id}){
+        let query = '';
+        if (id) {
+            query = `?currentCalculationId=${id}`;
+        }
+        calculationsApi.getCalculationsForFormula({query}, (results) => {
                 commit("SET_FORMULA_CALCULATIONS",results.data.data.docs);
             },
             (error) => {

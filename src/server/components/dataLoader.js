@@ -7,6 +7,7 @@ let logger = {};
 const utils = require('./utils');
 
 const Contract = require('./../models/contract.model').Contract;
+const deletedSchema = require('./../models/schemas/deleted.schema');
 const {
 
     procedureTypesEnumDict,
@@ -942,7 +943,7 @@ class ContractExcelReader {
     }
 
 
-    _checkValidationsForFieldInfo(rowInfo, fieldInfo, validationStrategy, requiredStrategy, callback) {
+    _checkValidationsForFieldInfo(rowInfo, fieldInfo, validationStrategy, requiredStrategy, organizationId, callback) {
         let options = fieldInfo.options || {};
         
         //Check for override
@@ -970,7 +971,7 @@ class ContractExcelReader {
         }
     }
 
-    _checkRequiredForFieldInfo(rowInfo, fieldInfo, validationStrategy, requiredStrategy, callback) {
+    _checkRequiredForFieldInfo(rowInfo, fieldInfo, validationStrategy, requiredStrategy, organizationId, callback) {
         let options = fieldInfo.options || {};
 
         //Check for override
@@ -1025,6 +1026,52 @@ class ContractExcelReader {
             }
         } else {
             return callback(null, fieldInfo);
+        }
+    }
+
+    _checkUniqueByOrganizationForFieldInfo(rowInfo, fieldInfo, validationStrategy, requiredStrategy, organizationId, callback) {
+        let options = fieldInfo.options || [];
+        
+        if (options && utils.isDefined(options.uniqueByOrganization) && utils.isFunction(options.uniqueByOrganization)) {
+            options.uniqueByOrganization(rowInfo, (err, shouldBeUnique, errorMessage, config) => {
+                
+                //Optional config for query
+                config = config || {
+                    model: Contract,
+                    fieldName: fieldInfo.fieldName
+                };
+                
+                if (shouldBeUnique) {
+                    
+                    let query = {};
+                    
+                    query[config.fieldName] = fieldInfo.value;
+                    query.organization = organizationId;
+                    query = {...query, ...deletedSchema.qNotDeleted()};
+                    
+                    config.model.find(query)
+                        .count()
+                        .exec((err, count) => {
+                            if (err) {
+                                logger.error(err, null, 'dataLoader#_checkUniqueByOrganizationForFieldInfo', 'Error trying to validate uniqueByOrganization on field [%s]', fieldInfo.fieldName);
+                                return callback();
+                            }
+                            
+                            //Check if a doc already exists for the current organization
+                            if (count) {
+                                fieldInfo.errors.push({
+                                    //TODO: i18n
+                                    message: errorMessage
+                                });
+                            }
+                            return callback();
+                        });
+                } else {
+                    return callback();
+                }
+            });
+        } else {
+            return callback();
         }
     }
 
@@ -1374,7 +1421,15 @@ class ContractExcelReader {
                         refLink: {
                             linkToField: 'supplierName',
                             shouldMatchField: 'rfc'
-                        }
+                        },
+                        uniqueByOrganization: function (rowInfo, callback) {
+                            //Only validate when creating a new Supplier
+                            let shouldBeUnique = rowInfo.supplierRfc.value && rowInfo.supplierRfc.value.length && !!rowInfo.supplierName.shouldCreateDoc;
+                            return callback(null, shouldBeUnique, 'Ya existe un Proveedor registrado con este RFC.', {
+                                model: Supplier,
+                                fieldName: 'rfc'
+                            });
+                        },
                     }, callback);
                     break;
                 case C_IDS.ORGANIZER_ADMINISTRATIVE_UNIT:
@@ -1609,8 +1664,9 @@ class ContractExcelReader {
                     //Apply multiple fns with the same params, then call callback when all fns are done
                     async.applyEach([
                         this._checkValidationsForFieldInfo, 
-                        this._checkRequiredForFieldInfo
-                    ], rowInfo, fieldInfo, VALIDATION_STRATEGIES.CHECK, REQUIRED_STRATEGIES.CHECK, () => {
+                        this._checkRequiredForFieldInfo,
+                        this._checkUniqueByOrganizationForFieldInfo,
+                    ], rowInfo, fieldInfo, VALIDATION_STRATEGIES.CHECK, REQUIRED_STRATEGIES.CHECK, this.organizationId, () => {
 
                         if (fieldInfo.errors && fieldInfo.errors.length) {
                             rowInfo.summary.hasErrors = true;
