@@ -103,7 +103,7 @@ prod:
         eval `ssh-agent -s`
         ssh-add ~/.ssh/id_rsa
         ssh -t karewa "docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}"
-        ssh -t karewa "KAREWA_VERSION=${CI_COMMIT_REF_SLUG} docker-compose up -d"
+        ssh -t karewa "KAREWA_VERSION=${CI_COMMIT_REF_SLUG} SMTP_USER=${SMTP_USER} SMTP_PASS=${SMTP_PASS} SMTP_HOST=${SMTP_HOST} SMTP_ACCOUNT=${SMTP_ACCOUNT} docker-compose up -d"
         ssh -t karewa "docker system prune -af"
       }
 
