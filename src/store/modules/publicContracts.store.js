@@ -29,6 +29,7 @@ const state = {
     trimonths : [],
     administrationPeriods : [],
     procedureTypes : [],
+    suppliers : [],
     lastQuery : {}
 };
 
@@ -181,6 +182,14 @@ const actions = {
                 tShow(`Hubo un error al cargar el listado : ${error}`);
             }
         )
+    },
+    getSuppliersForFilter({commit}) {
+        contractsApi.retrieveSuppliersForFilter({},
+            (result) => {
+                if (result && result.data) {
+                    commit('SET_SUPPLIERS_FOR_FILTER', result.data);
+                }
+            })
     }
     };
 
@@ -238,6 +247,9 @@ const mutations = {
     SET_PROCEDURE_TYPES(state, procedureTypes) {
         state.procedureTypes = procedureTypes;
     },
+    SET_SUPPLIERS_FOR_FILTER(state, suppliers) {
+        state.suppliers = suppliers;
+    },
     /**
      * Saves which was the last query used so it can change page when there are filtered results
      */
@@ -247,6 +259,7 @@ const mutations = {
         state.lastQuery.trimonths = lastQuery.trimonths;
         state.lastQuery.procedureTypes = lastQuery.procedureTypes;
         state.lastQuery.administrativeUnits = lastQuery.administrativeUnits;
+        state.lastQuery.suppliers = lastQuery.suppliers;
         state.lastQuery.search = lastQuery.search;
     },
 };

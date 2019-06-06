@@ -66,6 +66,14 @@ function _fetchContractsAndTotals(req, res, options = {}, callback) {
             orBuilder = [];
         }
 
+        if (req.body.filters.suppliers && req.body.filters.suppliers.length) {
+            for (let i = 0; i < req.body.filters.suppliers.length; i++) {
+                orBuilder.push({supplier: new mongoose.Types.ObjectId(req.body.filters.suppliers[i]._id)});
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
         if (req.body.filters.administrativeUnits && req.body.filters.administrativeUnits.length) {
             for (let i = 0; i < req.body.filters.administrativeUnits.length; i++) {
                 orBuilder.push({applicantAdministrativeUnit: new mongoose.Types.ObjectId(req.body.filters.administrativeUnits[i]._id)})
@@ -624,7 +632,6 @@ exports.retrieveSuppliersForFilter = (req, res, next) => {
 
         ]
     ).exec(function (err, result) {
-            console.log("result", result);
             return res.json(
                 result
             )

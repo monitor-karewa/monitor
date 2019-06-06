@@ -81,6 +81,7 @@
                                 :trimonths="trimonths"
                                 :administrationPeriods="administrationPeriods"
                                 :procedureTypes="procedureTypes"
+                                :suppliers="suppliers"
 
                         >
 
@@ -241,6 +242,7 @@
                 procedureTypes: state => state[storeModule].procedureTypes,
                 totals: state => state[storeModule].totals, //I like totals
                 lastQuery: state => state[storeModule].lastQuery,
+                suppliers:  state => state[storeModule].suppliers
             }),
         },
         components: {
@@ -268,6 +270,7 @@
             this.$store.dispatch(`${storeModule}/getTrimonths`);
             this.$store.dispatch(`${storeModule}/getAdministrationPeriods`);
             this.$store.dispatch(`${storeModule}/getProcedureTypes`);
+            this.$store.dispatch(`${storeModule}/getSuppliersForFilter`);
 
         },
         methods:{
