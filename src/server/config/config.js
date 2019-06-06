@@ -74,10 +74,10 @@ const config = {
             skipJobManager: process.env.SKIP_JOB_MANAGER || false
         },
         email: {
-            stmpUser: 'monitorkarewa@gmail.com',
+            stmpUser: process.env.SMTP_USER || 'monitorkarewa@gmail.com',
             stmpPass: process.env.SMTP_PASS || '',
-            stmpHost: 'smtp.gmail.com',
-            stmpAccount: 'Monitor Karewa <monitorkarewa@gmail.com>'
+            stmpHost: process.env.SMTP_HOST || 'smtp.gmail.com',
+            stmpAccount: process.env.SMTP_ACCOUNT || 'Monitor Karewa <monitorkarewa@gmail.com>'
         }
     },
     dev: {
@@ -121,10 +121,10 @@ const config = {
             skipJobManager: process.env.SKIP_JOB_MANAGER || false
         },
         email: {
-            stmpUser: 'monitorkarewa@gmail.com',
+            stmpUser: process.env.SMTP_USER || 'monitorkarewa@gmail.com',
             stmpPass: process.env.SMTP_PASS || '',
-            stmpHost: 'smtp.gmail.com',
-            stmpAccount: 'Monitor Karewa <monitorkarewa@gmail.com>'
+            stmpHost: process.env.SMTP_HOST || 'smtp.gmail.com',
+            stmpAccount: process.env.SMTP_ACCOUNT || 'Monitor Karewa <monitorkarewa@gmail.com>'
         }
     }
 };
