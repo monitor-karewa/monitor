@@ -88,7 +88,7 @@ exports.save = (req, res, next) => {
 
 
                 if (err || !recurso) {
-                    logger.error(req, err, 'recurso.controller#save', 'Error al consultar Recurso');
+                    logger.error(err, req, 'recurso.controller#save', 'Error al consultar Recurso');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.save')
@@ -102,7 +102,7 @@ exports.save = (req, res, next) => {
 
                 recurso.save((err, savedRecurso) => {
                     if (err) {
-                        logger.error(req, err, 'recurso.controller#save', 'Error al guardar Recurso');
+                        logger.error(err, req, 'recurso.controller#save', 'Error al guardar Recurso');
                         return res.json({
                             errors: true,
                             message: req.__('general.error.save')
@@ -128,7 +128,7 @@ exports.save = (req, res, next) => {
 
         recurso.save((err, savedRecurso) => {
             if (err) {
-                logger.error(req, err, 'recurso.controller#save', 'Error al guardar Recurso');
+                logger.error(err, req, 'recurso.controller#save', 'Error al guardar Recurso');
                 return res.json({
                     "error": true,
                     "message": req.__('general.error.save')
@@ -165,7 +165,7 @@ exports.delete = (req, res, next) => {
         .count()
         .exec((err, count) => {
             if (err) {
-                logger.error(req, err, 'recurso.controller#delete', 'Error al realizar count de Recurso');
+                logger.error(err, req, 'recurso.controller#delete', 'Error al realizar count de Recurso');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.delete')
@@ -173,7 +173,7 @@ exports.delete = (req, res, next) => {
             }
             
             if (count === 0) {
-                logger.error(req, err, 'recurso.controller#delete', 'Error al intentar borrar Recurso; el registro no existe o ya fue borrado anteriormente');
+                logger.error(err, req, 'recurso.controller#delete', 'Error al intentar borrar Recurso; el registro no existe o ya fue borrado anteriormente');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.not-exists-or-already-deleted')
@@ -195,7 +195,7 @@ exports.delete = (req, res, next) => {
                 {multi: false}
             ).exec((err) => {
                 if (err) {
-                    logger.error(req, err, 'recurso.controller#delete', 'Error al borrar Recurso.');
+                    logger.error(err, req, 'recurso.controller#delete', 'Error al borrar Recurso.');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.delete')
