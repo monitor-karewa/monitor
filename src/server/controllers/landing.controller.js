@@ -125,7 +125,7 @@ function _aggregateAmountByPeriods(req, res, callback) {
             }
         },
         {
-            $sort:{"_id.year":-1, "_id.period":-1}
+            $sort:{"_id.year":1, "_id.period":1}
         }
     ]);
 
