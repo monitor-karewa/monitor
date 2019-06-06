@@ -66,6 +66,14 @@ function _fetchContractsAndTotals(req, res, options = {}, callback) {
             orBuilder = [];
         }
 
+        if (req.body.filters.suppliers && req.body.filters.suppliers.length) {
+            for (let i = 0; i < req.body.filters.suppliers.length; i++) {
+                orBuilder.push({supplier: new mongoose.Types.ObjectId(req.body.filters.suppliers[i]._id)});
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
         if (req.body.filters.administrativeUnits && req.body.filters.administrativeUnits.length) {
             for (let i = 0; i < req.body.filters.administrativeUnits.length; i++) {
                 orBuilder.push({applicantAdministrativeUnit: new mongoose.Types.ObjectId(req.body.filters.administrativeUnits[i]._id)})
@@ -572,6 +580,58 @@ exports.retrieveProceudureTypes = (req, res, next) => {
                 }
             }
         ]).exec(function (err, result) {
+            return res.json(
+                result
+            )
+        },
+        function (error) {
+            console.log("error", error);
+        })
+};
+
+/**
+ * Gets the procedure types of the current contracts
+ */
+exports.retrieveSuppliersForFilter = (req, res, next) => {
+
+    //Filter everything by organization
+    let query = {};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...deletedSchema.qNotDeleted(), ...qByOrganization};
+    if(req.query.supplierId){
+        query.supplier = new mongoose.Types.ObjectId(req.query.supplierId);
+    }
+    //query["field"] = value;
+
+    //let qNotDeleted = deletedSchema.qNotDeleted();
+    //query = {...query, ...qNotDeleted};
+
+    Contract.aggregate([
+            {
+                $match: query
+            },
+            {
+                $group: {
+                    _id: "$supplier"
+                }
+            },
+            {
+                $lookup: {
+                    from: "suppliers",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "supplier"
+                }
+            },
+            {
+                $unwind: "$supplier"
+            },
+            {
+                $replaceRoot: {newRoot: "$supplier"}
+            }
+
+        ]
+    ).exec(function (err, result) {
             return res.json(
                 result
             )
