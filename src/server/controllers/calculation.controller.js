@@ -915,7 +915,7 @@ exports.delete = (req, res, next) => {
         .count()
         .exec((err, count) => {
             if (err) {
-                logger.error(req, err, 'calculation.controller#delete', 'Error al realizar count de Calculation');
+                logger.error(err, req, 'calculation.controller#delete', 'Error al realizar count de Calculation');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.delete')
@@ -923,7 +923,7 @@ exports.delete = (req, res, next) => {
             }
             
             if (count === 0) {
-                logger.error(req, err, 'calculation.controller#delete', 'Error al intentar borrar Calculation; el registro no existe o ya fue borrado anteriormente');
+                logger.error(err, req, 'calculation.controller#delete', 'Error al intentar borrar Calculation; el registro no existe o ya fue borrado anteriormente');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.not-exists-or-already-deleted')
@@ -945,7 +945,7 @@ exports.delete = (req, res, next) => {
                 {multi: false}
             ).exec((err) => {
                 if (err) {
-                    logger.error(req, err, 'calculation.controller#delete', 'Error al borrar Calculation.');
+                    logger.error(err, req, 'calculation.controller#delete', 'Error al borrar Calculation.');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.delete')

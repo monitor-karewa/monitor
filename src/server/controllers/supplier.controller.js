@@ -9,6 +9,8 @@ const deletedSchema = require('./../models/schemas/deleted.schema');
 
 const { validationResult } = require('express-validator/check');
 
+const async = require('async');
+
 const utils = require('./../components/utils');
 
 /**
@@ -98,7 +100,9 @@ exports.saveUpdatedDocs = (req, res, next) => {
 
     if(docsUpdated){
         try{
-            docsUpdated.forEach((doc) => {
+            let errorMessage = null;
+
+            async.each(docsUpdated, (doc, callback) => {
                 let qById = {_id: doc._id};
                 let qByOrganization = Organization.qByOrganization(req);
                 let query = {...qById, ...qByOrganization};
@@ -110,27 +114,43 @@ exports.saveUpdatedDocs = (req, res, next) => {
                       supplier.notes = doc.notes;
 
                       supplier.save((err) => {
-                          logger.error(err, req, 'supplier.controller#saveUpdatedDocs', 'Error al actualizar lista de Suppliers');
+                          if (err) {
+                              logger.error(err, req, 'supplier.controller#saveUpdatedDocs', 'Error al actualizar lista de Suppliers');
+                              errorMessage = req.__('general.success.updated-with-errors');
+                          }
+                          return callback();
                       });
 
                   });
+            }, (err, results) => {
+                if (errorMessage) {
+                    return res.json({
+                        error:true,
+                        message: errorMessage,
+                    });
+                }
+    
+                return res.json({
+                    error:false,
+                    message: req.__('general.success.updated'),
+                });
             });
-
-            return res.json({
-                error:false,
-                message: req.__('general.success.updated'),
-            });
+            
+            // docsUpdated.forEach((doc) => {
+            // });
 
         } catch(err) {
             logger.error(err, req, 'supplier.controller#saveUpdatedDocs', 'Error al actualizar lista de Suppliers');
+            return res.json({
+                error:false,
+                message: req.__('general.error.updated')
+            });
         }
-
     } else {
         return res.json({
             error:false,
             message: req.__('general.success.updated')
         });
-
     }
 };
 
@@ -159,7 +179,7 @@ exports.save = (req, res, next) => {
             .findOne(query)
             .exec((err, supplier) => {
                 if (err || !supplier) {
-                    logger.error(req, err, 'supplier.controller#save', 'Error al consultar Supplier');
+                    logger.error(err, req, 'supplier.controller#save', 'Error al consultar Supplier');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.save')
@@ -173,7 +193,13 @@ exports.save = (req, res, next) => {
 
                 supplier.save((err, savedSupplier) => {
                     if (err) {
-                        logger.error(req, err, 'supplier.controller#save', 'Error al guardar Supplier');
+                        logger.error(err, req, 'supplier.controller#save', 'Error al guardar Supplier');
+                        if (err.name && err.name === 'MongoError') {
+                            return res.json({
+                                "error": true,
+                                "message": req.__('suppliers.error.save')
+                            });
+                        }
                         return res.json({
                             errors: true,
                             message: req.__('general.error.save')
@@ -200,7 +226,14 @@ exports.save = (req, res, next) => {
 
         supplier.save((err, savedSupplier) => {
             if (err) {
-                logger.error(req, err, 'supplier.controller#save', 'Error al guardar Supplier');
+                logger.error(err, req, 'supplier.controller#save', 'Error al guardar Supplier');
+                if (err.name && err.name === 'MongoError') {
+                    return res.json({
+                        "error": true,
+                        "message": req.__('suppliers.error.save')
+                    });
+                }
+                
                 return res.json({
                     "error": true,
                     "message": req.__('general.error.save')
@@ -237,7 +270,7 @@ exports.delete = (req, res, next) => {
         .count()
         .exec((err, count) => {
             if (err) {
-                logger.error(req, err, 'supplier.controller#delete', 'Error al realizar count de Supplier');
+                logger.error(err, req, 'supplier.controller#delete', 'Error al realizar count de Supplier');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.delete')
@@ -245,7 +278,7 @@ exports.delete = (req, res, next) => {
             }
 
             if (count === 0) {
-                logger.error(req, err, 'supplier.controller#delete', 'Error al intentar borrar Supplier; el registro no existe o ya fue borrado anteriormente');
+                logger.error(err, req, 'supplier.controller#delete', 'Error al intentar borrar Supplier; el registro no existe o ya fue borrado anteriormente');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.not-exists-or-already-deleted')
@@ -256,7 +289,7 @@ exports.delete = (req, res, next) => {
             
             Contract.find(usedQuery).count().exec((err, countUses) => {
                 if (err) {
-                    logger.error(req, err, 'supplier.controller#delete', 'Error al buscar Contracts que usen al Supplier.');
+                    logger.error(err, req, 'supplier.controller#delete', 'Error al buscar Contracts que usen al Supplier.');
                 }
                 
                 if (countUses) {
@@ -280,7 +313,7 @@ exports.delete = (req, res, next) => {
                     {multi: false}
                 ).exec((err) => {
                     if (err) {
-                        logger.error(req, err, 'supplier.controller#delete', 'Error al borrar Supplier.');
+                        logger.error(err, req, 'supplier.controller#delete', 'Error al borrar Supplier.');
                         return res.json({
                             errors: true,
                             message: req.__('general.error.delete')

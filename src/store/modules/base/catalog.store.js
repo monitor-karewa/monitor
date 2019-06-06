@@ -176,9 +176,15 @@ export default function (api, storeName) {
                 data,
                 (result) => {
                     // Vue.$log.info('Response', result);
+                    console.log('result.data', result.data);
                     dispatch(`${storeName}/list`,{},{root:true});
                     dispatch(`${storeName}/setEditTable`,false,{root:true});
                     commit('CLEAR_DOCS_UPDATED');
+                    if (result.data.error) {
+                        tShow(result.data.message, 'danger');
+                    } else {
+                        tShow(result.data.message, 'info');
+                    }
                 },
                 (error) => {
                     // Vue.$log.error('Response error', error);

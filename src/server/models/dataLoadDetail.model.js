@@ -119,6 +119,8 @@ DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
             limitExceeded : !!/no/gi.test(detail.limitExceeded.valueToSaveOverride),
             
             amountExceeded : detail.amountExceeded.value,
+            
+            deleted: {isDeleted: false},
         }
     };
 };
@@ -141,7 +143,8 @@ DataLoadDetailSchema.statics.toSuppliersArray = function (dataLoad, detailObj) {
         {
             organization: dataLoad.organization,
             name: detail.supplierName.value,
-            rfc: detail.supplierRfc.value
+            rfc: detail.supplierRfc.value,
+            deleted: {isDeleted: false},
         }
     ]
 };
@@ -159,21 +162,24 @@ DataLoadDetailSchema.statics.toAdministrativeUnitsArray = function (dataLoad, de
     if (detail.organizerAdministrativeUnit.shouldCreateDoc) {
         administrativeUnits.push({
             organization: dataLoad.organization,
-            name: detail.organizerAdministrativeUnit.value
+            name: detail.organizerAdministrativeUnit.value,
+            deleted: {isDeleted: false},
         });
     }
     
     if (detail.applicantAdministrativeUnit.shouldCreateDoc) {
         administrativeUnits.push({
             organization: dataLoad.organization,
-            name: detail.applicantAdministrativeUnit.value
+            name: detail.applicantAdministrativeUnit.value,
+            deleted: {isDeleted: false},
         });
     }
     
     if (detail.areaInCharge.shouldCreateDoc) {
         administrativeUnits.push({
             organization: dataLoad.organization,
-            name: detail.areaInCharge.value
+            name: detail.areaInCharge.value,
+            deleted: {isDeleted: false},
         });
     }
     

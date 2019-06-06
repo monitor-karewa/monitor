@@ -85,7 +85,7 @@ exports.save = (req, res, next) => {
             .findOne(qById)
             .exec((err, unidadAdministrativa) => {
                 if (err || !unidadAdministrativa) {
-                    logger.error(req, err, 'unidadAdministrativa.controller#save', 'Error al consultar UnidadAdministrativa');
+                    logger.error(err, req, 'unidadAdministrativa.controller#save', 'Error al consultar UnidadAdministrativa');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.save')
@@ -98,7 +98,7 @@ exports.save = (req, res, next) => {
 
                 unidadAdministrativa.save((err, savedUnidadAdministrativa) => {
                     if (err) {
-                        logger.error(req, err, 'unidadAdministrativa.controller#save', 'Error al guardar UnidadAdministrativa');
+                        logger.error(err, req, 'unidadAdministrativa.controller#save', 'Error al guardar UnidadAdministrativa');
                         return res.json({
                             errors: true,
                             message: req.__('general.error.save')
@@ -123,7 +123,7 @@ exports.save = (req, res, next) => {
 
         unidadAdministrativa.save((err, savedUnidadAdministrativa) => {
             if (err) {
-                logger.error(req, err, 'unidadAdministrativa.controller#save', 'Error al guardar UnidadAdministrativa');
+                logger.error(err, req, 'unidadAdministrativa.controller#save', 'Error al guardar UnidadAdministrativa');
                 return res.json({
                     "error": true,
                     "message": req.__('general.error.save')
@@ -160,7 +160,7 @@ exports.delete = (req, res, next) => {
         .count()
         .exec((err, count) => {
             if (err) {
-                logger.error(req, err, 'unidadAdministrativa.controller#delete', 'Error al realizar count de UnidadAdministrativa');
+                logger.error(err, req, 'unidadAdministrativa.controller#delete', 'Error al realizar count de UnidadAdministrativa');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.delete')
@@ -168,7 +168,7 @@ exports.delete = (req, res, next) => {
             }
             
             if (count === 0) {
-                logger.error(req, err, 'unidadAdministrativa.controller#delete', 'Error al intentar borrar UnidadAdministrativa; el registro no existe o ya fue borrado anteriormente');
+                logger.error(err, req, 'unidadAdministrativa.controller#delete', 'Error al intentar borrar UnidadAdministrativa; el registro no existe o ya fue borrado anteriormente');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.not-exists-or-already-deleted')
@@ -190,7 +190,7 @@ exports.delete = (req, res, next) => {
                 {multi: false}
             ).exec((err) => {
                 if (err) {
-                    logger.error(req, err, 'unidadAdministrativa.controller#delete', 'Error al borrar UnidadAdministrativa.');
+                    logger.error(err, req, 'unidadAdministrativa.controller#delete', 'Error al borrar UnidadAdministrativa.');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.delete')
