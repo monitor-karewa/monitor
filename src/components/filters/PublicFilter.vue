@@ -11,21 +11,21 @@
             <div>
                 <div class="filter">
                     <div class="filter-container row m-0" >
-                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['administrationPeriod']} col-6`" v-if="checkIfShown('administrationPeriod')">
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['administrationPeriod']} col-6`" v-if="checkIfShown('administrationPeriod')" :key="keys.administrationPeriods">
                             <div class="fg-line m-0">
                                 <select v-model="temp.administrationPeriod" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar administración"
-                                        title="Por administración" @change="addFilter(query.administrationPeriods, temp.administrationPeriod)">
+                                        title="Por administración" @change="addFilter(query.administrationPeriods, temp.administrationPeriod, 'administrationPeriods')">
                                     <option v-for="item in administrationPeriods" :value="item">
                                         ADMINISTRACIÓN {{item.administrationPeriod}}
                                     </option>
                                 </select>
                             </div>
                         </div>
-                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['fiscalYear']} col-6`" v-if="checkIfShown('fiscalYear')">
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['fiscalYear']} col-6`" v-if="checkIfShown('fiscalYear')" :key="keys.fiscalYears">
                             <div class="fg-line m-0">
                                 <select v-model="temp.fiscalYear" class="form-control select selectpicker" data-live-search="true"
-                                        data-live-search-placeholder="Buscar año" title="Por año…" @change="addFilter(query.fiscalYears, temp.fiscalYear)">
+                                        data-live-search-placeholder="Buscar año" title="Por año…" @change="addFilter(query.fiscalYears, temp.fiscalYear, 'fiscalYears')">
                                     <optGroup>
                                         <option :value="undefined"> Por año...</option>
                                     </optGroup>
@@ -34,33 +34,33 @@
                                 </select>
                             </div>
                         </div>
-                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['trimonth']} col-6`" v-if="checkIfShown('trimonth')">
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['trimonth']} col-6`" v-if="checkIfShown('trimonth')" :key="keys.trimonths">
                             <div class="fg-line m-0">
                                 <select v-model="temp.trimonth" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar trimestre"
-                                        title="Por trimestre…" @change="addFilter(query.trimonths, temp.trimonth)">
+                                        title="Por trimestre…" @change="addFilter(query.trimonths, temp.trimonth, 'trimonths')">
                                         <option v-for="trimonth in trimonths"  :value="trimonth">
                                             {{trimonth.period}}
                                         </option>
                                 </select>
                             </div>
                         </div>
-                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['procedureType']} col-6`" v-if="checkIfShown('procedureType')">
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['procedureType']} col-6`" v-if="checkIfShown('procedureType')" :key="keys.procedureTypes">
                             <div class="fg-line m-0">
                                 <select v-model="temp.procedureType" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar trimestre"
-                                        title="Por tipo de procedimiento" @change="addFilter(query.procedureTypes, temp.procedureType)">
+                                        title="Por tipo de procedimiento" @change="addFilter(query.procedureTypes, temp.procedureType, 'procedureTypes')">
                                         <option v-for="procedureType in procedureTypes" :value="procedureType">
                                             {{$t(procedureType)}}
                                         </option>
                                 </select>
                             </div>
                         </div>
-                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['administrativeUnit']} col-12`" v-if="checkIfShown('administrativeUnit')">
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['administrativeUnit']} col-12`" v-if="checkIfShown('administrativeUnit')" :key="keys.administrativeUnits">
                             <div class="fg-line m-0">
                                 <select v-model="temp.administrativeUnit" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar administrativa"
-                                        title="Por unidad administrativa…" @change="addFilter(query.administrativeUnits, temp.administrativeUnit)">
+                                        title="Por unidad administrativa…" @change="addFilter(query.administrativeUnits, temp.administrativeUnit, 'administrativeUnits')">
                                             <optGroup>
                                                 <option :value="undefined"> Por Unidad...</option>
                                             </optGroup>
@@ -68,11 +68,11 @@
                                 </select>
                             </div>
                         </div>
-                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['supplier']} col-12`" v-if="checkIfShown('supplier')">
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['supplier']} col-12`" v-if="checkIfShown('supplier')" :key="keys.suppliers">
                             <div class="fg-line m-0">
                                 <select v-model="temp.supplier" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar proveedor"
-                                        title="Por proveedor…" @change="addFilter(query.suppliers, temp.supplier)">
+                                        title="Por proveedor…" @change="addFilter(query.suppliers, temp.supplier, 'suppliers')">
                                     <optGroup>
                                         <option :value="undefined"> Por Proveedor...</option>
                                     </optGroup>
@@ -149,6 +149,8 @@
     const FIRST_ROW_TOTAL = 1;
     const SECOND_ROW_TOTAL = 6;
 
+    import FilterSelect from  "@/components/general/FilterSelect";
+
 
     export default {
         name: "publicFilter",
@@ -178,9 +180,21 @@
                     procedureType : 2,
                     administrativeUnit : 2,
                     supplier : 2,
-                }
-
+                },
+                keys : {
+                    administrationPeriods : 0,
+                    fiscalYears : 10000,
+                    trimonths : 20000,
+                    procedureTypes : 30000,
+                    administrativeUnits : 40000,
+                    suppliers : 50000
+                },
+                testkey : "thisisakey",
+                vifhack : true
             }
+        },
+        components : {
+            FilterSelect
         },
         computed : {
            showFilters : function(){
@@ -362,19 +376,25 @@
                 }
             },
             refreshSelects() {
+                this.$nextTick(function () {
                     window.$('.selectpicker').selectpicker();
                     window.$('.selectpicker').selectpicker('refresh');
                     $('.selectpicker').selectpicker();
                     $('.selectpicker').selectpicker('refresh');
+                })
             },
-            addFilter(array, element){
-                console.log("element", element);
-
-                if(array.indexOf(element) < 0){
-                    array.push(element);
+            addFilter(array, element, keyName){
+                if(element){
+                    if(array.indexOf(element) < 0){
+                        array.push(element);
+                    }
+                    element = undefined;
+                    const keys = Object.keys(this.keys)
+                    for (const key of keys) {
+                        this.keys[key]++;
+                    }
+                    this.refreshSelects();
                 }
-                element = undefined;
-                this.refreshSelects();
             },
             removeFilter(array, element){
                 array.splice(array.indexOf(element),1);
