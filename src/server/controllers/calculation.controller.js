@@ -147,6 +147,8 @@ exports.getCalculationsForFormula = (req, res, next) => {
 
     //TODO Add this validation later to avoid a infinity recursion
     // let idCalculationOrigin;
+    
+    let currentCalculationId = req.query.currentCalculationId;
 
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
 
@@ -157,6 +159,10 @@ exports.getCalculationsForFormula = (req, res, next) => {
     let qNotDeleted = deletedSchema.qNotDeleted();
     // let qByOrganization = Organization.qByOrganization(req);
     query = {...query, ...qNotDeleted/*, ...qByOrganization*/};
+    
+    if (currentCalculationId) {
+        query = {...query, _id: {$ne: mongoose.Types.ObjectId(currentCalculationId)}};
+    }
 
     Calculation
         .find(

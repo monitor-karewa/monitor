@@ -26,7 +26,7 @@ export default {
             .catch(onError);
     },
     getCalculationsForFormula: (params = {}, onSuccess, onError) => {
-        return axios.get(`${base.baseUrl}/api/${namespace}/retrieve/calculations`,)
+        return axios.get(`${base.baseUrl}/api/${namespace}/retrieve/calculations${params.query || ''}`,)
             .then(onSuccess)
             .catch(onError);
     },
