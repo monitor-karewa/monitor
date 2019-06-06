@@ -369,12 +369,13 @@
             },
             addFilter(array, element){
                 console.log("element", element);
-
-                if(array.indexOf(element) < 0){
-                    array.push(element);
+                if(element){
+                    if(array.indexOf(element) < 0){
+                        array.push(element);
+                    }
+                    element = undefined ;
+                    this.refreshSelects();
                 }
-                element = undefined;
-                this.refreshSelects();
             },
             removeFilter(array, element){
                 array.splice(array.indexOf(element),1);
