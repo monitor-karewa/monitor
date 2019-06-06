@@ -10,8 +10,8 @@ function _aggregateAmountByPeriods(req, res, callback) {
 
 
     let query = {};
-    var orBuilder = [];
-    var andBuilder = [];
+    let orBuilder = [];
+    let andBuilder = [];
 
     let filters = req.body;
 
@@ -206,15 +206,11 @@ function _aggregateAmountByProcedure(req, res, callback) {
         }
     }
 
-
-    console.log("query", JSON.stringify(query));
-    // {"$and":[{"$or":[{"supplier":"5c9eb68decdaff977f7184d1"
-
     let aggregate = Contract.aggregate([
         {
             $match:{
-                "deleted.isDeleted":false,
-                "organization":Organization.currentOrganizationId(req),
+                "deleted.isDeleted" : false,
+                "organization" : Organization.currentOrganizationId(req),
                 ...query
             }
         },

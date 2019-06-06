@@ -3,7 +3,7 @@
         <div class="filter" v-if="checkIfShown('search')">
             <div class="filter-container">
                 <input class="input-search" type="text" name="" value="" v-model="query.search"
-                       :placeholder="placeHolder" />
+                       :placeholder="placeHolder" @keyup.enter="filter" />
             </div>
             <button @click="filter" class="filter-btn" type="button" name="button">Buscar</button>
         </div>
