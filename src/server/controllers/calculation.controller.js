@@ -212,7 +212,7 @@ var exploreCalculationTree = function (cache, calculation, mainCallback) {
                     });
                 }
 
-                if (!called || (called && !calculated)) {
+                if (!called || !(called && !calculated)) {
                     calls.push(res.abbreviation);
 
                     async.map(res.formula.calculations, (calc, calcCallback) => {
@@ -252,7 +252,7 @@ var exploreCalculationTree = function (cache, calculation, mainCallback) {
             });
         }
 
-        if (!called || (called && !calculated)) {
+        if (!called || !(called && !calculated)) {
             calls.push(calculation.abbreviation);
 
             async.map(calculation.formula.calculations, (calc, calcCallback) => {
@@ -432,20 +432,28 @@ exports.save = (req, res, next) => {
                         return res.json({error: true, message: req.__('calculations.formula.syntax.error'), err:formulaValidation.err})
                     }
 
-                calculation.save((err, savedCalculation) => {
+                exploreCalculationTree(cache, calculation, function (validTree) {
+                    if (!validTree) {
+                        return res.json({
+                            error: true,
+                            message: req.__('calculations.formula.reference-circular.error'),
+                            err: new Error("Formula is not valid")
+                        });
+                    }
+                    calculation.save((err, savedCalculation) => {
                         if (err) {
                             let errors = [];
-                            if(err.code == 11000){
-                                errors.push({message:"Se encontro otro registro con la misma abreviación de calculo o con el mismo nombre"})
+                            if (err.code === 11000) {
+                                errors.push({message: "Se encontro otro registro con la misma abreviación de calculo o con el mismo nombre"})
                             }
-                            for(let item in err.errors){
+                            for (let item in err.errors) {
                                 errors.push(err.errors[item]);
                             }
                             logger.error(err, req, 'calculation.controller#save', 'Error al guardar Calculation');
                             return res.json({
                                 error: true,
                                 message: req.__('general.error.save'),
-                                errors:errors
+                                errors: errors
                             });
                         }
                         if (calculation.locked) {
@@ -461,29 +469,29 @@ exports.save = (req, res, next) => {
                             }, {
                                 $set: {"locked": false}
                             }).exec((err) => {
-                                
+
                             });
                         }
-                        
-                        if(calculation.hasPercentScale) {
-                            calculation.scale = calculation.scale.sort(function(a, b) {
-                                if(a.max > b.max){
+
+                        if (calculation.hasPercentScale) {
+                            calculation.scale = calculation.scale.sort(function (a, b) {
+                                if (a.max > b.max) {
                                     return 1;
                                 }
-                                if(a.max < b.max){
+                                if (a.max < b.max) {
                                     return -1;
                                 }
                                 return 0;
                             });
-                            for(let i = 0; i < calculation.scale.length; i++){
+                            for (let i = 0; i < calculation.scale.length; i++) {
                                 let maxValue = calculation.scale[i].max;
                                 let nextIndex = i + 1;
-                                if( nextIndex < calculation.scale.length){
-                                    if(maxValue > calculation.scale[nextIndex].max || maxValue > calculation.scale[nextIndex].min){
+                                if (nextIndex < calculation.scale.length) {
+                                    if (maxValue > calculation.scale[nextIndex].max || maxValue > calculation.scale[nextIndex].min) {
                                         return res.json({
-                                            error:true,
-                                            message:req.__('general.error.save'),
-                                            errors:[{ message: "Algunos de los rangos en la escala se traslapan, favor de verificarlo" }]
+                                            error: true,
+                                            message: req.__('general.error.save'),
+                                            errors: [{message: "Algunos de los rangos en la escala se traslapan, favor de verificarlo"}]
                                         })
                                     }
                                 }
@@ -496,6 +504,8 @@ exports.save = (req, res, next) => {
                             data: savedCalculation
                         });
                     });
+                });
+
 
             });
         
@@ -533,66 +543,77 @@ exports.save = (req, res, next) => {
                 return res.json({error: true, message: req.__('calculations.formula.syntax.error'), err: isValid.err})
             }
 
-        calculation.save((err, savedCalculation) => {
-            if (err) {
-                let errors = [];
-                if(err.code == 11000){
-                    errors.push({message:"Se encontro otro registro con la misma abreviación de calculo o con el mismo nombre"})
-                }
-                for(let item in err.errors){
-                    errors.push(err.errors[item]);
-                }
-                logger.error(err, req, 'calculation.controller#save', 'Error al guardar Calculation');
+        exploreCalculationTree(cache, calculation, function (validTree) {
+            if (!validTree) {
                 return res.json({
-                    "error": true,
-                    "message": req.__('general.error.save'),
-                    "errors":errors
+                    error: true,
+                    message: req.__('calculations.formula.reference-circular.error'),
+                    err: new Error("Formula is not valid")
                 });
             }
 
-            if (calculation.locked) {
-                let qNotDeleted = deletedSchema.qNotDeleted();
-                Calculation.updateMany({
-                    // _id: {$ne: calculation._id},
-                    ...qNotDeleted
-                }, {
-                    $set: {"locked": false}
-                }).exec((err) => {
+            calculation.save((err, savedCalculation) => {
+                if (err) {
+                    let errors = [];
+                    if (err.code == 11000) {
+                        errors.push({message: "Se encontro otro registro con la misma abreviación de calculo o con el mismo nombre"})
+                    }
+                    for (let item in err.errors) {
+                        errors.push(err.errors[item]);
+                    }
+                    logger.error(err, req, 'calculation.controller#save', 'Error al guardar Calculation');
+                    return res.json({
+                        "error": true,
+                        "message": req.__('general.error.save'),
+                        "errors": errors
+                    });
+                }
 
-                });
-            }
-            
-            if(calculation.hasPercentScale) {
-                calculation.scale = calculation.scale.sort(function(a, b) {
-                    if(a.max > b.max){
-                        return 1;
-                    }
-                    if(a.max < b.max){
-                        return -1;
-                    }
-                    return 0;
-                });
-                for(let i = 0; i < calculation.scale.length; i++){
-                    let maxValue = calculation.scale[i].max;
-                    let nextIndex = i + 1;
-                    if( nextIndex < calculation.scale.length){
-                        if(maxValue > calculation.scale[nextIndex].max || maxValue > calculation.scale[nextIndex].min){
-                            return res.json({
-                                error:true,
-                                message:req.__('general.error.save'),
-                                errors:[{ message: "Algunos de los rangos en la escala se traslapan, favor de verificarlo" }]
-                            })
+                if (calculation.locked) {
+                    let qNotDeleted = deletedSchema.qNotDeleted();
+                    Calculation.updateMany({
+                        // _id: {$ne: calculation._id},
+                        ...qNotDeleted
+                    }, {
+                        $set: {"locked": false}
+                    }).exec((err) => {
+
+                    });
+                }
+
+                if (calculation.hasPercentScale) {
+                    calculation.scale = calculation.scale.sort(function (a, b) {
+                        if (a.max > b.max) {
+                            return 1;
+                        }
+                        if (a.max < b.max) {
+                            return -1;
+                        }
+                        return 0;
+                    });
+                    for (let i = 0; i < calculation.scale.length; i++) {
+                        let maxValue = calculation.scale[i].max;
+                        let nextIndex = i + 1;
+                        if (nextIndex < calculation.scale.length) {
+                            if (maxValue > calculation.scale[nextIndex].max || maxValue > calculation.scale[nextIndex].min) {
+                                return res.json({
+                                    error: true,
+                                    message: req.__('general.error.save'),
+                                    errors: [{message: "Algunos de los rangos en la escala se traslapan, favor de verificarlo"}]
+                                })
+                            }
                         }
                     }
                 }
-            }
 
-            return res.json({
-                "error": false,
-                "message": req.__('general.success.created'),
-                "data": savedCalculation
+                return res.json({
+                    "error": false,
+                    "message": req.__('general.success.created'),
+                    "data": savedCalculation
+                });
             });
         });
+
 
 
     }

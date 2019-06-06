@@ -208,7 +208,8 @@ function ToastShow() {
             .append("<a class='toast-exit' onclick=\"$(this).closest('.toast').remove();\"><i class=\"zmdi zmdi-close\"></i></a>")
             .queue(function(next) {
                 $(this).css({
-                    'opacity': 1
+                    'opacity': 1,
+                    'zIndex': '1060'
                 });
                 // var topOffset = 15;
                 var topOffset = 65;
@@ -253,7 +254,7 @@ $('#toast-warning').click(function(){
     tShow("Complete todos los campos requeridos",'alert');
 });
 $('#toast-success').click(function(){
-    tShow("Se ha completado el proceso correctamente sadasda adadasd sda dasdasdas dasda dasdasd ad adaspidjdj asoijdas",'success');
+    tShow("Se ha completado el proceso correctamente.",'success');
 });
 
 

@@ -119,7 +119,7 @@ exports.save = (req, res, next) => {
                 administrativeUnit.save((err, savedAdministrativeUnit) => {
                     if (err) {
                         logger.error(err, req, 'administrativeUnit.controller#save', 'Error al guardar AdministrativeUnit');
-                        if (err.name && err.name === 'MongoError') {
+                        if (err.code === 11000) {
                             return res.json({
                                 "error": true,
                                 "message": req.__('administrative-units.error.save')
@@ -151,7 +151,7 @@ exports.save = (req, res, next) => {
         administrativeUnit.save((err, savedAdministrativeUnit) => {
             if (err) {
                 logger.error(err, req, 'administrativeUnit.controller#save', 'Error al guardar AdministrativeUnit');
-                if (err.name && err.name === 'MongoError') {
+                if (err.code === 11000) {
                     return res.json({
                         "error": true,
                         "message": req.__('administrative-units.error.save')

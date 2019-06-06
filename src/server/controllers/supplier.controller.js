@@ -194,7 +194,7 @@ exports.save = (req, res, next) => {
                 supplier.save((err, savedSupplier) => {
                     if (err) {
                         logger.error(err, req, 'supplier.controller#save', 'Error al guardar Supplier');
-                        if (err.name && err.name === 'MongoError') {
+                        if (err.code === 11000) {
                             return res.json({
                                 "error": true,
                                 "message": req.__('suppliers.error.save')
@@ -227,7 +227,7 @@ exports.save = (req, res, next) => {
         supplier.save((err, savedSupplier) => {
             if (err) {
                 logger.error(err, req, 'supplier.controller#save', 'Error al guardar Supplier');
-                if (err.name && err.name === 'MongoError') {
+                if (err.code === 11000) {
                     return res.json({
                         "error": true,
                         "message": req.__('suppliers.error.save')

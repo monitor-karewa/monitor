@@ -3099,7 +3099,7 @@ Card image on corner
                     tShow("Complete todos los campos requeridos", 'alert');
                 });
                 $('#toast-success').click(function () {
-                    tShow("Se ha completado el proceso correctamente sadasda adadasd sda dasdasdas dasda dasdasd ad adaspidjdj asoijdas", 'success');
+                    tShow("Se ha completado el proceso correctamente.", 'success');
                 });
             });
         },
