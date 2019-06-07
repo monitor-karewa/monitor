@@ -123,7 +123,7 @@
                                             <div id="gauge-text-left">0</div>
                                             %
                                         </div>
-                                        <div class="prob">---</div>
+                                        <div id="level-text-left" class="prob">---</div>
                                     </div>
 
                                 </div>
@@ -150,7 +150,7 @@
                                             <div id="gauge-text-right">0</div>
                                             %
                                         </div>
-                                        <div class="prob">---</div>
+                                        <div id="level-text-right" class="prob">---</div>
                                     </div>
 
                                 </div>
@@ -429,6 +429,7 @@
             administrationPeriods() {
                 return `${this.leftAdministrationPeriod} / ${this.rightAdministrationPeriod}`;
             }
+
         },
         methods: {
             initTachometer(elementId, textElementId, value) {
@@ -439,6 +440,21 @@
                 gauge.setTextField(document.getElementById(textElementId));
 
                 gauge.set(value);
+            },
+            corruptionLevel(value) {
+                if (value <= 50) {
+                    return 'BAJO'
+                } else if (value <= 75) {
+                    return 'MEDIO'
+                } else {
+                    return 'ALTO'
+                }
+            },
+            initTextLevel(elementId,value) {
+                let levelElement = document.getElementById(elementId);
+                let corruptionLevelRisk = this.corruptionLevel(value);
+                levelElement.innerHTML = corruptionLevelRisk;
+
             },
             copyUrlToClipBoard(){
                 const tempTextArea = document.createElement('textarea');
@@ -506,11 +522,13 @@
                 let elementId = 'gauge-graph-left';
                 let textElementid = 'gauge-text-left';
                 let gaugeValue = 0;
+                let elementLevelId='level-text-left';
 
                 if (_detailLeft && _detailLeft.corruptionIndex && _detailLeft.corruptionIndex.result) {
                     gaugeValue = _detailLeft.corruptionIndex.result;
                 }
                 this.initTachometer(elementId, textElementid, gaugeValue);
+                this.initTextLevel(elementLevelId,gaugeValue);
 
                 this.initTooltipCorruptionIndex();
                 this.initTooltipTotals();
@@ -520,11 +538,13 @@
                 let elementId = 'gauge-graph-right';
                 let textElementid = 'gauge-text-right';
                 let gaugeValue = 0;
+                let elementLevelId='level-text-right';
 
                 if (_detailRight && _detailRight.corruptionIndex && _detailRight.corruptionIndex.result) {
                     gaugeValue = _detailRight.corruptionIndex.result;
                 }
                 this.initTachometer(elementId, textElementid, gaugeValue);
+                this.initTextLevel(elementLevelId,gaugeValue);
 
                 this.initTooltipCorruptionIndex();
                 this.initTooltipTotals();
