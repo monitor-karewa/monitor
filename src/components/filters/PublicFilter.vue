@@ -149,9 +149,6 @@
     const FIRST_ROW_TOTAL = 1;
     const SECOND_ROW_TOTAL = 6;
 
-    import FilterSelect from  "@/components/general/FilterSelect";
-
-
     export default {
         name: "publicFilter",
         data() {
@@ -194,7 +191,6 @@
             }
         },
         components : {
-            FilterSelect
         },
         computed : {
            showFilters : function(){
