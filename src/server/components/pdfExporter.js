@@ -83,6 +83,10 @@ let defaultStyles = {
         alignment:'center',
         margin: [0, 30, 0, 0]
     },
+    statsCurrency3Col: {
+        alignment:'center',
+        margin: [60, 50, 0, 10]
+    },
     headerExample:{
         margin: [15, 5]
 
@@ -111,8 +115,14 @@ let defaultStyles = {
         font:'Courier',
         margin:[0,10,0,10]
     },
+    rowCurrencyStyleBig:{
+        fontSize:11,
+        alignment:'right',
+        font:'Courier',
+        margin:[0,10,0,10]
+    },
     rowNumberStyle:{
-        fontSize:12,
+        fontSize:11,
         alignment:'center',
         font:'Courier',
         margin:[0,10,0,10]
@@ -315,7 +325,7 @@ class PDFTable {
                     if(isNaN(value)){
                         value = 0
                     }
-                return Number(value).toLocaleString('es-MX', { style: 'currency', currency:'MXN'});
+                return value ? '$' + value.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : "";
                 break;
             case 'date':
                 return moment(value).format('DD/MM/YYYY');
@@ -326,7 +336,119 @@ class PDFTable {
     }
 }
 
+class PDFTableList {
+    constructor(params){
+        this.widths = params.widths || [];
+        this.body = params.body || [];
+        this.docs = params.docs || [];
+        this.headers = params.headers || [];
+        this.labelsColumn = params.labelsColumn || [];
+        this.tableStructure = params.tableStructure || {};
+    }
+
+    setTableHeaders(headers){
+        this.headers = headers;
+
+        let arrayHeaders = [];
+        this.headers.forEach((meta) => {
+            let newEntry = { text: meta.title, style: meta.headerStyle };
+            arrayHeaders.push(newEntry);
+        });
+        this.body.unshift(arrayHeaders);
+        return this
+    }
+
+    setLabelsColumn(labelsColumn=[],columnStyle){
+        this.labelsColumn = labelsColumn;
+        let tempTableStructure = {};
+        this.labelsColumn.forEach(function(column){
+            let prop = column.propName;
+            tempTableStructure[prop] = {};
+            tempTableStructure[prop].values = [];
+            tempTableStructure[prop].label = column.label;
+            tempTableStructure[prop].headerStyle = columnStyle;
+            tempTableStructure[prop].type = column.type;
+        });
+
+        this.tableStructure = tempTableStructure;
+        return this;
+    }
+
+    setDocs(docs){
+        this.docs = docs;
+        let self = this;
+        if(Array.isArray(this.docs)){
+            this.docs.forEach(function(doc){
+               for(let item in self.tableStructure){
+                   if(doc[item] !== null && doc[item] !== undefined){
+                       self.tableStructure[item].values.push(doc[item]);
+                   }
+               }
+            });
+        } else {
+            for(let item in this.tableStructure){
+                if(this.docs[item] !== null && this.docs[item] !== undefined){
+                    this.tableStructure[item].values.push(this.docs[item]);
+                }
+            }
+        }
+        return this
+    }
+
+    setWidths(widths, fillValue){
+        if(widths){
+            if(widths.length !== this.headers.length){
+                throw new Error("El numero de valores en el campo 'widths' no corresponde con el número de columnas que se definieron")
+            }
+            this.widths = widths;
+        } else {
+            let array = new Array(this.headers.length);
+            array.fill(fillValue, 0, this.headers.length);
+            this.widths = array;
+        }
+        return this;
+    }
+
+    transformDocs(){
+        let values = [];
+        let self = this;
+        for(let item in this.tableStructure){
+            values = [];
+            values.push({text:this.tableStructure[item].label, style:this.tableStructure[item].headerStyle});
+            this.tableStructure[item].values.forEach(function(value){
+               values.push({text:self._formatValue(value, self.tableStructure[item].type), style: self._getStyleFormat(self.tableStructure[item].type)})
+            });
+            this.body.push(values);
+        }
+
+        return this;
+
+    }
+
+    _formatValue(value, format){
+        switch(format){
+            case 'currency':
+                if(isNaN(value)){
+                    value = 0
+                }
+                return value ? '$' + value.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : "$0.00";
+                break;
+            case 'date':
+                return moment(value).format('DD/MM/YYYY');
+                break;
+            default:
+                return value;
+        }
+    }
+
+    _getStyleFormat(format){
+        return format == 'currency' ? 'rowCurrencyStyleBig' : 'rowNumberStyle';
+    }
+
+}
+
 module.exports = {
     PDFTable,
-    PDFExporter
+    PDFExporter,
+    PDFTableList
 };

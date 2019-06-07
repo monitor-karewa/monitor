@@ -1,5 +1,7 @@
 <template>
     <section class="client-content">
+        <!-- MODAL AUTO DISMISS-->
+        <ModalAutoDismiss :message="$t('general.modal.wait.message')" ></ModalAutoDismiss>
         <div class="neutral-width">
 
             <div class="col-12 p-0 m-t-20 m-b-20 d-flex">
@@ -14,11 +16,35 @@
                         <h1>
                             Comparar Monitores
                         </h1>
-                        <div class="side-right">
+                        <div class="side-right d-flex">
                             <a @click="copyUrlToClipBoard()" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
                                     class="zmdi zmdi-share"></i> Compartir</a>
-                            <a href="" class="btn-raised button-accent text-capi m-l-10" tabindex=""><i
-                                    class="zmdi zmdi-download"></i> Descargar comparación</a>
+                            <div class="dropdown p-l-10">
+                                <button class="btn-raised button-accent text-capi m-l-10" type="button" id="dropdownDownloadOptions"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="zmdi zmdi-download"></i> Descargar comparación
+
+                                </button>
+                                <div class="dropdown-menu dropdown-options dropdown-menu-right"
+                                     aria-labelledby="dropdownDownloadOptions">
+                                    <span>Descargar datos con formato:</span>
+                                    <div class="container-dropdown">
+                                        <a class="dropdown-item" @click.prevent="downloadFile('pdf')" target="_blank">
+                                            <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-pdf.svg"
+                                                 alt="Empty"/>
+                                        </a>
+                                        <a class="dropdown-item" @click.prevent="downloadFile('xls')">
+                                            <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-xls.svg"
+                                                 alt="Empty"/>
+                                        </a>
+                                        <a class="dropdown-item" @click.prevent="downloadFile('json')">
+                                            <img class="img-fluid" src="@/assets/images/Illustrations/icon-file-json.svg"
+                                                 alt="Empty"/>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+
                         </div>
                     </div>
 
@@ -331,6 +357,7 @@
     import MoreInfo from '@/components/general/MoreInfo';
     import ModalCorruptionIndexHow from "@/components/modals/ModalCorruptionIndexHow";
     import PanelOtherCalculations from '@/components/panels/PanelOtherCalculations';
+    import ModalAutoDismiss from '@/components/catalogs/ModalAutoDismiss.vue';
 
     import {mapState} from 'vuex';
     import {Gauge} from 'gaugeJS';
@@ -370,7 +397,8 @@
         components: {
             MoreInfo,
             ModalCorruptionIndexHow,
-            PanelOtherCalculations
+            PanelOtherCalculations,
+            ModalAutoDismiss
         },
         filters: {
             percentage(num) {
@@ -467,6 +495,11 @@
 //                return `${urlPrefix}/calculations/corruption-index`;
                 return `${urlPrefix}/select-organization`;
             },
+            downloadFile(format){
+                $('#modalAutoDismiss').modal('show');
+                this.$store.dispatch(`${storeModule}/downloadComparisonFile`, { format, id : this.currentOrganization._id});
+
+            }
         },
         watch: {
             detailLeft(_detailLeft) {
