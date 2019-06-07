@@ -178,7 +178,7 @@ module.exports = {
 
 
             //----- EDITAR MEDIANTE LOS BOTONES DE CADA REGISTRO -------------
-            .moveToElement(utils.xpath.elementWithClass("div","table-buttons-hover"),5,5)
+           /* .moveToElement(utils.xpath.elementWithClass("div","table-buttons-hover"),5,5)
 
             .assert.visible(utils.xpath.elementWithClass("div","table-buttons-hover"))
             .execute(function(){
@@ -196,7 +196,7 @@ module.exports = {
             .click('//button[contains(text(), " Guardar ")]')
             .assert.containsText(utils.xpath.body(), "Elemento Actualizado!")
             .pause(1000)
-
+*/
 
             //----- ELIMINAR MEDIANTE LOS BOTONES DE CADA REGISTRO -------------
             .moveToElement(utils.xpath.elementWithClass("div","table-buttons-hover"),5,5)

@@ -17,7 +17,7 @@ module.exports = {
             .setValue(utils.xpath.elementWithId("input","file"),require('path').resolve(__dirname + '/monitorTest.png'))
 
             .pause(1000)
-            .assert.visible(utils.xpath.elementWithText("a", "Editar"))
+            .assert.visible(utils.xpath.elementWithText("a", " Editar"))
             .execute(function(){
 
                 document.querySelectorAll('a.btn-raised.button-accent.b-shadow-none.p-t-5.p-b-5.m-l-15')[0].click()
@@ -48,7 +48,7 @@ module.exports = {
 
             })
 
-            .assert.visible(utils.xpath.elementWithText("a", "Editar"))
+            .assert.visible(utils.xpath.elementWithText("a", " Editar"))
             .execute(function(){
                 //Click en el boton , se usa este metodo ya que como son varios de la otra forma se interceptan entre ellos
                 document.querySelectorAll('a.btn-raised.button-accent.b-shadow-none.p-t-5.p-b-5')[2].click()
