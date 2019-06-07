@@ -36,4 +36,16 @@ export default {
             .then(onSuccess)
             .catch(onError);
     },
+    downloadComparison: (params = {}, onSuccess, onError) => {
+        return axios({
+            url: `${base.baseUrl}/public-api/${namespace}/download-comparison/${params.format}/${params.id}`,
+            method: 'POST',
+            responseType: 'blob',
+            data:params,
+            // query:params,
+            // params
+        })
+            .then(onSuccess)
+            .catch(onError);
+    },
 }

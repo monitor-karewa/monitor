@@ -791,41 +791,41 @@ let downloadPDF = (req, res, { totals, contracts, filters }) => {
     }
 
     let resultsTable = {
-        style:'statsExample',
+        style:'statsA2Example',
         layout: 'lightHorizontalLines',
         table: new PDFTable({headerRows:1,docs:totals})
             .setTableMetadata([
                 {
                     header: 'Monto Total',
-                    headerStyle:'headerStyle',
-                    rowStyle:'rowNumberStyle',
+                    headerStyle:'headerA2Style',
+                    rowStyle:'rowNumberA2Style',
                     propName:'totalAmount',
                     format:'currency'
                 },
                 {
                     header: 'Monto Total de Contratos por Licitación Pública',
-                    headerStyle:'headerStyle',
-                    rowStyle:'rowNumberStyle',
+                    headerStyle:'headerA2Style',
+                    rowStyle:'rowNumberA2Style',
                     propName:'PUBLIC',
                     format:'currency'
                 },
                 {
                     header: 'Monto Total de Contratos por Invitación',
-                    headerStyle:'headerStyle',
-                    rowStyle:'rowNumberStyle',
+                    headerStyle:'headerA2Style',
+                    rowStyle:'rowNumberA2Style',
                     propName:'INVITATION',
                     format:'currency'
                 },
                 {
                     header: 'Monto Total de Contratos por Adjudicación Directa',
-                    headerStyle:'headerStyle',
-                    rowStyle:'rowNumberStyle',
+                    headerStyle:'headerA2Style',
+                    rowStyle:'rowNumberA2Style',
                     propName:'NO_BID',
                     format:'currency'
                 }
             ])
             .setHeaders()
-            .setWidths([150,150,150,150],"auto")
+            .setWidths(null,300)
             .transformDocs(req)
     };
     let suppliersTable = {
@@ -899,7 +899,43 @@ let downloadPDF = (req, res, { totals, contracts, filters }) => {
                     rowStyle:'rowCurrencyStyle',
                     propName:'contractType',
                     i18n: true
-                }
+                },
+                {
+                    header: 'Notas',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'notes'
+                },
+                {
+                    header: 'Hipervínculo a la convocatoria',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'announcementUrl'
+                },
+                {
+                    header: 'Hipervínculo a la convocatoria',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'announcementUrl'
+                },
+                {
+                    header: 'Hipervínculo al documento del contrato',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'contractUrl'
+                },
+                {
+                    header: 'Hipervínculo al documento de la presentación de propuestas',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'presentationProposalsDocUrl'
+                },
+                {
+                    header: 'Fecha de obtención de los datos',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'informationDate'
+                },
             ])
             .setHeaders()
             .setWidths(null,"auto")
@@ -912,6 +948,7 @@ let downloadPDF = (req, res, { totals, contracts, filters }) => {
     new PDFExporter()
         .setFileName('monitor-karewa-contratos.pdf')
         .addHeadersToPDF(headers)
+        .setPageSize('A2')
         .addTitleToPDF({text:"Información general de Contratos", style:'title'})
         .addContentToPDF(filters)
         .addContentToPDF(resultsTable)

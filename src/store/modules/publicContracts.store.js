@@ -62,6 +62,7 @@ const actions = {
             const url = window.URL.createObjectURL(new Blob([result.data]));
             const link = document.createElement('a');
             link.href = url;
+            format = format == 'xls' ? 'xlsx' : format;
             link.setAttribute('download', `monitor-karewa-contratos.${format}`); //or any other extension
             document.body.appendChild(link);
             link.click();
