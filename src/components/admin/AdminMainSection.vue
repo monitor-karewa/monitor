@@ -8,7 +8,7 @@
                     
                 <div class="container-footer">
                     <div>
-                        <label> {{lastUpdate ? "Ultima actualización: " + (lastUpdate | moment) : ""}}</label>
+                        <label v-if="lastUpdate && lastUpdate.length"> Última actualización: {{lastUpdate | moment}}</label>
                     </div>
                     <div>
                         <label> © 2019 Black Labs </label>

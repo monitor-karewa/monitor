@@ -86,7 +86,8 @@ exports.list = (req, res, next) => {
                     );
             },
             lastUpdate: function (callback) {
-                User.find(query,
+                User.find(
+                    qNotDeleted,
                     {updatedAt:1},
                     {sort:{"updatedAt":-1}, limit:1},
                     function (err, result) {
