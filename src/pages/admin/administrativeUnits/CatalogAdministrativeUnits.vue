@@ -131,6 +131,15 @@
             clearEntry(){
                 this.entry = {};
                 this.$v.$reset();
+            },
+            initAllBusEvents(){
+                let busDelete = bus._events[storeModule + events.DELETE_SUCCESS];
+                let busCreate = bus._events[storeModule + events.DOC_CREATED];
+                let busUpdate = bus._events[storeModule + events.DOC_UPDATED];
+
+                busDelete.splice(1, busDelete.length - 1);
+                busCreate.splice(1, busCreate.length - 1);
+                busUpdate.splice(1, busUpdate.length - 1);
             }
         },
         created(){
@@ -164,6 +173,7 @@
             });
         },
         mounted(){
+            this.initAllBusEvents();
             window.$(document).ready(function () {
                 window.$('.selectpicker').selectpicker();
                 $('.selectpicker').selectpicker();
