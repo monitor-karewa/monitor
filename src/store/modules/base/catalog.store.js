@@ -25,7 +25,8 @@ export default function (api, storeName) {
         sortTable:{
             sortKey:'createdAt',
             order:'desc'
-        }
+        },
+        lastUpdate : undefined
     };
 
     const getters = {
@@ -81,6 +82,7 @@ export default function (api, storeName) {
                     // });
                     // console.log('result.data.data', result.data.data);
                     commit('updateDocs', result.data.data);
+                    commit('SET_LAST_UPDATE', result.data.lastUpdate);
                 },
                 (error) => {
                     // console.log('error', error);
@@ -117,7 +119,6 @@ export default function (api, storeName) {
                 { id : id },
                 (result) => {
                     dispatch(`${storeName}/list`,{},{root:true});
-                    console.log('result.data', result.data);
                     if (result.data.error || result.data.errors) {
                         tShow(`No fue posible eliminar el registro.`, 'danger');
                     } else {
@@ -176,7 +177,6 @@ export default function (api, storeName) {
                 data,
                 (result) => {
                     // Vue.$log.info('Response', result);
-                    console.log('result.data', result.data);
                     dispatch(`${storeName}/list`,{},{root:true});
                     dispatch(`${storeName}/setEditTable`,false,{root:true});
                     commit('CLEAR_DOCS_UPDATED');
@@ -271,6 +271,9 @@ export default function (api, storeName) {
         },
         SORT_TABLE_BY(state, payload){
             state.sortTable = payload;
+        },
+        SET_LAST_UPDATE(state, lastUpdate){
+            state.lastUpdate = lastUpdate
         }
 
         // CLEAR_SELECTED_ENTRY(state){

@@ -8,7 +8,7 @@
                     
                 <div class="container-footer">
                     <div>
-                        <label> Ultima actualización: 27 Mar, 2019 </label>
+                        <label> {{lastUpdate ? "Ultima actualización: " + (lastUpdate | moment) : ""}}</label>
                     </div>
                     <div>
                         <label> © 2019 Black Labs </label>
@@ -28,16 +28,35 @@
 <style>
 </style>
 
-<script>
-</script>
+
 
 <script>
+    import {mapState} from 'vuex';
+    import moment from 'moment';
+
+
     export default {
         data () {
             return {
+
             }
         },
+        props: {
+            storeModule : String
+        },
         components: {
-        }
+        },
+        computed : {
+            ...mapState({
+                lastUpdate: function (state) {
+                    return this.$props.storeModule ? state[this.$props.storeModule].lastUpdate : "";
+                }
+            })
+        },
+        filters: {
+            moment: function (date) {
+                return moment(date).format('DD/MM/YYYY');
+            }
+        },
     }
 </script>
