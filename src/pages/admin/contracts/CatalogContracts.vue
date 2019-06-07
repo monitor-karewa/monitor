@@ -992,6 +992,15 @@
             clearEntry() {
 //                this.$store.dispatch (`${storeModule}/clearSelectedEntry`);
                 this.$v.$reset();
+            },
+            initAllBusEvents(){
+                let busDelete = bus._events[storeModule + DELETE_SUCCESS];
+                let busCreate = bus._events[storeModule + DOC_CREATED];
+                let busUpdate = bus._events[storeModule + DOC_UPDATED];
+
+                busDelete.splice(1, busDelete.length - 1);
+                busCreate.splice(1, busCreate.length - 1);
+                busUpdate.splice(1, busUpdate.length - 1);
             }
         },
         created() {
@@ -1065,6 +1074,7 @@
             });
         },
         mounted() {
+            this.initAllBusEvents();
             window.$(document).ready(function () {
 
                 window.$.fn.datepicker.dates['es-MX'] = {

@@ -43,7 +43,7 @@ module.exports = {
             // -------------- EDIT --------------------
 
             // Editar mediante el boton de la tabla
-            .assert.visible(utils.xpath.elementWithText("button", "Editar"))
+           /* .assert.visible(utils.xpath.elementWithText("button", "Editar"))
             .execute(function(){
                 //obtiene todos los botones
                 let buttonsTable = document.querySelectorAll('.btn-stroke.button-accent')
@@ -72,7 +72,7 @@ module.exports = {
                 //Click para guardar , se encuentra en la posicion 1
                 buttonsConfirm[1].click()
             })
-            .pause(2000)
+            .pause(2000)*/
 
             //----- EDITAR MEDIANTE LOS BOTONES DE CADA REGISTRO -------------
             .moveToElement(utils.xpath.elementWithClass("div","table-buttons-hover"),5,5)

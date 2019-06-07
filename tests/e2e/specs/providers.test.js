@@ -31,7 +31,7 @@ module.exports = {
             .assert.visible(utils.xpath.elementWithText("label", "Notas adicionales"))
             .assert.visible(utils.xpath.elementWithText("button", " Guardar "))
 
-            .setValue(utils.xpath.elementWithPlaceholder("input","Introduce el nombre o razón social"), "Black Labs")
+            .setValue(utils.xpath.elementWithPlaceholder("input","Introduce el nombre o razón social"), "BLACK LABS")
             .setValue(utils.xpath.elementWithPlaceholder("input","Introduce el RFC"), "SAOK790530QZ2")
             .setValue(utils.xpath.elementWithPlaceholder("input","Introduce notas adicionales"), "En Black Labs nos inspiramos por la creatividad de las personas, nos motiva la idea de cambiar el mundo a través de la tecnología.")
             .click('//button[contains(text(), " Guardar ")]')
@@ -50,7 +50,7 @@ module.exports = {
             })
 
             .pause(1000)
-            .setValue(utils.xpath.elementWithPlaceholder("input","Black Labs")," Company")
+            .setValue(utils.xpath.elementWithPlaceholder("input","BLACK LABS")," COMPANY")
             .pause(1000)
             //.setValue(utils.xpath.elementWithPlaceholder("input","SAOK790530QZ2"),"SAOK790530QZ3" )
             //.setValue(utils.xpath.elementWithPlaceholder("input","En Black Labs nos inspiramos por la creatividad de las personas, nos motiva la idea de cambiar el mundo a través de la tecnología."), "Nos Motiva la idea de cambiar el mundo a través de la tecnología.")
@@ -90,7 +90,7 @@ module.exports = {
             .assert.visible(utils.xpath.elementWithText("button", " Guardar "))
 
             .clearValue(utils.xpath.elementWithPlaceholder("input","Introduce el nombre o razón social"))
-            .setValue(utils.xpath.elementWithPlaceholder("input","Introduce el nombre o razón social"), "Desarrollo BlackLabs")
+            .setValue(utils.xpath.elementWithPlaceholder("input","Introduce el nombre o razón social"), "DESARROLLO BLACK LABS")
             .clearValue(utils.xpath.elementWithPlaceholder("input", "Introduce notas adicionales"))
             .setValue(utils.xpath.elementWithPlaceholder("input","Introduce notas adicionales"), "Campos editados desde el modal")
             .pause(1000)

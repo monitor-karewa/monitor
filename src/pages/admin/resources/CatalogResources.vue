@@ -221,7 +221,17 @@
                     tShow(`Por favor selecciona un archivo para la carga de datos`, 'danger');
                     return;
                 }
+            },
+            initAllBusEvents(){
+                let busDelete = bus._events[storeModule + DELETE_SUCCESS];
+                let busCreate = bus._events[storeModule + DOC_CREATED];
+                let busUpdate = bus._events[storeModule + DOC_UPDATED];
+
+                busDelete.splice(1, busDelete.length - 1);
+                busCreate.splice(1, busCreate.length - 1);
+                busUpdate.splice(1, busUpdate.length - 1);
             }
+
         },
         created(){
             bus.$on(storeModule+events.DELETE_SUCCESS, (data)=>{
@@ -254,6 +264,7 @@
             });
         },
         mounted(){
+            this.initAllBusEvents();
             window.$(document).ready(function () {
                 window.$('.selectpicker').selectpicker();
                 $('.selectpicker').selectpicker();
