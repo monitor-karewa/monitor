@@ -10,7 +10,8 @@ const state = {
     originalData : {
         name : "",
         lastName : "",
-    }
+    },
+    lastUpdate : undefined
 };
 
 const getters = {
@@ -79,6 +80,7 @@ const mutations = {
         state.user = user;
         state.originalData.name = user.name;
         state.originalData.lastName = user.lastName;
+        state.lastUpdate =  user.updatedAt;
     }
 
 };

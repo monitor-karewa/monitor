@@ -49,6 +49,7 @@
         computed : {
             ...mapState({
                 lastUpdate: function (state) {
+                    console.log('this.$props.storeModule --> ' + this.$props.storeModule);
                     return this.$props.storeModule ? state[this.$props.storeModule].lastUpdate : "";
                 }
             })

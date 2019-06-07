@@ -1,6 +1,6 @@
 <template>
     <div>
-        <AdminMainSection>
+        <AdminMainSection :storeModule="'settings'">
             <BackButton />
             <div class="col-12">
                 <div class="material-tabs">

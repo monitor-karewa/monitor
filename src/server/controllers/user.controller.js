@@ -480,7 +480,7 @@ exports.updateProfileInfo = function(req, res , next){
 
 exports.getProfileInfo = function(req, res , next){
 
-    User.findOne({_id: req.user._id}).select("name lastName profilePicture")
+    User.findOne({_id: req.user._id}).select("name lastName profilePicture updatedAt")
         .exec(function (err, result) {
 
             if(err){

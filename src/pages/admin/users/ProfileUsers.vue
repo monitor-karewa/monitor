@@ -1,6 +1,6 @@
 <template>
     <div>
-        <AdminMainSection>
+        <AdminMainSection :storeModule="storeModule">
             <BackButton/>
             <div class=" m-b-50">
                 <div class="col-12 card profile">
