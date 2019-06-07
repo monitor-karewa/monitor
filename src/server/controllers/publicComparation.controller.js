@@ -753,7 +753,146 @@ exports.downloadComparison = (req, res, next) => {
 };
 
 let downloadComparisonXls = (req, res, comparison) => {
+    try {
+        let organizationLeft = comparison.detailLeft.organization;
+        let organizationRight = comparison.detailRight.organization;
 
+        let administrationLeft = comparison.detailLeft.corruptionIndex.administrationPeriod;
+        let administrationRight = comparison.detailRight.corruptionIndex.administrationPeriod;
+
+        comparison.detailRight.corruptionIndex.organization = organizationRight;
+        comparison.detailLeft.corruptionIndex.organization = organizationLeft;
+
+        comparison.detailRight.totals.organization = organizationRight;
+        comparison.detailLeft.totals.organization = organizationLeft;
+
+        comparison.detailRight.totals.administration = administrationRight;
+        comparison.detailLeft.totals.administration = administrationLeft;
+
+
+        comparison.detailRight.counts.organization = organizationRight;
+        comparison.detailLeft.counts.organization = organizationLeft;
+
+        comparison.detailRight.counts.administration = administrationRight;
+        comparison.detailLeft.counts.administration = administrationLeft;
+        let excelInfo = {
+            generalInfo:{
+                docs : [comparison.detailLeft.corruptionIndex,comparison.detailRight.corruptionIndex],
+                sheetNumber: 1
+            },
+            totalsInfo:{
+                docs : [comparison.detailLeft.totals, comparison.detailRight.totals],
+                sheetNumber : 2
+            },
+            countsInfo:{
+                docs : [comparison.detailLeft.counts, comparison.detailRight.counts],
+                sheetNumber : 3
+            }
+        };
+        new ExcelExporter()
+            .setPropInfoArray([
+                {
+                    header: 'NOMBRE DEL CALCULO',
+                    propName: 'name',
+                    sheet:1
+                },
+                {
+                    header: 'DESCRIPCIÓN DEL CALCULO',
+                    propName: 'description',
+                    sheet:1
+                },
+                {
+                    header: 'ORGANIZACIÓN',
+                    propName: 'organization',
+                    childPropName:'name',
+                    sheet:1
+                },
+                {
+                    header: 'FORMULA',
+                    propName: 'formula',
+                    childPropName : 'expression',
+                    sheet:1
+                },
+                {
+                    header: 'RESULTADO',
+                    propName: 'result',
+                    sheet:1
+                },
+                {
+                    header: 'PROBABILIDAD',
+                    propName: 'corruptionLevel',
+                    sheet:1
+                },
+                {
+                    header: 'ORGANIZACIÓN',
+                    propName: 'organization',
+                    childPropName: 'name',
+                    sheet:2
+                },
+                {
+                    header: 'ADMINISTRACIÓN',
+                    propName: 'administration',
+                    sheet:2
+                },
+                {
+                    header: 'MONTO LICITACIÓN PUBLICA',
+                    propName: 'public',
+                    sheet:2
+                },
+                {
+                    header: 'MONTO POR INVITACION',
+                    propName: 'invitation',
+                    sheet:2
+                },
+                {
+                    header: 'MONTO ADJUDICACION DIRECTA',
+                    propName: 'noBid',
+                    sheet:2
+                },
+                {
+                    header: 'MONTO TOTAL',
+                    propName: 'total',
+                    sheet:2
+                },
+                {
+                    header: 'ORGANIZACIÓN',
+                    propName: 'organization',
+                    childPropName: 'name',
+                    sheet:3
+                },
+                {
+                    header: 'ADMINISTRACIÓN',
+                    propName: 'administration',
+                    sheet:3
+                },
+                {
+                    header: 'CONTRATOS DE LICITACIÓN PÚBLICA',
+                    propName: 'public',
+                    sheet:3
+                },
+                {
+                    header: 'CONTRATOS POR INVITACIÓN',
+                    propName: 'invitation',
+                    sheet:3
+                },
+                {
+                    header: 'CONTRATOS DE ADJUDICACIÓN DIRECTA',
+                    propName: 'noBid',
+                    sheet:3
+                },
+                {
+                    header: 'CONTRATOS EN TOTAL',
+                    propName: 'total',
+                    sheet:3
+                },
+            ])
+            .setDocs(comparison)
+            .setTitle('Comparación índice de corrupción')
+            .setFileName('comparacion-indice-corrupcion')
+            .exportToFileExtraSheets(req, res, excelInfo);
+    } catch(err){
+        logger.error(err,req,"publicComparition.controller#downloadXls","Error intentando crear el archivo xls del índice de corrupción")
+    }
 };
 
 let downloadComparisonPDF = (req, res, comparison) => {
