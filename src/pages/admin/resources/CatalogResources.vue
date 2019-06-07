@@ -223,9 +223,9 @@
                 }
             },
             initAllBusEvents(){
-                let busDelete = bus._events[storeModule + DELETE_SUCCESS];
-                let busCreate = bus._events[storeModule + DOC_CREATED];
-                let busUpdate = bus._events[storeModule + DOC_UPDATED];
+                let busDelete = bus._events[storeModule + events.DELETE_SUCCESS];
+                let busCreate = bus._events[storeModule + events.DOC_CREATED];
+                let busUpdate = bus._events[storeModule + events.DOC_UPDATED];
 
                 busDelete.splice(1, busDelete.length - 1);
                 busCreate.splice(1, busCreate.length - 1);
