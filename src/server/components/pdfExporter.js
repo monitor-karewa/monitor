@@ -79,6 +79,10 @@ let defaultStyles = {
         alignment:'center',
         margin: [50, 30, 0, 0]
     },
+    statsA2Example: {
+        alignment:'center',
+        margin: [175, 30, 0, 0]
+    },
     statsCurrency4Col: {
         alignment:'center',
         margin: [0, 30, 0, 0]
@@ -98,6 +102,13 @@ let defaultStyles = {
     },
     headerStyle:{
         fontSize:12,
+        bold:true,
+        alignment:'center',
+        font:'Times',
+        margin:5
+    },
+    headerA2Style:{
+        fontSize:15,
         bold:true,
         alignment:'center',
         font:'Times',
@@ -123,6 +134,12 @@ let defaultStyles = {
     },
     rowNumberStyle:{
         fontSize:11,
+        alignment:'center',
+        font:'Courier',
+        margin:[0,10,0,10]
+    },
+    rowNumberA2Style:{
+        fontSize:14,
         alignment:'center',
         font:'Courier',
         margin:[0,10,0,10]
@@ -153,6 +170,7 @@ class PDFExporter extends Exporter {
             defaultStyle:defaultStyles.defaultStyle,
             pageMargins:[40,120,40,100],
             pageOrientation: 'portrait',
+            // pageSize: 'A4',//TODO:Realizar método sePageSize y colocarle A3 al reporte de contratos
 
             // by default we use portrait, you can change it to landscape if you wish
 
@@ -168,6 +186,11 @@ class PDFExporter extends Exporter {
             propInfoArray: this.propInfoArray,
             fileName: this.fileName
         }
+    }
+
+    setPageSize(pageSize){
+        this.docDefinition.pageSize = pageSize;
+        return this;
     }
 
     setStyle(...styleObj){
@@ -310,7 +333,7 @@ class PDFTable {
                         value = meta.i18n ? req.__(value) : value;
                         values.push({text:this._formatValue(value, meta.format), style:meta.rowStyle});
                     } else {
-                        values.push({text:"", style:meta.rowStyle});
+                        values.push({text:this._formatValue(null, meta.format), style:meta.rowStyle});
                     }
                 });
                 this.body.push(values);
@@ -325,7 +348,7 @@ class PDFTable {
                     if(isNaN(value)){
                         value = 0
                     }
-                return value ? '$' + value.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : "";
+                return value ? '$' + value.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : "$0.00";
                 break;
             case 'date':
                 return moment(value).format('DD/MM/YYYY');
