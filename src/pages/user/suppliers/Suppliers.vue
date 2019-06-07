@@ -111,6 +111,7 @@
                                 :administrationPeriods="administrationPeriods"
                                 :procedureTypes="procedureTypes"
                                 :placeHolder="'Escribe el nombre del proveedor...'"
+                                :projection = "{search : 1, administrationPeriod : 1, fiscalYear : 1, trimonth : 1, administrativeUnit : 1}"
                         >
 
                         </PublicFilter>
@@ -303,7 +304,7 @@
                     tShow("Complete todos los campos requeridos", 'alert');
                 });
                 $('#toast-success').click(function () {
-                    tShow("Se ha completado el proceso correctamente sadasda adadasd sda dasdasdas dasda dasdasd ad adaspidjdj asoijdas", 'success');
+                    tShow("Se ha completado el proceso correctamente.", 'success');
                 });
             });
         },

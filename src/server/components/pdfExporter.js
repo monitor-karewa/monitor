@@ -94,7 +94,7 @@ let defaultStyles = {
     pagination:{
         fontSize:'12',
         alignment:'right',
-        margin: [0, 0, 30, 0]
+        margin: [0, 20, 30, 0]
     },
     headerStyle:{
         fontSize:12,
@@ -151,7 +151,7 @@ class PDFExporter extends Exporter {
             footer:[],
             styles:defaultStyles,
             defaultStyle:defaultStyles.defaultStyle,
-            pageMargins:[40,120,40,40],
+            pageMargins:[40,120,40,100],
             pageOrientation: 'portrait',
 
             // by default we use portrait, you can change it to landscape if you wish

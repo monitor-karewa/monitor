@@ -11,6 +11,7 @@ const state = {
     trimonths : [],
     administrationPeriods : [],
     procedureTypes : [],
+    suppliers : [],
     lastQuery : {}
 };
 
@@ -53,7 +54,15 @@ const actions = {
                     commit('SET_PROCEDURE_TYPES', procedureTypes);
                 }
             })
-    }
+    },
+    getSuppliersForFilter({commit}) {
+        contractsApi.retrieveSuppliersForFilter({},
+            (result) => {
+                if (result && result.data) {
+                    commit('SET_SUPPLIERS_FOR_FILTER', result.data);
+                }
+            })
+    },
 }
 
 const mutations = {
@@ -71,6 +80,9 @@ const mutations = {
     },
     SET_PROCEDURE_TYPES(state, procedureTypes) {
         state.procedureTypes = procedureTypes;
+    },
+    SET_SUPPLIERS_FOR_FILTER(state, suppliers) {
+        state.suppliers = suppliers;
     }
 };
 

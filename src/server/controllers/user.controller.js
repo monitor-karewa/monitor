@@ -274,7 +274,7 @@ exports.delete = (req, res, next) => {
         .count()
         .exec((err, count) => {
             if (err) {
-                logger.error(req, err, 'user.controller#delete', 'Error al realizar count de User');
+                logger.error(err, req, 'user.controller#delete', 'Error al realizar count de User');
                 return res.json({
                     error: true,
                     message: req.__('general.error.delete')
@@ -282,7 +282,7 @@ exports.delete = (req, res, next) => {
             }
 
             if (count === 0) {
-                logger.error(req, err, 'user.controller#delete', 'Error al intentar borrar User; el registro no existe o ya fue borrado anteriormente');
+                logger.error(err, req, 'user.controller#delete', 'Error al intentar borrar User; el registro no existe o ya fue borrado anteriormente');
                 return res.json({
                     error: true,
                     message: req.__('general.error.not-exists-or-already-deleted')
@@ -303,7 +303,7 @@ exports.delete = (req, res, next) => {
             ).exec((err) => {
                 {multi: false}
                 if (err) {
-                    logger.error(req, err, 'user.controller#delete', 'Error al borrar User.');
+                    logger.error(err, req, 'user.controller#delete', 'Error al borrar User.');
                     return res.json({
                         error: true,
                         message: req.__('general.error.delete')

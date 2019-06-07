@@ -110,3 +110,13 @@ Ejecutar pruebas:
 # Configuración de una instancia en Google Cloud 
 
 [Enlace a documentación](docs/serverConfig.md)
+
+# Configuración cuenta para envío de correos
+
+La plataforma envía correos mediante la cuenta smtp configurada a través de las siguientes variables de entorno:
+
+- `SMTP_USER`: Usuario para credenciales de SMTP
+- `SMTP_PASS`: Contraseña para credenciales de SMTP
+- `SMTP_ACCOUNT`: Cuenta con la cual se identificará la plataforma. Puede ser la dirección de correo electrónico en sí o seguir el formato `Monitor Karewa <monitorkarewa@gmail.com>` (por ejemplo).
+
+Esta configuración es opcional, pero es requerida para enviar correctamente correos (ej. correo de configuración de contraseña).

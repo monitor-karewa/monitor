@@ -210,7 +210,7 @@
                 <div class="vertical-center">
                     <div class="row w-100">
                         <div class="col-sm-8">
-                            <div class="form-group fg-float basic-select scroll-select p-t-0 m-b-0">
+                            <div class="form-group fg-float basic-select scroll-select height-200px p-t-0 m-b-0">
                                 <div class="fg-line">
                                     <select @change="addToFormula($event)" v-model="variableSelected" class="form-control select selectpicker" data-live-search="true"
                                             data-live-search-placeholder="Buscar variable"
@@ -876,12 +876,16 @@
             });
             bus.$on(storeModule+DOC_START_CREATE, ()=>{
                 this.clearEntry();
+                this.$store.dispatch(`${storeModule}/fetchCalculations`, {});
                 this.refreshSelect();
             });
             bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
                 this.clearEntry();
                 let tempEntry = {};
                 tempEntry._id = entry._id;
+
+                this.$store.dispatch(`${storeModule}/fetchCalculations`, {id: entry._id});
+                
                 tempEntry.formula = {};
                 tempEntry.notes = entry.notes;
                 tempEntry.name = entry.name;
@@ -947,7 +951,7 @@
                     tShow("Complete todos los campos requeridos", 'alert');
                 });
                 $('#toast-success').click(function () {
-                    tShow("Se ha completado el proceso correctamente sadasda adadasd sda dasdasdas dasda dasdasd ad adaspidjdj asoijdas", 'success');
+                    tShow("Se ha completado el proceso correctamente.", 'success');
                 });
             });
         },
@@ -998,7 +1002,7 @@
         },
         beforeMount(){
             this.$store.dispatch(`${storeModule}/fetchVariables`);
-            this.$store.dispatch(`${storeModule}/fetchCalculations`);
+            this.$store.dispatch(`${storeModule}/fetchCalculations`, {});
             this.$store.dispatch(`${storeModule}/getSuppliers`);
             this.$store.dispatch(`${storeModule}/getAdministrativeUnits`);
         },
