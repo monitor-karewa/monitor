@@ -82,7 +82,7 @@ module.exports = {
             .assert.visible(utils.xpath.elementWithText("label", "Notas del cálculo"))
             .setValue(utils.xpath.elementWithPlaceholder("input","Introduce las notas adicionales"), "Calculo editado mediante pruebas automatizadas")
             .pause(1000)
-            .click('//button[contains(text(), "Agregar")]')
+            .click('//button[contains(text(), "Actualizar")]')
             .pause(5000)
 
             //----- ELIMINAR MEDIANTE LOS BOTONES DE CADA REGISTRO -------------

@@ -287,59 +287,75 @@
                     notes:""
                 };
                 this.$v.$reset();
+
+
+            },
+            initAllBusEvents(){
+                let busDelete = bus._events[storeModule + DELETE_SUCCESS];
+                let busCreate = bus._events[storeModule + DOC_CREATED];
+                let busUpdate = bus._events[storeModule + DOC_UPDATED];
+
+                busDelete.splice(1, busDelete.length - 1);
+                busCreate.splice(1, busCreate.length - 1);
+                busUpdate.splice(1, busUpdate.length - 1);
             }
         },
         created(){
-            bus.$on(storeModule+DELETE_SUCCESS, (data)=>{
+
+            bus.$on(storeModule + DELETE_SUCCESS, (data) => {
                 tShow("El usuario fue eliminado correctamente", 'info');
+
             });
-            bus.$on(storeModule+DOC_CREATED, ()=>{
-                this.doc.name = "";
-                this.doc.lastName = "";
-                this.doc.email = "";
-                this.doc.active = true;
-                this.doc.permissions  =  [];
-                this.doc.administratorType  =  "GENERAL";
-                this.doc.notes = "";
-                this.$v.$reset();
-                tShow("El usuario fue creado correctamente", 'success');
+            bus.$on(storeModule + DOC_CREATED, () => {
+                    this.clearEntry();
+                    this.doc.name = "";
+                    this.doc.lastName = "";
+                    this.doc.email = "";
+                    this.doc.active = true;
+                    this.doc.permissions = [];
+                    this.doc.administratorType = "GENERAL";
+                    this.doc.notes = "";
+                    this.$v.$reset();
+
+                    tShow("El usuario fue creado correctamente", 'success');
             });
-            bus.$on(storeModule+DOC_UPDATED, ()=>{
+            bus.$on(storeModule + DOC_UPDATED, () => {
                 this.clearEntry();
                 tShow("El usuario fue actualizado correctamente", 'success');
             });
-            bus.$on(storeModule+DOC_START_EDIT, (entry)=>{
+            bus.$on(storeModule + DOC_START_EDIT, (entry) => {
                 this.clearEntry();
 
-                this.doc._id = entry._id;
-                
-                this.doc.name = entry.name;
-                this.$v.doc.name.$touch();
+                    this.doc._id = entry._id;
 
-                this.doc.lastName = entry.lastName;
-                this.$v.doc.lastName.$touch();
+                    this.doc.name = entry.name;
+                    this.$v.doc.name.$touch();
 
-                this.doc.email = entry.email;
-                this.$v.doc.email.$touch();
+                    this.doc.lastName = entry.lastName;
+                    this.$v.doc.lastName.$touch();
 
-                this.doc.active = entry.active;
-                this.$v.doc.active.$touch();
+                    this.doc.email = entry.email;
+                    this.$v.doc.email.$touch();
 
-                this.doc.permissions  =  entry.permissions || [];
-                this.$v.doc.permissions.$touch();
+                    this.doc.active = entry.active;
+                    this.$v.doc.active.$touch();
 
-                this.doc.administratorType  =  entry.administratorType || "GENERAL";
-                this.$v.doc.administratorType.$touch();
+                    this.doc.permissions = entry.permissions || [];
+                    this.$v.doc.permissions.$touch();
 
-                this.doc.notes = entry.notes || "";
-//                this.$v.doc.notes.$touch();
-                
+                    this.doc.administratorType = entry.administratorType || "GENERAL";
+                    this.$v.doc.administratorType.$touch();
+
+                    this.doc.notes = entry.notes || "";
+
             });
-            bus.$on(storeModule+DOC_START_CREATE, (entry)=>{
+            bus.$on(storeModule + DOC_START_CREATE, () => {
                 this.clearEntry();
             });
         },
         mounted(){
+            this.initAllBusEvents();
+
             window.$(document).ready(function () {
                 window.$('.selectpicker').selectpicker();
 
@@ -358,6 +374,7 @@
                     tShow("Se ha completado el proceso correctamente.", 'success');
                 });
             });
+
         }
     }
 </script>
