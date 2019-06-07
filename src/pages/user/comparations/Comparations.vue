@@ -41,8 +41,9 @@
 
                         <br/>
 
-                        <div class="row">
-                            <div class="col-12 col-md-4 col-lg-3" v-for="organization in filteredOrganizations">
+                        <div class="row" v-if="filteredOrganizations && filteredOrganizations.length">
+
+                            <div class="col-12 col-md-4 col-lg-3" v-for="organization in filteredOrganizations" >
                                 <div class="card-compare">
                                     <img class="img-fluid" src="@/assets/images/Cards/bgm-karewa.png" alt="Karewa"/>
                                     <div class="logo-full">
@@ -60,6 +61,27 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div v-else v-cloak>
+                            <div class="row m-b-50">
+                                <div class="col-12">
+                                    <div class="">
+                                        <div class="empty-state">
+                                            <img class="img-fluid"
+                                                 src="@/assets/images/Emptystates/empty-state-box.svg"
+                                                 alt="Empty"/>
+                                            <p>
+                                                <strong class="d-block">No se han encontrado monitores que coincidan con tu búsqueda</strong>
+                                                <span>Por favor intenta nuevamente</span>
+                                            </p>
+
+                                        </div>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
 
 
                         <p class="f-14 c-plain_text principal-font-regular" v-show="comparations && comparations.length">
