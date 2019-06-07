@@ -1161,7 +1161,7 @@ $themes: (
     		            	}
     		          	}
 
-    		          	&:first-of-type a {
+    		          	&.active a {
     		            	color: $accent;
 
     		            	&::before {
