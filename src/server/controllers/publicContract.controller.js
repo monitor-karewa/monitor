@@ -66,6 +66,14 @@ function _fetchContractsAndTotals(req, res, options = {}, callback) {
             orBuilder = [];
         }
 
+        if (req.body.filters.suppliers && req.body.filters.suppliers.length) {
+            for (let i = 0; i < req.body.filters.suppliers.length; i++) {
+                orBuilder.push({supplier: new mongoose.Types.ObjectId(req.body.filters.suppliers[i]._id)});
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
         if (req.body.filters.administrativeUnits && req.body.filters.administrativeUnits.length) {
             for (let i = 0; i < req.body.filters.administrativeUnits.length; i++) {
                 orBuilder.push({applicantAdministrativeUnit: new mongoose.Types.ObjectId(req.body.filters.administrativeUnits[i]._id)})
@@ -581,6 +589,58 @@ exports.retrieveProceudureTypes = (req, res, next) => {
         })
 };
 
+/**
+ * Gets the procedure types of the current contracts
+ */
+exports.retrieveSuppliersForFilter = (req, res, next) => {
+
+    //Filter everything by organization
+    let query = {};
+    let qByOrganization = Organization.qByOrganization(req);
+    query = {...query, ...deletedSchema.qNotDeleted(), ...qByOrganization};
+    if(req.query.supplierId){
+        query.supplier = new mongoose.Types.ObjectId(req.query.supplierId);
+    }
+    //query["field"] = value;
+
+    //let qNotDeleted = deletedSchema.qNotDeleted();
+    //query = {...query, ...qNotDeleted};
+
+    Contract.aggregate([
+            {
+                $match: query
+            },
+            {
+                $group: {
+                    _id: "$supplier"
+                }
+            },
+            {
+                $lookup: {
+                    from: "suppliers",
+                    localField: "_id",
+                    foreignField: "_id",
+                    as: "supplier"
+                }
+            },
+            {
+                $unwind: "$supplier"
+            },
+            {
+                $replaceRoot: {newRoot: "$supplier"}
+            }
+
+        ]
+    ).exec(function (err, result) {
+            return res.json(
+                result
+            )
+        },
+        function (error) {
+            console.log("error", error);
+        })
+};
+
 exports.download = (req, res, next) => {
     let format = req.params.format;
     req.body.filters = JSON.parse(req.query.filters);
@@ -731,41 +791,41 @@ let downloadPDF = (req, res, { totals, contracts, filters }) => {
     }
 
     let resultsTable = {
-        style:'statsExample',
+        style:'statsA2Example',
         layout: 'lightHorizontalLines',
         table: new PDFTable({headerRows:1,docs:totals})
             .setTableMetadata([
                 {
                     header: 'Monto Total',
-                    headerStyle:'headerStyle',
-                    rowStyle:'rowNumberStyle',
+                    headerStyle:'headerA2Style',
+                    rowStyle:'rowNumberA2Style',
                     propName:'totalAmount',
                     format:'currency'
                 },
                 {
                     header: 'Monto Total de Contratos por Licitación Pública',
-                    headerStyle:'headerStyle',
-                    rowStyle:'rowNumberStyle',
+                    headerStyle:'headerA2Style',
+                    rowStyle:'rowNumberA2Style',
                     propName:'PUBLIC',
                     format:'currency'
                 },
                 {
                     header: 'Monto Total de Contratos por Invitación',
-                    headerStyle:'headerStyle',
-                    rowStyle:'rowNumberStyle',
+                    headerStyle:'headerA2Style',
+                    rowStyle:'rowNumberA2Style',
                     propName:'INVITATION',
                     format:'currency'
                 },
                 {
                     header: 'Monto Total de Contratos por Adjudicación Directa',
-                    headerStyle:'headerStyle',
-                    rowStyle:'rowNumberStyle',
+                    headerStyle:'headerA2Style',
+                    rowStyle:'rowNumberA2Style',
                     propName:'NO_BID',
                     format:'currency'
                 }
             ])
             .setHeaders()
-            .setWidths([150,150,150,150],"auto")
+            .setWidths(null,300)
             .transformDocs(req)
     };
     let suppliersTable = {
@@ -839,7 +899,43 @@ let downloadPDF = (req, res, { totals, contracts, filters }) => {
                     rowStyle:'rowCurrencyStyle',
                     propName:'contractType',
                     i18n: true
-                }
+                },
+                {
+                    header: 'Notas',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'notes'
+                },
+                {
+                    header: 'Hipervínculo a la convocatoria',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'announcementUrl'
+                },
+                {
+                    header: 'Hipervínculo a la convocatoria',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'announcementUrl'
+                },
+                {
+                    header: 'Hipervínculo al documento del contrato',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'contractUrl'
+                },
+                {
+                    header: 'Hipervínculo al documento de la presentación de propuestas',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'presentationProposalsDocUrl'
+                },
+                {
+                    header: 'Fecha de obtención de los datos',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowCurrencyStyle',
+                    propName:'informationDate'
+                },
             ])
             .setHeaders()
             .setWidths(null,"auto")
@@ -847,11 +943,12 @@ let downloadPDF = (req, res, { totals, contracts, filters }) => {
     };
 
     let headers = [{ text:"Monitor Karewa", style:'header'},
-        {text : moment(new Date()).format('MM/DD/YYYY'), style:'header'}];
+        {text : moment(new Date()).format('DD/MM/YYYY'), style:'header'}];
 
     new PDFExporter()
         .setFileName('monitor-karewa-contratos.pdf')
         .addHeadersToPDF(headers)
+        .setPageSize('A2')
         .addTitleToPDF({text:"Información general de Contratos", style:'title'})
         .addContentToPDF(filters)
         .addContentToPDF(resultsTable)

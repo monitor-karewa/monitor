@@ -7,6 +7,10 @@ services:
     environment:
       - NODE_ENV=production
       - MONGODB_URI=mongodb://db:27017/monitor_db
+      - SMTP_USER=$SMTP_USER
+      - SMTP_PASS=$SMTP_PASS
+      - SMTP_HOST=$SMTP_HOST
+      - SMTP_ACCOUNT=$SMTP_ACCOUNT
     links:
       - db
     depends_on:

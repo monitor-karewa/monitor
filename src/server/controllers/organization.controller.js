@@ -98,7 +98,7 @@ exports.save = (req, res, next) => {
             .findOne(qById)
             .exec((err, organization) => {
                 if (err || !organization) {
-                    logger.error(req, err, 'organization.controller#save', 'Error al consultar Organization');
+                    logger.error(err, req, 'organization.controller#save', 'Error al consultar Organization');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.save')
@@ -112,7 +112,7 @@ exports.save = (req, res, next) => {
 
                 organization.save((err, savedOrganization) => {
                     if (err) {
-                        logger.error(req, err, 'organization.controller#save', 'Error al guardar Organization');
+                        logger.error(err, req, 'organization.controller#save', 'Error al guardar Organization');
                         return res.json({
                             errors: true,
                             message: req.__('general.error.save')
@@ -137,7 +137,7 @@ exports.save = (req, res, next) => {
 
         organization.save((err, savedOrganization) => {
             if (err) {
-                logger.error(req, err, 'organization.controller#save', 'Error al guardar Organization');
+                logger.error(err, req, 'organization.controller#save', 'Error al guardar Organization');
                 return res.json({
                     "error": true,
                     "message": req.__('general.error.save')
@@ -227,7 +227,7 @@ exports.delete = (req, res, next) => {
         .count()
         .exec((err, existingCount) => {
             if (existingCount === 1) {
-                logger.error(req, err, 'organization.controller#delete', 'Error al intentar borrar la última Organization');
+                logger.error(err, req, 'organization.controller#delete', 'Error al intentar borrar la última Organization');
                 return res.json({
                     errors: true,
                 });
@@ -238,7 +238,7 @@ exports.delete = (req, res, next) => {
                 .count()
                 .exec((err, count) => {
                     if (err) {
-                        logger.error(req, err, 'organization.controller#delete', 'Error al realizar count de Organization');
+                        logger.error(err, req, 'organization.controller#delete', 'Error al realizar count de Organization');
                         return res.json({
                             errors: true,
                             message: req.__('general.error.delete')
@@ -246,7 +246,7 @@ exports.delete = (req, res, next) => {
                     }
         
                     if (count === 0) {
-                        logger.error(req, err, 'organization.controller#delete', 'Error al intentar borrar Organization; el registro no existe o ya fue borrado anteriormente');
+                        logger.error(err, req, 'organization.controller#delete', 'Error al intentar borrar Organization; el registro no existe o ya fue borrado anteriormente');
                         return res.json({
                             errors: true,
                             message: req.__('general.error.not-exists-or-already-deleted')
@@ -267,7 +267,7 @@ exports.delete = (req, res, next) => {
                         {multi: false}
                     ).exec((err, par) => {
                         if (err) {
-                            logger.error(req, err, 'organization.controller#delete', 'Error al borrar Organization.');
+                            logger.error(err, req, 'organization.controller#delete', 'Error al borrar Organization.');
                             return res.json({
                                 errors: true,
                                 message: req.__('general.error.delete')

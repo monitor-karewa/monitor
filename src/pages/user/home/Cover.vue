@@ -41,7 +41,9 @@
                                     :trimonths="trimonths"
                                     :administrationPeriods="administrationPeriods"
                                     :procedureTypes="procedureTypes"
+                                    :suppliers="suppliers"
                                     :actionName = "'getInfoForChart'"
+                                    :projection = "{search : 0}"
                             >
                             </PublicFilter>
 
@@ -97,6 +99,11 @@
                 trimonths: state => state[storeModule].trimonths,
                 administrationPeriods: state => state[storeModule].administrationPeriods,
                 procedureTypes: state => state[storeModule].procedureTypes,
+                // suppliers: state => state[storeModule].suppliers,
+                suppliers : function(state){
+                    let suppliers = state[storeModule].suppliers
+                    return suppliers;
+                }
             }),
             hasCover() {
                 return !!this.currentOrganization.cover;
@@ -116,6 +123,7 @@
             this.$store.dispatch(`${storeModule}/getTrimonths`);
             this.$store.dispatch(`${storeModule}/getAdministrationPeriods`);
             this.$store.dispatch(`${storeModule}/getProcedureTypes`);
+            this.$store.dispatch(`${storeModule}/getSuppliersForFilter`);
 
 
             let cover = this.$session.get('currentOrganizationCover');

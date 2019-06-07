@@ -83,6 +83,7 @@
                                 :procedureTypes="procedureTypes"
                                 :actionName="'LOAD_SUPPLIER_DETAIL'"
                                 :additionalParams="{id: supplierId}"
+                                :projection="{supplier :0}"
                         >
                         </PublicFilter>
 

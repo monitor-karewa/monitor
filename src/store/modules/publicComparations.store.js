@@ -29,6 +29,22 @@ const actions = {
             const url = window.URL.createObjectURL(new Blob([result.data]));
             const link = document.createElement('a');
             link.href = url;
+            format = format == 'xls' ? 'xlsx' : format;
+            link.setAttribute('download', `monitor-karewa-indice-corrupcion.${format}`); //or any other extension
+            document.body.appendChild(link);
+            link.click();
+        });
+    },
+    downloadComparisonFile({commit,state},{format, id}) {
+        let comparison = {
+            detailRight:state.detailRight,
+            detailLeft:state.detailLeft,
+        };
+        apiPublicComparations.downloadComparison({format,id, comparison}, (result) => {
+            const url = window.URL.createObjectURL(new Blob([result.data]));
+            const link = document.createElement('a');
+            link.href = url;
+            format = format == 'xls' ? 'xlsx' : format;
             link.setAttribute('download', `monitor-karewa-indice-corrupcion.${format}`); //or any other extension
             document.body.appendChild(link);
             link.click();

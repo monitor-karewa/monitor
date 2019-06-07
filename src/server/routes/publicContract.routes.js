@@ -57,6 +57,13 @@ router.get('/retrieve/administration-periods', securityController.validatePermis
 
 
 /**
+ * GET /retrieve/contracts
+ * Obtains the suppliers units available according to the current contracts
+ */
+router.get('/retrieve/suppliers-filter', securityController.validatePermission(Contract.permission, 'read'), publicContractController.retrieveSuppliersForFilter);
+
+
+/**
  * GET /retrieve/fiscal-years
  * Obtains the fiscal years available according to the currenct contracts
  */

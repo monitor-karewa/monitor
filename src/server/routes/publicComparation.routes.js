@@ -34,6 +34,12 @@ router.get('/retrieve', publicComparationController.retrieveRecentComparations);
  */
 router.get('/download/:format/:id', publicComparationController.download);
 
+/**
+ * GET /download-comparison
+ * Download file in PDF,XLS and JSON format of comparison between two monitors
+ */
+router.post('/download-comparison/:format/:id', publicComparationController.downloadComparison);
+
 
 
 module.exports = router;

@@ -81,6 +81,8 @@
                                 :trimonths="trimonths"
                                 :administrationPeriods="administrationPeriods"
                                 :procedureTypes="procedureTypes"
+                                :suppliers="suppliers"
+
                         >
 
                         </PublicFilter>
@@ -167,8 +169,7 @@
                                         <TableTdFormat :format="'url'" :fieldName="'announcementUrl'"    :value="contract.announcementUrl"  class="text-align-l"> </TableTdFormat>
                                         <TableTdFormat :format="'url'" :fieldName="'contractUrl'"    :value="contract.contractUrl"  class="text-align-l"> </TableTdFormat>
                                         <TableTdFormat :format="'url'" :fieldName="'presentationProposalsDocUrl'"    :value="contract.presentationProposalsDocUrl"  class="text-align-l"> </TableTdFormat>
-                                        <TableTdFormat :format="'date'" :fieldName="'informationDate'"    :value="contract.informationDate"  classda="text-align-l c-accent"> </TableTdFormat>
-                                        <TableTdFormat :format="'date'" :fieldName="'contractDate'"    :value="contract.contractDate"  class="text-align-l" style="text-transform: uppercase"> </TableTdFormat>
+                                        <TableTdFormat :format="'date'" :fieldName="'informationDate'"    :value="contract.informationDate"  class="text-align-l c-accent"> </TableTdFormat>
                                     </tr>
                                     <!--<tr class="bgm-cards">-->
                                         <!--<td class="p-t-15 p-b-10 f-bold">TOTAL</td>-->
@@ -240,6 +241,7 @@
                 procedureTypes: state => state[storeModule].procedureTypes,
                 totals: state => state[storeModule].totals, //I like totals
                 lastQuery: state => state[storeModule].lastQuery,
+                suppliers:  state => state[storeModule].suppliers
             }),
         },
         components: {
@@ -267,6 +269,7 @@
             this.$store.dispatch(`${storeModule}/getTrimonths`);
             this.$store.dispatch(`${storeModule}/getAdministrationPeriods`);
             this.$store.dispatch(`${storeModule}/getProcedureTypes`);
+            this.$store.dispatch(`${storeModule}/getSuppliersForFilter`);
 
         },
         methods:{

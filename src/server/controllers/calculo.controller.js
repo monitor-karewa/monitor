@@ -85,7 +85,7 @@ exports.save = (req, res, next) => {
             .findOne(qById)
             .exec((err, calculo) => {
                 if (err || !calculo) {
-                    logger.error(req, err, 'calculo.controller#save', 'Error al consultar Calculo');
+                    logger.error(err, req, 'calculo.controller#save', 'Error al consultar Calculo');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.save')
@@ -101,7 +101,7 @@ exports.save = (req, res, next) => {
 
                 calculo.save((err, savedCalculo) => {
                     if (err) {
-                        logger.error(req, err, 'calculo.controller#save', 'Error al guardar Calculo');
+                        logger.error(err, req, 'calculo.controller#save', 'Error al guardar Calculo');
                         return res.json({
                             errors: true,
                             message: req.__('general.error.save')
@@ -128,7 +128,7 @@ exports.save = (req, res, next) => {
 
         calculo.save((err, savedCalculo) => {
             if (err) {
-                logger.error(req, err, 'calculo.controller#save', 'Error al guardar Calculo');
+                logger.error(err, req, 'calculo.controller#save', 'Error al guardar Calculo');
                 return res.json({
                     "error": true,
                     "message": req.__('general.error.save')
@@ -165,7 +165,7 @@ exports.delete = (req, res, next) => {
         .count()
         .exec((err, count) => {
             if (err) {
-                logger.error(req, err, 'calculo.controller#delete', 'Error al realizar count de Calculo');
+                logger.error(err, req, 'calculo.controller#delete', 'Error al realizar count de Calculo');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.delete')
@@ -173,7 +173,7 @@ exports.delete = (req, res, next) => {
             }
             
             if (count === 0) {
-                logger.error(req, err, 'calculo.controller#delete', 'Error al intentar borrar Calculo; el registro no existe o ya fue borrado anteriormente');
+                logger.error(err, req, 'calculo.controller#delete', 'Error al intentar borrar Calculo; el registro no existe o ya fue borrado anteriormente');
                 return res.json({
                     errors: true,
                     message: req.__('general.error.not-exists-or-already-deleted')
@@ -195,7 +195,7 @@ exports.delete = (req, res, next) => {
                 {multi: false}
             ).exec((err) => {
                 if (err) {
-                    logger.error(req, err, 'calculo.controller#delete', 'Error al borrar Calculo.');
+                    logger.error(err, req, 'calculo.controller#delete', 'Error al borrar Calculo.');
                     return res.json({
                         errors: true,
                         message: req.__('general.error.delete')

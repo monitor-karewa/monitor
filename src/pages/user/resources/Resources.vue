@@ -32,16 +32,16 @@
                                                 <a class="nav-link active" id="box-tab" data-toggle="pill"
                                                    href="#box-content1"
                                                    role="tab" aria-controls="box-content1" aria-selected="true">
-                                                    Articulos </a>
+                                                    Articulos  ( {{article.length}} )</a>
                                                 <a class="nav-link" id="box-tab" data-toggle="pill" href="#box-content2"
                                                    role="tab"
-                                                   aria-controls="box-content2" aria-selected="false"> Notas </a>
+                                                   aria-controls="box-content2" aria-selected="false"> Notas  ( {{notes.length}} )</a>
                                                 <a class="nav-link" id="box-tab" data-toggle="pill" href="#box-content3"
                                                    role="tab"
-                                                   aria-controls="box-content3" aria-selected="false"> Marco Legal </a>
+                                                   aria-controls="box-content3" aria-selected="false"> Marco Legal  ( {{legalFramework.length}} )</a>
                                                 <a class="nav-link" id="box-tab" data-toggle="pill" href="#box-content4"
                                                    role="tab"
-                                                   aria-controls="box-content4" aria-selected="false"> Sitio Web </a>
+                                                   aria-controls="box-content4" aria-selected="false"> Sitio Web  ( {{website.length}} )</a>
                                             </div>
                                         </div>
                                         
@@ -362,7 +362,7 @@
                 if (!utils.isDate(date)) {
                     return '';
                 }
-                return moment(date).format('MM/DD/YYYY');
+                return moment(date).format('DD/MM/YYYY');
             }
         },
         methods: {

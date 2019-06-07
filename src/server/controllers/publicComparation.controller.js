@@ -7,7 +7,7 @@ const Organization = require('./../models/organization.model').Organization;
 const Calculation = require('./../models/calculation.model').Calculation;
 const Comparation = require('./../models/comparation.model').Comparation;
 const deletedSchema = require('./../models/schemas/deleted.schema');
-const { PDFTable, PDFExporter } = require('./../components/pdfExporter');
+const { PDFTable, PDFExporter, PDFTableList } = require('./../components/pdfExporter');
 const {ExcelExporter} = require('./../components/exporter');
 const moment = require('moment');
 
@@ -465,11 +465,12 @@ exports.download = (req, res, next) => {
             let query = {...qNotDeleted/*, ...qByOrganization*/, locked: true};
             Calculation
                 .findOne(query)
-                .populate('organization calculations')
+                .populate('organization')
                 // .lean()
                 .exec((err, corruptionIndex) => {
-        
-                    if (err) {
+                corruptionIndex.populate({path:'formula.calculations', model:'Calculation'},(errPopulate,doc)=>{
+                    corruptionIndex = doc;
+                    if (err || errPopulate) {
                         //Error
                         logger.error(err, req, 'publicComparation.controller#corruptionIndex', 'Error trying to find Corruption index');
                         return res.json({
@@ -486,22 +487,22 @@ exports.download = (req, res, next) => {
                     }
         
                     corruptionIndex = corruptionIndex || {};
-                    
+
                     if (corruptionIndex.toObject) {
                         corruptionIndex = corruptionIndex.toObject();
                         corruptionIndex.organization = currentOrganization;
                     }
-        
+
                     corruptionIndex.result = 0;
-        
-        
+
+
                     if (!corruptionIndex._id) {
                         return res.json({
                             error: true,
                             data: corruptionIndex
                         });
                     }
-        
+
                     let cache = {
                         done: [],
                         calls: [],
@@ -510,27 +511,29 @@ exports.download = (req, res, next) => {
                     };
 
                     let query = Calculation.qAdministrationPeriodFromYearToYear(corruptionIndex);
-        
+
                     calculateAndValidateFormula(req, cache, corruptionIndex._id, {query: query}, (err, result) => {
                         if (result && result.value) {
                             corruptionIndex.result = result.value;
                         }
-        
-                        if (corruptionIndex.result <= 55) {
+
+                        if (corruptionIndex.result <= 50) {
                             corruptionIndex.corruptionLevel = 'BAJO'
                         } else if (corruptionIndex.result <= 75) {
                             corruptionIndex.corruptionLevel = 'MEDIO'
                         } else {
                             corruptionIndex.corruptionLevel = 'ALTO'
                         }
-        
-        
+
+
                         delete corruptionIndex._id;
                         switch(format){
                             case 'xls':
+                                corruptionIndex.result = Math.round(corruptionIndex.result) + "%";
                                 downloadXls(req, res, corruptionIndex);
                                 break;
                             case 'pdf':
+                                corruptionIndex.result = Math.round(corruptionIndex.result) + "%";
                                 downloadPDF(req, res, corruptionIndex);
                                 break;
                             case 'json':
@@ -540,7 +543,8 @@ exports.download = (req, res, next) => {
                                 break;
                         }
                     });
-        
+
+                    });
                 });
         });
 
@@ -699,7 +703,7 @@ let downloadPDF = (req, res, corruptionIndex) => {
     };
 
     let headers = [{ text:"Monitor Karewa", style:'header'},
-        {text : moment(new Date()).format('MM/DD/YYYY'), style:'header'}];
+        {text : moment(new Date()).format('DD/MM/YYYY'), style:'header'}];
 
     new PDFExporter()
         .setFileName('monitor-karewa-indice-corrupcion.pdf')
@@ -710,4 +714,360 @@ let downloadPDF = (req, res, corruptionIndex) => {
         .addFooterToPDF()
         .setPageOrientation('landscape')
         .exportToFile(req, res)
+};
+
+
+
+exports.downloadComparison = (req, res, next) => {
+    let id = req.params.id;
+    let format = req.params.format;
+    let comparison = req.body.comparison;
+
+
+    if (!['xls', 'pdf', 'json'].includes(format) || !comparison) {
+        res.status(404);
+        return res.end();
+    }
+
+    comparison.detailRight.corruptionIndex.corruptionLevel = _getCorruptionLevel(comparison.detailRight.corruptionIndex.result);
+    comparison.detailLeft.corruptionIndex.corruptionLevel = _getCorruptionLevel(comparison.detailLeft.corruptionIndex.result);
+
+    switch(format){
+        case 'xls':
+            comparison.detailRight.corruptionIndex.result = Math.round(comparison.detailRight.corruptionIndex.result) + "%";
+            comparison.detailLeft.corruptionIndex.result = Math.round(comparison.detailLeft.corruptionIndex.result) + "%";
+            downloadComparisonXls(req, res, comparison);
+            break;
+        case 'pdf':
+
+            comparison.detailRight.corruptionIndex.result = Math.round(comparison.detailRight.corruptionIndex.result) + "%";
+            comparison.detailLeft.corruptionIndex.result = Math.round(comparison.detailLeft.corruptionIndex.result) + "%";
+            downloadComparisonPDF(req, res, comparison);
+            break;
+        case 'json':
+            return res.json({ comparison });
+            break;
+        default:
+            break;
+    }
+};
+
+let downloadComparisonXls = (req, res, comparison) => {
+    try {
+        let organizationLeft = comparison.detailLeft.organization;
+        let organizationRight = comparison.detailRight.organization;
+
+        let administrationLeft = comparison.detailLeft.corruptionIndex.administrationPeriod;
+        let administrationRight = comparison.detailRight.corruptionIndex.administrationPeriod;
+
+        comparison.detailRight.corruptionIndex.organization = organizationRight;
+        comparison.detailLeft.corruptionIndex.organization = organizationLeft;
+
+        comparison.detailRight.totals.organization = organizationRight;
+        comparison.detailLeft.totals.organization = organizationLeft;
+
+        comparison.detailRight.totals.administration = administrationRight;
+        comparison.detailLeft.totals.administration = administrationLeft;
+
+
+        comparison.detailRight.counts.organization = organizationRight;
+        comparison.detailLeft.counts.organization = organizationLeft;
+
+        comparison.detailRight.counts.administration = administrationRight;
+        comparison.detailLeft.counts.administration = administrationLeft;
+        let excelInfo = {
+            generalInfo:{
+                docs : [comparison.detailLeft.corruptionIndex,comparison.detailRight.corruptionIndex],
+                sheetNumber: 1
+            },
+            totalsInfo:{
+                docs : [comparison.detailLeft.totals, comparison.detailRight.totals],
+                sheetNumber : 2
+            },
+            countsInfo:{
+                docs : [comparison.detailLeft.counts, comparison.detailRight.counts],
+                sheetNumber : 3
+            }
+        };
+        new ExcelExporter()
+            .setPropInfoArray([
+                {
+                    header: 'NOMBRE DEL CALCULO',
+                    propName: 'name',
+                    sheet:1
+                },
+                {
+                    header: 'DESCRIPCIÓN DEL CALCULO',
+                    propName: 'description',
+                    sheet:1
+                },
+                {
+                    header: 'ORGANIZACIÓN',
+                    propName: 'organization',
+                    childPropName:'name',
+                    sheet:1
+                },
+                {
+                    header: 'FORMULA',
+                    propName: 'formula',
+                    childPropName : 'expression',
+                    sheet:1
+                },
+                {
+                    header: 'RESULTADO',
+                    propName: 'result',
+                    sheet:1
+                },
+                {
+                    header: 'PROBABILIDAD',
+                    propName: 'corruptionLevel',
+                    sheet:1
+                },
+                {
+                    header: 'ORGANIZACIÓN',
+                    propName: 'organization',
+                    childPropName: 'name',
+                    sheet:2
+                },
+                {
+                    header: 'ADMINISTRACIÓN',
+                    propName: 'administration',
+                    sheet:2
+                },
+                {
+                    header: 'MONTO LICITACIÓN PUBLICA',
+                    propName: 'public',
+                    sheet:2
+                },
+                {
+                    header: 'MONTO POR INVITACION',
+                    propName: 'invitation',
+                    sheet:2
+                },
+                {
+                    header: 'MONTO ADJUDICACION DIRECTA',
+                    propName: 'noBid',
+                    sheet:2
+                },
+                {
+                    header: 'MONTO TOTAL',
+                    propName: 'total',
+                    sheet:2
+                },
+                {
+                    header: 'ORGANIZACIÓN',
+                    propName: 'organization',
+                    childPropName: 'name',
+                    sheet:3
+                },
+                {
+                    header: 'ADMINISTRACIÓN',
+                    propName: 'administration',
+                    sheet:3
+                },
+                {
+                    header: 'CONTRATOS DE LICITACIÓN PÚBLICA',
+                    propName: 'public',
+                    sheet:3
+                },
+                {
+                    header: 'CONTRATOS POR INVITACIÓN',
+                    propName: 'invitation',
+                    sheet:3
+                },
+                {
+                    header: 'CONTRATOS DE ADJUDICACIÓN DIRECTA',
+                    propName: 'noBid',
+                    sheet:3
+                },
+                {
+                    header: 'CONTRATOS EN TOTAL',
+                    propName: 'total',
+                    sheet:3
+                },
+            ])
+            .setDocs(comparison)
+            .setTitle('Comparación índice de corrupción')
+            .setFileName('comparacion-indice-corrupcion')
+            .exportToFileExtraSheets(req, res, excelInfo);
+    } catch(err){
+        logger.error(err,req,"publicComparition.controller#downloadXls","Error intentando crear el archivo xls del índice de corrupción")
+    }
+};
+
+let downloadComparisonPDF = (req, res, comparison) => {
+    comparison.detailRight.corruptionIndex.organization = comparison.detailRight.organization;
+    comparison.detailLeft.corruptionIndex.organization = comparison.detailLeft.organization;
+    let corruptionIndex = [comparison.detailRight.corruptionIndex,comparison.detailLeft.corruptionIndex];
+    let generalInfoTable = {
+        style: 'statsCurrency4Col',
+        layout: 'lightHorizontalLines',
+        table: new PDFTable({ headerRows:1, docs:corruptionIndex })
+            .setTableMetadata([
+                {
+                    header: 'Nombre del Calculo',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowNumberStyle',
+                    propName:'name'
+                },
+                {
+                    header: 'Descripción del Calculo',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowNumberStyle',
+                    propName:'description'
+                },
+                {
+                    header: 'Organización',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowNumberStyle',
+                    propName:'organization',
+                    childPropName:'name'
+                },
+                {
+                    header: 'Formula',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowNumberStyle',
+                    propName:'formula',
+                    childPropName:'expression'
+                },
+                {
+                    header: 'Resultado',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowNumberStyle',
+                    propName:'result'
+                },
+                {
+                    header: 'Probabilidad',
+                    headerStyle:'headerStyle',
+                    rowStyle:'rowNumberStyle',
+                    propName:'corruptionLevel'
+                }
+            ])
+            .setHeaders()
+            .setWidths(null,"auto")
+            .transformDocs(req)
+    };
+    let totals = [comparison.detailLeft.totals,comparison.detailRight.totals];
+    let totalsTable = {
+        style: 'statsCurrency3Col',
+        layout: 'lightHorizontalLines',
+        table : new PDFTableList({})
+            .setTableHeaders([
+                {
+                    title:`Montos Totales de la Administración ${comparison.detailLeft.corruptionIndex.administrationPeriod}/${comparison.detailLeft.corruptionIndex.administrationPeriod}`,
+                    columnNumber:1,
+                    headerStyle:'headerStyle'
+                },
+                {
+                    title:`${comparison.detailLeft.organization.name}`,
+                    columnNumber:1,
+                    headerStyle:'headerStyle'
+                },
+                {
+                    title:`${comparison.detailRight.organization.name}`,
+                    columnNumber:1,
+                    headerStyle:'headerStyle'
+                }
+            ])
+            .setLabelsColumn([
+                {
+                    label: 'Licitación Pública',
+                    propName: 'public',
+                    type: 'currency'
+                },
+                {
+                    label: 'Por Invitación',
+                    propName: 'invitation',
+                    type: 'currency'
+                },
+                {
+                    label: 'Adjudicación Directa',
+                    propName: 'noBid',
+                    type: 'currency'
+                },
+                {
+                    label: 'Monto Total',
+                    propName: 'total',
+                    type: 'currency'
+                },
+            ],'headerStyle')
+            .setDocs(totals)
+            .setWidths(null, "auto")
+            .transformDocs()
+
+    };
+
+    let counts = [comparison.detailLeft.counts,comparison.detailRight.counts];
+    let countsTable = {
+        style: 'statsCurrency3Col',
+        layout: 'lightHorizontalLines',
+        table : new PDFTableList({})
+            .setTableHeaders([
+                {
+                    title:`Contratos dados de la administración ${comparison.detailLeft.corruptionIndex.administrationPeriod}/${comparison.detailLeft.corruptionIndex.administrationPeriod}`,
+                    columnNumber:1,
+                    headerStyle:'headerStyle'
+                },
+                {
+                    title:`${comparison.detailLeft.organization.name}`,
+                    columnNumber:1,
+                    headerStyle:'headerStyle'
+                },
+                {
+                    title:`${comparison.detailRight.organization.name}`,
+                    columnNumber:1,
+                    headerStyle:'headerStyle'
+                }
+            ])
+            .setLabelsColumn([
+                {
+                    label: 'Contratos de Licitación Pública',
+                    propName: 'public',
+                    type: 'number'
+                },
+                {
+                    label: 'Contratos por Invitación',
+                    propName: 'invitation',
+                    type: 'number'
+                },
+                {
+                    label: 'Contratos de Adjudicación Directa',
+                    propName: 'noBid',
+                    type: 'number'
+                },
+                {
+                    label: 'Contratos en Total',
+                    propName: 'total',
+                    type: 'number'
+                },
+            ],'headerStyle')
+            .setDocs(counts)
+            .setWidths(null, "auto")
+            .transformDocs()
+
+    };
+
+    let headers = [{ text:"Monitor Karewa", style:'header'},
+        {text : moment(new Date()).format('DD/MM/YYYY'), style:'header'}];
+
+    new PDFExporter()
+        .setFileName('monitor-karewa-comparacion-indice-corrupcion.pdf')
+        .addHeadersToPDF(headers)
+        .addTitleToPDF({text:"Comparación Índice de corrupción", style:'title'})
+        .addContentToPDF(generalInfoTable)
+        .addContentToPDF(totalsTable)
+        .addContentToPDF(countsTable)
+        .addFooterToPDF()
+        .setPageOrientation('landscape')
+        .exportToFile(req, res)
+};
+
+let _getCorruptionLevel = (value) =>{
+    if (value <= 50) {
+        return 'BAJO'
+    } else if (value <= 75) {
+        return 'MEDIO'
+    } else {
+        return 'ALTO'
+    }
 };

@@ -57,6 +57,14 @@ function _aggregateAmountByPeriods(req, res, callback) {
             orBuilder = [];
         }
 
+        if (filters.suppliers && filters.suppliers.length) {
+            for (let i = 0; i < filters.suppliers.length; i++) {
+                orBuilder.push({supplier: new mongoose.Types.ObjectId(filters.suppliers[i]._id)})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
         if (filters.administrativeUnits && filters.administrativeUnits.length) {
             for (let i = 0; i < filters.administrativeUnits.length; i++) {
                 orBuilder.push({applicantAdministrativeUnit: new mongoose.Types.ObjectId(filters.administrativeUnits[i]._id)})
@@ -117,7 +125,7 @@ function _aggregateAmountByPeriods(req, res, callback) {
             }
         },
         {
-            $sort:{"_id.year":-1, "_id.period":-1}
+            $sort:{"_id.year":1, "_id.period":1}
         }
     ]);
 
@@ -126,9 +134,10 @@ function _aggregateAmountByPeriods(req, res, callback) {
 
 function _aggregateAmountByProcedure(req, res, callback) {
 
+
     let query = {};
-    let orBuilder = [];
-    let andBuilder = [];
+    var orBuilder = [];
+    var andBuilder = [];
 
     let filters = req.body;
 
@@ -174,6 +183,14 @@ function _aggregateAmountByProcedure(req, res, callback) {
             orBuilder = [];
         }
 
+        if (filters.suppliers && filters.suppliers.length) {
+            for (let i = 0; i < filters.suppliers.length; i++) {
+                orBuilder.push({supplier: new mongoose.Types.ObjectId(filters.suppliers[i]._id)})
+            }
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+        }
+
         if (filters.administrativeUnits && filters.administrativeUnits.length) {
             for (let i = 0; i < filters.administrativeUnits.length; i++) {
                 orBuilder.push({applicantAdministrativeUnit: new mongoose.Types.ObjectId(filters.administrativeUnits[i]._id)})
@@ -192,8 +209,8 @@ function _aggregateAmountByProcedure(req, res, callback) {
     let aggregate = Contract.aggregate([
         {
             $match:{
-                "deleted.isDeleted": false,
-                "organization": Organization.currentOrganizationId(req),
+                "deleted.isDeleted" : false,
+                "organization" : Organization.currentOrganizationId(req),
                 ...query
             }
         },

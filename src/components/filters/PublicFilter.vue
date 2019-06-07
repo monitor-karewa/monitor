@@ -1,31 +1,31 @@
 <template>
     <div>
-        <div class="filter">
+        <div class="filter" v-if="checkIfShown('search')">
             <div class="filter-container">
                 <input class="input-search" type="text" name="" value="" v-model="query.search"
-                       :placeholder="placeHolder" />
+                       :placeholder="placeHolder" @keyup.enter="filter" />
             </div>
             <button @click="filter" class="filter-btn" type="button" name="button">Buscar</button>
         </div>
         <div class="m-t-10">
             <div>
                 <div class="filter">
-                    <div class="filter-container row m-0">
-                        <div class="form-group fg-float border-select m-0 p-0 col-lg-3 col-6">
+                    <div class="filter-container row m-0" >
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['administrationPeriod']} col-6`" v-if="checkIfShown('administrationPeriod')" :key="keys.administrationPeriods">
                             <div class="fg-line m-0">
                                 <select v-model="temp.administrationPeriod" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar administración"
-                                        title="Por administración" @change="addFilter(query.administrationPeriods, temp.administrationPeriod)">
+                                        title="Por administración" @change="addFilter(query.administrationPeriods, temp.administrationPeriod, 'administrationPeriods')">
                                     <option v-for="item in administrationPeriods" :value="item">
                                         ADMINISTRACIÓN {{item.administrationPeriod}}
                                     </option>
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['fiscalYear']} col-6`" v-if="checkIfShown('fiscalYear')" :key="keys.fiscalYears">
                             <div class="fg-line m-0">
                                 <select v-model="temp.fiscalYear" class="form-control select selectpicker" data-live-search="true"
-                                        data-live-search-placeholder="Buscar año" title="Por año…" @change="addFilter(query.fiscalYears, temp.fiscalYear)">
+                                        data-live-search-placeholder="Buscar año" title="Por año…" @change="addFilter(query.fiscalYears, temp.fiscalYear, 'fiscalYears')">
                                     <optGroup>
                                         <option :value="undefined"> Por año...</option>
                                     </optGroup>
@@ -34,37 +34,49 @@
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['trimonth']} col-6`" v-if="checkIfShown('trimonth')" :key="keys.trimonths">
                             <div class="fg-line m-0">
                                 <select v-model="temp.trimonth" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar trimestre"
-                                        title="Por trimestre…" @change="addFilter(query.trimonths, temp.trimonth)">
+                                        title="Por trimestre…" @change="addFilter(query.trimonths, temp.trimonth, 'trimonths')">
                                         <option v-for="trimonth in trimonths"  :value="trimonth">
                                             {{trimonth.period}}
                                         </option>
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group fg-float border-select m-0 p-0 col-lg-2 col-6">
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['procedureType']} col-6`" v-if="checkIfShown('procedureType')" :key="keys.procedureTypes">
                             <div class="fg-line m-0">
                                 <select v-model="temp.procedureType" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar trimestre"
-                                        title="Por tipo de procedimiento" @change="addFilter(query.procedureTypes, temp.procedureType)">
+                                        title="Por tipo de procedimiento" @change="addFilter(query.procedureTypes, temp.procedureType, 'procedureTypes')">
                                         <option v-for="procedureType in procedureTypes" :value="procedureType">
                                             {{$t(procedureType)}}
                                         </option>
                                 </select>
                             </div>
                         </div>
-                        <div class="form-group fg-float border-select m-0 p-0 col-lg-3 col-12">
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['administrativeUnit']} col-12`" v-if="checkIfShown('administrativeUnit')" :key="keys.administrativeUnits">
                             <div class="fg-line m-0">
                                 <select v-model="temp.administrativeUnit" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar administrativa"
-                                        title="Por unidad administrativa…" @change="addFilter(query.administrativeUnits, temp.administrativeUnit)">
+                                        title="Por unidad administrativa…" @change="addFilter(query.administrativeUnits, temp.administrativeUnit, 'administrativeUnits')">
                                             <optGroup>
                                                 <option :value="undefined"> Por Unidad...</option>
                                             </optGroup>
                                     <option v-for="unit in administrativeUnits" :value="unit">{{unit.name}}</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['supplier']} col-12`" v-if="checkIfShown('supplier')" :key="keys.suppliers">
+                            <div class="fg-line m-0">
+                                <select v-model="temp.supplier" class="form-control select selectpicker" data-live-search="true"
+                                        data-live-search-placeholder="Buscar proveedor"
+                                        title="Por proveedor…" @change="addFilter(query.suppliers, temp.supplier, 'suppliers')">
+                                    <optGroup>
+                                        <option :value="undefined"> Por Proveedor...</option>
+                                    </optGroup>
+                                    <option v-for="supplier in suppliers" :value="supplier">{{supplier.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -117,6 +129,14 @@
                         <i class="zmdi zmdi-close"></i>
                     </button>
                 </div>
+                <div class="tag" v-for="supplier in query.suppliers">
+                    <span class="">
+                      {{supplier.name}}
+                    </span>
+                    <button @click="removeFilter(query.suppliers, supplier)">
+                        <i class="zmdi zmdi-close"></i>
+                    </button>
+                </div>
             </div>
         <!--Button dummy, do not delete; used to ensure selects are properly shown-->
         <button id="refresh-selects-button" style="display:none" type="button" @click="refreshSelects">
@@ -125,6 +145,13 @@
 </template>
 
 <script>
+
+    const FIRST_ROW_TOTAL = 1;
+    const SECOND_ROW_TOTAL = 6;
+
+    import FilterSelect from  "@/components/general/FilterSelect";
+
+
     export default {
         name: "publicFilter",
         data() {
@@ -135,16 +162,39 @@
                     trimonths : [],
                     procedureTypes : [],
                     administrativeUnits : [],
-                    search : ""
+                    search : "",
+                    suppliers : []
                 },
                 temp : {
                     administrationPeriod : undefined,
                     fiscalYear : undefined,
                     trimonth : undefined,
                     procedureType : undefined,
-                    administrativeUnit : undefined
-                }
+                    administrativeUnit : undefined,
+                    supplier : undefined
+                },
+                colSizes : {
+                    administrationPeriod : 2,
+                    fiscalYear : 2,
+                    trimonth : 2,
+                    procedureType : 2,
+                    administrativeUnit : 2,
+                    supplier : 2,
+                },
+                keys : {
+                    administrationPeriods : 0,
+                    fiscalYears : 10000,
+                    trimonths : 20000,
+                    procedureTypes : 30000,
+                    administrativeUnits : 40000,
+                    suppliers : 50000
+                },
+                testkey : "thisisakey",
+                vifhack : true
             }
+        },
+        components : {
+            FilterSelect
         },
         computed : {
            showFilters : function(){
@@ -153,44 +203,85 @@
                       (this.query.fiscalYears && this.query.fiscalYears.length>  0 ) ||
                       (this.query.trimonths && this.query.trimonths.length>  0 ) ||
                       (this.query.procedureTypes && this.query.procedureTypes.length >  0 ) ||
+                      (this.query.suppliers && this.query.suppliers.length >  0 ) ||
                       (this.query.administrativeUnits && this.query.administrativeUnits.length >  0 );
-
            }
         },
         props: {
             administrationPeriods: {
                 type: Array,
-                default: []
+                default: function () {
+                    return []
+                }
             },
             fiscalYears: {
                 type: Array,
-                default: []
+                default: function () {
+                    return []
+                }
             },
             trimonths: {
                 type: Array,
-                default: []
+                default: function () {
+                    return []
+                }
             },
             procedureTypes: {
                 type: Array,
-                default: []
+                default: function () {
+                    return []
+                }
             },
             administrativeUnits: {
                 type: Array,
-                default: []
+                default: function () {
+                    return []
+                }
             },
-            actionName : String,
-            storeModule : {
+            actionName: String,
+            storeModule: {
                 type: String
             },
-            storeModules : {
+            storeModules: {
                 type: Array
             },
-            additionalParams : {
+            additionalParams: {
                 type: Object
             },
             placeHolder: {
                 type: String,
-                default:"Escribe el nombre del contrato.."
+                default: "Escribe el nombre del contrato.."
+            },
+            suppliers: {
+                type: Array,
+                default: function () {
+                    return []
+                }
+            },
+            projection : {
+                validator : function (value) {
+                    let thereArePositives = false;
+                    let thereAreFalsities = false;
+
+                    if(value == undefined  || (Object.entries(value).length === 0 && value.constructor === Object)){ //if it's empty
+                        return true;
+                    } else if(Object.keys(value).length > FIRST_ROW_TOTAL + SECOND_ROW_TOTAL){ //if it's "==" won't show any filters
+                        return false;
+                    }
+
+                    const values = Object.values(value);
+                    for (let i = 0; i < values.length; i++){
+                        if(thereArePositives || values[i]){
+                            thereArePositives = true;
+                        } else {
+                            thereAreFalsities = true;
+                        }
+                        if(thereArePositives && thereAreFalsities){
+                            return false;
+                        }
+                    }
+                    return true;
+                }
             }
         },
         mounted() {
@@ -201,6 +292,59 @@
                     },2000);
                 })
             })
+        },
+        beforeMount() {
+
+            if(!(this.$props.projection == undefined  || (Object.entries(this.$props.projection).length === 0 && this.$props.projection.constructor === Object))) { //if it's not  empty
+
+                let truthyProjection = Object.values(this.$props.projection)[0]; //Assuming validation was correct, values must be all false or all true
+                let filtersCount;
+                let leftoverSpace, colSize, colCount;
+                let projectionKeys = Object.keys(this.$props.projection);
+                filtersCount = projectionKeys.length;
+
+
+                if (projectionKeys.includes("search")) {
+                    filtersCount--;
+                }
+                if (!truthyProjection) {
+                    colCount = SECOND_ROW_TOTAL - filtersCount;
+                    for (let i = 0; i < projectionKeys.length; i++) {
+                        delete this.colSizes[projectionKeys[i]];
+                    }
+                } else {
+                    colCount = filtersCount;
+                    this.colSizes = {};
+                    for (let i = 0; i < projectionKeys.length; i++) {
+                        this.colSizes[projectionKeys[i]] = 2;
+                    }
+                }
+
+
+                leftoverSpace = 12 % colCount;
+                let colSizesKeys = Object.keys(this.colSizes);
+                colSize = (12 - leftoverSpace) / colCount;
+
+
+
+                for (let i = 0; i < colSizesKeys.length; i++) {
+                    this.colSizes[colSizesKeys[i]] = colSize;
+                }
+
+
+                if (filtersCount > 6) {
+                    for (let i = 1; i <= leftoverSpace; i++) {
+                        this.colSizes[colSizesKeys[i]]++;
+                    }
+                } else if (leftoverSpace !== 0 && leftoverSpace % 2 === 0) {
+                    this.colSizes[colSizesKeys[0]] += (leftoverSpace / 2);
+                    this.colSizes[colSizesKeys[colSizesKeys.length - 1]] += (leftoverSpace / 2);
+                } else {
+                    this.colSizes[colSizesKeys[0]] += leftoverSpace;
+                }
+
+            }
+
         },
         methods: {
             filter() {
@@ -232,20 +376,43 @@
                 }
             },
             refreshSelects() {
+                this.$nextTick(function () {
                     window.$('.selectpicker').selectpicker();
                     window.$('.selectpicker').selectpicker('refresh');
                     $('.selectpicker').selectpicker();
                     $('.selectpicker').selectpicker('refresh');
+                })
             },
-            addFilter(array, element){
-                if(array.indexOf(element) < 0){
-                    array.push(element);
+            addFilter(array, element, keyName){
+                if(element){
+                    if(array.indexOf(element) < 0){
+                        array.push(element);
+                    }
+                    element = undefined;
+                    const keys = Object.keys(this.keys)
+                    for (const key of keys) {
+                        this.keys[key]++;
+                    }
+                    this.refreshSelects();
                 }
-                element = undefined;
-                this.refreshSelects();
             },
             removeFilter(array, element){
                 array.splice(array.indexOf(element),1);
+            },
+            checkIfShown(filterKey){
+                if(this.$props.projection == undefined  || (Object.entries(this.$props.projection).length === 0 && this.$props.projection.constructor === Object)) { //if it's empty
+                    return true;
+                }
+                    let truthyProjection;
+                if((Object.entries(this.$props.projection).length === 0 && this.$props.projection.constructor === Object)) { //if it's empty
+                    return true;
+                }
+                truthyProjection = Object.values(this.$props.projection)[0]; //Assuming validation was correct, values must be all false or all true
+
+                if((truthyProjection && this.$props.projection[filterKey]) || (!truthyProjection && !Object.keys(this.$props.projection).includes(filterKey))){
+                    return true;
+                }
+                return false;
             }
         }
     }

@@ -8,7 +8,7 @@
     "test": "node node_modules/@vue/cli-service/bin/vue-cli-service.js test:e2e --url localhost:8080",
     "lint": "node node_modules/@vue/cli-service/bin/vue-cli-service.js lint",
     "dev": "node node_modules/@vue/cli-service/bin/vue-cli-service.js serve",
-    "start": "supervisor -i public ./bin/www",
+    "start": "supervisor -w config.js,devServer.js,server.config.js,server.js,src/server ./bin/www",
     "prod": "NODE_ENV=production node node_modules/pm2/bin/pm2-runtime process.yml",
     "test:e2e": "node node_modules/@vue/cli-service/bin/vue-cli-service.js test:e2e"
   },
