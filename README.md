@@ -2,23 +2,23 @@
 
 Bienvenido a Monitor Karewa Web
 
-Este proyecto busca presentar información pública de contrataciones realiazadas por instituciones públicas, a través de 
-una plataforma accesible y de código abierto que puede ser usada por instituciones locales, estatales y nacionales en 
+Este proyecto busca presentar información pública de contrataciones realiazadas por instituciones públicas, a través de
+una plataforma accesible y de código abierto que puede ser usada por instituciones locales, estatales y nacionales en
 México.
 
 Nuestros principales objetivos son los siguientes:
 - Código libre - Extender el alcance de la plataforma a través de un repositorio de código abierto y orientado a la comunidad.
 - Replicabilidad - Permitir a cualquier institución pública tener su propia instancia, ofreciendo herramientas y guías en como hacerlo.
 - Usabilidad - Empoderar a los ciudadanos con una plataforma accesible desde cualquier lugar, con un enfoque en la accesibilidad y experiencia de usuario.
- 
+
  # Implementación rápida (sin configuración)
- 
+
  Puedes crear una nueva instancia de Monitor Karewa en Heroku usando el siguiente botón. Recuerda antes [crear una cuenta gratuita en Heroku](https://signup.heroku.com/).
- 
+
  [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy?template=https://github.com/monitor-karewa/monitor)
- 
+
  **NOTA**: Por limitaciones de Heroku, este servicio solo se encuentra disponible desde GitHub: https://github.com/monitor-karewa/monitor
- 
+
 
 ## Plataforma
 
@@ -54,8 +54,8 @@ El servidor estará disponible en el puerto 3000 (por defecto).
 
 Para correr el servidor en un puerto distinto:
     `PORT=3001 npm start`
-    
-    
+
+
 La configuración del servidor está disponible en el archivo `/src/server/config/config.js`
 
 ## Cliente
@@ -73,7 +73,7 @@ La dirección de la API y otras variables de entorno se encuentran definidos en 
 Compilar y minificar cliente para producción
 
     `npm run build`
-    
+
 Correr servidor en modo producción
 
     `NODE_ENV=production npm start`
@@ -97,7 +97,7 @@ Después introduce el nombre del catálogo y el generador creará los archivos b
 Para instalar el motor de testing e2e:
 
     `npm install -g nightwatch`
-    
+
 Ejecutar pruebas:
 
     `nightwatch`
@@ -107,6 +107,6 @@ Ejecutar pruebas:
 
 [Enlace a documentación](docs/contributionGuide.md)
 
-# Configuración de una instancia en Google Cloud 
+# Despliegue y configuración del servidor para producción
 
 [Enlace a documentación](docs/serverConfig.md)
