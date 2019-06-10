@@ -49,14 +49,17 @@
         computed : {
             ...mapState({
                 lastUpdate: function (state) {
-                    console.log('this.$props.storeModule --> ' + this.$props.storeModule);
                     return this.$props.storeModule ? state[this.$props.storeModule].lastUpdate : "";
                 }
             })
         },
         filters: {
             moment: function (date) {
-                return moment(date).format('DD/MM/YYYY');
+                moment.locale('es');
+                if(!date){
+                    return
+                }
+                return moment(date).format('DD [de] MMMM [de] YYYY')
             }
         },
     }

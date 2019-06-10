@@ -2,6 +2,8 @@ const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 const mongoose = require('mongoose');
 const moment = require('moment');
+const async = require('async');
+
 
 const {Organization} = require('./../models/organization.model');
 const Contract = require('./../models/contract.model').Contract;
@@ -196,30 +198,58 @@ exports.index = (req, res, next) => {
  * @param next
  */
 exports.list = (req, res, next) => {
-    let paginationOptions = pagination.getDefaultPaginationOptions(req);
-    paginationOptions.lean = false;
-    _fetchContractsAndTotals(req, res, { paginate:true, paginationOptions},(err, {totals, contracts}) => {
-       if(err){
-            logger.error(err, req, 'contract.controller#list', 'Error al consultar lista de Contract');
-            return res.json({
-                errors: true,
-                message: res.__('general.error.unexpected-error')
-            });
-       } else {
-        return res.json({
-            errors: false,
-            message: "",
-            data: {
-                docs: contracts.docs,
-                page: contracts.page,
-                pages: contracts.pages,
-                total: contracts.total,
-                totals:totals
-            }
-        });
 
-       }
-    });
+    async.parallel({
+            mainQuery: function (callback) {
+                let paginationOptions = pagination.getDefaultPaginationOptions(req);
+                paginationOptions.lean = false;
+                _fetchContractsAndTotals(req, res, {paginate: true, paginationOptions}, (err, {totals, contracts}) => {
+                    if (err) {
+                        logger.error(err, req, 'contract.controller#list', 'Error al consultar lista de Contract');
+                        return callback({
+                            errors: true,
+                            message: res.__('general.error.unexpected-error')
+                        });
+                    } else {
+                        return callback(null,{
+                            errors: false,
+                            message: "",
+                            data: {
+                                docs: contracts.docs,
+                                page: contracts.page,
+                                pages: contracts.pages,
+                                total: contracts.total,
+                                totals: totals
+                            }
+                        });
+
+                    }
+                })
+            },
+            lastUpdate: function (callback) {
+                let qByOrganization = Organization.qByOrganization(req);
+                Contract.find(
+                    {...qByOrganization},
+                    {updatedAt: 1},
+                    {sort: {"updatedAt": -1}, limit: 1},
+                    function (err, result) {
+                        if (err) {
+                            console.log("err", err);
+                            callback(err)
+                        } else {
+                            callback(null, result)
+                        }
+                    }
+                )
+            }
+        },
+        function (err, results) {
+            let json = {...results.mainQuery};
+            if (results.lastUpdate && results.lastUpdate.length) {
+                json = {...results.mainQuery, lastUpdate: results.lastUpdate[0].updatedAt}
+            }
+            res.json(json);
+        });
 };
 
 

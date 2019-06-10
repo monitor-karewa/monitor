@@ -291,7 +291,7 @@
                     Todos los datos que se presentan en este informe son única y exclusivamente obtenidos de:
                     http://www.municipiochihuahua.gob.mx/Transparencia
                     <br>
-                    Última actualización: <strong>27 de noviembre de 2018</strong>
+                    Última actualización: <strong>{{supplier.updatedAt | moment}}</strong>
                 </p>
 
                 <more-info></more-info>
@@ -435,7 +435,7 @@
                 if(!date){
                     return
                 }
-                return moment(date).format('DD MMMM YYYY')
+                return moment(date).format('DD [de] MMMM [de] YYYY')
             }
         }
 

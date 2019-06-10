@@ -18,7 +18,8 @@ const state = {
     trimonths : [],
     administrationPeriods : [],
     procedureTypes : [],
-    lastQuery : {}
+    lastQuery : {},
+    lastUpdate : undefined
 };
 
 const storeName = 'publicSuppliers';
@@ -46,6 +47,7 @@ const actions = {
         }
         apiPublicSuppliers.list({query}, (result) => {
             commit('SET_SUPPLIERS', result.data.data);
+            commit('SET_LAST_UPDATE', result.data.lastUpdate);
         }, (err) => {
             tShow(i18n.t('suppliers.public.load.error'), 'danger');
             commit('SET_SUPPLIERS', {});
@@ -173,6 +175,9 @@ const mutations = {
         }
         state.suppliers = suppliers || [];
         state.totals = totals || {};
+    },
+    SET_LAST_UPDATE(state, lastUpdate){
+        state.lastUpdate = lastUpdate
     },
     SET_SUPPLIER_DETAIL (state, detail) {
         state.detail = detail;

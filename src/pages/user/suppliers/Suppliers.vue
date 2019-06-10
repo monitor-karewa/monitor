@@ -200,7 +200,7 @@
                     Todos los datos que se presentan en este informe son única y exclusivamente obtenidos de:
                     http://www.municipiochihuahua.gob.mx/Transparencia
                     <br>
-                    Última actualización: <strong>27 de noviembre de 2018</strong>
+                    <LastUpdateLabel :storeModule="storeModule"/>
                 </p>
 
                 <more-info></more-info>
@@ -223,7 +223,8 @@
     import PublicFilter from '@/components/filters/PublicFilter.vue';
     import ModalAutoDismiss from '@/components/catalogs/ModalAutoDismiss.vue';
     import ModalAlert from '@/components/catalogs/ModalAlert.vue';
-    
+    import LastUpdateLabel from '@/components/general/LastUpdateLabel.vue';
+
     
     const storeModule = 'publicSuppliers';
     const apiNamespace = 'suppliers';
@@ -242,7 +243,8 @@
             Pagination,
             PublicFilter,
             ModalAutoDismiss,
-            ModalAlert
+            ModalAlert,
+            LastUpdateLabel
         },
         computed: {
             ...mapState({

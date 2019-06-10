@@ -217,7 +217,6 @@ exports.list = (req, res, next) => {
             }
         },
         function (err, results) {
-            console.log("results", results);
             let json = {...results.mainQuery};
             if (results.lastUpdate && results.lastUpdate.length) {
                 json = {...results.mainQuery, lastUpdate: results.lastUpdate[0].updatedAt}
