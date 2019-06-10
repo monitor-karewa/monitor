@@ -56,31 +56,58 @@ exports.list = (req, res, next) => {
     let qByOrganization = Organization.qByOrganization(req);
     query = {...query, ...qNotDeleted, ...qByOrganization};
 
-    Supplier
-        .paginate(
-            query,
-            paginationOptions,
-            (err, result) => {
-                if (err) {
-                    logger.error(err, req, 'supplier.controller#list', 'Error al consultar lista de Supplier');
-                    return res.json({
-                        errors: true,
-                        message: res.__('general.error.unexpected-error')
-                    });
-                }
 
-                return res.json({
-                    errors: false,
-                    message: "",
-                    data: {
-                        docs: result.docs,
-                        page: result.page,
-                        pages: result.pages,
-                        total: result.total
+    async.parallel({
+            mainQuery: function (callback) {
+                Supplier
+                    .paginate(
+                        query,
+                        paginationOptions,
+                        (err, result) => {
+                            if (err) {
+                                logger.error(err, req, 'supplier.controller#list', 'Error al consultar lista de Supplier');
+                                return callback(err, {
+                                    errors: true,
+                                    message: res.__('general.error.unexpected-error')
+                                });
+                            }
+
+                            return callback(null,{
+                                errors: false,
+                                message: "",
+                                data: {
+                                    docs: result.docs,
+                                    page: result.page,
+                                    pages: result.pages,
+                                    total: result.total
+                                }
+                            });
+                        }
+                    )
+            },
+            lastUpdate: function (callback) {
+                Supplier.find(
+                    {...qByOrganization},
+                    {updatedAt: 1},
+                    {sort: {"updatedAt": -1}, limit: 1},
+                    function (err, result) {
+                        if (err) {
+                            console.log("err", err);
+                            callback(err)
+                        } else {
+                            callback(null, result)
+                        }
                     }
-                });
+                )
             }
-        );
+        },
+        function (err, results) {
+            let json = {...results.mainQuery};
+            if (results.lastUpdate && results.lastUpdate.length) {
+                json = {...results.mainQuery, lastUpdate: results.lastUpdate[0].updatedAt}
+            }
+            res.json(json);
+        });
 };
 
 /**

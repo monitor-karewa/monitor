@@ -5,6 +5,7 @@ const deletedSchema = require('./../models/schemas/deleted.schema');
 const utils = require('./../components/utils.js');
 const moment = require('moment');
 const { PDFTable, PDFExporter } = require('./../components/pdfExporter');
+const async = require('async');
 
 const logger = require('./../components/logger').instance;
 const mongoose = require('mongoose');
@@ -210,7 +211,8 @@ function _aggregateSupplierDetail(req, res, callback){
                     },
                     {
                         "$project": {
-                            "name": 1
+                            "name": 1,
+                            "updatedAt": 1
                         }
                     }
                 ],
@@ -476,6 +478,8 @@ exports.list = (req, res, next) => {
 
     let page = _getPageFromReq(req);
 
+    async.parallel({
+        mainQuery: function (callback) {
     _aggregateSuppliersFromContracts(req, res, {paginate: true}, (err, suppliers, pageCount, itemCount) => {
         if (err) {
             logger.error(err, req, 'publicSupplier.controller#list', 'Error trying to query suppliers info from aggregate');
@@ -520,10 +524,34 @@ exports.list = (req, res, next) => {
             pagination: pagination
         };
 
-        return res.json({
+        return callback(null,{
             error: false,
             data: data
         });
+    })},
+        lastUpdate: function (callback) {
+        let qByOrganization = Organization.qByOrganization(req);
+        Contract.find(
+            {...qByOrganization},
+            {updatedAt: 1},
+            {sort: {"updatedAt": -1}, limit: 1},
+            function (err, result) {
+                if (err) {
+                    console.log("err", err);
+                    callback(err)
+                } else {
+                    callback(null, result)
+                }
+            }
+        )
+    }
+},
+    function (err, results) {
+        let json = {...results.mainQuery};
+        if (results.lastUpdate && results.lastUpdate.length) {
+            json = {...results.mainQuery, lastUpdate: results.lastUpdate[0].updatedAt}
+        }
+        res.json(json);
     });
 };
 

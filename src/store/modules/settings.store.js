@@ -9,7 +9,8 @@ const state = {
         contactEmail: '',
         address: '',
         schedule: ''
-    }
+    },
+    lastUpdate : undefined
 };
 
 const getters = {
@@ -88,13 +89,14 @@ const actions = {
 };
 
 const mutations = {
-    SETTINGS_UPDATED (state, {title, description, contactLocation, contactEmail, address, schedule}) {
+    SETTINGS_UPDATED (state, {title, description, contactLocation, contactEmail, address, schedule, updatedAt}) {
         state.settings.title = title;
         state.settings.description = description;
         state.settings.contactLocation = contactLocation;
         state.settings.contactEmail = contactEmail;
         state.settings.address = address;
         state.settings.schedule= schedule;
+        state.lastUpdate = updatedAt;
     }
 };
 

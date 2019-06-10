@@ -30,7 +30,8 @@ const state = {
     administrationPeriods : [],
     procedureTypes : [],
     suppliers : [],
-    lastQuery : {}
+    lastQuery : {},
+    lastUpdate : undefined
 };
 
 const getters = {
@@ -92,6 +93,7 @@ const actions = {
                 // });
                 commit('SET_CONTRACTS', result.data.data);
                 commit('SET_TOTALS', result.data.data.totals);
+                commit('SET_LAST_UPDATE', result.data.lastUpdate);
             },
             (error) => {
                 // console.log('error', error);
@@ -250,6 +252,9 @@ const mutations = {
     },
     SET_SUPPLIERS_FOR_FILTER(state, suppliers) {
         state.suppliers = suppliers;
+    },
+    SET_LAST_UPDATE(state, lastUpdate){
+        state.lastUpdate = lastUpdate
     },
     /**
      * Saves which was the last query used so it can change page when there are filtered results

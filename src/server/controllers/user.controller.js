@@ -1,6 +1,7 @@
 const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 const utils = require('./../components/utils');
+const async = require('async');
 
 const mongoose = require('mongoose');
 const User = require('./../models/user.model').User;
@@ -57,31 +58,59 @@ exports.list = (req, res, next) => {
     // let qByOrganization = Organization.qByOrganization(req);
     query = {...query, ...qNotDeleted/*, ...qByOrganization*/};
 
-    User
-        .paginate(
-            query,
-            paginationOptions,
-            (err, result) => {
-                if (err) {
-                    logger.error(err, req, 'user.controller#list', 'Error al consultar lista de User');
-                    return res.json({
-                        errors: true,
-                        message: res.__('general.error.unexpected-error')
-                    });
-                }
 
-                return res.json({
-                    errors: false,
-                    message: "",
-                    data: {
-                        docs: result.docs,
-                        page: result.page,
-                        pages: result.pages,
-                        total: result.total
+    async.parallel({
+            mainQuery: function (callback) {
+                User
+                    .paginate(
+                        query,
+                        paginationOptions,
+                        (err, result) => {
+                            if (err) {
+                                logger.error(err, req, 'user.controller#list', 'Error al consultar lista de User');
+                                return callback(err,{
+                                    errors: true,
+                                    message: res.__('general.error.unexpected-error')
+                                });
+                            }
+
+                            callback(null, {
+                                data: {
+                                    docs: result.docs,
+                                    page: result.page,
+                                    pages: result.pages,
+                                    total: result.total
+                                }
+                            });
+                        }
+                    );
+            },
+            lastUpdate: function (callback) {
+                User.find(
+                    {},
+                    {updatedAt:1},
+                    {sort:{"updatedAt":-1}, limit:1},
+                    function (err, result) {
+                        if(err){
+                            console.log("err", err);
+                            callback(err)
+                        } else {
+                            callback(null,result)
+                        }
                     }
-                });
+                    )
             }
-        );
+        },
+        function(err, results) {
+            let json = {...results.mainQuery};
+            if(results.lastUpdate && results.lastUpdate.length){
+                json = {...results.mainQuery, lastUpdate :  results.lastUpdate[0].updatedAt}
+            }
+            res.json(json);
+        });
+
+
+
 };
 
 /**
@@ -451,7 +480,7 @@ exports.updateProfileInfo = function(req, res , next){
 
 exports.getProfileInfo = function(req, res , next){
 
-    User.findOne({_id: req.user._id}).select("name lastName profilePicture")
+    User.findOne({_id: req.user._id}).select("name lastName profilePicture updatedAt")
         .exec(function (err, result) {
 
             if(err){

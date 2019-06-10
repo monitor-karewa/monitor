@@ -191,7 +191,7 @@
                 <p class="f-12 c-plain_text principal-font-regular">
                     Todos los datos que se presentan en este informe son única y exclusivamente obtenidos de: http://www.municipiochihuahua.gob.mx/Transparencia
                     <br>
-                    Última actualización: <strong>27 de noviembre de 2018</strong>
+                    <LastUpdateLabel :storeModule="storeModule"/>
                 </p>
 
                 <more-info></more-info>
@@ -212,9 +212,9 @@
 
 <script>
 
-    import MoreInfo from '@/components/general/MoreInfo';
     const storeModule = 'publicContracts';
     const docName = 'contracts.doc-name';
+    import MoreInfo from '@/components/general/MoreInfo';
     import Pagination from '@/components/catalogs/Pagination';
     import { mapState, mapGetters } from 'vuex';
     import moment from 'moment';
@@ -222,6 +222,7 @@
     import PublicFilter from '@/components/filters/PublicFilter.vue';
     import ModalAutoDismiss from '@/components/catalogs/ModalAutoDismiss.vue';
     import ModalAlert from '@/components/catalogs/ModalAlert.vue';
+    import LastUpdateLabel from '@/components/general/LastUpdateLabel.vue';
 
 
     export default {
@@ -250,7 +251,8 @@
             Pagination,
             PublicFilter,
             ModalAutoDismiss,
-            ModalAlert
+            ModalAlert,
+            LastUpdateLabel
         },
         created() {
             window.$(document).ready(function () {
@@ -300,7 +302,11 @@
         },
         filters: {
             moment: function (date) {
-                return moment(date).format('DD/MM/YYYY');
+                moment.locale('es');
+                if(!date){
+                    return
+                }
+                return moment(date).format('DD [de] MMMM [de] YYYY')
             }
         }
     }

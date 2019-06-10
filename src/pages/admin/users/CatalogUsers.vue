@@ -1,6 +1,6 @@
 <template>
     <div>
-        <AdminMainSection>
+        <AdminMainSection :storeModule="storeModule">
             <BackButton />
             <CatalogHeader :singular="'Usuario'" :plural="'Usuarios'" :store-module="storeModule"/>
             <EditableTable

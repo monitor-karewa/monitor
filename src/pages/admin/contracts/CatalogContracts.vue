@@ -1,6 +1,6 @@
 <template>
     <div class="contract-section">
-        <AdminMainSection>
+        <AdminMainSection :storeModule="storeModule">
             <BackButton/>
             <CatalogHeader :singular="'Contrato'" :plural="'Contratos'" :store-module="storeModule"/>
             <EditableTable

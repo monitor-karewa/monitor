@@ -2,6 +2,7 @@ const pagination = require('./../components/pagination');
 const logger = require('./../components/logger').instance;
 const utils = require('./../components/utils');
 const mongoose = require('mongoose');
+const async = require('async');
 
 const {
     Contract,
@@ -156,45 +157,72 @@ exports.list = (req, res, next) => {
         }
     };
 
-    Contract.aggregatePaginate(aggregate, paginateOptions, (err, docs, pageCount, itemCount) => {
-        if (err) {
-            logger.error(err, req, 'contract.controller#list', 'Error al consultar lista de Contract');
-            return res.json({
-                errors: true,
-                message: res.__('general.error.unexpected-error')
-            });
-        }
-        
-        //To correctly show each enum's value to the user, virtual fields are used
-        //To use virtuals, we must transform each doc to a model "instance", but we keep the populated refs
-        
-        let docsWithVirtualsAndRefs = [];
-        
-        for (let doc of docs) {
-            //Pass through the model to obtain the value for virtual fields
-            let docAsObjWithVirtuals = (new Contract(doc)).toObject();
+    async.parallel({
+        mainQuery: function (callback) {
+            Contract.aggregatePaginate(aggregate, paginateOptions, (err, docs, pageCount, itemCount) => {
+                if (err) {
+                    logger.error(err, req, 'contract.controller#list', 'Error al consultar lista de Contract');
+                    return callback({
+                        errors: true,
+                        message: res.__('general.error.unexpected-error')
+                    });
+                }
 
-            //Keep the populated refs
-            docAsObjWithVirtuals.supplier = doc.supplier;
-            docAsObjWithVirtuals.administrativeUnit = doc.administrativeUnit;
-            docAsObjWithVirtuals.organizerAdministrativeUnit = doc.organizerAdministrativeUnit;
-            docAsObjWithVirtuals.areaInCharge = doc.areaInCharge;
-            docAsObjWithVirtuals.applicantAdministrativeUnit = doc.applicantAdministrativeUnit;
-            
-            docsWithVirtualsAndRefs.push(docAsObjWithVirtuals);
-        }
+                //To correctly show each enum's value to the user, virtual fields are used
+                //To use virtuals, we must transform each doc to a model "instance", but we keep the populated refs
 
-        return res.json({
-            errors: false,
-            message: "",
-            data: {
-                docs: docsWithVirtualsAndRefs,
-                page: page,
-                pages: pageCount,
-                total: itemCount
+                let docsWithVirtualsAndRefs = [];
+
+                for (let doc of docs) {
+                    //Pass through the model to obtain the value for virtual fields
+                    let docAsObjWithVirtuals = (new Contract(doc)).toObject();
+
+                    //Keep the populated refs
+                    docAsObjWithVirtuals.supplier = doc.supplier;
+                    docAsObjWithVirtuals.administrativeUnit = doc.administrativeUnit;
+                    docAsObjWithVirtuals.organizerAdministrativeUnit = doc.organizerAdministrativeUnit;
+                    docAsObjWithVirtuals.areaInCharge = doc.areaInCharge;
+                    docAsObjWithVirtuals.applicantAdministrativeUnit = doc.applicantAdministrativeUnit;
+
+                    docsWithVirtualsAndRefs.push(docAsObjWithVirtuals);
+                }
+
+                return callback(null,{
+                    errors: false,
+                    message: "",
+                    data: {
+                        docs: docsWithVirtualsAndRefs,
+                        page: page,
+                        pages: pageCount,
+                        total: itemCount
+                    }
+                });
+
+            })
+        },
+            lastUpdate: function (callback) {
+                Contract.find(
+                    {...qByOrganization},
+                    {updatedAt: 1},
+                    {sort: {"updatedAt": -1}, limit: 1},
+                    function (err, result) {
+                        if (err) {
+                            console.log("err", err);
+                            callback(err)
+                        } else {
+                            callback(null, result)
+                        }
+                    }
+                )
             }
+        },
+        function (err, results) {
+            let json = {...results.mainQuery};
+            if (results.lastUpdate && results.lastUpdate.length) {
+                json = {...results.mainQuery, lastUpdate: results.lastUpdate[0].updatedAt}
+            }
+            res.json(json);
         });
-    });
     
     //Deprecated query without aggregate (unable to search in populated fields)
     // Contract
