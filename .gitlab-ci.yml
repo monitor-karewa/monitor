@@ -69,6 +69,10 @@ prod:
             docker build \
               --iidfile imageid.txt \
               --pull \
+              --build-arg VUE_APP_API_PORT_ARG=${VUE_APP_API_PORT_BETA} \
+              --build-arg VUE_APP_API_HOST_ARG=${VUE_APP_API_HOST_BETA} \
+              --build-arg API_PORT_ARG=${API_PORT_BETA} \
+              --build-arg API_HOST_ARG=${API_HOST_BETA} \
               --cache-from ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} \
               -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
             docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
@@ -85,6 +89,10 @@ prod:
             docker build \
               --iidfile imageid.txt \
               --pull \
+              --build-arg VUE_APP_API_PORT_ARG=${VUE_APP_API_PORT_PROD} \
+              --build-arg VUE_APP_API_HOST_ARG=${VUE_APP_API_HOST_PROD} \
+              --build-arg API_PORT_ARG=${API_PORT_PROD} \
+              --build-arg API_HOST_ARG=${API_HOST_PROD} \
               --cache-from ${CI_REGISTRY_IMAGE}:master \
               -t ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG} .
             docker push ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}
@@ -103,7 +111,17 @@ prod:
         eval `ssh-agent -s`
         ssh-add ~/.ssh/id_rsa
         ssh -t karewa "docker pull ${CI_REGISTRY_IMAGE}:${CI_COMMIT_REF_SLUG}"
-        ssh -t karewa "KAREWA_VERSION=${CI_COMMIT_REF_SLUG} SMTP_USER=${SMTP_USER} SMTP_PASS=${SMTP_PASS} SMTP_HOST=${SMTP_HOST} SMTP_ACCOUNT='${SMTP_ACCOUNT}' docker-compose up -d"
+        ssh -t karewa \
+          "KAREWA_VERSION=${CI_COMMIT_REF_SLUG} \
+          VUE_APP_API_PORT=${VUE_APP_API_PORT_PROD} \
+          VUE_APP_API_HOST=${VUE_APP_API_HOST_PROD} \
+          API_PORT=${API_PORT_PROD} \
+          API_HOST=${API_HOST_PROD} \
+          SMTP_USER=${SMTP_USER} \
+          SMTP_PASS=${SMTP_PASS} \
+          SMTP_HOST=${SMTP_HOST} \
+          SMTP_ACCOUNT='${SMTP_ACCOUNT}' \
+          docker-compose up -d"
         ssh -t karewa "docker system prune -af"
       }
 

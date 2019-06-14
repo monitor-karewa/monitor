@@ -11,6 +11,10 @@ services:
       - SMTP_PASS=$SMTP_PASS
       - SMTP_HOST=$SMTP_HOST
       - SMTP_ACCOUNT=$SMTP_ACCOUNT
+      - VUE_APP_API_PORT=$VUE_APP_API_PORT
+      - VUE_APP_API_HOST=$VUE_APP_API_HOST
+      - API_PORT=$API_PORT
+      - API_HOST=$API_HOST
     links:
       - db
     depends_on:
