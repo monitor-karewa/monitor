@@ -139,7 +139,7 @@
                     }
                 },
                 rfc: {
-                    required,
+                    //required,
                     validRFC: (value) => {
                         if (value == null || value == undefined || value == "") {
                             return true
@@ -166,9 +166,9 @@
                 }
             },
             rfcErrorMessage(){
-               if(!this.$v.entry.rfc.required){
-                   return "El RFC del Proveedor es requerido"
-               }
+               //if(!this.$v.entry.rfc.required){
+                 //  return "El RFC del Proveedor es requerido"
+               //}
                if(!this.$v.entry.rfc.validRFC ){
                    return "El RFC introducido no tiene un formato válido"
                }
