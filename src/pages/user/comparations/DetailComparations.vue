@@ -88,7 +88,7 @@
 
 
                             <span class="border-lines col-12">
-                                <label>Índice de corrupción <i id="corruption-index-tooltip" class="zmdi zmdi-help-outline"></i></label>
+                                <label>Índice de corrupción {{detailRight.corruptionIndex.administrationPeriod+ '/'+ detailLeft.corruptionIndex.administrationPeriod}}<i id="corruption-index-tooltip" class="zmdi zmdi-help-outline"></i></label>
                                 <div id="help-tooltip-corruption-index-content" class="d-none">
                                     <div class="help-tooltip-div">
                                         <label>¿Qué significa esto?</label>

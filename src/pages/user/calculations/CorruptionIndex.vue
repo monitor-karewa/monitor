@@ -23,7 +23,7 @@
             <div class="col-12 p-0">
                 <div class="card d-flex">
                     <div class="floating-title-panel big">
-                        <h1>Índice de Riesgo de Corrupción</h1>
+                        <h1>Índice de Riesgo de Corrupción {{`(${corruptionIndex.administrationPeriod})`}}</h1>
 
                         <div class="side-right d-flex">
                             <a @click="copyUrlToClipBoard()" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i
@@ -109,6 +109,11 @@
                                  Se calcula analizando el número de adjudicaciones directas contra el número de invitaciones al proveedor y de licitaciones públicas. En adición, se toman en cuenta diferentes variables para generar un índice exacto.
 
                                 Si deseas conocer más sobre la plataforma, dirígete a nuestras recursos haciendo <router-link to="/resources">clic aquí</router-link>.
+                                <br>
+                                <br>
+                                <strong class="f-16">Administración</strong>
+                                <br>
+                                {{corruptionIndex.administrationPeriod}}
 
                             </p>
                             <a data-toggle="modal" data-target="#corruption-index-modal" class="btn-stroke button-primary text-unset" tabindex="">¿Cómo se
