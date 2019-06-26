@@ -64,8 +64,8 @@ exports.corruptionIndex = (req, res, next) => {
             };
 
             Calculation.getEnabledCalculations(req, cache, currentOrganizationId, (err, calculationsInfo) => {
-                
-                let query = Calculation.qAdministrationPeriodFromYearToYear(corruptionIndex);
+
+                let query = Calculation.qAdministrationPeriod(corruptionIndex);
 
                 calculateAndValidateFormula(req, cache, corruptionIndex._id, {query: query}, (err, result) => {
                     if (result && result.value) {
@@ -114,91 +114,6 @@ exports.detail = (req, res, next) => {
     let qNotDeleted = deletedSchema.qNotDeleted();
     let organizationId = mongoose.Types.ObjectId(id);
     let qByOrganization = {"organization": organizationId};
-    let query = {...qNotDeleted, ...qByOrganization};
-
-    Contract.aggregate([
-        {
-            $match: query
-        },
-        {
-            $group: {
-                _id: null,
-
-                publicCount: {
-                    $sum: {
-                        $cond: {
-                            if: {$eq: ["$procedureType", "PUBLIC"]},
-                            then: 1,
-                            else: 0
-                        }
-                    }
-                },
-                invitationCount: {
-                    $sum: {
-                        $cond: {
-                            if: {$eq: ["$procedureType", "INVITATION"]},
-                            then: 1,
-                            else: 0
-                        }
-                    }
-                },
-                noBidCount: {
-                    $sum: {
-                        $cond: {
-                            if: {$eq: ["$procedureType", "NO_BID"]},
-                            then: 1,
-                            else: 0
-                        }
-                    }
-                },
-                totalCount: {$sum: 1},
-
-                public: {
-                    $sum: {
-                        $cond: {
-                            if: {$eq: ["$procedureType", "PUBLIC"]},
-                            then: "$totalOrMaxAmount",
-                            else: 0
-                        }
-                    }
-                },
-                invitation: {
-                    $sum: {
-                        $cond: {
-                            if: {$eq: ["$procedureType", "INVITATION"]},
-                            then: "$totalOrMaxAmount",
-                            else: 0
-                        }
-                    }
-                },
-                noBid: {
-                    $sum: {
-                        $cond: {
-                            if: {$eq: ["$procedureType", "NO_BID"]},
-                            then: "$totalOrMaxAmount",
-                            else: 0
-                        }
-                    }
-                },
-                total: {$sum: "$totalOrMaxAmount"}
-            }
-        },
-        {
-            $project: {
-                publicCount: 1,
-                invitationCount: 1,
-                noBidCount: 1,
-                totalCount: 1,
-
-                public: 1,
-                invitation: 1,
-                noBid: 1,
-                total: 1
-            }
-        }
-    ]).exec((err, results) => {
-        let result = results[0] || {};
-
         async.parallel({
             corruptionIndex: (callback) => {
                 let query = {...qNotDeleted/*, ...qByOrganization*/, locked: true};
@@ -230,7 +145,7 @@ exports.detail = (req, res, next) => {
                             resultsMap: {},
                         };
 
-                        let query = Calculation.qAdministrationPeriodFromYearToYear(corruptionIndex);
+                        let query = Calculation.qAdministrationPeriod(corruptionIndex);
 
                         calculateAndValidateFormula(req, cache, corruptionIndex._id, {query: query, currentOrganizationId: organizationId}, (err, result) => {
                             if (err) {
@@ -266,11 +181,97 @@ exports.detail = (req, res, next) => {
                         logger.error(err, req, 'publicComparation.controller#detail', 'Error trying to get enabled calculations');
                     }
                     calculationsInfo = calculationsInfo || [];
-                    
                     return callback(null, calculationsInfo);
                 });
             },
         }, (err, results) => {
+
+            let query = {...qNotDeleted, ...qByOrganization, ...Calculation.qAdministrationPeriod(results.corruptionIndex)};
+
+
+            Contract.aggregate([
+                {
+                    $match: query
+                },
+                {
+                    $group: {
+                        _id: null,
+
+                        publicCount: {
+                            $sum: {
+                                $cond: {
+                                    if: {$eq: ["$procedureType", "PUBLIC"]},
+                                    then: 1,
+                                    else: 0
+                                }
+                            }
+                        },
+                        invitationCount: {
+                            $sum: {
+                                $cond: {
+                                    if: {$eq: ["$procedureType", "INVITATION"]},
+                                    then: 1,
+                                    else: 0
+                                }
+                            }
+                        },
+                        noBidCount: {
+                            $sum: {
+                                $cond: {
+                                    if: {$eq: ["$procedureType", "NO_BID"]},
+                                    then: 1,
+                                    else: 0
+                                }
+                            }
+                        },
+                        totalCount: {$sum: 1},
+
+                        public: {
+                            $sum: {
+                                $cond: {
+                                    if: {$eq: ["$procedureType", "PUBLIC"]},
+                                    then: "$totalOrMaxAmount",
+                                    else: 0
+                                }
+                            }
+                        },
+                        invitation: {
+                            $sum: {
+                                $cond: {
+                                    if: {$eq: ["$procedureType", "INVITATION"]},
+                                    then: "$totalOrMaxAmount",
+                                    else: 0
+                                }
+                            }
+                        },
+                        noBid: {
+                            $sum: {
+                                $cond: {
+                                    if: {$eq: ["$procedureType", "NO_BID"]},
+                                    then: "$totalOrMaxAmount",
+                                    else: 0
+                                }
+                            }
+                        },
+                        total: {$sum: "$totalOrMaxAmount"}
+                    }
+                },
+                {
+                    $project: {
+                        publicCount: 1,
+                        invitationCount: 1,
+                        noBidCount: 1,
+                        totalCount: 1,
+
+                        public: 1,
+                        invitation: 1,
+                        noBid: 1,
+                        total: 1
+                    }
+                }
+            ]).exec((err, totalResults) => {
+                let result = totalResults[0] || {};
+
             let corruptionIndex = results.corruptionIndex;
             let organization = results.organization;
             let calculationsInfo = results.calculationsInfo;
@@ -313,10 +314,11 @@ exports.detail = (req, res, next) => {
                 error: false,
                 data: detail
             });
+            });
 
         });
 
-    });
+    // });
 };
 
 
@@ -510,7 +512,7 @@ exports.download = (req, res, next) => {
                         resultsMap: {},
                     };
 
-                    let query = Calculation.qAdministrationPeriodFromYearToYear(corruptionIndex);
+                    let query = Calculation.qAdministrationPeriod(corruptionIndex);
 
                     calculateAndValidateFormula(req, cache, corruptionIndex._id, {query: query}, (err, result) => {
                         if (result && result.value) {

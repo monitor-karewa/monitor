@@ -365,11 +365,21 @@ CalculationSchema.statics.getEnabledCalculations = function(req, cache, currentO
     });
 };
 
-
+/**
+ * @deprecated
+ * @param administrationPeriodFromYear
+ * @param administrationPeriodToYear
+ * @return {{administrationPeriodFromYear: {$gte: *}, administrationPeriodToYear: {$lte: *}}}
+ */
 CalculationSchema.statics.qAdministrationPeriodFromYearToYear = function({administrationPeriodFromYear, administrationPeriodToYear}) {
     return {
         administrationPeriodFromYear: {$gte: administrationPeriodFromYear},
         administrationPeriodToYear: {$lte: administrationPeriodToYear},
+    };
+};
+CalculationSchema.statics.qAdministrationPeriod = function({administrationPeriod}) {
+    return {
+        administrationPeriod: {$eq: administrationPeriod}
     };
 };
 
