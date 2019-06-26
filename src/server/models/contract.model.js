@@ -272,7 +272,7 @@ function  getProcedureTypesEnumObject (procedureType) {
 getCategoryEnumObject = function (category) {
     switch (category) {
         case 'EXTENSION':
-            return {description: "Extensión", key: "EXTENSION"};
+            return {description: "Ampliación", key: "EXTENSION"};
         case 'MODIFICATION':
             return {description: "Modificación", key: "MODIFICATION"};
         case 'ADENDUM':
