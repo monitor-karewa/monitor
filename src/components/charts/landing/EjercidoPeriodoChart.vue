@@ -56,7 +56,7 @@
                         breakpoint: 480,
                         options: {
                             chart: {
-                                width: 500
+//                                width: 250
                             },
                             legend: {
                                 position: 'bottom',
