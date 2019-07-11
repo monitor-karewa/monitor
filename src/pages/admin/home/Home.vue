@@ -29,7 +29,7 @@
                             </div>
                         </div>
                     </div>
-                    <div>
+                    <div v-if="hasAccess('CONTRACTS')">
                         <div class="panel-info">
                             <div class="w-70">
                                 <label>Contratos</label>
@@ -127,7 +127,7 @@
                         <img class="img-fluid" src="@/assets/images/Cards/corner-setting.svg" alt=""/>
                     </div>
                 </div>
-                <div class="col-12 col-md-4 d-grid">
+                <div class="col-12 col-md-4 d-grid" v-if="hasAccess('CONTRACTS')">
                     <div class="card-img-corner">
                         <h1>Contratos</h1>
                         <p>Aquí puedes crear nuevos contratos o editarlos …</p>
@@ -238,7 +238,14 @@
                         return "Diciembre";
                 }
 
-            }
+            },
+            hasAccess (permission) {
+                if (!permission) {
+                    return true;
+                }
+
+                return this.permissions && this.permissions.includes(permission);
+            },
         },
         created() {
         },
