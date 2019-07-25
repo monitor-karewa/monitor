@@ -8,44 +8,44 @@ var securityController = require('./../controllers/security.controller');
  * GET /
  * Renderizar vista principal
  */
-router.get('/', securityController.validatePermission(Contract.permission, 'read'), contractController.index);
+router.get('/', securityController.checkPermission(Contract.permission, 'read'), contractController.index);
 
 /**
  * GET /list
  * Consulta de registros
  */
-router.get('/list', securityController.validatePermission(Contract.permission, 'read'), contractController.list);
+router.get('/list', securityController.checkPermission(Contract.permission, 'read'), contractController.list);
 
 /**
  * POST /save
  * Guardar un registro
  */
-router.post('/save', securityController.validatePermission(Contract.permission, 'edit'), Contract.expressValidator(), contractController.save);
+router.post('/save', securityController.checkPermission(Contract.permission, 'edit'), Contract.expressValidator(), contractController.save);
 
 /**
  * POST /save-updated-docs
  * Actualiza la información de varios registros
  */
-router.post('/save-updated-docs', securityController.validatePermission(Contract.permission, 'edit'), Contract.expressValidator(), contractController.saveUpdatedDocs);
+router.post('/save-updated-docs', securityController.checkPermission(Contract.permission, 'edit'), Contract.expressValidator(), contractController.saveUpdatedDocs);
 
 
 /**
  * POST /delete
  * Borrar un registro
  */
-router.post('/delete', securityController.validatePermission(Contract.permission, 'delete'), contractController.delete);
+router.post('/delete', securityController.checkPermission(Contract.permission, 'delete'), contractController.delete);
 
 
 /**
  * GET /delete
  * Obtains the suppliers available for this contract
  */
-router.get('/retrieve/suppliers', securityController.validatePermission(Contract.permission, 'edit'), contractController.retrieveSuppliers);
+router.get('/retrieve/suppliers', securityController.checkPermission(Contract.permission, 'edit'), contractController.retrieveSuppliers);
 
 /**
  * GET /delete
  * Obtains the suppliers available for this contract
  */
-router.get('/retrieve/administrative-units', securityController.validatePermission(Contract.permission, 'edit'), contractController.retrieveAdministrativeUnits);
+router.get('/retrieve/administrative-units', securityController.checkPermission(Contract.permission, 'edit'), contractController.retrieveAdministrativeUnits);
 
 module.exports = router;

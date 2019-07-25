@@ -115,20 +115,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-12 col-md-6">
-                                            <div class="form-group fg-float">
-                                                <div v-show="!editEnabled" class="fg-line basic-input">
-                                                    <p>{{settings.description}}</p>
-                                                    <label class="fg-label">Descripción</label>
-                                                </div>
-                                                <div v-show="editEnabled" class="fg-line basic-input">
-                                                    <textarea v-model.trim="localSettings.description" type="text"
-                                                              class="form-control fg-input"
-                                                              placeholder="Aquí podrás obtener información sobre los procedimientos de licitaciones para comparar la compra, renta y contratación de serviciosque se realizan en el Monitor Karewa."></textarea>
-                                                    <label class="fg-label">Descripción</label>
-                                                </div>
-                                            </div>
-                                        </div>
+
                                         <div class="col-12 col-md-6">
                                             <div class="form-group fg-float">
                                                 <div v-show="!editEnabled" class="fg-line basic-input">

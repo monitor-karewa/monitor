@@ -414,16 +414,50 @@ let getVariables = function() {
                     $match:{contractUrl: { $exists: true} }
                 },
                 {
-                    $count: "noContracts"
+                    $addFields:{isComplex:true}
                 },
                 {
-                    $project:{ results:"$noContracts", abbreviation:{ $literal : "$NFXXVII" } }
+                    $project:{ period:1, informationDate:1, abbreviation:{ $literal : "$NFXXVII" }, isComplex:1 }
                 }
             ],
             queryDummy:[{
                 $group:{_id: null, myCount: {$sum: 1 } }},
                 { $project:{ result : "$myCount", abbreviation : { $literal : "$NFXXVII"}}
-                }]
+                }],
+            complexFn: function (docs, abbreviation) {
+                if(docs && docs.length){
+                    let totalFormats = 0;
+                    for(let i = 0; i < docs.length; i++){
+                        let periodArray = docs[i].period ? docs[i].period.split(" ") : [];
+                        if(periodArray.length){
+                            let month = 0;
+                            switch(periodArray[0]){
+                                case '1o':
+                                    month = 2// Marzo
+                                    break
+                                case '2o':
+                                    month = 5// Junio
+                                    break
+                                case '3o':
+                                    month = 8// Septiembre
+                                    break
+                                case '4o':
+                                    month = 11// Diciembre
+                                    break
+                            }
+                            let dateToSearch = new Date(Number(periodArray[1]), month + 1, 0);
+                            dateToSearch.setDate(dateToSearch.getDate() + 30);
+
+                            if(docs[i].informationDate && dateToSearch >= docs[i].informationDate){
+                                totalFormats++;
+                            }
+                        }
+                    }
+                    return {result:totalFormats,abbreviation};
+                } else {
+                    return {result:0,abbreviation};
+                }
+            }
         }),
         addOrganizationFilter : function(abbreviation,idOrganization){
             this[abbreviation].query[0].match["organization"] = idOrganization
