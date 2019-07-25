@@ -83,7 +83,7 @@ exports.list = (req, res, next) => {
             {'applicantAdministrativeUnit.name': queryAsRegex},
             {contractNumber: queryAsRegex},
             {contractUrl: search}, //non-regex for urls
-            {'areaInCharge.name': queryAsRegex},
+            {'areaInCharge': queryAsRegex},
             {notes: queryAsRegex},
             {karewaNotes: queryAsRegex},
         ];
@@ -140,7 +140,7 @@ exports.list = (req, res, next) => {
     utils.addLookupRefToAggregatePipeline(aggregate, Supplier, 'supplier');
     utils.addLookupRefToAggregatePipeline(aggregate, AdministrativeUnit, 'administrativeUnit');
     utils.addLookupRefToAggregatePipeline(aggregate, AdministrativeUnit, 'organizerAdministrativeUnit');
-    utils.addLookupRefToAggregatePipeline(aggregate, AdministrativeUnit, 'areaInCharge');
+    // utils.addLookupRefToAggregatePipeline(aggregate, AdministrativeUnit, 'areaInCharge');
     utils.addLookupRefToAggregatePipeline(aggregate, AdministrativeUnit, 'applicantAdministrativeUnit');
     
     aggregate.append({
@@ -391,7 +391,7 @@ exports.save = (req, res, next) => {
                 contract.maxAmount = req.body.maxAmount;
                 contract.totalOrMaxAmount = req.body.totalOrMaxAmount;
                 contract.contractUrl = req.body.contractUrl;
-                contract.areaInCharge = mongoose.Types.ObjectId(req.body.areaInCharge._id);
+                contract.areaInCharge = req.body.areaInCharge;
                 contract.updateDate = req.body.updateDate;
                 contract.notes = req.body.notes;
                 contract.karewaNotes = req.body.karewaNotes;
@@ -463,7 +463,7 @@ exports.save = (req, res, next) => {
                             administrativeUnit :  mongoose.Types.ObjectId(req.body.administrativeUnit._id),
                             organizerAdministrativeUnit :  mongoose.Types.ObjectId(req.body.organizerAdministrativeUnit._id),
                             applicantAdministrativeUnit :  mongoose.Types.ObjectId(req.body.applicantAdministrativeUnit._id),
-                            areaInCharge : mongoose.Types.ObjectId(req.body.areaInCharge._id),
+                            areaInCharge : req.body.areaInCharge
                         });
 
                         contract.administrationPeriodFromYear = Contract.parseAdministrationPeriodFromYear(req.body.administrationPeriod);

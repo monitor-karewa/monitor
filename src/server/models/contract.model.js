@@ -593,9 +593,9 @@ let ContractSchema = new Schema({
     },
     /*Área responsable de la información*/
     areaInCharge: {
-        type: Schema.Types.ObjectId,
-        ref: 'AdministrativeUnit',
-        required: [true, "El campo Área responsable de la información es requerido"],
+        type: String,
+        // ref: 'AdministrativeUnit',
+        // required: [true, "El campo Área responsable de la información es requerido"],
     },
     /*Fecha de actualización*/
     updateDate: {

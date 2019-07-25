@@ -412,7 +412,7 @@ export default {
     "contracts.new.contract-url.placeholder" : "Ingresa la url",
     "contracts.new.contract-url.label" : "Enlace a Contrato",
     "contracts.new.contract-url.sub-label" : "Hipervínculo al documento del contrato y anexos",
-    "contracts.new.responsible-administrative-unit.placeholder" : "Selecciona el área",
+    "contracts.new.responsible-administrative-unit.placeholder" : "Escribe el nombre del área responsable",
     "contracts.new.responsible-administrative-unit.label" : "Área responsable de la información",
     "contracts.new.update-date.placeholder" : "Selecciona la fecha de actualización",
     "contracts.new.update-date.label" : "Fecha de actualización",
