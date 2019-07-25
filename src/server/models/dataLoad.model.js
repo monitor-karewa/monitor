@@ -154,14 +154,14 @@ DataLoadSchema.statics.getSummary = function (dataLoad, details) {
                 skippedAdministrativeUnitsCount++;
             }
     
-            if (rowInfo.areaInCharge.shouldCreateDoc) {
-                if (!addedAdministrativeUnits[rowInfo.areaInCharge.value]) {
-                    addedAdministrativeUnits[rowInfo.areaInCharge.value] = true;
-                    newAdministrativeUnitsCount++;
-                }
-            } else {
-                skippedAdministrativeUnitsCount++;
-            }
+            // if (rowInfo.areaInCharge.shouldCreateDoc) {
+            //     if (!addedAdministrativeUnits[rowInfo.areaInCharge.value]) {
+            //         addedAdministrativeUnits[rowInfo.areaInCharge.value] = true;
+            //         newAdministrativeUnitsCount++;
+            //     }
+            // } else {
+            //     skippedAdministrativeUnitsCount++;
+            // }
         }
 
     });
@@ -181,6 +181,7 @@ DataLoadSchema.statics.dataLoadInfo = function (currentOrganizationId, callback)
 
     this
         .findOne({
+
             organization: currentOrganizationId,
             confirmed: false,
             'deleted.isDeleted': {'$ne': true}
@@ -401,7 +402,7 @@ DataLoadSchema.statics.confirm = function (dataLoad, details, confirmCallback) {
                         }
                         //areaInCharge
                         if (!detail.areaInCharge.valueToSaveOverride) {
-                            contract.areaInCharge = administrativeUnitsMapIdByName[detail.areaInCharge.value];
+                            contract.areaInCharge = detail.areaInCharge.value;
                         }
                         
                         return contract;

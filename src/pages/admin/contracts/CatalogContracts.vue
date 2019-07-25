@@ -462,16 +462,17 @@
                 </div>
 
 
-                <!-- Area in charge -->
-                <div class="form-group fg-float basic-select">
-                    <div class="fg-line">
-                        <select v-model="entry.areaInCharge._id" class="form-control select selectpicker"
-                                data-live-search="true"
-                                :title="$t('contracts.new.responsible-administrative-unit.placeholder')"
-                                data-live-search-placeholder="Realiza una búsqueda..">
-                            <option v-for="administrativeUnit in administrativeUnits" :value="administrativeUnit._id"> {{administrativeUnit.name}}</option>
-                        </select>
-                        <label class="fg-label">{{$t('contracts.new.responsible-administrative-unit.label')}}</label>
+
+                <div class="form-group fg-float subtitle">
+                    <div class="fg-line basic-input">
+                        <input type="text" class="form-control fg-input"
+                               :placeholder="$t('contracts.new.responsible-administrative-unit.placeholder')"
+                               v-model="entry.areaInCharge">
+                        <label class="fg-label">{{$t('contracts.new.responsible-administrative-unit.label')}}
+                            <small></small>
+                            <br>
+                            <!--<strong>{{$t('contracts.new.notes.sub-label')}}</strong>-->
+                        </label>
                     </div>
                     <span v-if="$v.entry.areaInCharge.$invalid  && $v.entry.areaInCharge.$dirty && !$v.entry.areaInCharge.required"
                           class="c-error">{{$t(requiredErrorMessage, {field:$t('contracts.new.responsible-administrative-unit.label')})}}</span>
@@ -668,7 +669,7 @@
                     {label: "contracts.maxAmount", visible: true, field: 'maxAmount'},
                     {label: "contracts.totalOrMaxAmount", visible: true, field: 'totalOrMaxAmount'},
                     {label: "contracts.contractUrl", visible: true, field: 'contractUrl'},
-                    {label: "contracts.areaInCharge", visible: true, field: 'areaInCharge.name'},
+                    {label: "contracts.areaInCharge", visible: true, field: 'areaInCharge'},
                     {label: "contracts.updateDate", visible: true, field: 'updateDate', type: 'date'},
 
                     {label: "general.created-at", visible: true, field: 'createdAt', type: 'date'}
@@ -703,7 +704,7 @@
                     maxAmount: 0,
                     totalOrMaxAmount: "",
                     contractUrl: "",
-                    areaInCharge: {},
+                    areaInCharge: "",
                     updateDate: "",
                     notes : "",
                     karewaNotes: "",
@@ -1051,7 +1052,7 @@
                     this.entry.maxAmount = entry.maxAmount;
                     this.entry.totalOrMaxAmount = entry.totalOrMaxAmount;
                     this.entry.contractUrl = entry.contractUrl;
-                    this.entry.areaInCharge = {...entry.areaInCharge};
+                    this.entry.areaInCharge = entry.areaInCharge;
                     this.entry.updateDate = entry.updateDate;
                     this.entry.notes  = entry.notes;
                     this.entry.karewaNotes = entry.karewaNotes;
