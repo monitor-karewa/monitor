@@ -80,7 +80,7 @@ function _fetchContractsAndTotals(req, res, options = {}, callback) {
             for (let i = 0; i < req.body.filters.administrativeUnits.length; i++) {
                 orBuilder.push({applicantAdministrativeUnit: new mongoose.Types.ObjectId(req.body.filters.administrativeUnits[i]._id)})
                 orBuilder.push({organizerAdministrativeUnit: new mongoose.Types.ObjectId(req.body.filters.administrativeUnits[i]._id)})
-                orBuilder.push({areaInCharge: new mongoose.Types.ObjectId(req.body.filters.administrativeUnits[i]._id)})
+                orBuilder.push({areaInCharge: req.body.filters.administrativeUnits[i]})
             }
             andBuilder.push({$or: orBuilder});
             orBuilder = [];
@@ -154,13 +154,12 @@ let contractsQuery = {};
                 'supplier',
                 'administrativeUnit ',
                 'organizerAdministrativeUnit ',
-                'areaInCharge ',
                 'applicantAdministrativeUnit '
             ]
         });
     } else {
         contractsQuery = Contract.find(query,{_id:0, deleted:0})
-            .populate('supplier administrativeUnit organizerAdministrativeUnit areaInCharge applicantAdministrativeUnit')
+            .populate('supplier administrativeUnit organizerAdministrativeUnit applicantAdministrativeUnit')
             .lean();
     }
     let promiseIterable = [totalsQuery,contractsQuery];
@@ -430,13 +429,13 @@ exports.retrieveAdministrativeUnits = (req, res, next) => {
                 _id : "AdministrativeUnit",
                 organizerAdministrativeUnits : {$push : "$organizerAdministrativeUnit"},
                 applicantAdministrativeUnits : {$push : "$applicantAdministrativeUnit"},
-                areasInCharge : {$push : "$areaInCharge"},
+                // areasInCharge : {$push : "$areaInCharge"},
             }
         },
         { $project:
                 {
                     administrativeUnits:
-                        {  $concatArrays: [ "$organizerAdministrativeUnits", "$applicantAdministrativeUnits", "$areasInCharge" ]  }
+                        {  $concatArrays: [ "$organizerAdministrativeUnits", "$applicantAdministrativeUnits" ]  }
                 }
         },
         {$unwind : "$administrativeUnits"},
