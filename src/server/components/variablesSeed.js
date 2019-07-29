@@ -464,13 +464,60 @@ let getVariables = function () {
                     $project: {result: "$myCount", abbreviation: {$literal: "$NCPJA"}}
                 }]
         }),
+        $NTF: Variable.makeVariable({
+            //contrato y anexos
+            name: "Número total de formatos XXVIII publicados",
+            abbreviation: "$NTF",
+            query: [
+                {
+                    $match: {informationDate: {$exists: true}}
+                },
+                {
+                    $group: { _id: {
+                            period:"$period",
+                            organizerAdministrativeUnit:"$organizerAdministrativeUnit",
+                            procedureType:"$procedureType"
+                        }
+                    }
+                },
+                {
+                    $count: "noFormats"
+                },
+                {
+                    $project: {result: "$noFormats", abbreviation: {$literal: "$NTF"}}
+                },
+            ],
+            queryDummy: [{
+                $group: {_id: null, myCount: {$sum: 1}}
+            },
+                {
+                    $project: {result: "$myCount", abbreviation: {$literal: "$NFXXVII"}}
+                }]
+        }),
         $NFXXVII: Variable.makeVariable({
             //contrato y anexos
             name: "Número de formatos XXVIII publicados a tiempo en el Portal de Transparencia",
             abbreviation: "$NFXXVII",
             query: [
                 {
-                    $match: {contractUrl: {$exists: true}}
+                    $match: {informationDate: {$exists: true}}
+                },
+                {
+                    $group: { _id: {
+                        period:"$period",
+                        organizerAdministrativeUnit:"$organizerAdministrativeUnit",
+                        procedureType:"$procedureType"
+                    },
+                        informationDate:{ $first: "$informationDate"}
+                    }
+                },
+                {
+                    $project: {
+                        period:"$_id.period",
+                        organizerAdministrativeUnit:"$_id.organizerAdministrativeUnit",
+                        procedureType:"$_id.procedureType",
+                        informationDate:1,
+                    }
                 },
                 {
                     $addFields: {isComplex: true}
