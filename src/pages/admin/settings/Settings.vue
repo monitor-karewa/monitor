@@ -143,6 +143,19 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group fg-float">
+                                                <div v-show="!editEnabled" class="fg-line basic-input">
+                                                    <p>{{settings.additionalInformation}}</p>
+                                                    <label class="fg-label">Información adicional de contacto</label>
+                                                </div>
+                                                <div v-show="editEnabled" class="fg-line basic-input">
+                                                    <input v-model.trim="localSettings.additionalInformation" type="text" class="form-control fg-input"
+                                                           placeholder="Información adicional de contacto">
+                                                    <label class="fg-label">Información adicional de contacto</label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -270,6 +283,7 @@
                     contactLocation: '',
                     contactEmail: '',
                     schedule: '',
+                    additionalInformation: '',
                     address: '',
                 },
                 coverFileRef: 'coverFile',
@@ -390,6 +404,7 @@
                 this.localSettings.contactEmail = val.contactEmail || '';  
                 this.localSettings.address = val.address|| '';
                 this.localSettings.schedule = val.schedule || '';
+                this.localSettings.additionalInformation = val.additionalInformation || '';
             },
             handleCoverFileUpload() {
 
