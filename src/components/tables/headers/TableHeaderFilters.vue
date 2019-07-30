@@ -1,5 +1,5 @@
 <template>
-    <div class="dropdown menu-filters">
+    <div class="dropdown menu-filters scroll-dropdown">
         <button class="btn-stroke button-accent m-l-15" type="button" id="dropdownFilters" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Filtrar <i class="zmdi zmdi-caret-down m-r-0 m-l-5 f-18"></i></button>
         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownFilters">
             <ul>
