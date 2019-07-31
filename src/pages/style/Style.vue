@@ -364,7 +364,7 @@ Card image on corner
                             <div class="card-info">
                                 <img class="img-fluid" src="@/assets/images/Cards/providers-vector.svg" alt=""/>
                                 <div>
-                                    <p>Conoce el índice de corrupción del monitor.</p>
+                                    <p>Conoce el índice de riesgo de corrupción del monitor.</p>
                                     <a href="" class="link-to" tabindex="">Ver Índice <i
                                             class="zmdi zmdi-chevron-right"></i></a>
                                 </div>

@@ -28,7 +28,7 @@
                     </li>
                       <li>
                           <router-link to="/calculations/corruption-index">
-                              Índice de corrupción
+                              Índice de riesgo de corrupción
                           </router-link>
                       </li>
                   </div>
