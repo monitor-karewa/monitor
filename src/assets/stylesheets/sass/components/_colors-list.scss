@@ -90,23 +90,23 @@
 	  		background-color: $blue;
 	  		box-shadow: 0 0 0 2px $blue;
 	  	}
+	  	// &:nth-child(10) span {
+	  	// 	background-color: $red;
+	  	// 	box-shadow: 0 0 0 2px $red;
+	  	// }
 	  	&:nth-child(10) span {
-	  		background-color: $red;
-	  		box-shadow: 0 0 0 2px $red;
-	  	}
-	  	&:nth-child(11) span {
 	  		background-color: $pink;
 	  		box-shadow: 0 0 0 2px $pink;
 	  	}
-	  	&:nth-child(12) span {
+	  	&:nth-child(11) span {
 	  		background-color: $gray;
 	  		box-shadow: 0 0 0 2px $gray;
 	  	}
-	  	&:nth-child(13) span {
+	  	&:nth-child(12) span {
 	  		background-color: $lilac;
 	  		box-shadow: 0 0 0 2px $lilac;
 	  	}
-	  	&:nth-child(14) span {
+	  	&:nth-child(13) span {
 	  		background-color: $blue-dark;
 	  		box-shadow: 0 0 0 2px $blue-dark;
 	  	}
