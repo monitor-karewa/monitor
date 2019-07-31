@@ -382,26 +382,28 @@ let ContractSchema = new Schema({
         type: String,
         required: [true, "El campo Ejercicio es requerido"],
         match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.FISCAL_YEAR), 'El campo Ejercicio no cumple con el formato esperado. Ejemplo: 2019'],
-        validate: {
-            validator: function () {
-                let yearContractDate = new Date(this.contractDate).getFullYear();
-                return Number(this.fiscalYear) === yearContractDate
-            },
-            message: props => "La Fecha del contrato no corresponde con el Ejercicio"
-        }
+        //Issue fixed: Eliminar validación de fecha del ejercicio fiscal vs fecha del contrato
+        // validate: {
+        //     validator: function () {
+        //         let yearContractDate = new Date(this.contractDate).getFullYear();
+        //         return Number(this.fiscalYear) === yearContractDate
+        //     },
+        //     message: props => "La Fecha del contrato no corresponde con el Ejercicio"
+        // }
     },
     /* Periodo que se reporta */
     period: {
         type: String,
         required: [true, "El campo Periodo es requerido"],
         match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.PERIOD), 'El campo Periodo no cumple con el formato esperado. Ejemplo: 1o 2019'],
-        validate: {
-            validator: function () {
-                let yearContractDate = new Date(this.contractDate).getFullYear();
-                return this.period.includes(String(yearContractDate));
-            },
-            message: props => "La Fecha del contrato no corresponde con el Periodo"
-        }
+        //Issue fixed: Eliminar validación de fecha del ejercicio fiscal vs fecha del periodo
+        // validate: {
+        //     validator: function () {
+        //         let yearContractDate = new Date(this.contractDate).getFullYear();
+        //         return this.period.includes(String(yearContractDate));
+        //     },
+        //     message: props => "La Fecha del contrato no corresponde con el Periodo"
+        // }
     },
     /* ID / Número de Folio o Nomenclatura / Identificador */
     contractId: {
