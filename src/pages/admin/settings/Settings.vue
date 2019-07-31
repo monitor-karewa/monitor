@@ -223,10 +223,10 @@
                                             <button class="controls" data-theme="blue" @click="setTheme('blue')"></button>
                                             <span :class="blueClass"></span> Azul
                                         </li>
-                                        <li>
+                                        <!--li>
                                             <button class="controls" data-theme="red" @click="setTheme('red')"></button>
                                             <span :class="redClass"></span> Rojo
-                                        </li>
+                                        </li-->
                                         <li>
                                             <button class="controls" data-theme="pink" @click="setTheme('pink')"></button>
                                             <span :class="pinkClass"></span> Rosa
