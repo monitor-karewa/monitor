@@ -6,7 +6,7 @@
                 <!--Titulo-->
                 <div class="col-12 p-0 m-t-20 m-b-20 d-flex">
                     <router-link to="/calculations/corruption-index" class="btn-outline text-unset">
-                        <i class="zmdi zmdi-long-arrow-left"></i>Ir a Índice de corrupción
+                        <i class="zmdi zmdi-long-arrow-left"></i>Ir a Índice de riesgo corrupción
                     </router-link>
                     <router-link to="/resources" class="btn-outline text-unset m-auto-left">
                         Ir a Recursos <i class="zmdi zmdi-long-arrow-right m-r-0 m-l-15"></i>

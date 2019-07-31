@@ -99,6 +99,7 @@
                                     <ul>
                                         <li><i class="zmdi zmdi-pin"></i> {{organization.address}} </li>
                                         <li><i class="zmdi zmdi-time"></i> {{organization.schedule}}</li>
+                                        <li><i class="zmdi zmdi-info-outline"></i> {{organization.additionalInformation}}</li>
                                     </ul>
                                 </div>
                             </div>
