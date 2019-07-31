@@ -565,7 +565,7 @@
 
 
                                 <span class="border-lines col-12">
-                    <label>Índice de corrupción <i id="indice-tooltip" class="zmdi zmdi-help-outline"></i></label>
+                    <label>Índice de riesgo de corrupción <i id="indice-tooltip" class="zmdi zmdi-help-outline"></i></label>
                                     <!-- TOOLTIP -->
                      <template id="help-tooltip-indice">
                       <div class="help-tooltip-div">
@@ -806,7 +806,7 @@
                         <div class="card-info">
                             <img class="img-fluid" src="@/assets/images/Cards/providers-vector.svg" alt="" />
                             <div>
-                                <p>Conoce el índice de corrupción del monitor.</p>
+                                <p>Conoce el índice de riesgo de corrupción del monitor.</p>
                                 <a href="" class="link-to" tabindex="">Ver Índice <i class="zmdi zmdi-chevron-right"></i></a>
                             </div>
                         </div>
@@ -838,7 +838,7 @@
                     <li><a href="#">Inicio</a></li>
                     <li><a href="#">Proveedores</a></li>
                     <li><a href="#">Contratos</a></li>
-                    <li><a href="#">Índice de corrupción</a></li>
+                    <li><a href="#">Índice de riesgo de corrupción</a></li>
                   </div>
                   <div class="col-6">
 

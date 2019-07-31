@@ -32,7 +32,7 @@
                             <div class="dropdown p-l-10">
                                 <button class="btn-raised button-accent text-capi m-l-10" type="button" id="dropdownDownloadOptions"
                                         data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="zmdi zmdi-download"></i> DESCARGAR DATOS DEl ÍNDICE DE CORRUPCIÓN
+                                    <i class="zmdi zmdi-download"></i> DESCARGAR DATOS DEl ÍNDICE DE RIESGO DE CORRUPCIÓN
 
                                 </button>
                                 <div class="dropdown-menu dropdown-options dropdown-menu-right"
@@ -96,17 +96,30 @@
                         </div>
                         <div class="col-md-8 col-xs-12">
                             <p class="f-14 c-plain_text principal-font-regular">
+                                <strong class="f-16">¿Qué es?</strong>
+                                <br>
+                                <!--<strong class="principal-font-semibold">KAREWA ES AMAR CHIHUAHUA, en lo sucesivo (Karewa)</strong>, que de acuerdo con la ley aplicable en México y que es la Ley Federal de Protección de Datos Personales en Posesión de los Particulares, (LFPDPPP) se entiende como (el “Responsable”) ya que decide sobre el tratamiento de los datos personales que recaba de usted como “Titular” de los mismos, entendiéndose como tal la persona física a quien corresponden los datos personales, y por éstos últimos cualquier información concerniente a una persona física identificada o identificable. Los datos personales pueden recabarse en ciertas páginas del sitio http://karewa.org/, en lo sucesivo el (sitio web).-->
+                                <!--<br>-->
+                                <!--<br>-->
+                                El Índice de Riesgo de Corrupción es una variable que mide, en una escala de cero (alto riesgo)
+                                a cien (bajo riesgo), los niveles de riesgo de corrupción en los procedimientos de
+                                contrataciones públicas en un gobierno determinado, y consiste en un índice compuesto que
+                                se basa en la información pública de las fuentes oficiales de transparencia.
+                                <br>
+                                <br>
                                 <strong class="f-16">¿Qué significa que el índice de riesgo de corrupción sea <span :style="{color: corruptionLevelColor}">{{corruptionLevel}}</span>?</strong>
                                 <br>
                                 <!--<strong class="principal-font-semibold">KAREWA ES AMAR CHIHUAHUA, en lo sucesivo (Karewa)</strong>, que de acuerdo con la ley aplicable en México y que es la Ley Federal de Protección de Datos Personales en Posesión de los Particulares, (LFPDPPP) se entiende como (el “Responsable”) ya que decide sobre el tratamiento de los datos personales que recaba de usted como “Titular” de los mismos, entendiéndose como tal la persona física a quien corresponden los datos personales, y por éstos últimos cualquier información concerniente a una persona física identificada o identificable. Los datos personales pueden recabarse en ciertas páginas del sitio http://karewa.org/, en lo sucesivo el (sitio web).-->
                                 <!--<br>-->
                                 <!--<br>-->
-                                La información se analiza automáticamente y el sistema indica que existe un <span style="color: #19babd;">{{corruptionLevelRisk}}</span> de que ocurran casos de corrupción. 
+                                La información se analiza automáticamente y el sistema indica que existe un <span style="color: #19babd;">{{corruptionLevelRisk}}</span> de que ocurran casos de corrupción.
                                 <br>
                                 <br>
                                 <strong class="f-16">¿Cómo se calcula? </strong>
                                 <br>
-                                 Se calcula analizando el número de adjudicaciones directas contra el número de invitaciones al proveedor y de licitaciones públicas. En adición, se toman en cuenta diferentes variables para generar un índice exacto.
+                                El índice de Riesgo de Corrupción se calcula analizando la información de transparencia de las
+                                contrataciones públicas, tomando en cuenta diferentes variables para generar un índice
+                                exacto.
 
                                 Si deseas conocer más sobre la plataforma, dirígete a nuestras recursos haciendo <router-link to="/resources">clic aquí</router-link>.
                                 <br>
@@ -180,15 +193,15 @@
         },
         limitMax: true,
         limitMin: true,
-        colorStart: '#6ec284',
+        colorStart: '#eb6262',
         generateGradient: true,
         percentColors: [
 //            [0.0, "#6ec284"], [0.50, "#6ec284"],
 //            [0.51, "#ffc043"], [0.75, "#ffc043"],
 //            [0.76, "#eb6262"], [1.0, "#eb6262"]
-            [0.0, RISK_COLORS.LOW], [0.50, RISK_COLORS.LOW],
+            [0.0, RISK_COLORS.HIGH], [0.50, RISK_COLORS.HIGH],
             [0.51, RISK_COLORS.MEDIUM], [0.75, RISK_COLORS.MEDIUM],
-            [0.76, RISK_COLORS.HIGH], [1.0, RISK_COLORS.HIGH]
+            [0.76, RISK_COLORS.LOW], [1.0, RISK_COLORS.LOW]
         ]
     };
     
@@ -251,20 +264,20 @@
             },
             corruptionLevel() {
                 if (this.tachometerValue <= 50) {
-                    return 'BAJO'
+                    return 'ALTO'
                 } else if (this.tachometerValue <= 75) {
                     return 'MEDIO'
                 } else {
-                    return 'ALTO'
+                    return 'BAJO'
                 }
             },
             corruptionProbability() {
                 if (this.tachometerValue <= 50) {
-                    return 'BAJA'
+                    return 'ALTA'
                 } else if (this.tachometerValue <= 75) {
                     return 'MEDIA'
                 } else {
-                    return 'ALTA'
+                    return 'BAJA'
                 }
             },
             corruptionLevelRisk() {

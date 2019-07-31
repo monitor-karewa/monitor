@@ -32,7 +32,7 @@
             <div class="card-info">
                 <img class="img-fluid" src="@/assets/images/Cards/providers-vector.svg" alt=""/>
                 <div>
-                    <p>Conoce el índice de corrupción del monitor.</p>
+                    <p>Conoce el índice de riesgo de corrupción del monitor.</p>
                     <router-link to="/calculations/corruption-index" class="link-to" tabindex="">
                         Ver Índice de Riesgo de Corrupción <i class="zmdi zmdi-chevron-right"></i>
                     </router-link>
