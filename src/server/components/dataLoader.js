@@ -471,7 +471,8 @@ class ContractExcelReader {
                             } else if (utils.isDate(value)) {
                                 fieldInfo.value = value;
                             } else {
-                                fieldInfo.value = utils.parseDate(value, true);
+                                //Issue fixed: Detección parcial de fechas (Formato enviado es dd/mm/yyyy, pero el sistema espera mm/dd/yyyy)
+                                fieldInfo.value = utils.parseDate(value, false); //Note: false for dd/mm/yyyy
                             }
                             break;
                         case Number:
