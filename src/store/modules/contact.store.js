@@ -8,7 +8,8 @@ const state = {
     messageSent : false,
     organization : {
         schedule : "",
-        address : ""
+        address : "",
+        additionalInformation : ""
     }
 
 };
@@ -37,9 +38,10 @@ const mutations = {
     SET_SENT_STATUS(state, sent){
         state.messageSent = sent;
     },
-    SET_ORGANIZATION(state, {schedule, address}){
+    SET_ORGANIZATION(state, {schedule, address, additionalInformation}){
         state.organization.schedule = schedule;
         state.organization.address = address;
+        state.organization.additionalInformation = additionalInformation;
     }
 };
 
