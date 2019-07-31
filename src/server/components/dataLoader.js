@@ -341,7 +341,7 @@ class ContractExcelReader {
                                 }
                             }
 
-                            //Check for reference check strategy override
+                            //Check for validation strategy override
                             //[!v#] at the start of a string overrides the validation strategy, where # is a number from 0 to 1
                             if (fieldInfo.value && fieldInfo.value.length) {
                                 let regexMatchRefStrategy = fieldInfo.value.match("^!v[0-1]");
@@ -1233,22 +1233,23 @@ class ContractExcelReader {
                         match: {
                             regexStr: CONTRACT_VALIDATION_REGEX_DICT.PERIOD
                         },
-                        validator: function (rowInfo, callback) {
-                            if (rowInfo.contractDate.value && rowInfo.period.value) {
-                                let yearContractDate = new Date(rowInfo.contractDate.value).getFullYear();
-                                let isValid = rowInfo.period.value.includes(String(yearContractDate));
+                        //Issue fixed: Eliminar validación de fecha del ejercicio fiscal vs fecha del periodo
+                        // validator: function (rowInfo, callback) {
+                        //     if (rowInfo.contractDate.value && rowInfo.period.value) {
+                        //         let yearContractDate = new Date(rowInfo.contractDate.value).getFullYear();
+                        //         let isValid = rowInfo.period.value.includes(String(yearContractDate));
 
-                                let errorMessage = null;
+                        //         let errorMessage = null;
                                 
-                                if (!isValid) {
-                                    errorMessage = "La fecha del periodo no coincide con la fecha del contrato.";
-                                }
+                        //         if (!isValid) {
+                        //             errorMessage = "La fecha del periodo no coincide con la fecha del contrato.";
+                        //         }
                                 
-                                return callback(null, errorMessage);
-                            }
+                        //         return callback(null, errorMessage);
+                        //     }
 
-                            return callback();
-                        },
+                        //     return callback();
+                        // },
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_ID:
