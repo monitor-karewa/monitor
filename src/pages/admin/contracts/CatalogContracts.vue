@@ -672,7 +672,7 @@
                     {label: "contracts.areaInCharge", visible: true, field: 'areaInCharge'},
                     {label: "contracts.updateDate", visible: true, field: 'updateDate', type: 'date'},
 
-                    {label: "general.created-at", visible: true, field: 'createdAt', type: 'date'}
+                    {label: "general.created-at", visible: false, field: 'createdAt', type: 'date'}
                 ],
                 entry: {
                     supplier: {},
@@ -1065,11 +1065,21 @@
 
                     //Update date through the datepicker API to avoid showing hours, minutes, seconds, timezone, etc.
                     this.$nextTick(() => {
-                        $('#announcementDate').datepicker('update', new Date(entry.announcementDate));
-                        $('#clarificationMeetingDate').datepicker('update', new Date(entry.clarificationMeetingDate));
-                        $('#contractDate').datepicker('update', new Date(entry.contractDate));
-                        $('#updateDate').datepicker('update', new Date(entry.updateDate));
-                        $('#informationDate').datepicker('update', new Date(entry.informationDate));
+                        if (entry.announcementDate) {
+                            $('#announcementDate').datepicker('update', new Date(entry.announcementDate));
+                        }
+                        if (entry.clarificationMeetingDate) {
+                            $('#clarificationMeetingDate').datepicker('update', new Date(entry.clarificationMeetingDate));
+                        }
+                        if (entry.contractDate) {
+                            $('#contractDate').datepicker('update', new Date(entry.contractDate));
+                        }
+                        if (entry.updateDate) {
+                            $('#updateDate').datepicker('update', new Date(entry.updateDate));
+                        }
+                        if (entry.informationDate) {
+                            $('#informationDate').datepicker('update', new Date(entry.informationDate));
+                        }
                     });
 
             });

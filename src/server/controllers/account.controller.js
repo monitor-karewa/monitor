@@ -12,6 +12,8 @@ const encryptionManager = require('./../components/encryptionManager');
 
 const {USER_PERMISSIONS, User} = require('./../models/user.model');
 
+const deletedSchema = require('./../models/schemas/deleted.schema');
+
 let crypto = require('crypto'),
     algorithm = 'aes-256-ctr',
     password = config.app.secret;
@@ -112,7 +114,12 @@ exports.resetPassword = (req, res, next) => {
     //
     //     if (body.success) {
 
-    User.findOne({email: userEmail}).lean().exec((err, user) => {
+    let qNotDeleted = deletedSchema.qNotDeleted();
+
+    let queryFind = {email: userEmail};
+    queryFind = {...queryFind, ...qNotDeleted};
+
+    User.findOne(queryFind).lean().exec((err, user) => {
         if (err || !user) {
             if (err) {
                 logger.error(err, req, 'userController#doResetPassword', 'Hubo un error al buscar el usuario');
@@ -129,6 +136,8 @@ exports.resetPassword = (req, res, next) => {
             };
 
             let query = {_id: user._id};
+            query = {...query, ...qNotDeleted};
+
             //Save the token to the db to validate later 
             User.updateOne(query, {$set: update}, {}, (err) => {
                 if (err) {
