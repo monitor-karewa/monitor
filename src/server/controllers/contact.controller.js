@@ -60,7 +60,7 @@ exports.contact = (req, res, next) => {
 
 exports.loadInfo = (req,res, next) => {
     Organization.findOne({_id: req.currentOrganizationId})
-        .select('address schedule')
+        .select('address schedule additionalInformation')
         .lean()
         .exec((err, organization) => {
             if (err) {
