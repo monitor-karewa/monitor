@@ -24,7 +24,7 @@
                         <i class="zmdi zmdi-long-arrow-left"></i>Ir a Proveedores
                     </router-link>
                     <router-link to="/calculations/corruption-index" class="btn-outline text-unset m-auto-left">
-                        Ir a Índice de Corrupción <i class="zmdi zmdi-long-arrow-right m-r-0 m-l-15"></i>
+                        Ir a Índice de Riesgo de Corrupción <i class="zmdi zmdi-long-arrow-right m-r-0 m-l-15"></i>
                     </router-link>
                 </div>
 

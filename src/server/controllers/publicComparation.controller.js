@@ -520,11 +520,11 @@ exports.download = (req, res, next) => {
                         }
 
                         if (corruptionIndex.result <= 50) {
-                            corruptionIndex.corruptionLevel = 'BAJO'
+                            corruptionIndex.corruptionLevel = 'ALTO'
                         } else if (corruptionIndex.result <= 75) {
                             corruptionIndex.corruptionLevel = 'MEDIO'
                         } else {
-                            corruptionIndex.corruptionLevel = 'ALTO'
+                            corruptionIndex.corruptionLevel = 'BAJO'
                         }
 
 
@@ -620,7 +620,7 @@ function downloadXls(req, res, corruptionIndex){
             .setFileName('indice-corrupcion')
             .exportToFileExtraSheets(req, res, excelInfo);
     } catch(err){
-        logger.error(err,req,"publicComparition.controller#downloadXls","Error intentando crear el archivo xls del índice de corrupción")
+        logger.error(err,req,"publicComparition.controller#downloadXls","Error intentando crear el archivo xls del índice de riesgo de corrupción")
     }
 };
 
@@ -710,7 +710,7 @@ let downloadPDF = (req, res, corruptionIndex) => {
     new PDFExporter()
         .setFileName('monitor-karewa-indice-corrupcion.pdf')
         .addHeadersToPDF(headers)
-        .addTitleToPDF({text:"Índice de corrupción", style:'title'})
+        .addTitleToPDF({text:"Índice de riesgo de corrupción", style:'title'})
         .addContentToPDF(generalInfoTable)
         .addContentToPDF(variablesTable)
         .addFooterToPDF()
@@ -889,11 +889,11 @@ let downloadComparisonXls = (req, res, comparison) => {
                 },
             ])
             .setDocs(comparison)
-            .setTitle('Comparación índice de corrupción')
+            .setTitle('Comparación índice de riesgo de corrupción')
             .setFileName('comparacion-indice-corrupcion')
             .exportToFileExtraSheets(req, res, excelInfo);
     } catch(err){
-        logger.error(err,req,"publicComparition.controller#downloadXls","Error intentando crear el archivo xls del índice de corrupción")
+        logger.error(err,req,"publicComparition.controller#downloadXls","Error intentando crear el archivo xls del índice de riesgo de corrupción")
     }
 };
 
@@ -1055,7 +1055,7 @@ let downloadComparisonPDF = (req, res, comparison) => {
     new PDFExporter()
         .setFileName('monitor-karewa-comparacion-indice-corrupcion.pdf')
         .addHeadersToPDF(headers)
-        .addTitleToPDF({text:"Comparación Índice de corrupción", style:'title'})
+        .addTitleToPDF({text:"Comparación Índice de riesgo de corrupción", style:'title'})
         .addContentToPDF(generalInfoTable)
         .addContentToPDF(totalsTable)
         .addContentToPDF(countsTable)
@@ -1066,10 +1066,10 @@ let downloadComparisonPDF = (req, res, comparison) => {
 
 let _getCorruptionLevel = (value) =>{
     if (value <= 50) {
-        return 'BAJO'
+        return 'ALTO'
     } else if (value <= 75) {
         return 'MEDIO'
     } else {
-        return 'ALTO'
+        return 'BAJO'
     }
 };

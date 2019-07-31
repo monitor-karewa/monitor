@@ -65,7 +65,7 @@
                         to: '/contracts'
                     },
                     {
-                        name: 'Índice de Corrupción',
+                        name: 'Índice de Riesgo de Corrupción',
                         to: '/calculations/corruption-index'
                     },
                     {
