@@ -53,6 +53,10 @@ organizationSchema = mongoose.Schema({
         ref: 'File',
         required: false
     },
+    welcomeTitle: {
+        type: String,
+        default: "Bienvenido a:"
+    },
     title: {
         type: String,
         required: true,

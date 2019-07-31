@@ -60,12 +60,12 @@
                                                  :src="coverSrc"
                                                  alt="Cover"/>
                                             <div class="info" v-show="!editEnabled">
-                                                <small>Bienvenido a</small>
+                                                <small v-html="localSettings.welcomeTitle || defaultWelcomeTitle"></small>
                                                 <label v-html="settings.title || defaultTitle"></label>
                                                 <p v-html="settings.description || defaultDescription"></p>
                                             </div>
                                             <div class="info" v-show="editEnabled">
-                                                <small>Bienvenido a</small>
+                                                <small v-html="localSettings.welcomeTitle || defaultWelcomeTitle"></small>
                                                 <label v-html="localSettings.title || defaultTitle"></label>
                                                 <p v-html="localSettings.description || defaultDescription"></p>
                                             </div>
@@ -73,6 +73,19 @@
                                     </div>
 
                                     <div class="row">
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group fg-float">
+                                                <div v-show="!editEnabled" class="fg-line basic-input">
+                                                    <p>{{settings.welcomeTitle}}</p>
+                                                    <label class="fg-label">Texto de bienvenida</label>
+                                                </div>
+                                                <div v-show="editEnabled" class="fg-line basic-input">
+                                                    <input v-model.trim="localSettings.welcomeTitle" type="text" class="form-control fg-input"
+                                                           placeholder="Texto de bienvenida">
+                                                    <label class="fg-label">Texto de bienvenida</label>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-12 col-md-6">
                                             <div class="form-group fg-float">
                                                 <div v-show="!editEnabled" class="fg-line basic-input">
@@ -285,6 +298,7 @@
                     schedule: '',
                     additionalInformation: '',
                     address: '',
+                    welcomeTitle: ''
                 },
                 coverFileRef: 'coverFile',
                 coverFile: null,
@@ -296,6 +310,7 @@
                 ],
                 defaultTitle: 'Monitor <strong>Karewa</strong>',
                 defaultDescription: 'Aquí podras obtener información sobre los procedimientos de contrataciones públicas, incluyendo la compra, renta y contratación de servicios que se realizan en el Municipio de Chihuahua',
+                defaultWelcomeTitle: 'Bienvenido a '
             }
         },
         components: {
@@ -405,6 +420,7 @@
                 this.localSettings.address = val.address|| '';
                 this.localSettings.schedule = val.schedule || '';
                 this.localSettings.additionalInformation = val.additionalInformation || '';
+                this.localSettings.welcomeTitle = val.welcomeTitle || '';
             },
             handleCoverFileUpload() {
 

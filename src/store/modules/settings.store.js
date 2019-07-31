@@ -9,7 +9,8 @@ const state = {
         contactEmail: '',
         address: '',
         schedule: '',
-        additionalInformation: ''
+        additionalInformation: '',
+        welcomeTitle: ''
     },
     lastUpdate : undefined
 };
@@ -21,6 +22,7 @@ const actions = {
     LOAD_SETTINGS ({commit}) {
         settingsApi.loadSettings({}, (result) => {
             if (result.data && !result.data.error && result.data.data) {
+                console.log(result.data);
                 commit('SETTINGS_UPDATED', result.data.data);
             } else {
                 tShow(i18n.t('settings.load-settings.error'), 'danger');
@@ -49,8 +51,8 @@ const actions = {
         });
     },
     
-    CHANGE_SETTINGS ({commit}, {session, title, description, contactLocation, contactEmail, address, schedule, additionalInformation}) {
-        settingsApi.changeSettings({title, description, contactLocation, contactEmail, address, schedule, additionalInformation}, (result) => {
+    CHANGE_SETTINGS ({commit}, {session, title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle}) {
+        settingsApi.changeSettings({title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle}, (result) => {
             if (result.data && !result.data.error && result.data.data) {
                 tShow(i18n.t('settings.change-settings.update.success'), 'success');
 
@@ -90,7 +92,7 @@ const actions = {
 };
 
 const mutations = {
-    SETTINGS_UPDATED (state, {title, description, contactLocation, contactEmail, address, schedule, additionalInformation, updatedAt}) {
+    SETTINGS_UPDATED (state, {title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle, updatedAt}) {
         state.settings.title = title;
         state.settings.description = description;
         state.settings.contactLocation = contactLocation;
@@ -98,6 +100,7 @@ const mutations = {
         state.settings.address = address;
         state.settings.schedule= schedule;
         state.settings.additionalInformation = additionalInformation;
+        state.settings.welcomeTitle = welcomeTitle;
         state.lastUpdate = updatedAt;
     }
 };
