@@ -1211,19 +1211,20 @@ class ContractExcelReader {
                         match: {
                             regexStr: CONTRACT_VALIDATION_REGEX_DICT.FISCAL_YEAR 
                         },
-                        validator: function(rowInfo, callback){
-                            let yearContractDate = new Date(rowInfo.contractDate.value).getFullYear();
-                            let fiscalYear = Number(rowInfo.fiscalYear.value);
-                            let isValid = yearContractDate === fiscalYear;
+                        //Issue fixed: Eliminar validación de fecha del ejercicio fiscal vs fecha del contrato
+                        // validator: function(rowInfo, callback){
+                        //     let yearContractDate = new Date(rowInfo.contractDate.value).getFullYear();
+                        //     let fiscalYear = Number(rowInfo.fiscalYear.value);
+                        //     let isValid = yearContractDate === fiscalYear;
 
-                            let errorMessage = null;
-                            if (!isValid) {
-                                //TODO: i18n
-                                errorMessage = 'La fecha del ejercicio fiscal no coincide con el fecha del contrato.';
-                            }
+                        //     let errorMessage = null;
+                        //     if (!isValid) {
+                        //         //TODO: i18n
+                        //         errorMessage = 'La fecha del ejercicio fiscal no coincide con el fecha del contrato.';
+                        //     }
 
-                            return callback(null, errorMessage);
-                        }
+                        //     return callback(null, errorMessage);
+                        // }
                     }, callback);
                     break;
                 case C_IDS.PERIOD:

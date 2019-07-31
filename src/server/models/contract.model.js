@@ -382,13 +382,13 @@ let ContractSchema = new Schema({
         type: String,
         required: [true, "El campo Ejercicio es requerido"],
         match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.FISCAL_YEAR), 'El campo Ejercicio no cumple con el formato esperado. Ejemplo: 2019'],
-        validate: {
-            validator: function () {
-                let yearContractDate = new Date(this.contractDate).getFullYear();
-                return Number(this.fiscalYear) === yearContractDate
-            },
-            message: props => "La Fecha del contrato no corresponde con el Ejercicio"
-        }
+        // validate: {
+        //     validator: function () {
+        //         let yearContractDate = new Date(this.contractDate).getFullYear();
+        //         return Number(this.fiscalYear) === yearContractDate
+        //     },
+        //     message: props => "La Fecha del contrato no corresponde con el Ejercicio"
+        // }
     },
     /* Periodo que se reporta */
     period: {
