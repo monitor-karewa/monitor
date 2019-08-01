@@ -48,6 +48,8 @@ DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
         return null;
     }
 
+    let currentDate = new Date();
+
     return {
         detail: detail,
         // supplierId: 
@@ -121,6 +123,8 @@ DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
             amountExceeded : detail.amountExceeded.value,
             
             deleted: {isDeleted: false},
+            createdAt: currentDate,
+            updatedAt: currentDate,
         }
     };
 };
