@@ -35,6 +35,7 @@ export default {
         // state.currentOrganization.contactEmail = contactEmail;
         // if (contactEmail) {
         // }
+        
         if (welcomeTitle) {
             state.currentOrganization.welcomeTitle = welcomeTitle;
         }

@@ -38,7 +38,7 @@ const actions = {
             }
         }, (result) => {
             if (result.data && !result.data.error && result.data.data) {
-                tShow(i18n.t('settings.change-cover.update.success'), 'danger');
+                tShow(i18n.t('settings.change-cover.update.success'), 'success');
                 session.set('currentOrganizationCover', result.data.data.cover);
                 commit('CURRENT_ORGANIZATION', result.data.data, {root: true});
             } else {

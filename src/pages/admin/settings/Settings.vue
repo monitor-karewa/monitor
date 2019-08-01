@@ -60,14 +60,14 @@
                                                  :src="coverSrc"
                                                  alt="Cover"/>
                                             <div class="info" v-show="!editEnabled">
-                                                <small v-html="localSettings.welcomeTitle || defaultWelcomeTitle"></small>
-                                                <label v-html="settings.title || defaultTitle"></label>
-                                                <p v-html="settings.description || defaultDescription"></p>
+                                                <small :class="'welcomeTitle'" v-html="settings.welcomeTitle || defaultWelcomeTitle"></small>
+                                                <label :class="'title'" v-html="settings.title || defaultTitle"></label>
+                                                <p :class="'description'" v-html="settings.description || defaultDescription"></p>
                                             </div>
                                             <div class="info" v-show="editEnabled">
-                                                <small v-html="localSettings.welcomeTitle || defaultWelcomeTitle"></small>
-                                                <label v-html="localSettings.title || defaultTitle"></label>
-                                                <p v-html="localSettings.description || defaultDescription"></p>
+                                                <small :class="'welcomeTitle'" v-html="localSettings.welcomeTitle || defaultWelcomeTitle"></small>
+                                                <label :class="'title'" v-html="localSettings.title || defaultTitle"></label>
+                                                <p :class="'description'" v-html="localSettings.description || defaultDescription"></p>
                                             </div>
                                         </div>
                                     </div>
@@ -274,6 +274,44 @@
 
 
 <style>
+
+    .description {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.88;
+            text-align: center;
+            max-width: 780px;
+            margin: auto;
+            overflow: hidden;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            background-color: rgba(0,0,0,0.3); 
+    }
+
+    .title {
+        font-size: 60px;
+        font-weight: normal;
+        line-height: normal;
+        text-align: center;
+        background-color: rgba(0,0,0,0.3);
+        max-width: 780px;
+        margin: auto;
+    }
+
+    .welcomeTitle {
+        font-size: 20px;
+        font-weight: bold;
+        line-height: normal;
+        text-align: center;
+        margin-bottom: 0;
+        background-color: rgba(0,0,0,0.3);
+        max-width: 780px;
+        margin: auto;  
+        color: white;   
+    }
 </style>
 
 <script>

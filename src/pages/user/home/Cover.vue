@@ -69,7 +69,7 @@
             -webkit-box-orient: vertical;
             text-overflow: ellipsis;
             overflow: hidden;
-            background-color: rgba(0,0,0,0.5);
+            background-color: rgba(0,0,0,0.3); 
     }
 
     .title {
@@ -77,7 +77,7 @@
         font-weight: normal;
         line-height: normal;
         text-align: center;
-        background-color: rgba(0,0,0,0.5);
+        background-color: rgba(0,0,0,0.3);
         max-width: 780px;
         margin: auto;
     }
@@ -88,9 +88,9 @@
         line-height: normal;
         text-align: center;
         margin-bottom: 0;
-        background-color: rgba(0,0,0,0.5);
+        background-color: rgba(0,0,0,0.3);
         max-width: 780px;
-        margin: auto;
+        margin: auto;     
     }
 
 
