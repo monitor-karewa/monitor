@@ -10,19 +10,19 @@
                     <!--<img src="@/assets/images/Backgrounds/test-cover-page.svg" alt="">-->
                 </div>
                 <div class="neutral-width">
-                    <div class=" info">
+                    <div class="info">
                         <!--<h3>{{$t('general.welcome-to')}}</h3>-->
                         <!--&lt;!&ndash;<h1>Monitor <strong>Karewa</strong></h1>&ndash;&gt;-->
                         <!--<h1 v-html="$t('general.app.name.html-strong')"></h1>-->
                         <!--<div class="divider"></div>-->
                         <!--&lt;!&ndash;<p>Aquí podrás obtener información sobre los procedimientos de licitaciones para consultar la compra, renta y contratación de servicios que se realizan en el Municipio de Chihuahua.</p>&ndash;&gt;-->
                         <!--<p>{{$t('general.app.description')}}</p>-->
-                        <h3>{{$t('general.welcome-to')}}</h3>
+                        <h3 :class="currentOrganization._id != '' ? 'welcomeTitle' : ''" v-html="currentOrganization.welcomeTitle || defaultWelcomeTitle"></h3>
                         <!--<h1>Monitor <strong>Karewa</strong></h1>-->
-                        <h1 v-html="currentOrganization.title || defaultTitle"></h1>
+                        <h1 :class="currentOrganization._id != '' ? 'title' : ''" v-html="currentOrganization.title || defaultTitle"></h1>
                         <div class="divider"></div>
                         <!--<p>Aquí podrás obtener información sobre los procedimientos de licitaciones para consultar la compra, renta y contratación de servicios que se realizan en el Municipio de Chihuahua.</p>-->
-                        <p v-html="currentOrganization.description || defaultDescription"></p>
+                        <p :class="currentOrganization._id != '' ? 'description' : ''" v-html="currentOrganization.description || defaultDescription"></p>
 
                     </div>
 
@@ -55,7 +55,47 @@
         </section>
     </div>
 </template>
-<style></style>
+<style>
+    .description {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.88;
+            text-align: center;
+            max-width: 780px;
+            margin: auto;
+            overflow: hidden;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            background-color: rgba(0,0,0,0.5);
+    }
+
+    .title {
+        font-size: 60px;
+        font-weight: normal;
+        line-height: normal;
+        text-align: center;
+        background-color: rgba(0,0,0,0.5);
+        max-width: 780px;
+        margin: auto;
+    }
+
+    .welcomeTitle {
+        font-size: 20px;
+        font-weight: bold;
+        line-height: normal;
+        text-align: center;
+        margin-bottom: 0;
+        background-color: rgba(0,0,0,0.5);
+        max-width: 780px;
+        margin: auto;
+    }
+
+
+
+</style>
 <script>
 
     import OrganizationSelector from '@/components/general/OrganizationSelector';
@@ -74,6 +114,7 @@
                 defaultRedirectTo: '/',
                 defaultTitle: 'Monitor <strong>Karewa</strong>',
                 defaultDescription: 'Aquí podras obtener información sobre los procedimientos de contrataciones públicas, incluyendo la compra, renta y contratación de servicios que se realizan en el Municipio de Chihuahua',
+                defaultWelcomeTitle: 'Bienvenido a'
             }
         },
         components: {

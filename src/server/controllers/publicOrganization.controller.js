@@ -16,7 +16,7 @@ const deletedSchema = require('./../models/schemas/deleted.schema');
 exports.list = (req, res, next) => {
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
 
-    paginationOptions.select = 'name shortName color theme cover title description contactEmail address schedule';
+    paginationOptions.select = 'name shortName color theme cover title description contactEmail address schedule additionalInformation welcomeTitle';
     paginationOptions.limit = 999999;//no limit per page
 
     let query = {};

@@ -22,7 +22,6 @@ const actions = {
     LOAD_SETTINGS ({commit}) {
         settingsApi.loadSettings({}, (result) => {
             if (result.data && !result.data.error && result.data.data) {
-                console.log(result.data);
                 commit('SETTINGS_UPDATED', result.data.data);
             } else {
                 tShow(i18n.t('settings.load-settings.error'), 'danger');
