@@ -88,7 +88,7 @@
 
 
                             <span class="border-lines col-12">
-                                <label>Índice de corrupción {{detailRight.corruptionIndex.administrationPeriod+ '/'+ detailLeft.corruptionIndex.administrationPeriod}}<i id="corruption-index-tooltip" class="zmdi zmdi-help-outline"></i></label>
+                                <label>Índice de riesgo de corrupción {{detailRight.corruptionIndex.administrationPeriod+ '/'+ detailLeft.corruptionIndex.administrationPeriod}}<i id="corruption-index-tooltip" class="zmdi zmdi-help-outline"></i></label>
                                 <div id="help-tooltip-corruption-index-content" class="d-none">
                                     <div class="help-tooltip-div">
                                         <label>¿Qué significa esto?</label>
@@ -380,9 +380,9 @@
         colorStart: '#6ec284',
         generateGradient: true,
         percentColors: [
-            [0.0, "#6ec284"], [0.50, "#6ec284"],
+            [0.0, "#eb6262"], [0.50, "#eb6262"],
             [0.51, "#ffc043"], [0.75, "#ffc043"],
-            [0.76, "#eb6262"], [1.0, "#eb6262"]
+            [0.76, "#6ec284"], [1.0, "#6ec284"]
         ]
     };
 
@@ -443,11 +443,11 @@
             },
             corruptionLevel(value) {
                 if (value <= 50) {
-                    return 'BAJO'
+                    return 'ALTO'
                 } else if (value <= 75) {
                     return 'MEDIO'
                 } else {
-                    return 'ALTO'
+                    return 'BAJO'
                 }
             },
             initTextLevel(elementId,value) {
