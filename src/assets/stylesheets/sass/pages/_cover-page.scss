@@ -33,6 +33,7 @@
       padding: 0 30px;
       z-index: 1;
       padding-top: 80px;
+      margin-bottom: 80px;
 
       p {
         font-size: 16px;
@@ -46,8 +47,9 @@
         -webkit-line-clamp: 4;
         -webkit-box-orient: vertical;
         text-overflow: ellipsis;
-        height: 114px;
+       // height: 114px;
         overflow: hidden;
+        color: white !important;
       }
 
       h3 {
@@ -56,6 +58,7 @@
         line-height: normal;
         text-align: center;
         margin-bottom: 0;
+        color: white !important;
       }
 
       h1 {
