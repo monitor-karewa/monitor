@@ -60,19 +60,29 @@
                                                  :src="coverSrc"
                                                  alt="Cover"/>
                                             <div class="info" v-show="!editEnabled">
-                                                <small :class="'welcomeTitle'" v-html="settings.welcomeTitle || defaultWelcomeTitle"></small>
-                                                <label :class="'title'" v-html="settings.title || defaultTitle"></label>
-                                                <p :class="'description'" v-html="settings.description || defaultDescription"></p>
+                                                <small :class="{'welcomeTitle' : settings.showBackgroundText}" v-html="settings.welcomeTitle || defaultWelcomeTitle"></small>
+                                                <label :class="{'title' : settings.showBackgroundText}" v-html="settings.title || defaultTitle"></label>
+                                                <p :class="{'description' : settings.showBackgroundText}" v-html="settings.description || defaultDescription"></p>
                                             </div>
                                             <div class="info" v-show="editEnabled">
-                                                <small :class="'welcomeTitle'" v-html="localSettings.welcomeTitle || defaultWelcomeTitle"></small>
-                                                <label :class="'title'" v-html="localSettings.title || defaultTitle"></label>
-                                                <p :class="'description'" v-html="localSettings.description || defaultDescription"></p>
+                                                <small :class="{'welcomeTitle' : localSettings.showBackgroundText}" v-html="localSettings.welcomeTitle || defaultWelcomeTitle"></small>
+                                                <label :class="{'title' : localSettings.showBackgroundText}" v-html="localSettings.title || defaultTitle"></label>
+                                                <p :class="{'description' : localSettings.showBackgroundText}" v-html="localSettings.description || defaultDescription"></p>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="row">
+                                        <div class="col-12 col-md-12">
+                                            <div class="form-group fg-float">
+                                                <div v-show="!editEnabled" class="">
+                                                    <input type="checkbox" v-model="settings.showBackgroundText" disabled="true" ><label class="fg-label"> Fondo de texto</label>
+                                                </div>
+                                                <div v-show="editEnabled" class="fg-line fg-float">
+                                                    <input type="checkbox" value="" v-model="localSettings.showBackgroundText"><label class="fg-label"> Fondo de texto</label>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-12 col-md-6">
                                             <div class="form-group fg-float">
                                                 <div v-show="!editEnabled" class="fg-line basic-input">
@@ -336,7 +346,8 @@
                     schedule: '',
                     additionalInformation: '',
                     address: '',
-                    welcomeTitle: ''
+                    welcomeTitle: '',
+                    showBackgroundText: false
                 },
                 coverFileRef: 'coverFile',
                 coverFile: null,

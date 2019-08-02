@@ -86,6 +86,10 @@ organizationSchema = mongoose.Schema({
         type: String,
         default: ""
     },
+    showBackgroundText: {
+        type: Boolean,
+        default: false
+    },
     deleted: require("./schemas/deleted.schema").Deleted
 });
 

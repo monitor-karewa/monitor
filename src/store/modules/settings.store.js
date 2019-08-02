@@ -10,7 +10,8 @@ const state = {
         address: '',
         schedule: '',
         additionalInformation: '',
-        welcomeTitle: ''
+        welcomeTitle: '',
+        showBackgroundText: false
     },
     lastUpdate : undefined
 };
@@ -50,8 +51,8 @@ const actions = {
         });
     },
     
-    CHANGE_SETTINGS ({commit}, {session, title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle}) {
-        settingsApi.changeSettings({title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle}, (result) => {
+    CHANGE_SETTINGS ({commit}, {session, title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle, showBackgroundText}) {
+        settingsApi.changeSettings({title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle, showBackgroundText}, (result) => {
             if (result.data && !result.data.error && result.data.data) {
                 tShow(i18n.t('settings.change-settings.update.success'), 'success');
 
@@ -91,7 +92,7 @@ const actions = {
 };
 
 const mutations = {
-    SETTINGS_UPDATED (state, {title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle, updatedAt}) {
+    SETTINGS_UPDATED (state, {title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle, showBackgroundText, updatedAt}) {
         state.settings.title = title;
         state.settings.description = description;
         state.settings.contactLocation = contactLocation;
@@ -100,6 +101,7 @@ const mutations = {
         state.settings.schedule= schedule;
         state.settings.additionalInformation = additionalInformation;
         state.settings.welcomeTitle = welcomeTitle;
+        state.settings.showBackgroundText = showBackgroundText;
         state.lastUpdate = updatedAt;
     }
 };

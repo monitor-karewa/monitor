@@ -17,12 +17,12 @@
                         <!--<div class="divider"></div>-->
                         <!--&lt;!&ndash;<p>Aquí podrás obtener información sobre los procedimientos de licitaciones para consultar la compra, renta y contratación de servicios que se realizan en el Municipio de Chihuahua.</p>&ndash;&gt;-->
                         <!--<p>{{$t('general.app.description')}}</p>-->
-                        <h3 :class="currentOrganization._id != '' ? 'welcomeTitle' : ''" v-html="currentOrganization.welcomeTitle || defaultWelcomeTitle"></h3>
+                        <h3 :class="currentOrganization.showBackgroundText != '' ? 'welcomeTitle' : ''" v-html="currentOrganization.welcomeTitle || defaultWelcomeTitle"></h3>
                         <!--<h1>Monitor <strong>Karewa</strong></h1>-->
-                        <h1 :class="currentOrganization._id != '' ? 'title' : ''" v-html="currentOrganization.title || defaultTitle"></h1>
+                        <h1 :class="currentOrganization.showBackgroundText != '' ? 'title' : ''" v-html="currentOrganization.title || defaultTitle"></h1>
                         <div class="divider"></div>
                         <!--<p>Aquí podrás obtener información sobre los procedimientos de licitaciones para consultar la compra, renta y contratación de servicios que se realizan en el Municipio de Chihuahua.</p>-->
-                        <p :class="currentOrganization._id != '' ? 'description' : ''" v-html="currentOrganization.description || defaultDescription"></p>
+                        <p :class="currentOrganization.showBackgroundText != '' ? 'description' : ''" v-html="currentOrganization.description || defaultDescription"></p>
 
                     </div>
 
