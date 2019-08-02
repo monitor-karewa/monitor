@@ -1026,7 +1026,8 @@ class ContractExcelReader {
                 return callback();
             }
         } else {
-            return callback(null, fieldInfo);
+            return callback();
+            // return callback(null, fieldInfo);
         }
     }
 
@@ -1109,7 +1110,7 @@ class ContractExcelReader {
                 logger.debug(null, null, '', 'undefined column, skipping');
                 return callback();
             }
-            
+
             switch(column) {
                 case C_IDS.PROCEDURE_TYPE:
                     return _this._readField(rowInfo, cell, 'procedureType', String, {
@@ -1409,18 +1410,18 @@ class ContractExcelReader {
                         match: {
                             regexStr: SUPPLIER_VALIDATION_REGEX_DICT.RFC
                         },
-                        required: function (rowInfo, callback) {
+                        // required: function (rowInfo, callback) {
 
-                            let supplierNameDefined = rowInfo.supplierName.value && rowInfo.supplierName.value.length;
-                            if (supplierNameDefined && rowInfo.supplierName.shouldCreateDoc) {
-                                let isRequired = true;
-                                let errorMessage = "Este campo es requerido debido a que se creará un nuevo Proveedor.";
+                        //     let supplierNameDefined = rowInfo.supplierName.value && rowInfo.supplierName.value.length;
+                        //     if (supplierNameDefined && rowInfo.supplierName.shouldCreateDoc) {
+                        //         let isRequired = true;
+                        //         let errorMessage = "Este campo es requerido debido a que se creará un nuevo Proveedor.";
 
-                                return callback(null, isRequired, errorMessage);
-                            }
+                        //         return callback(null, isRequired, errorMessage);
+                        //     }
 
-                            return callback(null, false);
-                        },
+                        //     return callback(null, false);
+                        // },
                         refLink: {
                             linkToField: 'supplierName',
                             shouldMatchField: 'rfc'
