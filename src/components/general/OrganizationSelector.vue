@@ -108,9 +108,11 @@
                 this.$session.set('currentOrganizationDescription', organization.description);
 //                this.$session.set('currentOrganizationContactLocation', organization.contactLocation);
 //                this.$session.set('currentOrganizationContactEmail', organization.contactEmail);
+                this.$session.set('currentOrganizationWelcomeTitle', organization.welcomeTitle);
+                this.$session.set('currentOrganizationShowBackgroundText', organization.showBackgroundText);
                 
                 axios.defaults.headers.common['X-CURRENT-ORGANIZATION-ID'] = organization._id;
-
+                this.$store.commit('SET_CURRENT_ORGANIZATION_DEFAULTS');
                 this.$store.commit('CURRENT_ORGANIZATION', organization);
 
                 let redirectTo = this.$router.currentRoute.query.redirectTo || this.defaultRedirectTo;

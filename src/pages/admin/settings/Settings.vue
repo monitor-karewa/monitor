@@ -60,19 +60,42 @@
                                                  :src="coverSrc"
                                                  alt="Cover"/>
                                             <div class="info" v-show="!editEnabled">
-                                                <small>Bienvenido a</small>
-                                                <label v-html="settings.title || defaultTitle"></label>
-                                                <p v-html="settings.description || defaultDescription"></p>
+                                                <small :class="{'welcomeTitle' : settings.showBackgroundText}" v-html="settings.welcomeTitle || defaultWelcomeTitle"></small>
+                                                <label :class="{'title' : settings.showBackgroundText}" v-html="settings.title || defaultTitle"></label>
+                                                <p :class="{'description' : settings.showBackgroundText}" v-html="settings.description || defaultDescription"></p>
                                             </div>
                                             <div class="info" v-show="editEnabled">
-                                                <small>Bienvenido a</small>
-                                                <label v-html="localSettings.title || defaultTitle"></label>
-                                                <p v-html="localSettings.description || defaultDescription"></p>
+                                                <small :class="{'welcomeTitle' : localSettings.showBackgroundText}" v-html="localSettings.welcomeTitle || defaultWelcomeTitle"></small>
+                                                <label :class="{'title' : localSettings.showBackgroundText}" v-html="localSettings.title || defaultTitle"></label>
+                                                <p :class="{'description' : localSettings.showBackgroundText}" v-html="localSettings.description || defaultDescription"></p>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div class="row">
+                                        <div class="col-12 col-md-12">
+                                            <div class="form-group fg-float">
+                                                <div v-show="!editEnabled" class="">
+                                                    <input type="checkbox" v-model="settings.showBackgroundText" disabled="true" ><label class="fg-label"> Fondo de texto</label>
+                                                </div>
+                                                <div v-show="editEnabled" class="fg-line fg-float">
+                                                    <input type="checkbox" value="" v-model="localSettings.showBackgroundText"><label class="fg-label"> Fondo de texto</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group fg-float">
+                                                <div v-show="!editEnabled" class="fg-line basic-input">
+                                                    <p>{{settings.welcomeTitle}}</p>
+                                                    <label class="fg-label">Texto de bienvenida</label>
+                                                </div>
+                                                <div v-show="editEnabled" class="fg-line basic-input">
+                                                    <input v-model.trim="localSettings.welcomeTitle" type="text" class="form-control fg-input"
+                                                           placeholder="Texto de bienvenida">
+                                                    <label class="fg-label">Texto de bienvenida</label>
+                                                </div>
+                                            </div>
+                                        </div>
                                         <div class="col-12 col-md-6">
                                             <div class="form-group fg-float">
                                                 <div v-show="!editEnabled" class="fg-line basic-input">
@@ -261,6 +284,44 @@
 
 
 <style>
+
+    .description {
+            font-size: 16px;
+            font-weight: 500;
+            line-height: 1.88;
+            text-align: center;
+            max-width: 780px;
+            margin: auto;
+            overflow: hidden;
+            display: -webkit-box !important;
+            -webkit-line-clamp: 4;
+            -webkit-box-orient: vertical;
+            text-overflow: ellipsis;
+            overflow: hidden;
+            background-color: rgba(0,0,0,0.3); 
+    }
+
+    .title {
+        font-size: 60px;
+        font-weight: normal;
+        line-height: normal;
+        text-align: center;
+        background-color: rgba(0,0,0,0.3);
+        max-width: 780px;
+        margin: auto;
+    }
+
+    .welcomeTitle {
+        font-size: 20px;
+        font-weight: bold;
+        line-height: normal;
+        text-align: center;
+        margin-bottom: 0;
+        background-color: rgba(0,0,0,0.3);
+        max-width: 780px;
+        margin: auto;  
+        color: white;   
+    }
 </style>
 
 <script>
@@ -285,6 +346,8 @@
                     schedule: '',
                     additionalInformation: '',
                     address: '',
+                    welcomeTitle: '',
+                    showBackgroundText: false
                 },
                 coverFileRef: 'coverFile',
                 coverFile: null,
@@ -296,6 +359,7 @@
                 ],
                 defaultTitle: 'Monitor <strong>Karewa</strong>',
                 defaultDescription: 'Aquí podras obtener información sobre los procedimientos de contrataciones públicas, incluyendo la compra, renta y contratación de servicios que se realizan en el Municipio de Chihuahua',
+                defaultWelcomeTitle: 'Bienvenido a '
             }
         },
         components: {
@@ -405,6 +469,7 @@
                 this.localSettings.address = val.address|| '';
                 this.localSettings.schedule = val.schedule || '';
                 this.localSettings.additionalInformation = val.additionalInformation || '';
+                this.localSettings.welcomeTitle = val.welcomeTitle || '';
             },
             handleCoverFileUpload() {
 
