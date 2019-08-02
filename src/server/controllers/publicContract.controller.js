@@ -97,7 +97,7 @@ function _fetchContractsAndTotals(req, res, options = {}, callback) {
 
     let totalsQuery = Contract.aggregate([
             {
-                $match : query
+                $match : {...query,...Contract.qProcedureStateConcluded()}
             },
             {
                 $group  : {
