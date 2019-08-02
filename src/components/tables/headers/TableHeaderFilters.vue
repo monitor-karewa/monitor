@@ -10,7 +10,7 @@
                 </li>
                 <li v-if="!hideShowAllToggle">
                     <div class="checkbox">
-                        <input type="checkbox" v-model="chkShowAllColumns" @click="showAllColumns()" :disabled="chkShowAllColumns" >
+                        <input type="checkbox" v-model="chkShowAllColumns" @click="showAllColumns()" >
                         <i class="input-helper"></i>
                         <span>Todas las columnas</span>
                     </div>
@@ -58,9 +58,18 @@
         },
         methods:{
             showAllColumns(){
-                this.$props.columns.some(p=>{
-                    p.visible = true;
-                })
+                console.log("checks",this.chkShowAllColumns);
+                if(this.chkShowAllColumns){
+                    
+                    this.$props.columns.some(p=>{
+                        p.visible = false;
+                    })
+                    this.$props.columns[0].visible = true;
+                }else{
+                    this.$props.columns.some(p=>{
+                        p.visible = true;
+                    })   
+                }
             },
             isLastVisibleColumn : function(visible){
                 return this.$props.columns.filter(p => p.visible).length === 1 && visible === true
