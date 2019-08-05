@@ -825,8 +825,9 @@ let  processCalculation = function(req, cache, calculation, options = {}, mainCa
             let queryArray = variables[item.abbreviation].query;
             let filters = calculation.filters ? calculation.filters.filter(f => { return f.variableAbbreviation == item.abbreviation }) : [];
             let matchQuery = buildAggregateQuerysFromFilters(filters);
-            
-            let query = {...Contract.qProcedureStateConcluded()};
+            let qNotDeleted = deletedSchema.qNotDeleted();
+
+            let query = {...Contract.qProcedureStateConcluded(), ...qNotDeleted};
             
             if (options.query) {
                 query = {...query, ...options.query};
