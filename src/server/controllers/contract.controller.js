@@ -398,6 +398,7 @@ exports.save = (req, res, next) => {
                 contract.informationDate = req.body.informationDate;
                 contract.limitExceeded = req.body.limitExceeded;
                 contract.amountExceeded = req.body.amountExceeded;
+                contract.isEmpty = req.body.isEmpty;
 
                                 contract.save((err, savedContract) => {
                                     if (err) {
@@ -463,7 +464,8 @@ exports.save = (req, res, next) => {
                             administrativeUnit :  mongoose.Types.ObjectId(req.body.administrativeUnit._id),
                             organizerAdministrativeUnit :  mongoose.Types.ObjectId(req.body.organizerAdministrativeUnit._id),
                             applicantAdministrativeUnit :  mongoose.Types.ObjectId(req.body.applicantAdministrativeUnit._id),
-                            areaInCharge : req.body.areaInCharge
+                            areaInCharge : req.body.areaInCharge,
+                            isEmpty : req.body.isEmpty
                         });
 
                         contract.administrationPeriodFromYear = Contract.parseAdministrationPeriodFromYear(req.body.administrationPeriod);

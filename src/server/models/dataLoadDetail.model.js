@@ -58,7 +58,7 @@ DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
             procedureType: detail.procedureType.valueToSaveOverride,
             
             //enum
-            category : detail.category.valueToSaveOverride,
+            category : detail.category.valueToSaveOverride || "NULL",
             
             //Someone renamed the model name
             // administrationPeriod : detail.administrationPeriod.value,
@@ -119,6 +119,8 @@ DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
             limitExceeded : !!/no/gi.test(detail.limitExceeded.valueToSaveOverride),
             
             amountExceeded : detail.amountExceeded.value,
+
+            isEmpty : detail.isEmpty.valueToSaveOverride,
             
             deleted: {isDeleted: false},
         }

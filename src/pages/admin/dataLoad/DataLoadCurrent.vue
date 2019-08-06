@@ -123,9 +123,11 @@
                                         <th>Fecha de obtención de los datos</th>
                                         <th>Adjudicaciones Directas que exceden el límite</th>
                                         <th>Monto que excede el límite de la Adjudicación Directa</th>
+                                        <th>No se llevaron a cabo procedimientos</th>
                                     </tr>
                                     </thead>
                                     <tbody>
+
                                     <!--<tr class="height-60" v-for="(rowInfo, rowInfoIndex) in filteredDataLoad" v-if="isRowInfoVisible(rowInfo)">-->
                                     <tr class="height-60" v-for="(dataLoadDetail, dataLoadDetailIndex) in paginatedDataLoad" v-if="isRowInfoVisible(dataLoadDetail.data)" :key="dataLoadDetail._id">
                                         <td>{{dataLoadDetail.rowIndex}}</td>
@@ -163,6 +165,7 @@
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="informationDate" format="date"/>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="limitExceeded"/>
                                         <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="amountExceeded" format="currency"/>
+                                        <TableTdDataLoadResult :rowInfo="dataLoadDetail.data" fieldName="isEmpty" format="boolean"/>
                                     </tr>
                                     </tbody>
                                 </table>
@@ -411,7 +414,9 @@
                 dataLoadInfo: state => state.dataLoad.dataLoadInfo,
 //                dataLoad: state => state.dataLoad.dataLoad,
 //                filteredDataLoad: state => state.dataLoad.filteredDataLoad,
-                paginatedDataLoad: state => state.dataLoad.paginatedDataLoad,
+                paginatedDataLoad: (state) => {
+                    return state.dataLoad.paginatedDataLoad
+                },
                 filtering: state => state.dataLoad.filtering
 //                filtering: state => true
             }),

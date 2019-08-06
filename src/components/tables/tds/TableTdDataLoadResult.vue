@@ -20,98 +20,106 @@
             {{info.value | currency}}
         </template>
         <template v-if="format === 'date'">
-            {{info.value | moment}}
-        </template>
-    </td>
-</template>
+                {{info.value | moment}}
+            </template>
+                <template v-if="format === 'boolean'">
 
-<style>
-</style>
+                    <div class="checkbox m-b-20">
+                    <input type="checkbox" value="IS_EMPTY" :checked="info.value" disabled="true">
+                    <i class="input-helper"></i>
+                    </div>
 
-<script>
-    import moment from 'moment';
-    import utils from '@/common/utils';
-    import tippy from 'tippy.js';
-    
-    export default {
-        data () {
-            return {
-                maxTextLength: 30
-            }
-        },
-        components: {
-        },
-        filters: {
-            moment: function (date) {
-                let m = moment(date);
-                if (!m.isValid()) {
-                    return '';
-                }
-                let formattedDate = m.utc().format('DD/MM/YYYY');
-                if (!formattedDate) {
-                    return '';
-                }
-                
-                return formattedDate;
-            },
-            ellipsify: function (str) {
-                let charNum = 30;
-                let suffix = '...';
-                if (utils.isNotDefined(str)) {
-                    str = '';
-                }
+                    </template>
+                    </td>
+                    </template>
+
+                    <style>
+                    </style>
+
+                    <script>
+                import moment from 'moment';
+                import utils from '@/common/utils';
+                import tippy from 'tippy.js';
+
+                export default {
+                    data () {
+                        return {
+                            maxTextLength: 30
+                        }
+                    },
+                    components: {
+                    },
+                    filters: {
+                        moment: function (date) {
+                            let m = moment(date);
+                            if (!m.isValid()) {
+                                return '';
+                            }
+                            let formattedDate = m.utc().format('DD/MM/YYYY');
+                            if (!formattedDate) {
+                                return '';
+                            }
+
+                            return formattedDate;
+                        },
+                        ellipsify: function (str) {
+                            let charNum = 30;
+                            let suffix = '...';
+                            if (utils.isNotDefined(str)) {
+                                str = '';
+                            }
 
 //                if (utils.isNotDefined(charNum)) {
 //                    charNum = 20;
 //                }
 
-                if (str.length > charNum) {
-                    return str.substr(0, charNum - suffix.length) + suffix;
-                } else {
-                    return str;
-                }
+                            if (str.length > charNum) {
+                                return str.substr(0, charNum - suffix.length) + suffix;
+                            } else {
+                                return str;
+                            }
 //                ellipsify(str, charNum, suffix) {
 //                },
-            } 
-        },
-        computed: {
-            //TODO: A better name for this computed value
-            info() {
-                return this.rowInfo[this.fieldName];
-            },
-            
-            hasErrors() {
-                return this.info.errors.length;
-            },
-            hasInfos() {
-                return this.info.infos.length;
-            },
-            willCreateDoc() {
-                return this.info.shouldCreateDoc;
-            },
+                        }
+                    },
+                    computed: {
+                        //TODO: A better name for this computed value
+                        info() {
+                            return this.rowInfo[this.fieldName];
+                        },
 
-            tippyTooltipClassName() {
-                if (this.info.value && this.info.value.length && this.info.value.length > this.maxTextLength) {
-                    return `tippy-tooltip--${this.fieldName}-${this._uid}`;
-                } else {
-                    return '';
-                }
-            },
-            
-            tippyErrorsClassName() {
-                return `tippy-errors-${this.fieldName}-${this._uid}`;
-            },
-            tippyInfosClassName() {
-                return `tippy-infos-${this.fieldName}-${this._uid}`;
-            },
-            tippyCreateDocClassName() {
-                return `tippy-create-doc-${this.fieldName}-${this._uid}`;
-            },
-            
-            tippyErrorsContent() {
-                if (!this.hasErrors) {
-                    return '';
-                }
+                        hasErrors() {
+                            return this.info.errors.length;
+                        },
+                        hasInfos() {
+                            return this.info.infos.length;
+                        },
+                        willCreateDoc() {
+                            return this.info.shouldCreateDoc;
+                        },
+
+                        tippyTooltipClassName() {
+                            if (this.info.value && this.info.value.length && this.info.value.length > this.maxTextLength) {
+                                return `tippy-tooltip--${this.fieldName}-${this._uid}`;
+                            } else {
+                                return '';
+                            }
+                        },
+
+                        tippyErrorsClassName() {
+                            return `tippy-errors-${this.fieldName}-${this._uid}`;
+                        },
+                        tippyInfosClassName() {
+                            return `tippy-infos-${this.fieldName}-${this._uid}`;
+                        },
+                        tippyCreateDocClassName() {
+                            return `tippy-create-doc-${this.fieldName}-${this._uid}`;
+                        },
+
+                        tippyErrorsContent() {
+                            if (!this.hasErrors) {
+                                return '';
+                            }
                 return this.info.errors.map(e => `<span class="f-14"><i class="zmdi zmdi-alert-circle c-error f-16"></i> ${e.message}</span>`).join('<br/>\n');
             },
             tippyInfosContent() {
@@ -139,7 +147,7 @@
             format: {
                 type: String,
                 validator: function (value) {
-                    return ['string', 'url', 'currency', 'date'].includes(value);
+                    return ['string', 'url', 'currency', 'date', 'boolean'].includes(value);
                 },
                 default: 'string'
             }
