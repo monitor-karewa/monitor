@@ -715,18 +715,40 @@ ContractSchema.statics.parseAdministrationPeriodToYear = function (administratio
 ContractSchema.statics.qProcedureStateConcluded = function () {
 
     return {
-        procedureState: "CONCLUDED"
+        procedureState: "CONCLUDED",
+        $and:[
+            { category: { $ne : 'MODIFICACION'} },
+            { category: { $ne : 'ADENDUM'} },
+            { category: { $ne : 'EXTENSION'} },
+            ]
     }
 };
 
 ContractSchema.statics.aggregateCondProcedures = function (procedureType, procedureState) {
 
     if(procedureType && procedureState){
-        return {$and: [{$eq: ["$procedureType", procedureType]}, {$eq: ["$procedureState", procedureState]}]}
+        return {
+            $and: [
+                { $eq: ["$procedureType", procedureType] },
+                { $eq: ["$procedureState", procedureState] },
+                { $ne:["$category","MODIFICACION"] },
+                { $ne:["$category","ADENDUM"] },
+                { $ne:["$category","EXTENSION"] }
+                ]}
     } else if(procedureType) {
-        return {$eq: ["$procedureType", procedureType]}
+        return {$and: [
+            {$eq: ["$procedureType", procedureType]},
+            {$ne:["$category","MODIFICACION"]},
+            {$ne:["$category","ADENDUM"]},
+            {$ne:["$category","EXTENSION"]}
+        ]}
     } else {
-        return {$eq: ["$procedureState", procedureState]}
+        return { $and:[
+            {$eq: ["$procedureState", procedureState]},
+            {$ne:["$category","MODIFICACION"]},
+            {$ne:["$category","ADENDUM"]},
+            {$ne:["$category","EXTENSION"]}
+        ]}
     }
 };
 
