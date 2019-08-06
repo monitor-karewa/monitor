@@ -1418,7 +1418,7 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell, 'supplierRfc', String, {
                         // required: true,
                         match: {
-                            regexStr: SUPPLIER_VALIDATION_REGEX_DICT.RFC
+                            // regexStr: SUPPLIER_VALIDATION_REGEX_DICT.RFC
                         },
                         // required: function (rowInfo, callback) {
 

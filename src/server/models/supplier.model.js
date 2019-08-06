@@ -82,7 +82,7 @@ SupplierSchema.statics.expressValidator = function() {
 
     return [
         // check('rfc').matches(/^([A-ZÑ&]{3,4}) ?(?:- ?)?(\d{2}(?:0[1-9]|1[0-2])(?:0[1-9]|[12]\d|3[01])) ?(?:- ?)?([A-Z\d]{2})([A\d])$/).withMessage('Verifica que el RFC es válido')
-        check('rfc', 'Verifica que el RFC es válido').optional({ checkFalsy: true }).matches(new RegExp(SUPPLIER_VALIDATION_REGEX_DICT.RFC))
+        // check('rfc', 'Verifica que el RFC es válido').optional({ checkFalsy: true }).matches(new RegExp(SUPPLIER_VALIDATION_REGEX_DICT.RFC))
         //Some examples:
         // check('email').isEmail(),
         // check('type').isIn(allowedTypes),
