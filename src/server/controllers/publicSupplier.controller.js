@@ -135,7 +135,8 @@ function _aggregateSupplierDetail(req, res, callback) {
                 totalOrMaxAmount: 1,
                 informationDate: 1,
                 procedureType: 1,
-                procedureState: 1
+                procedureState: 1,
+                category: 1
             }
         },
         {
@@ -519,7 +520,7 @@ exports.list = (req, res, next) => {
                     };
 
                     suppliers.forEach((supplierInfo) => {
-                        totals.totalCount += supplierInfo.contractsCount;
+                        totals.totalCount += (supplierInfo.publicCount + supplierInfo.invitationCount + supplierInfo.noBidCount);
                         totals.publicCount += supplierInfo.publicCount;
                         totals.invitationCount += supplierInfo.invitationCount;
                         totals.noBidCount += supplierInfo.noBidCount;
