@@ -115,7 +115,7 @@ if (!config.behavior.skipJobManager) {
         
     }
     
-    agenda.define(TASKS.BACKUP_CONTRACT_URLS, (job, done) => {
+    agenda.define(TASKS.BACKUP_CONTRACT_URLS, (job) => {
         // User.remove({lastLogIn: {$lt: twoDaysAgo}}, done);
     
         //Read params
@@ -131,7 +131,6 @@ if (!config.behavior.skipJobManager) {
             // contract.clarificationMeetingJudgmentUrl
             // contract.presentationProposalsDocUrl
             // contract.contractUrl
-            
             async.parallel({
                 announcementUrlBackup: (callback) => {
                     let url = contract.announcementUrl;
@@ -223,7 +222,6 @@ if (!config.behavior.skipJobManager) {
                 
                 //Else update the Contract and mark as backed up
                 update.backedUp = true;
-    
                 Contract.updateOne({_id: contract._id}, {$set: update}, {}, (err) => {
                     if (err) {
                         logger.error(err, null, 'jobManager#(after parallel)', 'Error trying to update contract [%s]', contract._id.toString());
