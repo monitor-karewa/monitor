@@ -200,7 +200,7 @@ exports.detail = (req, res, next) => {
                         publicCount: {
                             $sum: {
                                 $cond: {
-                                    if: {$eq: ["$procedureType", "PUBLIC"]},
+                                    if: Contract.aggregateCondProcedures("PUBLIC","CONCLUDED"),
                                     then: 1,
                                     else: 0
                                 }
@@ -209,7 +209,7 @@ exports.detail = (req, res, next) => {
                         invitationCount: {
                             $sum: {
                                 $cond: {
-                                    if: {$eq: ["$procedureType", "INVITATION"]},
+                                    if: Contract.aggregateCondProcedures("INVITATION","CONCLUDED"),
                                     then: 1,
                                     else: 0
                                 }
@@ -218,18 +218,25 @@ exports.detail = (req, res, next) => {
                         noBidCount: {
                             $sum: {
                                 $cond: {
-                                    if: {$eq: ["$procedureType", "NO_BID"]},
+                                    if: Contract.aggregateCondProcedures("NO_BID","CONCLUDED"),
                                     then: 1,
                                     else: 0
                                 }
                             }
                         },
-                        totalCount: {$sum: 1},
-
+                        totalCount: {
+                            $sum: {
+                                $cond: {
+                                    if: Contract.aggregateCondProcedures(null,"CONCLUDED"),
+                                    then: 1,
+                                    else: 0
+                                }
+                            }
+                        },
                         public: {
                             $sum: {
                                 $cond: {
-                                    if: {$eq: ["$procedureType", "PUBLIC"]},
+                                    if: Contract.aggregateCondProcedures("PUBLIC","CONCLUDED"),
                                     then: "$totalOrMaxAmount",
                                     else: 0
                                 }
@@ -238,7 +245,7 @@ exports.detail = (req, res, next) => {
                         invitation: {
                             $sum: {
                                 $cond: {
-                                    if: {$eq: ["$procedureType", "INVITATION"]},
+                                    if: Contract.aggregateCondProcedures("INVITATION","CONCLUDED"),
                                     then: "$totalOrMaxAmount",
                                     else: 0
                                 }
@@ -247,13 +254,21 @@ exports.detail = (req, res, next) => {
                         noBid: {
                             $sum: {
                                 $cond: {
-                                    if: {$eq: ["$procedureType", "NO_BID"]},
+                                    if: Contract.aggregateCondProcedures("NO_BID","CONCLUDED"),
                                     then: "$totalOrMaxAmount",
                                     else: 0
                                 }
                             }
                         },
-                        total: {$sum: "$totalOrMaxAmount"}
+                        total: {
+                            $sum: {
+                                $cond: {
+                                    if: Contract.aggregateCondProcedures(null,"CONCLUDED"),
+                                    then: "$totalOrMaxAmount",
+                                    else: 0
+                                }
+                            }
+                        }
                     }
                 },
                 {
