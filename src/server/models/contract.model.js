@@ -179,6 +179,12 @@ const procedureStateEnumDict = {
             flags: 'gi'
         },
     ],
+    'NULL': [
+        {
+            regexStr: utils.toAccentsRegex('^(null)?(undefined)?$', null, true),
+            flags: 'gi'
+        },
+    ]
 };
 
 
@@ -402,26 +408,28 @@ let ContractSchema = new Schema({
         type: String,
         required: [true, "El campo Ejercicio es requerido"],
         match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.FISCAL_YEAR), 'El campo Ejercicio no cumple con el formato esperado. Ejemplo: 2019'],
-        validate: {
-            validator: function () {
-                let yearContractDate = new Date(this.contractDate).getFullYear();
-                return Number(this.fiscalYear) === yearContractDate
-            },
-            message: props => "La Fecha del contrato no corresponde con el Ejercicio"
-        }
+        //Issue fixed: Eliminar validación de fecha del ejercicio fiscal vs fecha del contrato
+        // validate: {
+        //     validator: function () {
+        //         let yearContractDate = new Date(this.contractDate).getFullYear();
+        //         return Number(this.fiscalYear) === yearContractDate
+        //     },
+        //     message: props => "La Fecha del contrato no corresponde con el Ejercicio"
+        // }
     },
     /* Periodo que se reporta */
     period: {
         type: String,
         required: [true, "El campo Periodo es requerido"],
         match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.PERIOD), 'El campo Periodo no cumple con el formato esperado. Ejemplo: 1o 2019'],
-        validate: {
-            validator: function () {
-                let yearContractDate = new Date(this.contractDate).getFullYear();
-                return this.period.includes(String(yearContractDate));
-            },
-            message: props => "La Fecha del contrato no corresponde con el Periodo"
-        }
+        //Issue fixed: Eliminar validación de fecha del ejercicio fiscal vs fecha del periodo
+        // validate: {
+        //     validator: function () {
+        //         let yearContractDate = new Date(this.contractDate).getFullYear();
+        //         return this.period.includes(String(yearContractDate));
+        //     },
+        //     message: props => "La Fecha del contrato no corresponde con el Periodo"
+        // }
     },
     /* ID / Número de Folio o Nomenclatura / Identificador */
     contractId: {
@@ -462,11 +470,18 @@ let ContractSchema = new Schema({
         }, "Este campo es requerido debido a que se indicó un estado de procedimiento en las notas del contrato."],
         validate: {
             validator:function(v){
-                for(let item in procedureStateEnumDict){
-                    for(let i=0; i < procedureStateEnumDict[item].length; i++){
-                        let isIncluded = new RegExp(procedureStateEnumDict[item][i].regexStr).test(this.notes);
-                        if(isIncluded){
-                            return item == v;
+
+                if(this.isEmpty){
+                    return true
+                }
+
+                if (this.notes && this.notes.length) {
+                    for (let item in procedureStateEnumDict) {
+                        for (let i = 0; i < procedureStateEnumDict[item].length; i++) {
+                            let isIncluded = new RegExp(procedureStateEnumDict[item][i].regexStr).test(this.notes);
+                            if (isIncluded) {
+                                return item == v;
+                            }
                         }
                     }
                 }
@@ -778,19 +793,6 @@ let postSave = function(doc) {
 };
 
 
-let preInsertMany = function(next, docs){
-  for(doc in docs){
-      console.log('doc.category --> ' + doc.category + typeof  doc.category);
-      if(!doc.category){
-          console.log("changing value");
-           doc.category = categoryEnum.NULL;
-          console.log('doc.category AFT --> ' + doc.category);
-      }
-  }
-  next();
-};
-
-ContractSchema.pre('insertMany', preInsertMany);
 ContractSchema.post('insertMany', postInsertMany);
 ContractSchema.post('save', postSave);
 

@@ -48,6 +48,8 @@ DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
         return null;
     }
 
+    let currentDate = new Date();
+
     return {
         detail: detail,
         // supplierId: 
@@ -73,7 +75,7 @@ DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
             partida : detail.partida.value,
             
             //enum
-            procedureState : detail.procedureState.valueToSaveOverride,
+            procedureState : detail.procedureState.valueToSaveOverride || "NULL" ,
             
             announcementUrl : detail.announcementUrl.value,
             announcementDate : detail.announcementDate.value,
@@ -123,6 +125,8 @@ DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
             isEmpty : detail.isEmpty.valueToSaveOverride,
             
             deleted: {isDeleted: false},
+            createdAt: currentDate,
+            updatedAt: currentDate,
         }
     };
 };

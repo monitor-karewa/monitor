@@ -81,7 +81,7 @@ exports.visitsByRoute= (req, res, next) => {
                     }
                     break;
                 case "calculations":
-                    finalLabels.push("Índice de Corrupción");
+                    finalLabels.push("Índice de Riesgo de Corrupción");
                     break;
                 default:
                     finalLabels.push(data[i]._id.path);

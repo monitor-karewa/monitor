@@ -185,7 +185,7 @@
                 
                 
                 <div class="col-12 col-md-4" v-if="!showDetails">
-                    <div class="card">
+                    <div class="card" v-if="hasErrors">
                         <div class="note-transparent error">
                             <i class="zmdi zmdi-alert-triangle"></i>
                             <p>Hay errores en uno o más registros. Por favor, <strong>descarga el

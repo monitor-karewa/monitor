@@ -298,3 +298,14 @@
 .zmdi-chevron-right-double:before {
 	content: '\f2fa \f2fa';
 }
+
+.scroll-dropdown {
+	.dropdown-menu {
+		max-height: 250px!important;
+		overflow: auto!important;
+		transform: none !important;
+		top: 27px !important;
+		left: initial !important;
+		right: 0 !important;
+	}
+}

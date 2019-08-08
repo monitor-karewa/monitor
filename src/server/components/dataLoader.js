@@ -343,7 +343,7 @@ class ContractExcelReader {
                                 }
                             }
 
-                            //Check for reference check strategy override
+                            //Check for validation strategy override
                             //[!v#] at the start of a string overrides the validation strategy, where # is a number from 0 to 1
                             if (fieldInfo.value && fieldInfo.value.length) {
                                 let regexMatchRefStrategy = fieldInfo.value.match("^!v[0-1]");
@@ -473,7 +473,8 @@ class ContractExcelReader {
                             } else if (utils.isDate(value)) {
                                 fieldInfo.value = value;
                             } else {
-                                fieldInfo.value = utils.parseDate(value, true);
+                                //Issue fixed: Detección parcial de fechas (Formato enviado es dd/mm/yyyy, pero el sistema espera mm/dd/yyyy)
+                                fieldInfo.value = utils.parseDate(value, false); //Note: false for dd/mm/yyyy
                             }
                             break;
                         case Number:
@@ -526,7 +527,7 @@ class ContractExcelReader {
             },
             //Check ref in a collection
             (fieldInfo, callback) => {
-                fieldInfo.value  = fieldInfo.value || '';
+                fieldInfo.value = fieldInfo.value || '';
 
                 if (typeof(fieldInfo.value) !== 'string') {
                     logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
@@ -1047,7 +1048,8 @@ class ContractExcelReader {
                 return callback();
             }
         } else {
-            return callback(null, fieldInfo);
+            return callback();
+            // return callback(null, fieldInfo);
         }
     }
 
@@ -1130,7 +1132,7 @@ class ContractExcelReader {
                 logger.debug(null, null, '', 'undefined column, skipping');
                 return callback();
             }
-            
+
             switch(column) {
                 case C_IDS.PROCEDURE_TYPE:
                     return _this._readField(rowInfo, cell, 'procedureType', String, {
@@ -1237,22 +1239,20 @@ class ContractExcelReader {
                         match: {
                             regexStr: CONTRACT_VALIDATION_REGEX_DICT.FISCAL_YEAR 
                         },
-                        validator: function(rowInfo, callback){
-                            if(rowInfo.isEmpty.valueToSaveOverride && !rowInfo.fiscalYear.value){
-                                return callback();
-                            }
-                            let yearContractDate = new Date(rowInfo.contractDate.value).getFullYear();
-                            let fiscalYear = Number(rowInfo.fiscalYear.value);
-                            let isValid = yearContractDate === fiscalYear;
+                        //Issue fixed: Eliminar validación de fecha del ejercicio fiscal vs fecha del contrato
+                        // validator: function(rowInfo, callback){
+                        //     let yearContractDate = new Date(rowInfo.contractDate.value).getFullYear();
+                        //     let fiscalYear = Number(rowInfo.fiscalYear.value);
+                        //     let isValid = yearContractDate === fiscalYear;
 
-                            let errorMessage = null;
-                            if (!isValid) {
-                                //TODO: i18n
-                                errorMessage = 'La fecha del ejercicio fiscal no coincide con el fecha del contrato.';
-                            }
+                        //     let errorMessage = null;
+                        //     if (!isValid) {
+                        //         //TODO: i18n
+                        //         errorMessage = 'La fecha del ejercicio fiscal no coincide con el fecha del contrato.';
+                        //     }
 
-                            return callback(null, errorMessage);
-                        }
+                        //     return callback(null, errorMessage);
+                        // }
                     }, callback);
                     break;
                 case C_IDS.PERIOD:
@@ -1261,22 +1261,23 @@ class ContractExcelReader {
                         match: {
                             regexStr: CONTRACT_VALIDATION_REGEX_DICT.PERIOD
                         },
-                        validator: function (rowInfo, callback) {
-                            if (rowInfo.contractDate.value && rowInfo.period.value) {
-                                let yearContractDate = new Date(rowInfo.contractDate.value).getFullYear();
-                                let isValid = rowInfo.period.value.includes(String(yearContractDate));
+                        //Issue fixed: Eliminar validación de fecha del ejercicio fiscal vs fecha del periodo
+                        // validator: function (rowInfo, callback) {
+                        //     if (rowInfo.contractDate.value && rowInfo.period.value) {
+                        //         let yearContractDate = new Date(rowInfo.contractDate.value).getFullYear();
+                        //         let isValid = rowInfo.period.value.includes(String(yearContractDate));
 
-                                let errorMessage = null;
+                        //         let errorMessage = null;
                                 
-                                if (!isValid) {
-                                    errorMessage = "La fecha del periodo no coincide con la fecha del contrato.";
-                                }
+                        //         if (!isValid) {
+                        //             errorMessage = "La fecha del periodo no coincide con la fecha del contrato.";
+                        //         }
                                 
-                                return callback(null, errorMessage);
-                            }
+                        //         return callback(null, errorMessage);
+                        //     }
 
-                            return callback();
-                        },
+                        //     return callback();
+                        // },
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_ID:
@@ -1336,9 +1337,17 @@ class ContractExcelReader {
                             return callback(null, false);
                         },
                         validator: function (rowInfo, callback) {
+
                             let regexOptionMatch = null;
                             let matchingProcedureState = null;
-                            
+
+                            if (rowInfo.isEmpty.valueToSaveOverride) {
+                                return callback(null, false);
+                            } else if(!rowInfo.procedureState.valueToSaveOverride || rowInfo.procedureState.valueToSaveOverride == "NULL") {
+                                let errorMessage = "El valor es requerido";
+                                return callback(null, errorMessage);
+                            }
+
                             if (rowInfo.procedureState.value && rowInfo.procedureState.valueToSaveOverride && rowInfo.notes.value) {
 
                                 for (let procedureState of procedureStateEnum) {
@@ -1444,21 +1453,18 @@ class ContractExcelReader {
                         match: {
                             regexStr: SUPPLIER_VALIDATION_REGEX_DICT.RFC
                         },
-                        required: function (rowInfo, callback) {
+                        // required: function (rowInfo, callback) {
 
-                            if (rowInfo.isEmpty.valueToSaveOverride) {
-                                return callback(null, false);
-                            }
-                            let supplierNameDefined = rowInfo.supplierName.value && rowInfo.supplierName.value.length;
-                            if (supplierNameDefined && rowInfo.supplierName.shouldCreateDoc) {
-                                let isRequired = true;
-                                let errorMessage = "Este campo es requerido debido a que se creará un nuevo Proveedor.";
+                        //     let supplierNameDefined = rowInfo.supplierName.value && rowInfo.supplierName.value.length;
+                        //     if (supplierNameDefined && rowInfo.supplierName.shouldCreateDoc) {
+                        //         let isRequired = true;
+                        //         let errorMessage = "Este campo es requerido debido a que se creará un nuevo Proveedor.";
 
-                                return callback(null, isRequired, errorMessage);
-                            }
+                        //         return callback(null, isRequired, errorMessage);
+                        //     }
 
-                            return callback(null, false);
-                        },
+                        //     return callback(null, false);
+                        // },
                         refLink: {
                             linkToField: 'supplierName',
                             shouldMatchField: 'rfc'
@@ -2048,7 +2054,6 @@ class ContractExcelWriter {
                     sheet.getRow(rowIndex).getCell(cellIndex).value = fieldInfo.value;
                 }
                 break;
-
         }
         
         if (wrapText) {

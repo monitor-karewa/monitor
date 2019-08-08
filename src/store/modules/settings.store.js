@@ -8,7 +8,8 @@ const state = {
         contactLocation: '',
         contactEmail: '',
         address: '',
-        schedule: ''
+        schedule: '',
+        additionalInformation: ''
     },
     lastUpdate : undefined
 };
@@ -48,8 +49,8 @@ const actions = {
         });
     },
     
-    CHANGE_SETTINGS ({commit}, {session, title, description, contactLocation, contactEmail, address, schedule}) {
-        settingsApi.changeSettings({title, description, contactLocation, contactEmail, address, schedule}, (result) => {
+    CHANGE_SETTINGS ({commit}, {session, title, description, contactLocation, contactEmail, address, schedule, additionalInformation}) {
+        settingsApi.changeSettings({title, description, contactLocation, contactEmail, address, schedule, additionalInformation}, (result) => {
             if (result.data && !result.data.error && result.data.data) {
                 tShow(i18n.t('settings.change-settings.update.success'), 'success');
 
@@ -89,13 +90,14 @@ const actions = {
 };
 
 const mutations = {
-    SETTINGS_UPDATED (state, {title, description, contactLocation, contactEmail, address, schedule, updatedAt}) {
+    SETTINGS_UPDATED (state, {title, description, contactLocation, contactEmail, address, schedule, additionalInformation, updatedAt}) {
         state.settings.title = title;
         state.settings.description = description;
         state.settings.contactLocation = contactLocation;
         state.settings.contactEmail = contactEmail;
         state.settings.address = address;
         state.settings.schedule= schedule;
+        state.settings.additionalInformation = additionalInformation;
         state.lastUpdate = updatedAt;
     }
 };
