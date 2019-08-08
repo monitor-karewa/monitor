@@ -16,7 +16,7 @@ const deletedSchema = require('./../models/schemas/deleted.schema');
 exports.list = (req, res, next) => {
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
 
-    paginationOptions.select = 'name shortName color theme cover title description contactEmail address schedule';
+    paginationOptions.select = 'name shortName color theme cover title description contactEmail address schedule additionalInformation welcomeTitle showBackgroundText';
     paginationOptions.limit = 999999;//no limit per page
 
     let query = {};
@@ -160,13 +160,12 @@ exports.loadOrganizationSettings = (req, res, next) => {
     let currentOrganizationId = Organization.currentOrganizationId(req);
 
     Organization.findOne({_id: currentOrganizationId})
-        .select('title description contactLocation contactEmail address schedule additionalInformation updatedAt')
+        .select('title description contactLocation contactEmail address schedule additionalInformation welcomeTitle showBackgroundText updatedAt')
         .lean()
         .exec((err, organization) => {
             if (err) {
                 logger.error(err, null, 'settings.controller#changeSettings', 'Error trying to load settings for Organization [%s]', currentOrganizationId);
             }
-
             return res.json({
                 error: !!err,
                 data: organization

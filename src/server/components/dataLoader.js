@@ -224,10 +224,18 @@ class ContractExcelReader {
                 if (keywords && keywords.length) {
                     //If the value is "ONE TWO THREE"
                     //This will generate a regex ".*(ONE|TWO|THREE)? (ONE|TWO|THREE)? (ONE|TWO|THREE)?.*"
-                    keywords.forEach((keyword) => {
+                    let optionalSign;
+                    for (let i = 0; i < keywords.length; i++) {
+                        let keyword = keywords[i];
+                        optionalSign = '';
+                        //The first two words won't have a ? sign, ensuring a match has at least 2 words.
+                        if (i > 1) {
+                            optionalSign = '?';
+                        }
+
                         //Note: The space at the end is intended
-                        regexStr += `(${keywords.join('|')})? `;
-                    });
+                        regexStr += `(${keywords.join('|')})${optionalSign} `;
+                    }
                 }
 
                 //Remove the last extra space
@@ -591,13 +599,13 @@ class ContractExcelReader {
                     }
 
                     let query = _this._buildRefCheckQuery(_this.organizationId, model, field, fieldInfo.value, strategy);
-
+                    
                     query.exec((err, docs) => {
-
+                        
                         if (err) {
                             logger.warn(err, null, 'dataLoader#_readField', 'Error trying to query model [%s] with query: %j', fieldInfo.col, query);
                         }
-
+                        
                         //No matches found
                         if (!docs || !docs.length) {
                             fieldInfo.shouldCreateDoc = true;
@@ -662,6 +670,8 @@ class ContractExcelReader {
                                     //Console.logs kept for future reviewing of JACCARD_VALUE_REF_MATCH_THRESHOLD
                                     
                                     // console.log('\n\n');
+                                    // console.log('fieldInfo.fieldName', fieldInfo.fieldName);
+                                    // console.log('logs', logs);
                                     // console.log('valueMatchesString', valueMatchesString);
                                     // console.log('fieldInfo.value', fieldInfo.value);
                                     // console.log('links', links);
@@ -1451,7 +1461,7 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell, 'supplierRfc', String, {
                         // required: true,
                         match: {
-                            regexStr: SUPPLIER_VALIDATION_REGEX_DICT.RFC
+                            // regexStr: SUPPLIER_VALIDATION_REGEX_DICT.RFC
                         },
                         // required: function (rowInfo, callback) {
 

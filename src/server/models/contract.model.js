@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 
-const { check, validationResult } = require('express-validator/check');
+const {check, validationResult} = require('express-validator/check');
 
 const pluginCreatedUpdated = require('mongoose-createdat-updatedat');
 const mongoosePagination = require('mongoose-paginate');
@@ -126,7 +126,6 @@ const categoryEnumDict = {
 const categoryEnum = Object.keys(categoryEnumDict);
 
 
-
 // const procedureStateEnum = [
 //     'CONCLUDED',
 //     'CANCELED',
@@ -219,7 +218,6 @@ const administrativeUnitTypeEnumDict = {
 const administrativeUnitTypeEnum = Object.keys(administrativeUnitTypeEnumDict);
 
 
-
 // const limitExceededEnum = [
 //     'NOT_EXCEEDED',
 //     'LIMIT_EXCEEDED'
@@ -239,7 +237,6 @@ const limitExceededEnumDict = {
     ]
 };
 const limitExceededEnum = Object.keys(limitExceededEnumDict);
-
 
 
 const contractTypeEnumDict = {
@@ -271,7 +268,7 @@ const contractTypeEnum = Object.keys(contractTypeEnumDict);
 
 
 
-function  getProcedureTypesEnumObject (procedureType) {
+function getProcedureTypesEnumObject(procedureType) {
     switch (procedureType) {
         case 'PUBLIC':
             return {description: "Público", key: "PUBLIC"};
@@ -281,6 +278,7 @@ function  getProcedureTypesEnumObject (procedureType) {
             return {description: "Por Invitación", key: "INVITATION"};
     }
 }
+
 getCategoryEnumObject = function (category) {
     switch (category) {
         case 'EXTENSION':
@@ -297,7 +295,8 @@ getCategoryEnumObject = function (category) {
             return {description: "Arrendamiento", key: "LEASE"};
         case 'PUBLIC_WORKS':
             return {description: "Obra Pública", key: "PUBLIC_WORKS"};
-        default: return {}
+        default:
+            return {}
     }
 }
 getProcedureStateEnumObject = function (procedureState) {
@@ -391,12 +390,12 @@ let ContractSchema = new Schema({
         type: String,
         required: [true, "El campo Administración es requerido"],
         match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.ADMINISTRATION), 'El campo Administración no cumple con el formato esperado. Ejemplo: 2017-2019'],
-        default: '2016-2018' 
+        default: '2016-2018'
     },
     administrationPeriodFromYear: {
         type: Number,
         required: true,
-        default: 2016 
+        default: 2016
     },
     administrationPeriodToYear: {
         type: Number,
@@ -436,9 +435,6 @@ let ContractSchema = new Schema({
         type: String,
         //TODO:Definir otro Id aparte que sea karewaId(Pendiente)
         //TODO:Definir el formato que debe llevar el ID(Dejarlo Libre)
-        // required: function(value) {
-        //     return this.isEmpty || value;
-        // },
     },
     /* Partida */
     partida: {
@@ -455,13 +451,13 @@ let ContractSchema = new Schema({
             let valuesFlat = [];
             values.forEach((value) => {
                 let innerValues = [...value];
-                innerValues.forEach((item)=>{
+                innerValues.forEach((item) => {
                     valuesFlat.push(item.regexStr);
                 });
             });
-            for (let i = 0; i < valuesFlat.length; i++){
+            for (let i = 0; i < valuesFlat.length; i++) {
                 let isIncluded = new RegExp(valuesFlat[i]).test(this.notes);
-                if(isIncluded){
+                if (isIncluded) {
                     return true;
                 }
             }
@@ -493,17 +489,17 @@ let ContractSchema = new Schema({
         uppercase: true
     },
     /*Hipervínculo a la convocatoria o invitaciones*/
-    announcementUrl:{
-        type:String,
+    announcementUrl: {
+        type: String,
         match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.URL), 'El campo Hipervínculo a la convocatoria o invitaciones no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
     },
-    announcementUrlBackup:{
+    announcementUrlBackup: {
         type: Schema.Types.ObjectId,
         ref: 'File'
     },
     /* Fecha de la convocatoria o invitación */
-    announcementDate:{
-        type:Date
+    announcementDate: {
+        type: Date
     },
     /* Descripción de las obras, bienes o servicios */
     servicesDescription: {
@@ -513,24 +509,24 @@ let ContractSchema = new Schema({
         },"El campo Descripción de las obras es requerido"]
     },
     /* Fecha en la que se celebró la junta de aclaraciones */
-    clarificationMeetingDate:{
-        type:Date,
+    clarificationMeetingDate: {
+        type: Date,
     },
     /* Hipervínculo al fallo de Junta de Aclaraciones */
-    clarificationMeetingJudgmentUrl:{
-        type:String,
+    clarificationMeetingJudgmentUrl: {
+        type: String,
         match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.URL), 'El campo Hipervínculo al fallo de Junta de Aclaraciones no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
     },
-    clarificationMeetingJudgmentUrlBackup:{
+    clarificationMeetingJudgmentUrlBackup: {
         type: Schema.Types.ObjectId,
         ref: 'File'
     },
     /* Hipervínculo al documento de la Presentación de Propuestas */
-    presentationProposalsDocUrl:{
-        type:String,
+    presentationProposalsDocUrl: {
+        type: String,
         match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.URL), 'El campo Hipervínculo al documento de la Presentación de Propuestas no cumple con el formato esperado . Ejemplo: www.ejemplo.com']
     },
-    presentationProposalsDocUrlBackup:{
+    presentationProposalsDocUrlBackup: {
         type: Schema.Types.ObjectId,
         ref: 'File'
     },
@@ -545,7 +541,7 @@ let ContractSchema = new Schema({
         type: Schema.Types.ObjectId,
         ref: 'AdministrativeUnit',
         required: [true, "El campo U. administrativa convocante es requerido"],
-        validate :{
+        validate: {
             validator: function () {
                 return this.administrativeUnitType === 'DESCENTRALIZED' ? String(this.organizerAdministrativeUnit) === String(this.applicantAdministrativeUnit) : true
             },
@@ -579,17 +575,17 @@ let ContractSchema = new Schema({
         }, "El campo Fecha del contrato es requerido"]
     },
     /* Tipo de Contrato */
-    contractType:{
-      type:String,
-      enum:contractTypeEnum,
-      required: [function(value) {
+    contractType: {
+        type: String,
+        enum: contractTypeEnum,
+        required: [function(value) {
           return !this.isEmpty
       }, "El campo Tipo de contrato es requerido"],
     },
     /* Monto total del contrato con impuestos incluidos */
     totalAmount: {
         type: Number,
-        required:[ function () {
+        required: [function () {
             if (this.isEmpty) {
                 return false;
             }
@@ -609,7 +605,7 @@ let ContractSchema = new Schema({
     /* Monto máximo, en su caso */
     maxAmount: {
         type: Number,
-        required:[ function () {
+        required: [function () {
             if (this.isEmpty) {
                 return false;
             }
@@ -623,11 +619,11 @@ let ContractSchema = new Schema({
         required: [function(){
             return !this.isEmpty;
         }, "El campo Monto total o Máximo es requerido"],
-        validate:{
-            validator: function(v) {
-                if(this.contractType == 'OPEN'){
-                    return this.maxAmount ?  this.maxAmount == v : true;
-                } else if (this.contractType == 'NORMAL'){
+        validate: {
+            validator: function (v) {
+                if (this.contractType == 'OPEN') {
+                    return this.maxAmount ? this.maxAmount == v : true;
+                } else if (this.contractType == 'NORMAL') {
                     return this.totalAmount ? this.totalAmount == v : true;
                 }
                 return true;
@@ -638,12 +634,12 @@ let ContractSchema = new Schema({
         // Si es ABIERTO - es el monto máximo
     },
     /*Hipervínculo al documento del contrato y anexos*/
-    contractUrl:{
-        type : String,
+    contractUrl: {
+        type: String,
         match: [new RegExp(CONTRACT_VALIDATION_REGEX_DICT.URL), 'El campo Hipervínculo al documento del contrato y anexos no cumple con el formato esperado. Ejemplo: www.ejemplo.com']
         // required:true
     },
-    contractUrlBackup:{
+    contractUrlBackup: {
         type: Schema.Types.ObjectId,
         ref: 'File'
     },
@@ -690,25 +686,25 @@ let ContractSchema = new Schema({
 });
 
 
-    // ContractSchema.virtual('procedureTypeEnumObject').get(getProcedureTypesEnumObject);
-    ContractSchema.virtual('procedureTypeEnumObject').get(function () {
-        return getProcedureTypesEnumObject(this.procedureType);
-    });
-    ContractSchema.virtual('procedureStateEnumObject').get(function () {
-        return getProcedureStateEnumObject(this.procedureState);
-    });
-    ContractSchema.virtual('administrativeUnitTypeEnumObject').get(function () {
-        return getAdministrativeUnitTypeEnumObject(this.administrativeUnitType);
-    });
-    ContractSchema.virtual('contractTypeEnumObject').get(function () {
-        return getContractTypeEnumObject(this.contractType);
-    });
-    ContractSchema.virtual('categoryEnumObject').get(function () {
-        return getCategoryEnumObject(this.category);
-    });
+// ContractSchema.virtual('procedureTypeEnumObject').get(getProcedureTypesEnumObject);
+ContractSchema.virtual('procedureTypeEnumObject').get(function () {
+    return getProcedureTypesEnumObject(this.procedureType);
+});
+ContractSchema.virtual('procedureStateEnumObject').get(function () {
+    return getProcedureStateEnumObject(this.procedureState);
+});
+ContractSchema.virtual('administrativeUnitTypeEnumObject').get(function () {
+    return getAdministrativeUnitTypeEnumObject(this.administrativeUnitType);
+});
+ContractSchema.virtual('contractTypeEnumObject').get(function () {
+    return getContractTypeEnumObject(this.contractType);
+});
+ContractSchema.virtual('categoryEnumObject').get(function () {
+    return getCategoryEnumObject(this.category);
+});
 
-    ContractSchema.set('toObject', { virtuals: true });
-    ContractSchema.set('toJSON', { virtuals: true });
+ContractSchema.set('toObject', {virtuals: true});
+ContractSchema.set('toJSON', {virtuals: true});
 
 
 //Agregar createdAt, modifiedAt automáticamente
@@ -769,8 +765,48 @@ ContractSchema.statics.parseAdministrationPeriodToYear = function (administratio
     return Number(toYearAsStr);
 };
 
+ContractSchema.statics.qProcedureStateConcluded = function () {
 
-let postInsertMany = function(docs) {
+    return {
+        procedureState: "CONCLUDED",
+        $and:[
+            { category: { $ne : 'MODIFICACION'} },
+            { category: { $ne : 'ADENDUM'} },
+            { category: { $ne : 'EXTENSION'} },
+            ]
+    }
+};
+
+ContractSchema.statics.aggregateCondProcedures = function (procedureType, procedureState) {
+
+    if(procedureType && procedureState){
+        return {
+            $and: [
+                { $eq: ["$procedureType", procedureType] },
+                { $eq: ["$procedureState", procedureState] },
+                { $ne:["$category","MODIFICACION"] },
+                { $ne:["$category","ADENDUM"] },
+                { $ne:["$category","EXTENSION"] }
+                ]}
+    } else if(procedureType) {
+        return {$and: [
+            {$eq: ["$procedureType", procedureType]},
+            {$ne:["$category","MODIFICACION"]},
+            {$ne:["$category","ADENDUM"]},
+            {$ne:["$category","EXTENSION"]}
+        ]}
+    } else {
+        return { $and:[
+            {$eq: ["$procedureState", procedureState]},
+            {$ne:["$category","MODIFICACION"]},
+            {$ne:["$category","ADENDUM"]},
+            {$ne:["$category","EXTENSION"]}
+        ]}
+    }
+};
+
+
+let postInsertMany = function (docs) {
 
     jobManager.runTask(jobManager.TASKS.BACKUP_CONTRACT_URLS, {contracts: docs})
         .then((job) => {
@@ -782,7 +818,7 @@ let postInsertMany = function(docs) {
 
 };
 
-let postSave = function(doc) {
+let postSave = function (doc) {
     jobManager.runTask(jobManager.TASKS.BACKUP_CONTRACT_URLS, {contracts: [doc]})
         .then((job) => {
             logger.info(null, null, 'contract.model#post-postSave', 'Task creation finished [%s]', jobManager.TASKS.BACKUP_CONTRACT_URLS);
@@ -791,7 +827,6 @@ let postSave = function(doc) {
             logger.error(err, null, 'contract.model#post-postSave', 'Error trying to create task [%s]', jobManager.TASKS.BACKUP_CONTRACT_URLS);
         });
 };
-
 
 ContractSchema.post('insertMany', postInsertMany);
 ContractSchema.post('save', postSave);
@@ -803,7 +838,7 @@ const Contract = mongoose.model('Contract', ContractSchema);
 
 module.exports = {
     Contract,
-    
+
     procedureTypesEnumDict,
     procedureTypesEnum,
     getProcedureTypesEnumObject,

@@ -473,10 +473,19 @@ let getVariables = function () {
                     $match: {informationDate: {$exists: true}}
                 },
                 {
+                    $addFields : {
+                        type: { $cond: {
+                            if:{ $eq:["$procedureType","NO_BID"] },
+                            then:"B",
+                            else:"A"
+                        }}
+                    }
+                },
+                {
                     $group: { _id: {
                             period:"$period",
                             organizerAdministrativeUnit:"$organizerAdministrativeUnit",
-                            procedureType:"$procedureType"
+                            type:"$type"
                         }
                     }
                 },
@@ -503,10 +512,22 @@ let getVariables = function () {
                     $match: {informationDate: {$exists: true}}
                 },
                 {
+                    $sort:{ informationDate: -1 }
+                },
+                {
+                    $addFields : {
+                        type: { $cond: {
+                            if:{ $eq:["$procedureType","NO_BID"] },
+                            then:"B",
+                            else:"A"
+                        }}
+                    }
+                },
+                {
                     $group: { _id: {
                         period:"$period",
                         organizerAdministrativeUnit:"$organizerAdministrativeUnit",
-                        procedureType:"$procedureType"
+                        type:"$type"
                     },
                         informationDate:{ $first: "$informationDate"}
                     }
@@ -515,7 +536,6 @@ let getVariables = function () {
                     $project: {
                         period:"$_id.period",
                         organizerAdministrativeUnit:"$_id.organizerAdministrativeUnit",
-                        procedureType:"$_id.procedureType",
                         informationDate:1,
                     }
                 },
@@ -554,7 +574,7 @@ let getVariables = function () {
                                     break
                             }
                             let dateToSearch = new Date(Number(periodArray[1]), month + 1, 0);
-                            dateToSearch.setDate(dateToSearch.getDate() + 30);
+                            dateToSearch.setDate(dateToSearch.getDate() + 31);
 
                             if (docs[i].informationDate && dateToSearch >= docs[i].informationDate) {
                                 totalFormats++;

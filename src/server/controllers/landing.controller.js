@@ -80,14 +80,13 @@ function _aggregateAmountByPeriods(req, res, callback) {
         }
     }
 
-
-
     let aggregate = Contract.aggregate([
         {
             $match:{
                 "deleted.isDeleted":false,
                 "organization":Organization.currentOrganizationId(req),
-                ...query
+                ...query,
+                ...Contract.qProcedureStateConcluded()
             }
         },
         {
@@ -211,6 +210,7 @@ function _aggregateAmountByProcedure(req, res, callback) {
             $match:{
                 "deleted.isDeleted" : false,
                 "organization" : Organization.currentOrganizationId(req),
+                ...Contract.qProcedureStateConcluded(),
                 ...query
             }
         },
