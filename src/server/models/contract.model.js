@@ -234,6 +234,12 @@ const limitExceededEnumDict = {
             regexStr: "^[\s]*" + utils.toAccentsRegex('si|excede( el limite)?', null, true),
             flags: 'gi'
         },
+    ],
+    'NOT_APPLICABLE': [
+        {
+            regexStr: utils.toAccentsRegex('N(/)?A|no aplicable', null, true),
+            flags: 'gi'
+        },
     ]
 };
 const limitExceededEnum = Object.keys(limitExceededEnumDict);
@@ -671,9 +677,11 @@ let ContractSchema = new Schema({
     /*Adjudicaciones Directas que exceden el límite*/
     limitExceeded: {
         type: Boolean,
-        required: function(value) {
-            return !this.isEmpty;
-        },
+        // required: function(value) {
+        //     return !this.isEmpty;
+        // },
+        //Simulate a "N/A" value with null
+        required: false,
         default: false
     },
     /*Monto que excede el límite de la Adjudicación Directa*/

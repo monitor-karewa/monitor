@@ -118,11 +118,12 @@ DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
             informationDate : detail.informationDate.value,
 
             //enum -> boolean
-            limitExceeded : !!/no/gi.test(detail.limitExceeded.valueToSaveOverride),
+            // limitExceeded : !!/no/gi.test(detail.limitExceeded.valueToSaveOverride),
+            limitExceeded : detail.limitExceeded.valueToSaveOverride === "NOT_APPLICABLE" ? false : !!/no/gi.test(detail.limitExceeded.valueToSaveOverride),
             
-            amountExceeded : detail.amountExceeded.value,
+            amountExceeded : detail.amountExceeded.value || 0,
 
-            isEmpty : detail.isEmpty.valueToSaveOverride,
+            isEmpty : detail.isEmpty && detail.isEmpty.valueToSaveOverride,
             
             deleted: {isDeleted: false},
             createdAt: currentDate,

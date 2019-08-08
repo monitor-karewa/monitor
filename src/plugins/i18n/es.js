@@ -313,7 +313,7 @@ export default {
     "contracts.contractUrl" : "Enlace Contrato",
     "contracts.areaInCharge" : "Unidad Responsable",
     "contracts.updateDate" : "Fecha de actualización",
-
+    "contracts.isEmpty" : "No se llevaron a cabo procedimientos",
 
 
 
