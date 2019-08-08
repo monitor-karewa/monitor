@@ -601,7 +601,7 @@ class ContractExcelReader {
                     let query = _this._buildRefCheckQuery(_this.organizationId, model, field, fieldInfo.value, strategy);
                     
                     query.exec((err, docs) => {
-                        
+
                         if (err) {
                             logger.warn(err, null, 'dataLoader#_readField', 'Error trying to query model [%s] with query: %j', fieldInfo.col, query);
                         }
@@ -688,10 +688,23 @@ class ContractExcelReader {
                                             multipleMatchesErrorMessage = null;
                                         }
                                     } else {
-                                        
                                         //No good match was found
-                                        multipleMatchesErrorMessage = null;
-                                        doc = null;
+
+                                        //For some reason, sometimes the exact value yields a 0.71 match
+                                        //Check for an exact match
+                                        if (docs.length === 1) {
+                                            let _doc = docs[0];
+                                            if (_doc[field] === fieldInfo.value) {
+                                                //Set match (doc) as the first element and also the exact match (_doc)
+                                                doc = _doc;
+                                            } else {
+                                                multipleMatchesErrorMessage = null;
+                                                doc = null;
+                                            }
+                                        } else {
+                                            multipleMatchesErrorMessage = null;
+                                            doc = null;
+                                        }
                                     }
                                     
                                 } else {
@@ -1157,7 +1170,7 @@ class ContractExcelReader {
                         required: function (rowInfo, callback) {
                             //TODO: Centralize this validation
 
-                            if (rowInfo.isEmpty.valueToSaveOverride) {
+                            if (rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride) {
                                 return callback(null, false);
                             }
 
@@ -1305,7 +1318,7 @@ class ContractExcelReader {
                         enum: procedureStateEnumDict,
                         required: function (rowInfo, callback) {
 
-                            if (rowInfo.isEmpty.valueToSaveOverride) {
+                            if (rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride) {
                                 return callback(null, false);
                             }
                             //TODO: Centralize this validation
@@ -1351,7 +1364,7 @@ class ContractExcelReader {
                             let regexOptionMatch = null;
                             let matchingProcedureState = null;
 
-                            if (rowInfo.isEmpty.valueToSaveOverride) {
+                            if (rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride) {
                                 return callback(null, false);
                             } else if(!rowInfo.procedureState.valueToSaveOverride || rowInfo.procedureState.valueToSaveOverride == "NULL") {
                                 let errorMessage = "El valor es requerido";
@@ -1414,7 +1427,7 @@ class ContractExcelReader {
                 case C_IDS.SERVICES_DESCRIPTION:
                     return _this._readField(rowInfo, cell, 'servicesDescription', String, {
                         required: function (rowInfo, callback) {
-                            if(rowInfo.isEmpty.valueToSaveOverride){
+                            if(rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride){
                                 return callback(null, false);
                             }
                             return callback(null, true, "Este campo es requerido");
@@ -1539,7 +1552,7 @@ class ContractExcelReader {
                 case C_IDS.CONTRACT_NUMBER:
                     return _this._readField(rowInfo, cell, 'contractNumber', String, {
                         required: function (rowInfo, callback) {
-                            if(rowInfo.isEmpty.valueToSaveOverride){
+                            if(rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride){
                                 return callback(null, false);
                             }
                             return callback(null, true, "Este campo es requerido");
@@ -1550,7 +1563,7 @@ class ContractExcelReader {
                 case C_IDS.CONTRACT_DATE:
                     return _this._readField(rowInfo, cell, 'contractDate', Date, {
                         required: function (rowInfo, callback) {
-                            if(rowInfo.isEmpty.valueToSaveOverride){
+                            if(rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride){
                                 return callback(null, false);
                             }
                             return callback(null, true, "Este campo es requerido");
@@ -1581,7 +1594,7 @@ class ContractExcelReader {
                 case C_IDS.TOTAL_AMOUT:
                     return _this._readField(rowInfo, cell, 'totalAmount', Number, {
                         required: function (rowInfo, callback) {
-                            if (rowInfo.isEmpty.valueToSaveOverride) {
+                            if (rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride) {
                                 return callback(null, false);
                             }
                             let isRequired = rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'NORMAL';
@@ -1594,7 +1607,7 @@ class ContractExcelReader {
                 case C_IDS.MIN_AMOUNT:
                     return _this._readField(rowInfo, cell, 'minAmount', Number, {
                         required: function (rowInfo, callback) {
-                            if (rowInfo.isEmpty.valueToSaveOverride) {
+                            if (rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride) {
                                 return callback(null, false);
                             }
                             let isRequired = rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'OPEN';
@@ -1607,7 +1620,7 @@ class ContractExcelReader {
                 case C_IDS.MAX_AMOUNT:
                     return _this._readField(rowInfo, cell, 'maxAmount', Number, {
                         required: function (rowInfo, callback) {
-                            if (rowInfo.isEmpty.valueToSaveOverride) {
+                            if (rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride) {
                                 return callback(null, false);
                             }
                             let isRequired = rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'OPEN';
@@ -1620,7 +1633,7 @@ class ContractExcelReader {
                 case C_IDS.MAX_OR_TOTAL_AMOUNT:
                     return _this._readField(rowInfo, cell, 'totalOrMaxAmount', Number, {
                         required: function (rowInfo, callback) {
-                            if(rowInfo.isEmpty.valueToSaveOverride){
+                            if(rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride){
                                 return callback(null, false);
                             }
                             return callback(null, true, "Este campo es requerido");
@@ -1695,7 +1708,7 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell, 'limitExceeded', String, {
                         enum: limitExceededEnumDict,
                         required: function (rowInfo, callback) {
-                            if(rowInfo.isEmpty.valueToSaveOverride){
+                            if(rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride){
                                 return callback(null, false);
                             }
                             return callback(null, true, "Este campo es requerido");

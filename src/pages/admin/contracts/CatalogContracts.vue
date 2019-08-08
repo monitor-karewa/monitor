@@ -556,7 +556,7 @@
                           class="c-error">{{$t(requiredErrorMessage, {field:'contracts.new.information-date.label'})}}</span> -->
                 </div>
 
-                <div class="form-group fg-float subtitle">
+                <div class="form-group fg-float subtitle" v-show="entry.procedureType === 'NO_BID'">
                     <div class="fg-line basic-input">
                         <div class="checkbox">
                             <input type="checkbox" v-model="entry.limitExceeded">
@@ -573,7 +573,7 @@
 
 
                 <!--amountExceeded-->
-                <div class="form-group fg-float subtitle">
+                <div class="form-group fg-float subtitle" v-show="entry.procedureType === 'NO_BID'">
                     <div class="fg-line basic-input">
                         <input type="text" class="form-control fg-input"
                                :placeholder="$t('contracts.new.amount-exceeded.placeholder')"
