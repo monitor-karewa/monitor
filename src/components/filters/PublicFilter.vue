@@ -17,7 +17,7 @@
                                         data-live-search-placeholder="Buscar administración"
                                         title="Por administración" @change="addFilter(query.administrationPeriods, temp.administrationPeriod, 'administrationPeriods')">
                                     <option v-for="item in administrationPeriods" :value="item">
-                                        ADMINISTRACIÓN {{item.administrationPeriod}}
+                                        {{item.administrationPeriod}}
                                     </option>
                                 </select>
                             </div>

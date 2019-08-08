@@ -14,6 +14,15 @@
 
         <modalEntry v-bind:storeModule="storeModule" :validator="$v" :entry="entry">
             <div>
+
+
+                <div class="checkbox m-b-20">
+                    <input type="checkbox" value="IS_EMPTY" v-model="$v.entry.isEmpty.$model">
+                    <i class="input-helper"></i>
+                    <span>No se llevaron a cabo procedimientos</span>
+                </div>
+
+
                 <!--Procedure Type-->
                 <div class="form-group fg-float basic-select">
                     <div class="fg-line">
@@ -617,7 +626,7 @@
     import {DELETE_SUCCESS, DOC_CREATED, DOC_START_EDIT, DOC_UPDATED} from "@/store/events";
     import ModalDanger from "@/components/modals/ModalDanger";
     import ModalDefault from "@/components/modals/ModalDefault";
-    import { required, minLength, maxLength } from 'vuelidate/lib/validators';
+    import {requiredIf , required, minLength, maxLength } from 'vuelidate/lib/validators';
     import {mapGetters, mapState} from 'vuex';
     import ModalEntry from "@/components/catalogs/ModalEntry";
 
@@ -671,6 +680,7 @@
                     {label: "contracts.contractUrl", visible: true, field: 'contractUrl'},
                     {label: "contracts.areaInCharge", visible: true, field: 'areaInCharge'},
                     {label: "contracts.updateDate", visible: true, field: 'updateDate', type: 'date'},
+                    {label: "contracts.isEmpty", visible: true, field: 'isEmpty', type: 'boolean'},
 
                     {label: "general.created-at", visible: false, field: 'createdAt', type: 'date'}
                 ],
@@ -710,7 +720,8 @@
                     karewaNotes: "",
                     informationDate: "",
                     limitExceeded: false,
-                    amountExceeded: 0
+                    amountExceeded: 0,
+                    isEmpty: false
                 },
                 modalProperties: {
                     title: "general.modal-editable-table.title",
@@ -723,6 +734,7 @@
         },
         validations: {
             entry: {
+                isEmpty: {},
                 procedureType:{
                   required
                 },
@@ -792,7 +804,9 @@
                 },
 
                 servicesDescription:{
-                    required
+                    required: requiredIf(function(form){
+                        return !this.entry.isEmpty
+                    })
                 },
 //                supplier:{
 //                    required
@@ -804,16 +818,24 @@
                     required
                 },
                 administrativeUnitType:{
-                    required
+                    required: requiredIf(function(form){
+                        return !this.entry.isEmpty
+                    })
                 },
                 contractType:{
-                    required
+                    required: requiredIf(function(form){
+                        return !this.entry.isEmpty
+                    })
                 },
                 contractDate:{
-                    required
+                    required: requiredIf(function(form){
+                        return !this.entry.isEmpty
+                    })
                 },
                 totalOrMaxAmount:{
-                    required
+                    required: requiredIf(function(form){
+                        return !this.entry.isEmpty
+                    })
                 },
                 areaInCharge:{
                     required
@@ -900,7 +922,9 @@
 //                 },
                 // /* Número que identifique al contrato */
                  contractNumber:{
-                     required
+                     required: requiredIf(function(form){
+                         return !this.entry.isEmpty
+                     })
                  },
                 /* Fecha del contrato */
 //                 contractDate:{
@@ -1059,6 +1083,7 @@
                     this.entry.informationDate = entry.informationDate;
                     this.entry.limitExceeded = entry.limitExceeded;
                     this.entry.amountExceeded = entry.amountExceeded;
+                    this.entry.isEmpty= entry.isEmpty;
                     // this.$nextTick(function () {
                     //     $('.selectpicker').selectpicker('refresh');
                     // })

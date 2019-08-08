@@ -105,6 +105,12 @@ const categoryEnumDict = {
             regexStr: utils.toAccentsRegex('obra(s)? publica(s)?', null, true),
             flags: 'gi'
         },
+    ],
+    'NULL': [
+        {
+            regexStr: utils.toAccentsRegex('^(null)?(undefined)?$', null, true),
+            flags: 'gi'
+        },
     ]
 };
 
@@ -172,6 +178,12 @@ const procedureStateEnumDict = {
             flags: 'gi'
         },
     ],
+    'NULL': [
+        {
+            regexStr: utils.toAccentsRegex('^(null)?(undefined)?$', null, true),
+            flags: 'gi'
+        },
+    ]
 };
 
 
@@ -332,6 +344,13 @@ const CONTRACT_VALIDATION_REGEX_DICT = {
 };
 
 let ContractSchema = new Schema({
+
+    isEmpty : {
+        type : Boolean,
+        required : true,
+        default : false
+    },
+
     organization: {
         type: Schema.Types.ObjectId,
         ref: 'Organization',
@@ -339,7 +358,9 @@ let ContractSchema = new Schema({
     },
     backedUp: {
         type: Boolean,
-        required: true,
+        required: function(value) {
+            return !this.isEmpty;
+        },
         default: false
     },
     /* Tipo de procedimiento */
@@ -353,7 +374,12 @@ let ContractSchema = new Schema({
     category: {
         type: String,
         enum: categoryEnum,
-        required: [function () {
+        required: [function (value) {
+            // console.log('this.empty --> ' + this.empty);
+            // console.log('value --> ' + value);
+            if(!this.empty){
+                return false;
+            }
             let descriptionRegExp = utils.toAccentsRegex(this.servicesDescription.toUpperCase(), 'gi');
             return descriptionRegExp.test(this.category);
         }, "El campo Materia es un campo requerido"],
@@ -419,7 +445,8 @@ let ContractSchema = new Schema({
         type: String,
         enum: procedureStateEnum,
         // required:true,
-        required: [function () {
+        required: [ function () {
+            if(this.isEmpty){return false}
             let values = Object.values(procedureStateEnumDict);
             let valuesFlat = [];
             values.forEach((value) => {
@@ -438,12 +465,19 @@ let ContractSchema = new Schema({
 
         }, "Este campo es requerido debido a que se indicó un estado de procedimiento en las notas del contrato."],
         validate: {
-            validator: function (v) {
-                for (let item in procedureStateEnumDict) {
-                    for (let i = 0; i < procedureStateEnumDict[item].length; i++) {
-                        let isIncluded = new RegExp(procedureStateEnumDict[item][i].regexStr).test(this.notes);
-                        if (isIncluded) {
-                            return item == v;
+            validator:function(v){
+
+                if(this.isEmpty){
+                    return true
+                }
+
+                if (this.notes && this.notes.length) {
+                    for (let item in procedureStateEnumDict) {
+                        for (let i = 0; i < procedureStateEnumDict[item].length; i++) {
+                            let isIncluded = new RegExp(procedureStateEnumDict[item][i].regexStr).test(this.notes);
+                            if (isIncluded) {
+                                return item == v;
+                            }
                         }
                     }
                 }
@@ -470,7 +504,9 @@ let ContractSchema = new Schema({
     /* Descripción de las obras, bienes o servicios */
     servicesDescription: {
         type: String,
-        required: [true, "El campo Descripción de las obras es requerido"],
+        required: [function(value) {
+            return !this.isEmpty
+        },"El campo Descripción de las obras es requerido"]
     },
     /* Fecha en la que se celebró la junta de aclaraciones */
     clarificationMeetingDate: {
@@ -534,32 +570,45 @@ let ContractSchema = new Schema({
     /* Fecha del contrato */
     contractDate: {
         type: Date,
-        required: [true, "El campo Fecha del contrato es requerido"]
+        required: [function(value) {
+            return !this.isEmpty
+        }, "El campo Fecha del contrato es requerido"]
     },
     /* Tipo de Contrato */
     contractType: {
         type: String,
         enum: contractTypeEnum,
-        required: [true, "El campo Tipo de contrato es requerido"],
+        required: [function(value) {
+          return !this.isEmpty
+      }, "El campo Tipo de contrato es requerido"],
     },
     /* Monto total del contrato con impuestos incluidos */
     totalAmount: {
         type: Number,
         required: [function () {
+            if (this.isEmpty) {
+                return false;
+            }
             return this.contractType == 'NORMAL';
         }, "El campo Monto total es requerido al ser un contrato normal"]
     },
     /* Monto mínimo, en su caso */
     minAmount: {
         type: Number,
-        required: [function () {
-            return this.contractType == 'OPEN';
+        required:[ function () {
+            if (this.isEmpty) {
+                return false;
+            }
+             return this.contractType == 'OPEN';
         }, "El campo Monto mínimo es requerido al ser un contrato abierto"]
     },
     /* Monto máximo, en su caso */
     maxAmount: {
         type: Number,
         required: [function () {
+            if (this.isEmpty) {
+                return false;
+            }
             return this.contractType == 'OPEN';
         }, "El campo Monto máximo es requerido al ser un contrato abierto"]
     },
@@ -567,7 +616,9 @@ let ContractSchema = new Schema({
     /* Monto total o Monto máximo, en su caso */
     totalOrMaxAmount: {
         type: Number,
-        required: [true, "El campo Monto total o Máximo es requerido"],
+        required: [function(){
+            return !this.isEmpty;
+        }, "El campo Monto total o Máximo es requerido"],
         validate: {
             validator: function (v) {
                 if (this.contractType == 'OPEN') {
@@ -596,7 +647,7 @@ let ContractSchema = new Schema({
     areaInCharge: {
         type: String,
         // ref: 'AdministrativeUnit',
-        // required: [true, "El campo Área responsable de la información es requerido"],
+        required: [true, "El campo Área responsable de la información es requerido"],
     },
     /*Fecha de actualización*/
     updateDate: {
@@ -620,7 +671,9 @@ let ContractSchema = new Schema({
     /*Adjudicaciones Directas que exceden el límite*/
     limitExceeded: {
         type: Boolean,
-        required: true,
+        required: function(value) {
+            return !this.isEmpty;
+        },
         default: false
     },
     /*Monto que excede el límite de la Adjudicación Directa*/
@@ -779,7 +832,6 @@ ContractSchema.post('insertMany', postInsertMany);
 ContractSchema.post('save', postSave);
 
 ContractSchema.index({contractNumber: 1, organization: 1, deleted: 1}, {unique: true});
-
 
 const Contract = mongoose.model('Contract', ContractSchema);
 

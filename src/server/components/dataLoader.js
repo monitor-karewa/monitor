@@ -114,6 +114,7 @@ const C_IDS = {
     INFORMATION_DATE: 'C31',
     LIMIT_EXCEEDED: 'C32',
     AMOUNT_EXCEEDED: 'C33',
+    IS_EMPTY: 'C34',
 
     //Catch-all for unrecognized columns
     UNKOWN_COLUMN: 'UNKOWN_COLUMN'
@@ -152,8 +153,9 @@ const C_IDS_DESCRIPTIONS = {
     [C_IDS.NOTES]: 'Nota',
     [C_IDS.KAREWA_NOTES]: 'Notas Karewa',
     [C_IDS.INFORMATION_DATE]: 'Fecha de obtención de los datos',
-    [C_IDS.LIMIT_EXCEEDED]: 'Adjudicaciones Directas que exceden el límite',
+    [C_IDS.LIMIT_EXCEEDED]: 'Adjudicaciones Directa s que exceden el límite',
     [C_IDS.AMOUNT_EXCEEDED]: 'Monto que excede el límite de la Adjudicación',
+    [C_IDS.IS_EMPTY]: 'Indica si el contrato se hace con la intención de indicar que no se hicieron ',
 };
 
 const LETTERS_AND_SPACES_REGEX_STR = "[a-zA-ZñÑ]+[\S]*([a-zA-ZñÑ][\S]*)?";
@@ -505,6 +507,26 @@ class ContractExcelReader {
                                 fieldInfo.value = utils.parseNumber(value);
                             }
                             break;
+                        case Boolean:
+                            value = value ? value : false;
+                            let positiveBooleanStrings = ["true", "si", "sí", "verdadero"];
+
+                            if(typeof value =="string"){
+                                if(positiveBooleanStrings.includes(value.toLowerCase())){
+                                    fieldInfo.valueToSaveOverride = true
+                                    fieldInfo.value = true
+                                } else {
+                                    fieldInfo.valueToSaveOverride = false;
+                                    fieldInfo.value = false;
+                                }
+                            } else if(typeof value == "boolean"){
+                                fieldInfo.valueToSaveOverride = !!value;
+                                fieldInfo.value = !!value;
+                            } else {
+                                fieldInfo.valueToSaveOverride = false
+                                fieldInfo.value = false
+                            }
+                            break;
                     }
                 } catch (err) {
                     logger.error(err, null, 'dataLoader#_readField', 'Error trying to parse value');
@@ -790,7 +812,7 @@ class ContractExcelReader {
                         // sourceFieldInfo = obj[linkToField];
                         // targetFieldInfo = fieldInfo;
                         sourceFieldInfo = fieldInfo;
-                        targetFieldInfo = obj[linkToField];;
+                        targetFieldInfo = obj[linkToField];
                     } else {
                         //Wait for field to be processed
                         obj.pendingRefLinks = obj.pendingRefLinks || {};
@@ -1134,7 +1156,11 @@ class ContractExcelReader {
                         enum: categoryEnumDict,
                         required: function (rowInfo, callback) {
                             //TODO: Centralize this validation
-                            
+
+                            if (rowInfo.isEmpty.valueToSaveOverride) {
+                                return callback(null, false);
+                            }
+
                             let regexOptionMatch = null;
                             
                             
@@ -1164,7 +1190,7 @@ class ContractExcelReader {
                                 
                                 return callback(null, isRequired, errorMessage);
                             }
-                            
+
                             return callback(null, false);
                         },
                         validator: function (rowInfo, callback) {
@@ -1278,6 +1304,10 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell, 'procedureState', String, {
                         enum: procedureStateEnumDict,
                         required: function (rowInfo, callback) {
+
+                            if (rowInfo.isEmpty.valueToSaveOverride) {
+                                return callback(null, false);
+                            }
                             //TODO: Centralize this validation
                             // let descriptionRegExp = utils.toAccentsRegex((rowInfo.notes.value || '').toUpperCase(),'i');
                             // return descriptionRegExp.test(rowInfo.procedureType.value);
@@ -1317,9 +1347,17 @@ class ContractExcelReader {
                             return callback(null, false);
                         },
                         validator: function (rowInfo, callback) {
+
                             let regexOptionMatch = null;
                             let matchingProcedureState = null;
-                            
+
+                            if (rowInfo.isEmpty.valueToSaveOverride) {
+                                return callback(null, false);
+                            } else if(!rowInfo.procedureState.valueToSaveOverride || rowInfo.procedureState.valueToSaveOverride == "NULL") {
+                                let errorMessage = "El valor es requerido";
+                                return callback(null, errorMessage);
+                            }
+
                             if (rowInfo.procedureState.value && rowInfo.procedureState.valueToSaveOverride && rowInfo.notes.value) {
 
                                 for (let procedureState of procedureStateEnum) {
@@ -1375,7 +1413,12 @@ class ContractExcelReader {
                     break;
                 case C_IDS.SERVICES_DESCRIPTION:
                     return _this._readField(rowInfo, cell, 'servicesDescription', String, {
-                        required: true
+                        required: function (rowInfo, callback) {
+                            if(rowInfo.isEmpty.valueToSaveOverride){
+                                return callback(null, false);
+                            }
+                            return callback(null, true, "Este campo es requerido");
+                        },
                     }, callback);
                     break;
                 case C_IDS.CLARIFICATION_MEETING_DATE:
@@ -1495,13 +1538,23 @@ class ContractExcelReader {
                     break;
                 case C_IDS.CONTRACT_NUMBER:
                     return _this._readField(rowInfo, cell, 'contractNumber', String, {
-                        required: true,
+                        required: function (rowInfo, callback) {
+                            if(rowInfo.isEmpty.valueToSaveOverride){
+                                return callback(null, false);
+                            }
+                            return callback(null, true, "Este campo es requerido");
+                        },
                         unique: true
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_DATE:
                     return _this._readField(rowInfo, cell, 'contractDate', Date, {
-                        required: true,
+                        required: function (rowInfo, callback) {
+                            if(rowInfo.isEmpty.valueToSaveOverride){
+                                return callback(null, false);
+                            }
+                            return callback(null, true, "Este campo es requerido");
+                        },
                         //TODO: Centralize this validation
                         // validator: function(rowInfo, callback){
                         //     let yearContractDate = new Date(rowInfo.contractDate.value).getFullYear();
@@ -1528,6 +1581,9 @@ class ContractExcelReader {
                 case C_IDS.TOTAL_AMOUT:
                     return _this._readField(rowInfo, cell, 'totalAmount', Number, {
                         required: function (rowInfo, callback) {
+                            if (rowInfo.isEmpty.valueToSaveOverride) {
+                                return callback(null, false);
+                            }
                             let isRequired = rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'NORMAL';
                             let errorMessage = 'El campo Monto total es requerido al ser un contrato normal';
 
@@ -1538,6 +1594,9 @@ class ContractExcelReader {
                 case C_IDS.MIN_AMOUNT:
                     return _this._readField(rowInfo, cell, 'minAmount', Number, {
                         required: function (rowInfo, callback) {
+                            if (rowInfo.isEmpty.valueToSaveOverride) {
+                                return callback(null, false);
+                            }
                             let isRequired = rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'OPEN';
                             let errorMessage = 'El campo Monto mínimo es requerido al ser un contrato normal';
 
@@ -1548,6 +1607,9 @@ class ContractExcelReader {
                 case C_IDS.MAX_AMOUNT:
                     return _this._readField(rowInfo, cell, 'maxAmount', Number, {
                         required: function (rowInfo, callback) {
+                            if (rowInfo.isEmpty.valueToSaveOverride) {
+                                return callback(null, false);
+                            }
                             let isRequired = rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'OPEN';
                             let errorMessage = 'El campo Monto máximo es requerido al ser un contrato normal';
 
@@ -1557,7 +1619,12 @@ class ContractExcelReader {
                     break;
                 case C_IDS.MAX_OR_TOTAL_AMOUNT:
                     return _this._readField(rowInfo, cell, 'totalOrMaxAmount', Number, {
-                        required: true,
+                        required: function (rowInfo, callback) {
+                            if(rowInfo.isEmpty.valueToSaveOverride){
+                                return callback(null, false);
+                            }
+                            return callback(null, true, "Este campo es requerido");
+                        },
                         validator: function (rowInfo, callback) {
                             
                             if (rowInfo.totalOrMaxAmount.value) {
@@ -1627,12 +1694,20 @@ class ContractExcelReader {
                 case C_IDS.LIMIT_EXCEEDED:
                     return _this._readField(rowInfo, cell, 'limitExceeded', String, {
                         enum: limitExceededEnumDict,
-                        required: true,
+                        required: function (rowInfo, callback) {
+                            if(rowInfo.isEmpty.valueToSaveOverride){
+                                return callback(null, false);
+                            }
+                            return callback(null, true, "Este campo es requerido");
+                        },
                         uppercase: true
                     }, callback);
                     break;
                 case C_IDS.AMOUNT_EXCEEDED:
                     return _this._readField(rowInfo, cell, 'amountExceeded', Number, {}, callback);
+                    break;
+                case C_IDS.IS_EMPTY:
+                    return _this._readField(rowInfo, cell, 'isEmpty', Boolean, {}, callback);
                     break;
                 case C_IDS.UNKOWN_COLUMN:
                 default:
@@ -1934,6 +2009,7 @@ class ContractExcelWriter {
         this.addCell(sheet, rowIndex, 31, rowInfo.informationDate, 'date');
         this.addCell(sheet, rowIndex, 32, rowInfo.limitExceeded, 'string');
         this.addCell(sheet, rowIndex, 33, rowInfo.amountExceeded, 'currency');
+        this.addCell(sheet, rowIndex, 34, rowInfo.isEmpty, 'boolean');
     }
     
     addCell(sheet, rowIndex, cellIndex, fieldInfo, format, options = {}) {
@@ -1945,6 +2021,10 @@ class ContractExcelWriter {
         
         switch(format) {
             case 'string':
+                sheet.getRow(rowIndex).getCell(cellIndex).value = fieldInfo.value;
+                wrapText = true;
+                break;
+            case 'boolean':
                 sheet.getRow(rowIndex).getCell(cellIndex).value = fieldInfo.value;
                 wrapText = true;
                 break;

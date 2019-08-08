@@ -73,6 +73,7 @@ exports.upload = (req, res, next) => {
             if (err) {
                 logger.error(err, req, 'dataLoad.controller#upload', 'Error trying to count current DataLoad');
                 return res.json({
+
                     "error": true,
                     "message": req.__('data-load.error.upload.check-in-progress')
                 });
