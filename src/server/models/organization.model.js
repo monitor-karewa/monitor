@@ -53,6 +53,10 @@ organizationSchema = mongoose.Schema({
         ref: 'File',
         required: false
     },
+    welcomeTitle: {
+        type: String,
+        default: "Bienvenido a:"
+    },
     title: {
         type: String,
         required: true,
@@ -81,6 +85,10 @@ organizationSchema = mongoose.Schema({
     additionalInformation: {
         type: String,
         default: ""
+    },
+    showBackgroundText: {
+        type: Boolean,
+        default: false
     },
     deleted: require("./schemas/deleted.schema").Deleted
 });

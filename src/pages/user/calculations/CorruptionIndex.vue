@@ -120,8 +120,6 @@
                                 El índice de Riesgo de Corrupción se calcula analizando la información de transparencia de las
                                 contrataciones públicas, tomando en cuenta diferentes variables para generar un índice
                                 exacto.
-
-                                Si deseas conocer más sobre la plataforma, dirígete a nuestras recursos haciendo <router-link to="/resources">clic aquí</router-link>.
                                 <br>
                                 <br>
                                 <strong class="f-16">Administración</strong>

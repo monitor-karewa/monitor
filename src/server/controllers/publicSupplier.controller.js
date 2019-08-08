@@ -4,7 +4,7 @@ const {Organization} = require('./../models/organization.model');
 const deletedSchema = require('./../models/schemas/deleted.schema');
 const utils = require('./../components/utils.js');
 const moment = require('moment');
-const { PDFTable, PDFExporter } = require('./../components/pdfExporter');
+const {PDFTable, PDFExporter} = require('./../components/pdfExporter');
 const async = require('async');
 
 const logger = require('./../components/logger').instance;
@@ -16,26 +16,26 @@ function _getPageFromReq(req) {
     return Number(req.query.page) || 1;
 }
 
-function _getFormatedFilters(req, filters){
+function _getFormatedFilters(req, filters) {
     let formatedFilter = [];
-    for(let item in filters){
+    for (let item in filters) {
         let row = {
-            key : req.__('suppliers.filters.'+item),
-            values:''
+            key: req.__('suppliers.filters.' + item),
+            values: ''
         }
-        if(Array.isArray(filters[item])){
+        if (Array.isArray(filters[item])) {
             filters[item].forEach((filter) => {
-                if(typeof filter == "string"){
+                if (typeof filter == "string") {
                     row.values += `${req.__(filter)}. `;
 
-                } else if(filter.hasOwnProperty('_id') && filter.hasOwnProperty('name')){
+                } else if (filter.hasOwnProperty('_id') && filter.hasOwnProperty('name')) {
                     row.values += `${filter.name}. `;
                 } else {
                     row.values += `${filter._id}. `
                 }
                 // formatedFilter[item] = { value:filter._id};
             });
-        } else if(typeof filters[item] == "string" || typeof filters[item] == "number"){
+        } else if (typeof filters[item] == "string" || typeof filters[item] == "number") {
             row.values += filters[item];
             // formatedFilter[item] = filters[item]._id;
         }
@@ -45,14 +45,16 @@ function _getFormatedFilters(req, filters){
     return formatedFilter
 }
 
-function _aggregateSupplierDetail(req, res, callback){
+function _aggregateSupplierDetail(req, res, callback) {
     let supplierId = req.query.id;
 
     if (supplierId) {
         supplierId = mongoose.Types.ObjectId(supplierId);
     }
 
-    let query = {supplier : supplierId};
+    let qNotDeleted = deletedSchema.qNotDeleted();
+    let qByOrganization = Organization.qByOrganization(req);
+    let query = {supplier: supplierId,...qNotDeleted, ...qByOrganization};
 
     let matchContracts = {};
     let orBuilder = [];
@@ -111,8 +113,8 @@ function _aggregateSupplierDetail(req, res, callback){
             orBuilder = [];
         }
 
-        if(andBuilder.length){
-            matchContracts = {$and : andBuilder};
+        if (andBuilder.length) {
+            matchContracts = {$and: andBuilder};
             query = {
                 "supplier": supplierId,
                 ...matchContracts
@@ -132,7 +134,9 @@ function _aggregateSupplierDetail(req, res, callback){
                 servicesDescription: 1,
                 totalOrMaxAmount: 1,
                 informationDate: 1,
-                procedureType: 1
+                procedureType: 1,
+                procedureState: 1,
+                category: 1
             }
         },
         {
@@ -142,7 +146,7 @@ function _aggregateSupplierDetail(req, res, callback){
                 'totalPublic': {
                     $sum: {
                         $cond: {
-                            if: {$eq: ["$procedureType", "PUBLIC"]},
+                            if: Contract.aggregateCondProcedures("PUBLIC","CONCLUDED"),
                             then: "$totalOrMaxAmount",
                             else: 0
                         }
@@ -151,7 +155,7 @@ function _aggregateSupplierDetail(req, res, callback){
                 'totalPublicCount': {
                     $sum: {
                         $cond: {
-                            if: {$eq: ["$procedureType", "PUBLIC"]},
+                            if: Contract.aggregateCondProcedures("PUBLIC"),
                             then: 1,
                             else: 0
                         }
@@ -160,7 +164,7 @@ function _aggregateSupplierDetail(req, res, callback){
                 'totalInvitation': {
                     $sum: {
                         $cond: {
-                            if: {$eq: ["$procedureType", "INVITATION"]},
+                            if:Contract.aggregateCondProcedures("INVITATION","CONCLUDED"),
                             then: "$totalOrMaxAmount",
                             else: 0
                         }
@@ -169,7 +173,7 @@ function _aggregateSupplierDetail(req, res, callback){
                 'totalInvitationCount': {
                     $sum: {
                         $cond: {
-                            if: {$eq: ["$procedureType", "INVITATION"]},
+                            if: Contract.aggregateCondProcedures("INVITATION"),
                             then: 1,
                             else: 0
                         }
@@ -178,7 +182,7 @@ function _aggregateSupplierDetail(req, res, callback){
                 'totalNoBid': {
                     $sum: {
                         $cond: {
-                            if: {$eq: ["$procedureType", "NO_BID"]},
+                            if: Contract.aggregateCondProcedures("NO_BID","CONCLUDED"),
                             then: "$totalOrMaxAmount",
                             else: 0
                         }
@@ -187,13 +191,19 @@ function _aggregateSupplierDetail(req, res, callback){
                 'totalNoBidCount': {
                     $sum: {
                         $cond: {
-                            if: {$eq: ["$procedureType", "NO_BID"]},
+                            if: Contract.aggregateCondProcedures("NO_BID"),
                             then: 1,
                             else: 0
                         }
                     }
                 },
-                total: {$sum: "$totalOrMaxAmount"},
+                total: {$sum: {
+                    $cond: {
+                        if: Contract.aggregateCondProcedures(null,"CONCLUDED"),
+                        then: "$totalOrMaxAmount",
+                        else: 0
+                    }
+                }},
                 count: {$sum: 1}
             },
 
@@ -201,12 +211,13 @@ function _aggregateSupplierDetail(req, res, callback){
         {
             $lookup: {
                 from: Supplier.collection.name,
-                let: { "supplierId": "$_id" },
+                let: {"supplierId": "$_id"},
                 pipeline: [
                     {
                         "$match": {
                             "$expr": {
-                                "$eq": [ "$_id", "$$supplierId" ] }
+                                "$eq": ["$_id", "$$supplierId"]
+                            }
                         }
                     },
                     {
@@ -249,21 +260,21 @@ function _aggregateSupplierDetail(req, res, callback){
                     $filter: {
                         input: "$contracts",
                         as: "contract",
-                        cond: { $eq: [ "$$contract.procedureType", "PUBLIC" ] }
+                        cond: {$eq: ["$$contract.procedureType", "PUBLIC"]}
                     }
                 },
                 invitation: {
                     $filter: {
                         input: "$contracts",
                         as: "contract",
-                        cond: { $eq: [ "$$contract.procedureType", "INVITATION" ] }
+                        cond: {$eq: ["$$contract.procedureType", "INVITATION"]}
                     }
                 },
                 noBid: {
                     $filter: {
                         input: "$contracts",
                         as: "contract",
-                        cond: { $eq: [ "$$contract.procedureType", "NO_BID" ] }
+                        cond: {$eq: ["$$contract.procedureType", "NO_BID"]}
                     }
                 },
             }
@@ -275,7 +286,7 @@ function _aggregateSupplierDetail(req, res, callback){
 }
 
 function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
-    
+
     let paginate = !!options.paginate;
     let query = {};
     let orBuilder = [];
@@ -283,7 +294,7 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
 
     if (req.body && req.body.filters) {
         if (req.body.filters.search && req.body.filters.search.length) {
-            
+
             let searchRegex = utils.toAccentsRegex(req.body.filters.search, "gi");
             orBuilder.push({contractId: searchRegex});
             orBuilder.push({contractNumber: searchRegex});
@@ -335,11 +346,10 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
             orBuilder = [];
         }
 
-        if(andBuilder.length){
-            query = {$and : andBuilder};
+        if (andBuilder.length) {
+            query = {$and: andBuilder};
         }
     }
-
 
 
     let qNotDeleted = deletedSchema.qNotDeleted();
@@ -350,12 +360,13 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
         {
             $lookup: {
                 from: Supplier.collection.name,
-                let: { "supplierId": "$supplier" },
+                let: {"supplierId": "$supplier"},
                 pipeline: [
                     {
                         "$match": {
                             "$expr": {
-                                "$eq": [ "$_id", "$$supplierId" ] }
+                                "$eq": ["$_id", "$$supplierId"]
+                            }
                         }
                     },
                     {
@@ -385,7 +396,7 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
                 publicCount: {
                     $sum: {
                         $cond: {
-                            if: {$eq: ["$procedureType", "PUBLIC"]},
+                            if:Contract.aggregateCondProcedures("PUBLIC","CONCLUDED"),
                             then: 1,
                             else: 0
                         }
@@ -394,7 +405,7 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
                 invitationCount: {
                     $sum: {
                         $cond: {
-                            if: {$eq: ["$procedureType", "INVITATION"]},
+                            if: Contract.aggregateCondProcedures("INVITATION","CONCLUDED"),
                             then: 1,
                             else: 0
                         }
@@ -403,17 +414,17 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
                 noBidCount: {
                     $sum: {
                         $cond: {
-                            if: {$eq: ["$procedureType", "NO_BID"]},
+                            if: Contract.aggregateCondProcedures("NO_BID","CONCLUDED"),
                             then: 1,
                             else: 0
                         }
                     }
                 },
-                
+
                 public: {
                     $sum: {
                         $cond: {
-                            if: {$eq: ["$procedureType", "PUBLIC"]},
+                            if: Contract.aggregateCondProcedures("PUBLIC","CONCLUDED"),
                             then: "$totalOrMaxAmount",
                             else: 0
                         }
@@ -422,7 +433,7 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
                 invitation: {
                     $sum: {
                         $cond: {
-                            if: {$eq: ["$procedureType", "INVITATION"]},
+                            if: Contract.aggregateCondProcedures("INVITATION","CONCLUDED"),
                             then: "$totalOrMaxAmount",
                             else: 0
                         }
@@ -431,13 +442,21 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
                 noBid: {
                     $sum: {
                         $cond: {
-                            if: {$eq: ["$procedureType", "NO_BID"]},
+                            if: Contract.aggregateCondProcedures("NO_BID","CONCLUDED"),
                             then: "$totalOrMaxAmount",
                             else: 0
                         }
                     }
                 },
-                total: {$sum: "$totalOrMaxAmount"}
+                total: {
+                    $sum: {
+                        $cond: {
+                            if: Contract.aggregateCondProcedures(null,"CONCLUDED"),
+                            then: "$totalOrMaxAmount",
+                            else: 0
+                        }
+                    }
+                }
             }
         },
         {
@@ -455,7 +474,7 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
             }
         }
     ]);
-    
+
     if (!paginate) {
         return aggregate.exec(callback);
     } else {
@@ -468,7 +487,7 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
                 total: -1
             }
         };
-        
+
         return Contract.aggregatePaginate(aggregate, paginateOptions, callback);
     }
 }
@@ -479,80 +498,81 @@ exports.list = (req, res, next) => {
     let page = _getPageFromReq(req);
 
     async.parallel({
-        mainQuery: function (callback) {
-    _aggregateSuppliersFromContracts(req, res, {paginate: true}, (err, suppliers, pageCount, itemCount) => {
-        if (err) {
-            logger.error(err, req, 'publicSupplier.controller#list', 'Error trying to query suppliers info from aggregate');
-            return res.json({
-                error: true
-            });
-        }
+            mainQuery: function (callback) {
+                _aggregateSuppliersFromContracts(req, res, {paginate: true}, (err, suppliers, pageCount, itemCount) => {
+                    if (err) {
+                        logger.error(err, req, 'publicSupplier.controller#list', 'Error trying to query suppliers info from aggregate');
+                        return res.json({
+                            error: true
+                        });
+                    }
 
-        let totals = {
-            totalCount: 0,
-            publicCount: 0,
-            invitationCount: 0,
-            noBidCount: 0,
+                    let totals = {
+                        totalCount: 0,
+                        publicCount: 0,
+                        invitationCount: 0,
+                        noBidCount: 0,
 
-            total: 0,
-            public: 0,
-            invitation: 0,
-            noBid: 0,
-        };
+                        total: 0,
+                        public: 0,
+                        invitation: 0,
+                        noBid: 0,
+                    };
 
-        suppliers.forEach((supplierInfo) => {
-            totals.totalCount += supplierInfo.contractsCount;
-            totals.publicCount += supplierInfo.publicCount;
-            totals.invitationCount += supplierInfo.invitationCount;
-            totals.noBidCount += supplierInfo.noBidCount;
+                    suppliers.forEach((supplierInfo) => {
+                        totals.totalCount += (supplierInfo.publicCount + supplierInfo.invitationCount + supplierInfo.noBidCount);
+                        totals.publicCount += supplierInfo.publicCount;
+                        totals.invitationCount += supplierInfo.invitationCount;
+                        totals.noBidCount += supplierInfo.noBidCount;
 
-            totals.total += supplierInfo.total;
-            totals.public += supplierInfo.public;
-            totals.invitation += supplierInfo.invitation;
-            totals.noBid += supplierInfo.noBid;
-        });
+                        totals.total += supplierInfo.total;
+                        totals.public += supplierInfo.public;
+                        totals.invitation += supplierInfo.invitation;
+                        totals.noBid += supplierInfo.noBid;
+                    });
 
-        let pagination = {
-            total: itemCount,
-            page: page,
-            pages: pageCount
-        };
+                    let pagination = {
+                        total: itemCount,
+                        page: page,
+                        pages: pageCount
+                    };
 
-        let data = {
-            totals: totals,
-            suppliers: suppliers,
-            pagination: pagination
-        };
+                    let data = {
+                        totals: totals,
+                        suppliers: suppliers,
+                        pagination: pagination
+                    };
 
-        return callback(null,{
-            error: false,
-            data: data
-        });
-    })},
-        lastUpdate: function (callback) {
-        let qByOrganization = Organization.qByOrganization(req);
-        Contract.find(
-            {...qByOrganization},
-            {updatedAt: 1},
-            {sort: {"updatedAt": -1}, limit: 1},
-            function (err, result) {
-                if (err) {
-                    console.log("err", err);
-                    callback(err)
-                } else {
-                    callback(null, result)
-                }
+                    return callback(null, {
+                        error: false,
+                        data: data
+                    });
+                })
+            },
+            lastUpdate: function (callback) {
+                let qByOrganization = Organization.qByOrganization(req);
+                Contract.find(
+                    {...qByOrganization},
+                    {updatedAt: 1},
+                    {sort: {"updatedAt": -1}, limit: 1},
+                    function (err, result) {
+                        if (err) {
+                            console.log("err", err);
+                            callback(err)
+                        } else {
+                            callback(null, result)
+                        }
+                    }
+                )
             }
-        )
-    }
-},
-    function (err, results) {
-        let json = {...results.mainQuery};
-        if (results.lastUpdate && results.lastUpdate.length) {
-            json = {...results.mainQuery, lastUpdate: results.lastUpdate[0].updatedAt}
-        }
-        res.json(json);
-    });
+        },
+        function (err, results) {
+            let json = {...results.mainQuery};
+            if (results.lastUpdate && results.lastUpdate.length) {
+                json = {...results.mainQuery, lastUpdate: results.lastUpdate[0].updatedAt}
+            }
+            res.json(json);
+        });
 };
 
 exports.downloadDetail = (req, res, next) => {
@@ -564,15 +584,15 @@ exports.downloadDetail = (req, res, next) => {
         let formatedFilter = _getFormatedFilters(req, filters);
         supplierDetail = supplierDetail && supplierDetail.length ? supplierDetail[0] : {};
 
-        switch(format){
+        switch (format) {
             case 'xls':
-                downloadDetailXls(req, res, { supplier:supplierDetail, filters:formatedFilter } );
+                downloadDetailXls(req, res, {supplier: supplierDetail, filters: formatedFilter});
                 break;
             case 'pdf':
-                downloadDetailPDF(req, res, { supplier:supplierDetail,filters: formatedFilter });
+                downloadDetailPDF(req, res, {supplier: supplierDetail, filters: formatedFilter});
                 break;
             case 'json':
-                return res.json({ supplierDetail, filters: formatedFilter });
+                return res.json({supplierDetail, filters: formatedFilter});
                 break;
             default:
                 break;
@@ -586,7 +606,7 @@ exports.downloadDetail = (req, res, next) => {
 
 exports.detail = (req, res, next) => {
 
-    _aggregateSupplierDetail(req, res,(err, supplierDetails) => {
+    _aggregateSupplierDetail(req, res, (err, supplierDetails) => {
 
         // {
         //     supplier: {
@@ -637,7 +657,7 @@ exports.detail = (req, res, next) => {
 exports.download = (req, res, next) => {
     let format = req.params.format;
     req.body.filters = JSON.parse(req.query.filters);
-    
+
     if (!['xls', 'pdf', 'json'].includes(format)) {
         res.status(404);
         return res.end();
@@ -669,20 +689,18 @@ exports.download = (req, res, next) => {
         });
 
 
-
-
         let filters = req.body.filters;
         let formatedFilter = _getFormatedFilters(req, filters);
 
-        switch(format){
+        switch (format) {
             case 'xls':
                 downloadXls(req, res, suppliers, formatedFilter);
                 break;
             case 'pdf':
-                downloadPDF(req, res,{totals, suppliers,filters: formatedFilter});
+                downloadPDF(req, res, {totals, suppliers, filters: formatedFilter});
                 break;
             case 'json':
-                return res.json({ totals, suppliers, filters: formatedFilter });
+                return res.json({totals, suppliers, filters: formatedFilter});
                 break;
             default:
                 break;
@@ -693,13 +711,13 @@ exports.download = (req, res, next) => {
 let downloadDetailXls = (req, res, suppliersDetail, filters) => {
 
     let excelInfo = {
-        totals:{
-            docs : [suppliersDetail.totals],
+        totals: {
+            docs: [suppliersDetail.totals],
             sheetNumber: 1
         },
-        supplierContracts:{
-            docs : [...suppliersDetail.public, ...suppliersDetail.invitation, ...suppliersDetail.noBid],
-            sheetNumber : 2
+        supplierContracts: {
+            docs: [...suppliersDetail.public, ...suppliersDetail.invitation, ...suppliersDetail.noBid],
+            sheetNumber: 2
         }
     };
 
@@ -709,7 +727,7 @@ let downloadDetailXls = (req, res, suppliersDetail, filters) => {
             {
                 header: 'MONTO TOTAL',
                 propName: 'total',
-                format : 'currency',
+                format: 'currency',
                 sheet: 1
             },
             {
@@ -749,7 +767,7 @@ let downloadDetailXls = (req, res, suppliersDetail, filters) => {
                 header: 'TIPO DE PROCEDIMIENTO',
                 propName: 'procedureType',
                 sheet: 2,
-                i18n:true
+                i18n: true
             },
             {
                 header: 'DESCRIPCION DE LAS OBRAS, BIENES O SERVICIOS',
@@ -759,13 +777,13 @@ let downloadDetailXls = (req, res, suppliersDetail, filters) => {
             {
                 header: 'MONTO TOTAL',
                 propName: 'totalOrMaxAmount',
-                format:'currency',
+                format: 'currency',
                 sheet: 2
             },
             {
                 header: 'FECHA DE OBTENCIÓN DE LOS DATOS',
                 propName: 'informationDate',
-                format:'date',
+                format: 'date',
                 sheet: 2
             },
 
@@ -778,7 +796,7 @@ let downloadDetailXls = (req, res, suppliersDetail, filters) => {
 };
 
 
-let downloadXls = (req,res, suppliers, filters) => {
+let downloadXls = (req, res, suppliers, filters) => {
     new ExcelExporter()
         .setPropInfoArray([
             {
@@ -813,107 +831,107 @@ let downloadXls = (req,res, suppliers, filters) => {
         .exportToFile(req, res);
 };
 
-let downloadPDF = (req, res, { totals, suppliers, filters }) => {
+let downloadPDF = (req, res, {totals, suppliers, filters}) => {
 
-    filters = filters.map((filter)=>{
-        if(filter.key && filter.values!==""){
-            return { text:`   ${filter.key} : ${filter.values}`,style:'headerFilters' }
+    filters = filters.map((filter) => {
+        if (filter.key && filter.values !== "") {
+            return {text: `   ${filter.key} : ${filter.values}`, style: 'headerFilters'}
         }
     });
 
-    if(filters && filters.length){
-        filters.unshift({text:'Filtrado por:', style:'headerFilters'});
+    if (filters && filters.length) {
+        filters.unshift({text: 'Filtrado por:', style: 'headerFilters'});
     }
     let resultsTable = {
-        style:'statsExample',
+        style: 'statsExample',
         layout: 'lightHorizontalLines',
-        table: new PDFTable({headerRows:1,docs:totals})
-                    .setTableMetadata([
-                        {
-                            header: 'Contratos en Total',
-                            headerStyle:'headerStyle',
-                            rowStyle:'rowNumberStyle',
-                            propName:'totalCount',
-                            format:'number'
-                        },
-                        {
-                            header: 'Contratos por Licitación Pública',
-                            headerStyle:'headerStyle',
-                            rowStyle:'rowNumberStyle',
-                            propName:'publicCount',
-                            format:'number'
-                        },
-                        {
-                            header: 'Contratos por invitación',
-                            headerStyle:'headerStyle',
-                            rowStyle:'rowNumberStyle',
-                            propName:'invitationCount',
-                            format:'number'
-                        },
-                        {
-                            header: 'Contratos por adjudicación directa',
-                            headerStyle:'headerStyle',
-                            rowStyle:'rowNumberStyle',
-                            propName:'noBidCount',
-                            format:'number'
-                        }
-                    ])
-                    .setHeaders()
-                    .setWidths(null,"auto")
-                    .transformDocs()
+        table: new PDFTable({headerRows: 1, docs: totals})
+            .setTableMetadata([
+                {
+                    header: 'Contratos en Total',
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowNumberStyle',
+                    propName: 'totalCount',
+                    format: 'number'
+                },
+                {
+                    header: 'Contratos por Licitación Pública',
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowNumberStyle',
+                    propName: 'publicCount',
+                    format: 'number'
+                },
+                {
+                    header: 'Contratos por invitación',
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowNumberStyle',
+                    propName: 'invitationCount',
+                    format: 'number'
+                },
+                {
+                    header: 'Contratos por adjudicación directa',
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowNumberStyle',
+                    propName: 'noBidCount',
+                    format: 'number'
+                }
+            ])
+            .setHeaders()
+            .setWidths(null, "auto")
+            .transformDocs()
     };
     let suppliersTable = {
-        style:'tableExample',
+        style: 'tableExample',
         // layout: 'lightHorizontalLines',
-        table:new PDFTable({headerRows:1,docs:suppliers})
+        table: new PDFTable({headerRows: 1, docs: suppliers})
             .setTableMetadata([
                 {
                     header: 'Nombre del Proveedor',
-                    headerStyle:'headerStyle',
-                    rowStyle:'rowStyle',
-                    propName:'name'
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowStyle',
+                    propName: 'name'
                 },
                 {
                     header: 'Licitación Pública',
-                    headerStyle:'headerStyle',
-                    rowStyle:'rowCurrencyStyle',
-                    propName:'public',
-                    format:'currency'
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowCurrencyStyle',
+                    propName: 'public',
+                    format: 'currency'
                 },
                 {
                     header: 'Por Invitación',
-                    headerStyle:'headerStyle',
-                    rowStyle:'rowCurrencyStyle',
-                    propName:'invitation',
-                    format:'currency'
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowCurrencyStyle',
+                    propName: 'invitation',
+                    format: 'currency'
                 },
                 {
                     header: 'Adj. Directa',
-                    headerStyle:'headerStyle',
-                    rowStyle:'rowCurrencyStyle',
-                    propName:'noBid',
-                    format:'currency'
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowCurrencyStyle',
+                    propName: 'noBid',
+                    format: 'currency'
                 },
                 {
                     header: 'Monto Total',
-                    headerStyle:'headerStyle',
-                    rowStyle:'rowCurrencyStyle',
-                    propName:'total',
-                    format:'currency'
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowCurrencyStyle',
+                    propName: 'total',
+                    format: 'currency'
                 },
             ])
             .setHeaders()
-            .setWidths([145,145,145,145,145],"auto")
+            .setWidths([145, 145, 145, 145, 145], "auto")
             .transformDocs()
     };
 
-    let headers = [{ text:"Monitor Karewa", style:'header'},
-                    {text : moment(new Date()).format('DD/MM/YYYY'), style:'header'}];
+    let headers = [{text: "Monitor Karewa", style: 'header'},
+        {text: moment(new Date()).format('DD/MM/YYYY'), style: 'header'}];
 
     new PDFExporter()
         .setFileName('monitor-karewa-proveedores.pdf')
         .addHeadersToPDF(headers)
-        .addTitleToPDF({text:"Información general de Proveedores", style:'title'})
+        .addTitleToPDF({text: "Información general de Proveedores", style: 'title'})
         .addContentToPDF(filters)
         .addContentToPDF(resultsTable)
         .addContentToPDF(suppliersTable)
@@ -923,145 +941,145 @@ let downloadPDF = (req, res, { totals, suppliers, filters }) => {
 };
 
 
-let downloadDetailPDF = (req, res, { supplier, filters }) => {
+let downloadDetailPDF = (req, res, {supplier, filters}) => {
 
-    filters = filters.map((filter)=>{
-        if(filter.key && filter.values!==""){
-            return { text:`   ${filter.key} : ${filter.values}`,style:'headerFilters' }
+    filters = filters.map((filter) => {
+        if (filter.key && filter.values !== "") {
+            return {text: `   ${filter.key} : ${filter.values}`, style: 'headerFilters'}
         }
     });
 
-    if(filters && filters.length){
-        filters.unshift({text:'Filtrado por:', style:'headerFilters'});
+    if (filters && filters.length) {
+        filters.unshift({text: 'Filtrado por:', style: 'headerFilters'});
     }
     let totalsTable = {
-        style:'statsCurrency4Col',
+        style: 'statsCurrency4Col',
         layout: 'lightHorizontalLines',
-        table: new PDFTable({headerRows:1,docs:supplier.totals})
-                    .setTableMetadata([
-                        {
-                            header: 'Monto Total',
-                            headerStyle:'headerStyle',
-                            rowStyle:'rowNumberStyle',
-                            propName:'total',
-                            format:'currency'
-                        },
-                        {
-                            header: 'Monto Total de Contratos por Licitación Pública',
-                            headerStyle:'headerStyle',
-                            rowStyle:'rowNumberStyle',
-                            propName:'public',
-                            format:'currency'
-                        },
-                        {
-                            header: 'Monto Total de Contratos por Invitación',
-                            headerStyle:'headerStyle',
-                            rowStyle:'rowNumberStyle',
-                            propName:'invitation',
-                            format:'currency'
-                        },
-                        {
-                            header: 'Monto Total de Contratos por Adjudicación Directa',
-                            headerStyle:'headerStyle',
-                            rowStyle:'rowNumberStyle',
-                            propName:'noBid',
-                            format:'currency'
-                        }
-                        // {
-                        //     header: 'Monto Total de Contratos por Adjudicación Directa',
-                        //     headerStyle:'headerStyle',
-                        //     rowStyle:'rowNumberStyle',
-                        //     propName:'noBid',
-                        //     format:'currency'
-                        // },
-                    ])
-                    .setHeaders()
-                    .setWidths(null,"auto")
-                    .transformDocs()
+        table: new PDFTable({headerRows: 1, docs: supplier.totals})
+            .setTableMetadata([
+                {
+                    header: 'Monto Total',
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowNumberStyle',
+                    propName: 'total',
+                    format: 'currency'
+                },
+                {
+                    header: 'Monto Total de Contratos por Licitación Pública',
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowNumberStyle',
+                    propName: 'public',
+                    format: 'currency'
+                },
+                {
+                    header: 'Monto Total de Contratos por Invitación',
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowNumberStyle',
+                    propName: 'invitation',
+                    format: 'currency'
+                },
+                {
+                    header: 'Monto Total de Contratos por Adjudicación Directa',
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowNumberStyle',
+                    propName: 'noBid',
+                    format: 'currency'
+                }
+                // {
+                //     header: 'Monto Total de Contratos por Adjudicación Directa',
+                //     headerStyle:'headerStyle',
+                //     rowStyle:'rowNumberStyle',
+                //     propName:'noBid',
+                //     format:'currency'
+                // },
+            ])
+            .setHeaders()
+            .setWidths(null, "auto")
+            .transformDocs()
     };
 
     let countTable = {
-        style:'statsExample',
+        style: 'statsExample',
         layout: 'lightHorizontalLines',
-        table: new PDFTable({headerRows:1,docs:supplier.totals})
-                    .setTableMetadata([
-                        {
-                            header: 'Contratos Totales',
-                            headerStyle:'headerStyle',
-                            rowStyle:'rowNumberStyle',
-                            propName:'totalCount'
-                        },
-                        {
-                            header: 'Contratos por Licitación Pública',
-                            headerStyle:'headerStyle',
-                            rowStyle:'rowNumberStyle',
-                            propName:'publicCount'
-                        },
-                        {
-                            header: 'Contratos por Invitación',
-                            headerStyle:'headerStyle',
-                            rowStyle:'rowNumberStyle',
-                            propName:'invitationCount'
-                        },
-                        {
-                            header: 'Contratos por Adjudicación Directa',
-                            headerStyle:'headerStyle',
-                            rowStyle:'rowNumberStyle',
-                            propName:'noBidCount'
+        table: new PDFTable({headerRows: 1, docs: supplier.totals})
+            .setTableMetadata([
+                {
+                    header: 'Contratos Totales',
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowNumberStyle',
+                    propName: 'totalCount'
+                },
+                {
+                    header: 'Contratos por Licitación Pública',
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowNumberStyle',
+                    propName: 'publicCount'
+                },
+                {
+                    header: 'Contratos por Invitación',
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowNumberStyle',
+                    propName: 'invitationCount'
+                },
+                {
+                    header: 'Contratos por Adjudicación Directa',
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowNumberStyle',
+                    propName: 'noBidCount'
 
-                        }
-                    ])
-                    .setHeaders()
-                    .setWidths(null,"auto")
-                    .transformDocs(req)
+                }
+            ])
+            .setHeaders()
+            .setWidths(null, "auto")
+            .transformDocs(req)
     };
 
     let rowsTable = {
-        style:'table4Col',
+        style: 'table4Col',
         // layout: 'lightHorizontalLines',
-        table:new PDFTable({headerRows:1, docs:[...supplier.public,...supplier.invitation,...supplier.noBid]})
+        table: new PDFTable({headerRows: 1, docs: [...supplier.public, ...supplier.invitation, ...supplier.noBid]})
             .setTableMetadata([
                 {
                     header: 'Tipo de Procedimiento',
-                    headerStyle:'headerStyle',
-                    rowStyle:'rowStyle',
-                    propName:'procedureType',
-                    i18n:true
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowStyle',
+                    propName: 'procedureType',
+                    i18n: true
                 },
                 {
                     header: 'Descripción de las obras, bienes o servicios',
-                    headerStyle:'headerStyle',
-                    rowStyle:'rowStyle',
-                    propName:'servicesDescription'
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowStyle',
+                    propName: 'servicesDescription'
                 },
                 {
                     header: 'Monto Total',
-                    headerStyle:'headerStyle',
-                    rowStyle:'rowStyle',
-                    propName:'totalOrMaxAmount',
-                    format:'currency'
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowStyle',
+                    propName: 'totalOrMaxAmount',
+                    format: 'currency'
                 },
                 {
                     header: 'Fecha de obtención de los datos',
-                    headerStyle:'headerStyle',
-                    rowStyle:'rowStyle',
-                    propName:'informationDate',
-                    format:'date'
+                    headerStyle: 'headerStyle',
+                    rowStyle: 'rowStyle',
+                    propName: 'informationDate',
+                    format: 'date'
                 },
             ])
             .setHeaders()
-            .setWidths(null,"auto")
+            .setWidths(null, "auto")
             .transformDocs(req)
     };
 
 
-    let headers = [{ text:"Monitor Karewa", style:'header'},
-                    {text : moment(new Date()).format('DD/MM/YYYY'), style:'header'}];
+    let headers = [{text: "Monitor Karewa", style: 'header'},
+        {text: moment(new Date()).format('DD/MM/YYYY'), style: 'header'}];
 
-     new PDFExporter()
+    new PDFExporter()
         .setFileName('monitor-karewa-proveedores.pdf')
         .addHeadersToPDF(headers)
-        .addTitleToPDF({text:`Información del Proveedor ${supplier.supplier.name}`, style:'title'})
+        .addTitleToPDF({text: `Información del Proveedor ${supplier.supplier.name}`, style: 'title'})
         .addContentToPDF(filters)
         .addContentToPDF(totalsTable)
         .addContentToPDF(countTable)

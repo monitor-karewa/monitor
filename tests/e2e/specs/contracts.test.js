@@ -41,7 +41,7 @@ module.exports = {
             .keys(browser.Keys.ENTER)
             .pause(500)
             .clearValue(utils.xpath.elementWithPlaceholder("input","Ejemplo. 2017-2019"))
-            .assert.visible(utils.xpath.elementWithText("label", "Periodo de Administración"))
+            .assert.visible(utils.xpath.elementWithText("label", "Administración"))
             .setValue(utils.xpath.elementWithPlaceholder("input","Ejemplo. 2017-2019"),"2019-2020")
             .pause(500)
             .assert.visible(utils.xpath.elementWithText("label", "Ejercicio"))
@@ -152,10 +152,11 @@ module.exports = {
             .setValue(utils.xpath.elementWithPlaceholder("input","Ingresa la url"),"http://web.whatsapp.com")
             .assert.visible(utils.xpath.elementWithText("label", "Área responsable de la información"))
             .pause(500)
-            .click(utils.xpath.elementWithTitle('button',"Selecciona el área"))
-            .pause(500)
-            .keys(browser.Keys.TAB)
-            .keys(browser.Keys.ENTER)
+            .setValue(utils.xpath.elementWithPlaceholder("input","Escribe el nombre del área responsable"),"Tecnología")
+            // .click(utils.xpath.elementWithTitle('button',"Selecciona el área"))
+            // .pause(500)
+            // .keys(browser.Keys.TAB)
+            // .keys(browser.Keys.ENTER)
             .pause(500)
             .assert.visible(utils.xpath.elementWithText("label", "Fecha de actualización"))
             .clearValue(utils.xpath.elementWithPlaceholder("input","Selecciona la fecha de actualización"))
@@ -172,7 +173,7 @@ module.exports = {
             .assert.visible(utils.xpath.elementWithText("button", " Guardar "))
 
             .click('//button[contains(text(), " Guardar ")]')
-
+            .pause(1000)
             .assert.containsText(utils.xpath.body(), "Elemento Creado!")
             .pause(1000)
 

@@ -158,9 +158,11 @@
                     username: this.username,
                     password: this.password,
                 };
+                this.$store.dispatch('accounts/alertMessage', '');
                 this.$store.dispatch(`${storeModule}/LOGIN`, {credentials, _session});
             },
             goBack: function () {
+                this.$store.dispatch('accounts/alertMessage', '');
                 this.$router.back();
             }
         },

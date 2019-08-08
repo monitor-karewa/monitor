@@ -4,7 +4,7 @@ export default {
         state.currentUser.userPicture = profilePicture;
     },
     
-    CURRENT_ORGANIZATION(state, {_id, name, shortName, color, theme, cover, title, description, contactLocation, contactEmail}) {
+    CURRENT_ORGANIZATION(state, {_id, name, shortName, color, theme, cover, title, description, contactLocation, contactEmail, additionalInformation, welcomeTitle, showBackgroundText}) {
         if (_id) {
             state.currentOrganization._id = _id;
         }
@@ -35,6 +35,13 @@ export default {
         // state.currentOrganization.contactEmail = contactEmail;
         // if (contactEmail) {
         // }
+        
+        if (welcomeTitle) {
+            state.currentOrganization.welcomeTitle = welcomeTitle;
+        }
+        if (showBackgroundText) {
+            state.currentOrganization.showBackgroundText = showBackgroundText;
+        }
     },
 
     SET_CURRENT_ORGANIZATION_DEFAULTS(state) {
@@ -49,6 +56,9 @@ export default {
             description: null,
             contactLocation: null,
             contactEmail: null,
+            additionalInformation: '',
+            welcomeTitle: '',
+            showBackgroundText: false
         };
     }
 }

@@ -29,7 +29,6 @@ exports.index = (req, res, next) => {
  */
 exports.list = (req, res, next) => {
     let paginationOptions = pagination.getDefaultPaginationOptions(req);
-
     let query = {};
 
     //query["field"] = value;
