@@ -2026,6 +2026,10 @@ class ContractExcelWriter {
     }
     
     addCell(sheet, rowIndex, cellIndex, fieldInfo, format, options = {}) {
+
+        if(!fieldInfo){
+            return;
+        }
         //procedureType
         let wrapText = false;
 
