@@ -99,8 +99,8 @@ DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
             contractDate : detail.contractDate.value,
             
             //enum
-            // contractType : detail.contractType.valueToSaveOverride,
-            contractType : 'NORMAL',
+            contractType : detail.contractType.valueToSaveOverride,
+            // contractType : 'NORMAL',
             
             totalAmount : detail.totalAmount.value,
             minAmount : detail.minAmount.value,
