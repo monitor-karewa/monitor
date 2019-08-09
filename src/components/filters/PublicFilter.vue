@@ -58,7 +58,7 @@
                         </div>
                         <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['administrativeUnit']} col-12`" v-if="checkIfShown('administrativeUnit')" :key="keys.administrativeUnits">
                             <div class="fg-line m-0">
-                                <select v-model="temp.administrativeUnit" class="form-control select selectpicker" data-live-search="true"
+                                <select v-model="temp.administrativeUnit" class="form-control select selectpicker" data-live-search="true" data-width="500px"
                                         data-live-search-placeholder="Buscar administrativa"
                                         title="Por unidad administrativa…" @change="addFilter(query.administrativeUnits, temp.administrativeUnit, 'administrativeUnits')">
                                             <optGroup>
@@ -70,7 +70,7 @@
                         </div>
                         <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['supplier']} col-12`" v-if="checkIfShown('supplier')" :key="keys.suppliers">
                             <div class="fg-line m-0">
-                                <select v-model="temp.supplier" class="form-control select selectpicker" data-live-search="true"
+                                <select v-model="temp.supplier" class="form-control select selectpicker" data-live-search="true" data-width="500px"
                                         data-live-search-placeholder="Buscar proveedor"
                                         title="Por proveedor…" @change="addFilter(query.suppliers, temp.supplier, 'suppliers')">
                                     <optGroup>

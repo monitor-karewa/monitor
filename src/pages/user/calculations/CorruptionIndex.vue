@@ -115,7 +115,7 @@
                                 La información se analiza automáticamente y el sistema indica que existe un <span style="color: #19babd;">{{corruptionLevelRisk}}</span> de que ocurran casos de corrupción.
                                 <br>
                                 <br>
-                                <strong class="f-16">¿Cómo se calcula? </strong>
+                                <strong class="f-16">¿Cómo se calcula?</strong>
                                 <br>
                                 El índice de Riesgo de Corrupción se calcula analizando la información de transparencia de las
                                 contrataciones públicas, tomando en cuenta diferentes variables para generar un índice
