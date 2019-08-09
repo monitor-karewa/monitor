@@ -470,6 +470,7 @@
                 this.localSettings.schedule = val.schedule || '';
                 this.localSettings.additionalInformation = val.additionalInformation || '';
                 this.localSettings.welcomeTitle = val.welcomeTitle || '';
+                this.localSettings.showBackgroundText = val.showBackgroundText || false;
             },
             handleCoverFileUpload() {
 
