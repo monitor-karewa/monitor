@@ -52,14 +52,16 @@
                     },
                     yaxis: {
                         title: {
-                            text: '$ (millones de pesos)'
+                            // text: '$ (millones de pesos)'
+                            text: '$ pesos'
                         },
                         labels: {
                             formatter: function (val) {
-                                return val ? '$' + val.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + 'M' : "";
+                                // return val ? '$' + val.toFixed(0).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + 'M' : "";
+                                return val ? '$' + val.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : "";
                             }
                         },
-                        min: 1,
+                        // min: 1,
                         tickAmount: 6
                     },
                     fill: {
@@ -69,7 +71,8 @@
                     tooltip: {
                         y: {
                             formatter: function (val) {
-                                return val ? '$' + val.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ' Millones' : "";
+                                // return val ? '$' + val.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') + ' Millones' : "";
+                                return val ? '$' + val.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : "";
                             }
                         }
                     }
