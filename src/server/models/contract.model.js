@@ -570,7 +570,7 @@ let ContractSchema = new Schema({
     /* Número que identifique al contrato */
     contractNumber: {
         type: String,
-        unique: true,
+        // unique: true,
         required: true
     },
     /* Fecha del contrato */

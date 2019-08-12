@@ -923,7 +923,8 @@ class ContractExcelReader {
                 if (utils.isDefined(options.unique) && fieldInfo.value && fieldInfo.value.length) {
 
                     let query = {
-                        [fieldName]: fieldInfo.value
+                        [fieldName]: fieldInfo.value,
+                        "deleted.isDeleted": {"$ne": true}
                     };
                     Contract
                         .find(query)
