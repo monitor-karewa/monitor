@@ -269,7 +269,7 @@ DataLoadSchema.statics.confirm = function (dataLoad, details, confirmCallback) {
         //     suppliersInfo: {detail: {...}, suppliers: [...]},
         //     administrativeUnitsInfo: {detail: {...}, administrativeUnits: [...]}
         // }
-        
+
         async.waterfall([
             //Save all new Suppliers
             function (waterfallCallback) {
@@ -374,11 +374,11 @@ DataLoadSchema.statics.confirm = function (dataLoad, details, confirmCallback) {
                         let contract = detailObj.contractInfo.contract;
                         
                         //Only if not already seen; do not duplicate Suppliers to save
-                        if (seenContractContractIds[contract.contractId]) {
+                        if (seenContractContractIds[contract.contractNumber]) {
                             return false;
                         } else {
                             //Mark as "seen"
-                            seenContractContractIds[contract.contractId] = true;
+                            seenContractContractIds[contract.contractNumber] = true;
                             return true;
                         }
                     })

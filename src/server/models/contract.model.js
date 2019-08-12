@@ -470,28 +470,28 @@ let ContractSchema = new Schema({
             return false;
 
         }, "Este campo es requerido debido a que se indicó un estado de procedimiento en las notas del contrato."],
-        validate: {
-            validator:function(v){
+        // validate: {
+        //     validator:function(v){
 
-                if(this.isEmpty){
-                    return true
-                }
+        //         if(this.isEmpty){
+        //             return true
+        //         }
 
-                if (this.notes && this.notes.length) {
-                    for (let item in procedureStateEnumDict) {
-                        for (let i = 0; i < procedureStateEnumDict[item].length; i++) {
-                            let isIncluded = new RegExp(procedureStateEnumDict[item][i].regexStr).test(this.notes);
-                            if (isIncluded) {
-                                return item == v;
-                            }
-                        }
-                    }
-                }
-                return true;
-            },
-            message: props => `El valor de este campo no coincide con el estado de procedimiento indicado en las notas del contrato.`
+        //         if (this.notes && this.notes.length) {
+        //             for (let item in procedureStateEnumDict) {
+        //                 for (let i = 0; i < procedureStateEnumDict[item].length; i++) {
+        //                     let isIncluded = new RegExp(procedureStateEnumDict[item][i].regexStr).test(this.notes);
+        //                     if (isIncluded) {
+        //                         return item == v;
+        //                     }
+        //                 }
+        //             }
+        //         }
+        //         return true;
+        //     },
+        //     message: props => `El valor de este campo no coincide con el estado de procedimiento indicado en las notas del contrato.`
 
-        },
+        // },
         uppercase: true
     },
     /*Hipervínculo a la convocatoria o invitaciones*/
