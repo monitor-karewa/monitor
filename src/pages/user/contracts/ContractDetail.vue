@@ -68,7 +68,7 @@
                     <div class="non-list">
                         <span> <small>Identificador de proceso</small> <i>-</i> <strong>{{contract.contractId}}</strong></span>
                         <span> <small>Descripción de las obras, bienes o servicios</small> <i>-</i> <strong>{{contract.servicesDescription}}</strong></span>
-                        <span> <small>Monto total</small>  <i>-</i> <strong class="c-accent"> {{contract.totalAmount | currency}} </strong></span>
+                        <span> <small>Monto total</small>  <i>-</i> <strong class="c-accent"> {{contract.totalOrMaxAmount | currency}} </strong></span>
                         <span> <small>Fecha del contrato</small> <i>-</i> <strong>{{contract.contractDate | moment}}</strong></span>
                         <span> <small>Tipo de procedimiento</small> <i>-</i> <div class="badge" :class="{ 'badge-yellow' : contract.procedureType == 'INVITATION', 'badge-green' : contract.procedureType == 'PUBLIC', 'badge-red' : contract.procedureType == 'NO_BID'}">{{$t(contract.procedureType)}}</div></span>
 

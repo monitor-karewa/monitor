@@ -154,7 +154,7 @@
                                         <TableTdFormat :fieldName="'contractId'"    :value="contract.contractId"  class="text-align-l"> </TableTdFormat>
                                         <TableTdFormat :fieldName="'contractNumber'"    :value="contract.contractNumber"  class="text-align-l"> </TableTdFormat>
                                         <TableTdFormat :fieldName="'servicesDescription'"    :value="contract.servicesDescription"  class="text-align-l"> </TableTdFormat>
-                                        <TableTdFormat :format="'currency'" :fieldName="'totalAmount'"    :value="contract.totalAmount"  :currency="true" class="text-align-l"> </TableTdFormat>
+                                        <TableTdFormat :format="'currency'" :fieldName="'totalOrMaxAmount'"    :value="contract.totalOrMaxAmount"  :currency="true" class="text-align-l"> </TableTdFormat>
                                         <TableTdFormat :format="'date'"     :fieldName="'contractDate'"    :value="contract.contractDate" class="text-align-l c-accent"></TableTdFormat>
 
                                         <td class="text-align-l">
