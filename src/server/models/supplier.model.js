@@ -68,7 +68,7 @@ SupplierSchema.loadClass(SupplierClass);
 
 //Indexes
 SupplierSchema.index({name: 1, organization: 1, deleted: 1}, {unique: true});
-SupplierSchema.index({rfc: 1, organization: 1, deleted: 1}, {unique: true, partialFilterExpression: {rfc: {$exists:true }}});
+// SupplierSchema.index({rfc: 1, organization: 1, deleted: 1}, {unique: true, partialFilterExpression: {rfc: {$exists:true }}});
 
 SupplierSchema.statics.permission = permissions.getDefault("Supplier");
 
