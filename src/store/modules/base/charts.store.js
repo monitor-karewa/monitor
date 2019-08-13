@@ -3,7 +3,7 @@ import { bus } from '@/main';
 
 export default function (api) {
     const state = {
-        customChartData: [],
+        // customChartData: [],
         data:{}
     };
 
