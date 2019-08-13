@@ -95,14 +95,25 @@ function _fetchContractsAndTotals(req, res, options = {}, callback) {
     let qByOrganization = Organization.qByOrganization(req);
     query = {...query, ...deletedSchema.qNotDeleted(), ...qByOrganization};
 
+    let qProcedureStateConcluded = Contract.qProcedureStateConcluded();
+
+    let finalQuery = {
+        ...qProcedureStateConcluded,
+        ...query,
+    };
+
+    if (finalQuery["$and"]) {
+        finalQuery["$and"] = (qProcedureStateConcluded["$and"] || []).concat((query["$and"] || []))
+    }
+
     let totalsQuery = Contract.aggregate([
             {
-                $match : {...query,...Contract.qProcedureStateConcluded()}
+                $match : finalQuery
             },
             {
                 $group  : {
                     _id : "totalAmountSum",
-                    total : {$sum : "$totalAmount"},
+                    total : {$sum : "$totalOrMaxAmount"},
                     contracts: { $push : "$$ROOT" }
                 }
 
@@ -128,7 +139,7 @@ function _fetchContractsAndTotals(req, res, options = {}, callback) {
             {
                 $group  : {
                     _id : "$procedureType",
-                    total : {$sum : "$totalAmount"},
+                    total : {$sum : "$totalOrMaxAmount"},
                     totalAmount: {$first : "$total"}
                 }
             },
@@ -316,7 +327,7 @@ exports.getTotals = (req, res, next) => {
             {
                 $group  : {
                     _id : "totalAmountSum",
-                    total : {$sum : "$totalAmount"},
+                    total : {$sum : "$totalOrMaxAmount"},
                     contracts: { $push : "$$ROOT" }
                 }
 
@@ -342,7 +353,7 @@ exports.getTotals = (req, res, next) => {
             {
                 $group  : {
                     _id : "$procedureType",
-                    total : {$sum : "$totalAmount"},
+                    total : {$sum : "$totalOrMaxAmount"},
                     totalAmount: {$first : "$total"}
                 }
             },

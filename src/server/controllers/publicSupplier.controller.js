@@ -507,46 +507,57 @@ exports.list = (req, res, next) => {
                         });
                     }
 
-                    let totals = {
-                        totalCount: 0,
-                        publicCount: 0,
-                        invitationCount: 0,
-                        noBidCount: 0,
+                    _aggregateSuppliersFromContracts(req, res, {paginate: false}, (err, suppliersWithoutPagination, pageCountWithoutPagination, itemCountWithoutPagination) => {
 
-                        total: 0,
-                        public: 0,
-                        invitation: 0,
-                        noBid: 0,
-                    };
-
-                    suppliers.forEach((supplierInfo) => {
-                        totals.totalCount += (supplierInfo.publicCount + supplierInfo.invitationCount + supplierInfo.noBidCount);
-                        totals.publicCount += supplierInfo.publicCount;
-                        totals.invitationCount += supplierInfo.invitationCount;
-                        totals.noBidCount += supplierInfo.noBidCount;
-
-                        totals.total += supplierInfo.total;
-                        totals.public += supplierInfo.public;
-                        totals.invitation += supplierInfo.invitation;
-                        totals.noBid += supplierInfo.noBid;
+                        if (err) {
+                            logger.error(err, req, 'publicSupplier.controller#list', 'Error trying to query suppliers info from aggregate without pagination');
+                            return res.json({
+                                error: true
+                            });
+                        }
+                        
+                        let totals = {
+                            totalCount: 0,
+                            publicCount: 0,
+                            invitationCount: 0,
+                            noBidCount: 0,
+    
+                            total: 0,
+                            public: 0,
+                            invitation: 0,
+                            noBid: 0,
+                        };
+    
+                        suppliersWithoutPagination.forEach((supplierInfo) => {
+                            totals.totalCount += (supplierInfo.publicCount + supplierInfo.invitationCount + supplierInfo.noBidCount);
+                            totals.publicCount += supplierInfo.publicCount;
+                            totals.invitationCount += supplierInfo.invitationCount;
+                            totals.noBidCount += supplierInfo.noBidCount;
+    
+                            totals.total += supplierInfo.total;
+                            totals.public += supplierInfo.public;
+                            totals.invitation += supplierInfo.invitation;
+                            totals.noBid += supplierInfo.noBid;
+                        });
+    
+                        let pagination = {
+                            total: itemCount,
+                            page: page,
+                            pages: pageCount
+                        };
+    
+                        let data = {
+                            totals: totals,
+                            suppliers: suppliers,
+                            pagination: pagination
+                        };
+    
+                        return callback(null, {
+                            error: false,
+                            data: data
+                        });
                     });
 
-                    let pagination = {
-                        total: itemCount,
-                        page: page,
-                        pages: pageCount
-                    };
-
-                    let data = {
-                        totals: totals,
-                        suppliers: suppliers,
-                        pagination: pagination
-                    };
-
-                    return callback(null, {
-                        error: false,
-                        data: data
-                    });
                 })
             },
             lastUpdate: function (callback) {

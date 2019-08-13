@@ -830,7 +830,18 @@ let  processCalculation = function(req, cache, calculation, options = {}, mainCa
             let query = {...Contract.qProcedureStateConcluded(), ...qNotDeleted};
             
             if (options.query) {
-                query = {...query, ...options.query};
+                // query = {...query, ...options.query};
+
+                let finalQuery = {
+                    ...query,
+                    ...options.query,
+                };
+
+                if (finalQuery["$and"]) {
+                    finalQuery["$and"] = (query["$and"] || []).concat((options.query["$and"] || []))
+                }
+                
+                query = finalQuery;
             }
 
             //Check if calculation is filtered by organization, even if it's the corruption index

@@ -80,14 +80,22 @@ function _aggregateAmountByPeriods(req, res, callback) {
         }
     }
 
+    let qProcedureStateConcluded = Contract.qProcedureStateConcluded();
+
+    let finalQuery = {
+        "deleted.isDeleted":false,
+        "organization":Organization.currentOrganizationId(req),
+        ...qProcedureStateConcluded,
+        ...query,
+    };
+
+    if (finalQuery["$and"]) {
+        finalQuery["$and"] = (qProcedureStateConcluded["$and"] || []).concat((query["$and"] || []))
+    }
+
     let aggregate = Contract.aggregate([
         {
-            $match:{
-                "deleted.isDeleted":false,
-                "organization":Organization.currentOrganizationId(req),
-                ...query,
-                ...Contract.qProcedureStateConcluded()
-            }
+            $match: finalQuery
         },
         {
             $group: {
@@ -208,14 +216,22 @@ function _aggregateAmountByProcedure(req, res, callback) {
         }
     }
 
+    let qProcedureStateConcluded = Contract.qProcedureStateConcluded();
+
+    let finalQuery = {
+        "deleted.isDeleted":false,
+        "organization":Organization.currentOrganizationId(req),
+        ...qProcedureStateConcluded,
+        ...query,
+    };
+
+    if (finalQuery["$and"]) {
+        finalQuery["$and"] = (qProcedureStateConcluded["$and"] || []).concat((query["$and"] || []))
+    }
+
     let aggregate = Contract.aggregate([
         {
-            $match:{
-                "deleted.isDeleted" : false,
-                "organization" : Organization.currentOrganizationId(req),
-                ...Contract.qProcedureStateConcluded(),
-                ...query
-            }
+            $match: finalQuery
         },
         {
             $group: {
