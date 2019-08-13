@@ -696,19 +696,43 @@ class ContractExcelReader {
 
                                         //For some reason, sometimes the exact value yields a 0.71 match
                                         //Check for an exact match
-                                        if (docs.length === 1) {
-                                            let _doc = docs[0];
+
+                                        let exactMatchFound = false;
+
+                                        for (let i = 0; i < docs.length; i++) {
+                                            let _doc = docs[i];
+
                                             if (_doc[field] === fieldInfo.value) {
                                                 //Set match (doc) as the first element and also the exact match (_doc)
                                                 doc = _doc;
-                                            } else {
-                                                multipleMatchesErrorMessage = null;
-                                                doc = null;
+                                                //mark as found
+                                                exactMatchFound = true;
+                                                //end for loop
+                                                break;
                                             }
-                                        } else {
-                                            multipleMatchesErrorMessage = null;
-                                            doc = null;
                                         }
+
+                                        if (!exactMatchFound) {
+                                            multipleMatchesErrorMessage = null;
+                                                doc = null;
+                                        }
+
+                                        // if (docs.length === 1) {
+                                        //     let _doc = docs[0];
+                                        //     console.log('\n\nfieldInfo.fieldName', fieldInfo.fieldName);
+                                        //     console.log('_doc[field]', _doc[field]);
+                                        //     console.log('fieldInfo.value', fieldInfo.value);
+                                        //     if (_doc[field] === fieldInfo.value) {
+                                        //         //Set match (doc) as the first element and also the exact match (_doc)
+                                        //         doc = _doc;
+                                        //     } else {
+                                        //         multipleMatchesErrorMessage = null;
+                                        //         doc = null;
+                                        //     }
+                                        // } else {
+                                        //     multipleMatchesErrorMessage = null;
+                                        //     doc = null;
+                                        // }
                                     }
                                     
                                 } else {
@@ -1563,7 +1587,10 @@ class ContractExcelReader {
                             }
                             return callback(null, true, "Este campo es requerido");
                         },
-                        unique: true
+                        // unique: true
+                        uniqueByOrganization: function (rowInfo, callback) {
+                            return callback(null, true, 'Ya existe un Contrato registrado con este número.');
+                        },
                     }, callback);
                     break;
                 case C_IDS.CONTRACT_DATE:
