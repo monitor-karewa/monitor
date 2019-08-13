@@ -346,7 +346,7 @@ const CONTRACT_VALIDATION_REGEX_DICT = {
     ADMINISTRATION: "^[12][0-9]{3}-[12][0-9]{3}$",
     FISCAL_YEAR: "^[12][0-9]{3}$",
     PERIOD: "^[1234]o\\s2[0-9]{3}$",
-    URL: "(https?://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|https?://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})",
+    URL: "((https?|ftps?)://(?:www.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|www.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9].[^s]{2,}|(https?|ftps?)://(?:www.|(?!www))[a-zA-Z0-9]+.[^s]{2,}|www.[a-zA-Z0-9]+.[^s]{2,})",
 };
 
 let ContractSchema = new Schema({

@@ -238,7 +238,7 @@ exports.current = (req, res, next) => {
 
     let page = _getPageFromReq(req);
     let search = req.query.search;
-    
+
     let showNoIssues = req.query.showNoIssues === 'true';
     let showSkipped = req.query.showSkipped === 'true';
     let showErrors = req.query.showErrors === 'true';
@@ -348,33 +348,57 @@ exports.current = (req, res, next) => {
             }
             
             //Note: complex filter logic ahead
-            if (showSkipped) {
-                //Show means do not filter in this case
+
+
+            if (showSkipped && showErrors && showNoIssues) {
+                //Show all
             } else {
-                query = {...query, 'data.summary.skipRow': false};
+                if (showSkipped) {
+                    //Show means do not filter in this case
+                    // query = {...query, 'data.summary.skipRow': true};
+                    orArray.push({'data.summary.skipRow': true});
+                } else {
+                }
+    
+                if (showErrors) {
+                    //Show means do not filter in this case
+                    // query = {...query, 'data.summary.hasErrors': true};
+                    orArray.push({'data.summary.hasErrors': true});
+                } else {
+                }
+    
+                if (showNoIssues) {
+                    if (!showSkipped && !showErrors) {
+                        orArray.push({$and: [
+                            {'data.summary.skipRow': false},
+                            {'data.summary.hasErrors': false},
+                            {'data.summary.hasInfos': false},
+                        ]})
+                    } else {
+                        // if (!showSkipped) {
+                            orArray.push({'data.summary.skipRow': false});
+                        // }
+                        // if (!showErrors) {
+                            orArray.push({'data.summary.hasErrors': false});
+                        // }
+                        orArray.push({'data.summary.hasInfos': false});
+                    }
+                    //Show means do not filter in this case
+                } else {
+                    //Hide contracts without issues, i.e. show contracts with issues
+                    //So we filter contracts with at least one issue-related field with true
+                    // orArray.push({'data.summary.skipRow': true});
+                    // orArray.push({'data.summary.hasErrors': true});
+                    // orArray.push({'data.summary.hasInfos': true});
+                }
             }
 
-            if (showErrors) {
-                //Show means do not filter in this case
-            } else {
-                query = {...query, 'data.summary.hasErrors': false};
-            }
-
-            if (showNoIssues) {
-                //Show means do not filter in this case
-            } else {
-                //Hide contracts without issues, i.e. show contracts with issues
-                //So we filter contracts with at least one issue-related field with true
-                orArray.push({'data.summary.skipRow': true});
-                orArray.push({'data.summary.hasErrors': true});
-                orArray.push({'data.summary.hasInfos': true});
-            }
 
             //$or requires a non-empty array
             if (orArray.length) {
                 query = {
                     ...query,
-                    $or: orArray
+                    $or: orArray,
                 };
                 
             }

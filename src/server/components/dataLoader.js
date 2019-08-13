@@ -283,6 +283,7 @@ class ContractExcelReader {
                         refStrategy: null,
                         validationStrategy: null,
                         requiredStrategy: null,
+                        prefix: '',
                     },
                     options: options
                 };
@@ -347,6 +348,7 @@ class ContractExcelReader {
                                     }
                                     fieldInfo.overrides.refStrategy = refStrategyOverride;
                                     //Remove the override value from the string
+                                    fieldInfo.overrides.prefix = fieldInfo.value.substr(0, 3);
                                     fieldInfo.value = fieldInfo.value.substr(3, fieldInfo.value.length);
                                 }
                             }
@@ -371,6 +373,7 @@ class ContractExcelReader {
                                     }
                                     fieldInfo.overrides.validationStrategy = validationStrategyOverride;
                                     //Remove the override value from the string
+                                    fieldInfo.overrides.prefix = fieldInfo.value.substr(0, 3);
                                     fieldInfo.value = fieldInfo.value.substr(3, fieldInfo.value.length);
                                 }
                             }
@@ -395,6 +398,7 @@ class ContractExcelReader {
                                     }
                                     fieldInfo.overrides.requiredStrategy = requiredStrategyOverride;
                                     //Remove the override value from the string
+                                    fieldInfo.overrides.prefix = fieldInfo.value.substr(0, 5);
                                     fieldInfo.value = fieldInfo.value.substr(5, fieldInfo.value.length);
                                 }
                             }
@@ -470,7 +474,7 @@ class ContractExcelReader {
                             value = value || '';
 
                             if (!utils.isDate(value) && typeof(value) !== 'string') {
-                                logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
+                                // logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
                                 //
                                 // fieldInfo.errors.push({
                                 //     //TODO: i18n
@@ -489,7 +493,7 @@ class ContractExcelReader {
                             value = value || '';
 
                             if (!utils.isNumber(value) && typeof(value) !== 'string') {
-                                logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
+                                // logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
 
                                 // fieldInfo.errors.push({
                                 //     //TODO: i18n
@@ -538,7 +542,7 @@ class ContractExcelReader {
                 fieldInfo.value = fieldInfo.value || '';
 
                 if (typeof(fieldInfo.value) !== 'string') {
-                    logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
+                    // logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
 
                     // fieldInfo.errors.push({
                     //     //TODO: i18n
@@ -977,6 +981,7 @@ class ContractExcelReader {
                 refStrategy: null,
                 validationStrategy: null,
                 requiredStrategy: null,
+                prefix: '',
             },
             options: {required: true}
         };
@@ -2039,11 +2044,11 @@ class ContractExcelWriter {
         
         switch(format) {
             case 'string':
-                sheet.getRow(rowIndex).getCell(cellIndex).value = fieldInfo.value;
+                sheet.getRow(rowIndex).getCell(cellIndex).value = (fieldInfo.overrides && fieldInfo.overrides.prefix ? fieldInfo.overrides.prefix : '') + fieldInfo.value;
                 wrapText = true;
                 break;
             case 'boolean':
-                sheet.getRow(rowIndex).getCell(cellIndex).value = fieldInfo.value;
+                sheet.getRow(rowIndex).getCell(cellIndex).value = (fieldInfo.overrides && fieldInfo.overrides.prefix ? fieldInfo.overrides.prefix : '') + fieldInfo.value;
                 wrapText = true;
                 break;
             case 'date':
@@ -2056,12 +2061,12 @@ class ContractExcelWriter {
 
                     if (enumInfoObj) {
                         //Valid enum value
-                        sheet.getRow(rowIndex).getCell(cellIndex).value = enumInfoObj.description;
+                        sheet.getRow(rowIndex).getCell(cellIndex).value = (fieldInfo.overrides && fieldInfo.overrides.prefix ? fieldInfo.overrides.prefix : '') + enumInfoObj.description;
                     }
                     
                 } else {
                     //Bad enum value, but show anyway
-                    sheet.getRow(rowIndex).getCell(cellIndex).value = fieldInfo.value;
+                    sheet.getRow(rowIndex).getCell(cellIndex).value = (fieldInfo.overrides && fieldInfo.overrides.prefix ? fieldInfo.overrides.prefix : '') + fieldInfo.value;
                 }
 
                 wrapText = true;
