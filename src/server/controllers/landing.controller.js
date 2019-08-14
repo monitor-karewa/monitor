@@ -80,7 +80,7 @@ function _aggregateAmountByPeriods(req, res, callback) {
         }
     }
 
-    let qProcedureStateConcluded = Contract.qProcedureStateConcluded();
+    let qProcedureStateConcluded = Contract.qProcedureStateConcluded(true);
 
     let finalQuery = {
         "deleted.isDeleted":false,
@@ -216,7 +216,7 @@ function _aggregateAmountByProcedure(req, res, callback) {
         }
     }
 
-    let qProcedureStateConcluded = Contract.qProcedureStateConcluded();
+    let qProcedureStateConcluded = Contract.qProcedureStateConcluded(true);
 
     let finalQuery = {
         "deleted.isDeleted":false,
