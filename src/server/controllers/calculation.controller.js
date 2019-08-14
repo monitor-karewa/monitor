@@ -827,7 +827,7 @@ let  processCalculation = function(req, cache, calculation, options = {}, mainCa
             let matchQuery = buildAggregateQuerysFromFilters(filters);
             let qNotDeleted = deletedSchema.qNotDeleted();
 
-            let query = {...Contract.qProcedureStateConcluded(), ...qNotDeleted};
+            let query = {...Contract.qProcedureStateConcluded(true), ...qNotDeleted};
             
             if (options.query) {
                 // query = {...query, ...options.query};

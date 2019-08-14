@@ -1582,9 +1582,9 @@ class ContractExcelReader {
                 case C_IDS.CONTRACT_NUMBER:
                     return _this._readField(rowInfo, cell, 'contractNumber', String, {
                         required: function (rowInfo, callback) {
-                            if(rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride){
-                                return callback(null, false);
-                            }
+                            // if(rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride){
+                            //     return callback(null, false);
+                            // }
                             return callback(null, true, "Este campo es requerido");
                         },
                         // unique: true

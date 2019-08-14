@@ -773,7 +773,13 @@ ContractSchema.statics.parseAdministrationPeriodToYear = function (administratio
     return Number(toYearAsStr);
 };
 
-ContractSchema.statics.qProcedureStateConcluded = function () {
+ContractSchema.statics.qProcedureStateConcluded = function (skipFilterByCategory = false) {
+
+    if (skipFilterByCategory) {
+        return {
+            procedureState: "CONCLUDED"
+        };
+    }
 
     return {
         procedureState: "CONCLUDED",
