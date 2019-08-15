@@ -99,7 +99,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
-                        <div class="panel-simple-color red">
+                        <div class="panel-simple-color green">
                             <span>{{totals.PUBLIC | currency}}</span>
                             <label>Monto total de contratos por Licitación pública</label>
                         </div>
@@ -111,7 +111,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
-                        <div class="panel-simple-color green">
+                        <div class="panel-simple-color red">
                             <span>{{totals.NO_BID | currency}}</span>
                             <label>Monto total de contratos por Adjudicación Directa</label>
                         </div>

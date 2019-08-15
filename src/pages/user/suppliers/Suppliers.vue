@@ -129,7 +129,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
-                        <div class="panel-simple-color red">
+                        <div class="panel-simple-color green">
                             <span>{{totals.publicCount}}</span>
                             <label>CONTRATOS POR LICITACIÓN PÚBLICA</label>
                         </div>
@@ -141,7 +141,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
-                        <div class="panel-simple-color green">
+                        <div class="panel-simple-color red">
                             <span>{{totals.noBidCount}}</span>
                             <label>CONTRATOS POR ADJUDICACIÓN DIRECTA</label>
                         </div>
