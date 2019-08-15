@@ -63,11 +63,14 @@ exports.corruptionIndex = (req, res, next) => {
                 resultsMap: {},
             };
 
-            Calculation.getEnabledCalculations(req, cache, currentOrganizationId, (err, calculationsInfo) => {
+            let calculationsQuery = Calculation.qAdministrationPeriod(corruptionIndex);
 
-                let query = Calculation.qAdministrationPeriod(corruptionIndex);
+            let options = {
+                query: calculationsQuery
+            };
+            Calculation.getEnabledCalculations(req, cache, currentOrganizationId, options, (err, calculationsInfo) => {
 
-                calculateAndValidateFormula(req, cache, corruptionIndex._id, {query: query}, (err, result) => {
+                calculateAndValidateFormula(req, cache, corruptionIndex._id, options, (err, result) => {
                     if (result && result.value) {
                         corruptionIndex.result = result.value;
                     }
@@ -176,13 +179,23 @@ exports.detail = (req, res, next) => {
                     resultsMap: {},
                 };
 
-                Calculation.getEnabledCalculations(req, cache, id, (err, calculationsInfo) => {
-                    if (err) {
-                        logger.error(err, req, 'publicComparation.controller#detail', 'Error trying to get enabled calculations');
-                    }
-                    calculationsInfo = calculationsInfo || [];
-                    return callback(null, calculationsInfo);
-                });
+                let query = {...qNotDeleted/*, ...qByOrganization*/, locked: true};
+                Calculation
+                    .findOne(query)
+                    .lean()
+                    .exec((err, corruptionIndex) => {
+                        let query = Calculation.qAdministrationPeriod(corruptionIndex);
+
+                        Calculation.getEnabledCalculations(req, cache, id, query, (err, calculationsInfo) => {
+                            if (err) {
+                                logger.error(err, req, 'publicComparation.controller#detail', 'Error trying to get enabled calculations');
+                            }
+                            calculationsInfo = calculationsInfo || [];
+                            return callback(null, calculationsInfo);
+                        });
+
+                    });
+
             },
         }, (err, results) => {
 

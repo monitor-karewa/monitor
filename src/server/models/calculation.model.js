@@ -310,7 +310,7 @@ CalculationSchema.statics.expressValidator = function() {
     ]
 };
 
-CalculationSchema.statics.getEnabledCalculations = function(req, cache, currentOrganizationId, callback) {
+CalculationSchema.statics.getEnabledCalculations = function(req, cache, currentOrganizationId, options = {}, callback) {
     if (currentOrganizationId && typeof('currentOrganizationId').toLowerCase() === 'string') {
         currentOrganizationId = mongoose.Types.ObjectId(currentOrganizationId);
     }
@@ -330,7 +330,7 @@ CalculationSchema.statics.getEnabledCalculations = function(req, cache, currentO
         
         async.mapSeries(calculations, (calculation, callback) => {
 
-            let query = {};
+            // let query = {};
 
             // if (calculation.type === 'CONTRACT') {
             //     query = {organization: currentOrganizationId};
@@ -339,7 +339,11 @@ CalculationSchema.statics.getEnabledCalculations = function(req, cache, currentO
             // console.log('calculation.type', calculation.type);
             // console.log('query', query);
 
-            calculateAndValidateFormula(req, cache, calculation._id, {currentOrganizationId: currentOrganizationId}, (err, result) => {
+            let query = {currentOrganizationId: currentOrganizationId};
+
+            query = {...(options.query || {}), ...query};
+
+            calculateAndValidateFormula(req, cache, calculation._id, {query}, (err, result) => {
                 
                 
                 let resultObj = calculation.toObject();
@@ -379,7 +383,8 @@ CalculationSchema.statics.qAdministrationPeriodFromYearToYear = function({admini
 };
 CalculationSchema.statics.qAdministrationPeriod = function({administrationPeriod}) {
     return {
-        administrationPeriod: {$eq: administrationPeriod}
+        // administrationPeriod: {$eq: administrationPeriod}
+        administrationPeriod: administrationPeriod
     };
 };
 
