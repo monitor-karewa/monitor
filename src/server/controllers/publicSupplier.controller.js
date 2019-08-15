@@ -356,6 +356,20 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
     let qByOrganization = Organization.qByOrganization(req);
     query = {...query, ...qNotDeleted, ...qByOrganization};
 
+    let qProcedureStateConcluded = Contract.qProcedureStateConcluded(!!options.skipFilterByCategory);
+
+    let finalQuery = {
+        ...qProcedureStateConcluded,
+        isEmpty: {"$ne": true},
+        ...query,
+    };
+
+    if (finalQuery["$and"]) {
+        finalQuery["$and"] = (query["$and"] || []).concat((qProcedureStateConcluded["$and"] || []))
+    }
+    
+    query = finalQuery;
+
     let aggregate = Contract.aggregate([
         {
             $lookup: {
@@ -499,7 +513,7 @@ exports.list = (req, res, next) => {
 
     async.parallel({
             mainQuery: function (callback) {
-                _aggregateSuppliersFromContracts(req, res, {paginate: true}, (err, suppliers, pageCount, itemCount) => {
+                _aggregateSuppliersFromContracts(req, res, {paginate: true, skipFilterByCategory: true}, (err, suppliers, pageCount, itemCount) => {
                     if (err) {
                         logger.error(err, req, 'publicSupplier.controller#list', 'Error trying to query suppliers info from aggregate');
                         return res.json({
@@ -507,7 +521,7 @@ exports.list = (req, res, next) => {
                         });
                     }
 
-                    _aggregateSuppliersFromContracts(req, res, {paginate: false}, (err, suppliersWithoutPagination, pageCountWithoutPagination, itemCountWithoutPagination) => {
+                    _aggregateSuppliersFromContracts(req, res, {paginate: false, skipFilterByCategory: false}, (err, suppliersWithoutPagination, pageCountWithoutPagination, itemCountWithoutPagination) => {
 
                         if (err) {
                             logger.error(err, req, 'publicSupplier.controller#list', 'Error trying to query suppliers info from aggregate without pagination');
