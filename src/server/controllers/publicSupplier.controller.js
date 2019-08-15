@@ -360,7 +360,6 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
 
     let finalQuery = {
         ...qProcedureStateConcluded,
-        isEmpty: {"$ne": true},
         ...query,
     };
 
@@ -410,7 +409,7 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
                 publicCount: {
                     $sum: {
                         $cond: {
-                            if:Contract.aggregateCondProcedures("PUBLIC","CONCLUDED"),
+                            if:Contract.aggregateCondProcedures("PUBLIC","CONCLUDED", options.skipFilterByCategory),
                             then: 1,
                             else: 0
                         }
@@ -419,7 +418,7 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
                 invitationCount: {
                     $sum: {
                         $cond: {
-                            if: Contract.aggregateCondProcedures("INVITATION","CONCLUDED"),
+                            if: Contract.aggregateCondProcedures("INVITATION","CONCLUDED", options.skipFilterByCategory),
                             then: 1,
                             else: 0
                         }
@@ -428,7 +427,7 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
                 noBidCount: {
                     $sum: {
                         $cond: {
-                            if: Contract.aggregateCondProcedures("NO_BID","CONCLUDED"),
+                            if: Contract.aggregateCondProcedures("NO_BID","CONCLUDED", options.skipFilterByCategory),
                             then: 1,
                             else: 0
                         }
@@ -438,7 +437,7 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
                 public: {
                     $sum: {
                         $cond: {
-                            if: Contract.aggregateCondProcedures("PUBLIC","CONCLUDED"),
+                            if: Contract.aggregateCondProcedures("PUBLIC","CONCLUDED", options.skipFilterByCategory),
                             then: "$totalOrMaxAmount",
                             else: 0
                         }
@@ -447,7 +446,7 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
                 invitation: {
                     $sum: {
                         $cond: {
-                            if: Contract.aggregateCondProcedures("INVITATION","CONCLUDED"),
+                            if: Contract.aggregateCondProcedures("INVITATION","CONCLUDED", options.skipFilterByCategory),
                             then: "$totalOrMaxAmount",
                             else: 0
                         }
@@ -456,7 +455,7 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
                 noBid: {
                     $sum: {
                         $cond: {
-                            if: Contract.aggregateCondProcedures("NO_BID","CONCLUDED"),
+                            if: Contract.aggregateCondProcedures("NO_BID","CONCLUDED", options.skipFilterByCategory),
                             then: "$totalOrMaxAmount",
                             else: 0
                         }
@@ -465,7 +464,7 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
                 total: {
                     $sum: {
                         $cond: {
-                            if: Contract.aggregateCondProcedures(null,"CONCLUDED"),
+                            if: Contract.aggregateCondProcedures(null,"CONCLUDED", options.skipFilterByCategory),
                             then: "$totalOrMaxAmount",
                             else: 0
                         }

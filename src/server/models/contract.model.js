@@ -791,32 +791,51 @@ ContractSchema.statics.qProcedureStateConcluded = function (skipFilterByCategory
     }
 };
 
-ContractSchema.statics.aggregateCondProcedures = function (procedureType, procedureState) {
+ContractSchema.statics.aggregateCondProcedures = function (procedureType, procedureState, skipFilterByCategory = false) {
 
-    if(procedureType && procedureState){
-        return {
-            $and: [
-                { $eq: ["$procedureType", procedureType] },
-                { $eq: ["$procedureState", procedureState] },
-                { $ne:["$category","MODIFICACION"] },
-                { $ne:["$category","ADENDUM"] },
-                { $ne:["$category","EXTENSION"] }
-                ]}
-    } else if(procedureType) {
-        return {$and: [
-            {$eq: ["$procedureType", procedureType]},
-            {$ne:["$category","MODIFICACION"]},
-            {$ne:["$category","ADENDUM"]},
-            {$ne:["$category","EXTENSION"]}
-        ]}
+    if (skipFilterByCategory) {
+        if(procedureType && procedureState){
+            return {
+                $and: [
+                    { $eq: ["$procedureType", procedureType] },
+                    { $eq: ["$procedureState", procedureState] },
+                    ]}
+        } else if(procedureType) {
+            return {$and: [
+                {$eq: ["$procedureType", procedureType]},
+            ]}
+        } else {
+            return { $and:[
+                {$eq: ["$procedureState", procedureState]},
+            ]}
+        }
     } else {
-        return { $and:[
-            {$eq: ["$procedureState", procedureState]},
-            {$ne:["$category","MODIFICACION"]},
-            {$ne:["$category","ADENDUM"]},
-            {$ne:["$category","EXTENSION"]}
-        ]}
+        if(procedureType && procedureState){
+            return {
+                $and: [
+                    { $eq: ["$procedureType", procedureType] },
+                    { $eq: ["$procedureState", procedureState] },
+                    { $ne:["$category","MODIFICACION"] },
+                    { $ne:["$category","ADENDUM"] },
+                    { $ne:["$category","EXTENSION"] }
+                    ]}
+        } else if(procedureType) {
+            return {$and: [
+                {$eq: ["$procedureType", procedureType]},
+                {$ne:["$category","MODIFICACION"]},
+                {$ne:["$category","ADENDUM"]},
+                {$ne:["$category","EXTENSION"]}
+            ]}
+        } else {
+            return { $and:[
+                {$eq: ["$procedureState", procedureState]},
+                {$ne:["$category","MODIFICACION"]},
+                {$ne:["$category","ADENDUM"]},
+                {$ne:["$category","EXTENSION"]}
+            ]}
+        }
     }
+
 };
 
 
