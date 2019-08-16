@@ -223,8 +223,9 @@ class ContractExcelReader {
                 
                 if (keywords && keywords.length) {
                     //If the value is "ONE TWO THREE"
-                    //This will generate a regex ".*(ONE|TWO|THREE)? (ONE|TWO|THREE)? (ONE|TWO|THREE)?.*"
+                    //This will generate a regex ".*(ONE|TWO|THREE)[ ]+(ONE|TWO|THREE)[ ]*(ONE|TWO|THREE)?.*"
                     let optionalSign;
+                    let spaceCharSuffix;
                     for (let i = 0; i < keywords.length; i++) {
                         let keyword = keywords[i];
                         optionalSign = '';
@@ -234,7 +235,16 @@ class ContractExcelReader {
                         }
 
                         //Note: The space at the end is intended
-                        regexStr += `(${keywords.join('|')})${optionalSign} `;
+                        // spaceCharSuffix = '[ ]*';
+                        // if (i === 0) {
+                        //     spaceCharSuffix = '[ ]+';
+                        // }
+                        // if (i === (keywords.length - 1)) {
+                        //     spaceCharSuffix = '';
+                        // }
+
+                        spaceCharSuffix = ' ';
+                        regexStr += `(${keywords.join('|')})${optionalSign}${spaceCharSuffix}`;
                     }
                 }
 
@@ -1714,11 +1724,11 @@ class ContractExcelReader {
                             regexStr: LETTERS_AND_SPACES_REGEX_STR,
                             flags: "gi"
                         },
-                        ref: {
-                            model: AdministrativeUnit.modelName,
-                            field: 'name',
-                            strategy: REF_STRATEGIES.SUBSET
-                        },
+                        // ref: {
+                        //     model: AdministrativeUnit.modelName,
+                        //     field: 'name',
+                        //     strategy: REF_STRATEGIES.SUBSET
+                        // },
                     }, callback);
                     break;
                 case C_IDS.UPDATE_DATE:
