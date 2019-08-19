@@ -29,7 +29,7 @@ export default {
             }
         ]
         for (let i = 0; i < aggregationData.length; i++) {
-            labels.push(aggregationData[i]._id.period + " Trimestre " + aggregationData[i]._id.year)
+            labels.push(aggregationData[i]._id.period + " " + aggregationData[i]._id.year)
             datasets[0].data.push(aggregationData[i].totalPublic);
             datasets[1].data.push (aggregationData[i].totalInvitation);
             datasets[2].data.push(aggregationData[i].totalNoBid);

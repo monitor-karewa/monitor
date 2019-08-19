@@ -170,10 +170,12 @@
                                                         <label>{{contract.totalOrMaxAmount | currency}}</label>
                                                         <small>{{contract.informationDate | moment}}</small>
                                                     </span>
+
+                                                    </div>
+                                                    <br />
                                                         <router-link :to="'/contracts/' + contract._id" class="btn-stroke xs button-primary">
                                                             Ver más
                                                         </router-link>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -219,10 +221,12 @@
                                                         <label>{{contract.totalOrMaxAmount | currency}}</label>
                                                         <small>{{contract.informationDate}}</small>
                                                     </span>
+
+                                                    </div>
+                                                        <br />
                                                         <router-link :to="'/contracts/' + contract._id" class="btn-stroke xs button-primary">
                                                             Ver más
                                                         </router-link>
-                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
@@ -263,15 +267,17 @@
                                         <div class="col-12 col-md-4 col-lg-3" v-for="contract in noBid">
                                             <div class="card-background">
                                                 <p>{{contract.servicesDescription}}</p>
-                                                <div>
-                                                    <span>
-                                                        <label>{{contract.totalOrMaxAmount | currency}}</label>
-                                                        <small>{{contract.informationDate | moment}}</small>
-                                                    </span>
+                                                    <div>
+                                                        <span>
+                                                            <label>{{contract.totalOrMaxAmount | currency}}</label>
+                                                            <small>{{contract.informationDate | moment}}</small>
+                                                        </span>
+
+                                                    </div>
+                                                    <br />
                                                     <router-link :to="'/contracts/' + contract._id" class="btn-stroke xs button-primary">
                                                         Ver más
                                                     </router-link>
-                                                </div>
                                             </div>
                                         </div>
                                     </div>

@@ -182,13 +182,13 @@ DataLoadDetailSchema.statics.toAdministrativeUnitsArray = function (dataLoad, de
         });
     }
     
-    if (detail.areaInCharge.shouldCreateDoc) {
-        administrativeUnits.push({
-            organization: dataLoad.organization,
-            name: detail.areaInCharge.value,
-            deleted: {isDeleted: false},
-        });
-    }
+    // if (detail.areaInCharge.shouldCreateDoc) {
+    //     administrativeUnits.push({
+    //         organization: dataLoad.organization,
+    //         name: detail.areaInCharge.value,
+    //         deleted: {isDeleted: false},
+    //     });
+    // }
     
     return administrativeUnits;
 };

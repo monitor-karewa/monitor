@@ -159,6 +159,7 @@ let contractsQuery = {};
     if(!!options.paginate){
         paginationOptions = options.paginationOptions;
         paginationOptions.lean = false;
+        paginationOptions.sort = {"totalOrMaxAmount": -1};
         contractsQuery = Contract.paginate(query, {
             ...paginationOptions,
             populate : [
@@ -170,6 +171,7 @@ let contractsQuery = {};
         });
     } else {
         contractsQuery = Contract.find(query,{_id:0, deleted:0})
+            .sort({"totalOrMaxAmount": -1})
             .populate('supplier administrativeUnit organizerAdministrativeUnit applicantAdministrativeUnit')
             .lean();
     }
