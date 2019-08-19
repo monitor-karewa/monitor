@@ -21,7 +21,7 @@
                             <a @click="copyUrlToClipBoard()" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i class="zmdi zmdi-share"></i> Compartir</a>
                         </div>
                     </div>
-                    <p class="f-14 c-plain_text principal-font-regular">El contrato <strong class="principal-font-semibold"><span class="text-upper"> {{contract.servicesDescription}}</span></strong>, a cargo del proveedor <strong class="principal-font-semibold">{{contract.supplier ? contract.supplier.name : ""}}</strong> obtuvo una cantidad de <strong class="c-accent">{{contract.totalAmount | currency}}</strong>, celebrado el día <strong>{{contract.contractDate | moment}}</strong></p>
+                    <p class="f-14 c-plain_text principal-font-regular">El contrato <strong class="principal-font-semibold"><span class="text-upper"> {{contract.servicesDescription}}</span></strong>, a cargo del proveedor <strong class="principal-font-semibold">{{contract.supplier ? contract.supplier.name : ""}}</strong> obtuvo una cantidad de <strong class="c-accent">{{contract.totalOrMaxAmount | currency}}</strong>, celebrado el día <strong>{{contract.contractDate | moment}}</strong></p>
                 </div>
                 <!-- CONTRATO FILES -->
                 <div class="card">
