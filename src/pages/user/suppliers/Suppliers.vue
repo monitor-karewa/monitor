@@ -125,25 +125,29 @@
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color accent">
                             <span>{{totals.totalCount}}</span>
-                            <label>CONTRATOS EN TOTAL</label>
+                            <!--label>CONTRATOS EN TOTAL</label-->
+                            <label class="c-primary f-bold">CONTRATOS EN TOTAL</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color green">
                             <span>{{totals.publicCount}}</span>
-                            <label>CONTRATOS POR LICITACIÓN PÚBLICA</label>
+                            <!--label>CONTRATOS POR LICITACIÓN PÚBLICA</label-->
+                            <label class="c-primary f-bold">CONTRATOS POR LICITACIÓN PÚBLICA</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color yellow">
                             <span>{{totals.invitationCount}}</span>
-                            <label>CONTRATOS POR INVITACIÓN</label>
+                            <!--label>CONTRATOS POR INVITACIÓN</label-->
+                            <label class="c-primary f-bold">CONTRATOS POR INVITACIÓN</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color red">
                             <span>{{totals.noBidCount}}</span>
-                            <label>CONTRATOS POR ADJUDICACIÓN DIRECTA</label>
+                            <!--label>CONTRATOS POR ADJUDICACIÓN DIRECTA</label-->
+                            <label class="c-primary f-bold">CONTRATOS POR ADJUDICACIÓN DIRECTA</label>
                         </div>
                     </div>
                 </div>

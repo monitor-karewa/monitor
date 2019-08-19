@@ -20,7 +20,8 @@
             </div>
             <div class="divider-dash"></div>
             <div class="total">
-                <label>{{totalAmount | currency}} MXN</label>
+                <!--label>{{totalAmount | currency}} MXN</label-->
+                <label class="c-primary f-bold">{{totalAmount | currency}} MXN</label>
                 <small>MONTO TOTAL</small>
             </div>
         </div>
