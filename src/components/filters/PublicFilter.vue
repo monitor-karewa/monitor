@@ -256,10 +256,6 @@
                         bObj.periodNumber = bRegexRes[1];
                         bObj.year = bRegexRes[2];
 
-                        console.log("================================");
-                        console.log("aObj", aObj);
-                        console.log("bObj", bObj);
-
                         if (aObj.year === bObj.year) {
                             return aObj.periodNumber - bObj.periodNumber;
                         } else {
