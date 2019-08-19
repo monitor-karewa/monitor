@@ -29,7 +29,7 @@
                                     <optGroup>
                                         <option :value="undefined"> Por año...</option>
                                     </optGroup>
-                                    <option v-for="item in fiscalYears" :value="item">{{item.fiscalYear}}
+                                    <option v-for="item in fiscalYearsSorted" :value="item">{{item.fiscalYear}}
                                     </option>
                                 </select>
                             </div>
@@ -39,7 +39,7 @@
                                 <select v-model="temp.trimonth" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar trimestre"
                                         title="Por trimestre…" @change="addFilter(query.trimonths, temp.trimonth, 'trimonths')">
-                                        <option v-for="trimonth in trimonths"  :value="trimonth">
+                                        <option v-for="trimonth in trimonthsSorted"  :value="trimonth">
                                             {{trimonth.period}}
                                         </option>
                                 </select>
@@ -64,7 +64,7 @@
                                             <optGroup>
                                                 <option :value="undefined"> Por Unidad...</option>
                                             </optGroup>
-                                    <option v-for="unit in administrativeUnits" :value="unit">{{unit.name}}</option>
+                                    <option v-for="unit in administrativeUnitsSorted" :value="unit">{{unit.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -76,7 +76,7 @@
                                     <optGroup>
                                         <option :value="undefined"> Por Proveedor...</option>
                                     </optGroup>
-                                    <option v-for="supplier in suppliers" :value="supplier">{{supplier.name}}</option>
+                                    <option v-for="supplier in suppliersSorted" :value="supplier">{{supplier.name}}</option>
                                 </select>
                             </div>
                         </div>
@@ -201,7 +201,75 @@
                       (this.query.procedureTypes && this.query.procedureTypes.length >  0 ) ||
                       (this.query.suppliers && this.query.suppliers.length >  0 ) ||
                       (this.query.administrativeUnits && this.query.administrativeUnits.length >  0 );
-           }
+           },
+            fiscalYearsSorted : function () {
+                let newFiscalYears = JSON.parse(JSON.stringify(this.$props.fiscalYears));
+                newFiscalYears.sort(function (a, b) {
+                    try {
+                        let aInt = parseInt(a.fiscalYear);
+                        let bInt = parseInt(b.fiscalYear);
+                        return aInt - bInt;
+                    } catch (error){
+                        console.log("Error trying to parse fiscal years");
+                        return 0;
+                    }
+                });
+                return newFiscalYears;
+            },
+            administrativeUnitsSorted : function(){
+                let newAdministrativeUnits = JSON.parse(JSON.stringify(this.$props.administrativeUnits));
+                newAdministrativeUnits.sort(function (a, b) {
+                    if (a.name > b.name) {
+                        return 1;
+                    } else if (b.name > a.name) {
+                        return -1
+                    } else {
+                        return 0;
+                    }
+                });
+                return newAdministrativeUnits;
+            },
+            suppliersSorted : function(){
+                let newSuppliers = JSON.parse(JSON.stringify(this.$props.suppliers));
+                newSuppliers.sort(function (a, b) {
+                    if (a.name > b.name) {
+                        return 1;
+                    } else if (b.name > a.name) {
+                        return -1
+                    } else {
+                        return 0;
+                    }
+                });
+                return newSuppliers;
+            },
+            trimonthsSorted: function () {
+                let newTrimonths = JSON.parse(JSON.stringify(this.$props.trimonths));
+                let regex = /^([1-4])o[\s]([0-9]{4})$/;
+                newTrimonths.sort(function (a, b) {
+                    let aObj = {};
+                    let bObj = {};
+                    let aRegexRes = a.period.match(regex);
+                    let bRegexRes = b.period.match(regex);
+                    if (aRegexRes && bRegexRes) {
+                        aObj.periodNumber = aRegexRes[1];
+                        aObj.year = aRegexRes[2];
+                        bObj.periodNumber = bRegexRes[1];
+                        bObj.year = bRegexRes[2];
+
+                        console.log("================================");
+                        console.log("aObj", aObj);
+                        console.log("bObj", bObj);
+
+                        if (aObj.year === bObj.year) {
+                            return aObj.periodNumber - bObj.periodNumber;
+                        } else {
+                            return aObj.year - bObj.year;
+                        }
+                    }
+                    return 0;
+                });
+                return newTrimonths;
+            }
         },
         props: {
             administrationPeriods: {

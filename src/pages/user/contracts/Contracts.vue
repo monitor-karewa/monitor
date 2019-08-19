@@ -94,25 +94,25 @@
                 <div class="row">
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color accent">
-                            <span>{{totals.totalAmount | currency}}</span>
+                            <span class="f-25">{{totals.totalAmount | currency}}</span>
                             <label>MONTO TOTAL</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color green">
-                            <span>{{totals.PUBLIC | currency}}</span>
+                            <span class="f-25">{{totals.PUBLIC | currency}}</span>
                             <label>Monto total de contratos por Licitación pública</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color yellow">
-                            <span>{{totals.INVITATION | currency}}</span>
+                            <span class="f-25">{{totals.INVITATION | currency}}</span>
                             <label>Monto total de contratos por Invitación</label>
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
                         <div class="panel-simple-color red">
-                            <span>{{totals.NO_BID | currency}}</span>
+                            <span class="f-25">{{totals.NO_BID | currency}}</span>
                             <label>Monto total de contratos por Adjudicación Directa</label>
                         </div>
                     </div>
