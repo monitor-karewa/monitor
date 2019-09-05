@@ -2,7 +2,7 @@
     <div>
         <div class="col-12 extra-info-disclaimer">
             <div class="neutral-width">
-                <div class=" displaimer-text">
+                <div class=" disclaimer-text">
                     <strong>
                     Derechos Reservados © 2019 <br>
                     Programa de las Naciones Unidas para el Desarrollo (PNUD) <br>
