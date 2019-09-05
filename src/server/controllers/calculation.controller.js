@@ -339,11 +339,15 @@ exports.validateFormula = (req, res, next) => {
         i: 0,
         resultsMap: {},
     };
+    let options = {};
+    if(calculation.locked){
+        options.query = Calculation.qAdministrationPeriod(calculation);
+    }
 
 
     exploreCalculationTree(cache, calculation, function (validTree) {
         if (validTree) {
-            calculateAndValidateFormula(req, cache, calculation, {}, (err, results) => {
+            calculateAndValidateFormula(req, cache, calculation, options, (err, results) => {
                 if(results && (isNaN(results.value) || results.value == Number.Infinity)){
                     return res.json({error:true, message:req.__('calculations.formula.infinity.error'), err:err });
                 }
@@ -855,6 +859,7 @@ let  processCalculation = function(req, cache, calculation, options = {}, mainCa
                 query = {...query, ...qByOrganization, ...matchQuery};
             }
 
+            delete query.currentOrganizationId;
 
             if (Object.keys(query).length) {
                 queryArray.unshift({$match: query});
