@@ -556,6 +556,8 @@ button {
 }
 
 .footer-client {
+  position: relative;
+  z-index: 1;
   padding: 30px 85px;
   margin-top: 70px;
   width: 100%;

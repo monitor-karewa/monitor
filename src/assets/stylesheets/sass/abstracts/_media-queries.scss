@@ -145,6 +145,14 @@
 }
 
 @media screen and (max-width: 767px) {
+	.disclaimer-text .divider-line {
+		margin: 40px auto 40px !important;
+	}
+	.images-logos-container {
+		grid-template-columns: repeat(2, 1fr) !important;
+		max-width: 400px !important;
+		margin-bottom: 70px !important;
+	}
 	.about.vertical-center {
 		display: block !important;
 		img {
@@ -283,6 +291,9 @@
 
 @media screen and (max-width: 991px) {
 
+	.extra-info-disclaimer {
+		padding: 5px 30px !important;
+	}
 
 .profile {
   .user-info {
