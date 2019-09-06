@@ -323,8 +323,9 @@
 	// display: flex;
 	// justify-content: space-between;
 	display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    max-width: 900px;
+    grid-template-columns: repeat(8, 1fr);
+	// max-width: 900px;
+	margin-top: 30px;
 	margin: auto;
 	grid-gap: 10px 20px;
 	margin-bottom: 0px;
@@ -368,6 +369,6 @@
 		height: 2px;
 		background: #6a7296;
 		opacity: .2;
-		margin: 40px auto 70px;
+		margin: 0px auto 70px;
 	}
 }
