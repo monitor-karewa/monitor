@@ -781,7 +781,15 @@
                 this.$v.$reset();
             },
             validateFormula(){
-                this.$store.dispatch(`${storeModule}/validateFormula`, {formula: this.entry.formula, abbreviation : this.entry.abbreviation, hasPercentScale:this.entry.hasPercentScale, scale:this.entry.scale, filters:this.entry.filters});
+                this.$store.dispatch(`${storeModule}/validateFormula`, {
+                    formula: this.entry.formula,
+                    abbreviation : this.entry.abbreviation,
+                    hasPercentScale:this.entry.hasPercentScale,
+                    scale:this.entry.scale,
+                    filters:this.entry.filters,
+                    locked: this.entry.locked,
+                    administrationPeriod: this.entry.administrationPeriod
+                });
             },
             assignPercentScale(){
                 if(this.entry.hasPercentScale){
