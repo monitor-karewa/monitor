@@ -90,6 +90,10 @@ organizationSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
+    round: {
+        type: Boolean,
+        default: false
+    },
     deleted: require("./schemas/deleted.schema").Deleted
 });
 

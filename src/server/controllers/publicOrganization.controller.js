@@ -160,7 +160,7 @@ exports.loadOrganizationSettings = (req, res, next) => {
     let currentOrganizationId = Organization.currentOrganizationId(req);
 
     Organization.findOne({_id: currentOrganizationId})
-        .select('title description contactLocation contactEmail address schedule additionalInformation welcomeTitle showBackgroundText updatedAt')
+        .select('title description contactLocation contactEmail address schedule additionalInformation welcomeTitle showBackgroundText round updatedAt')
         .lean()
         .exec((err, organization) => {
             if (err) {

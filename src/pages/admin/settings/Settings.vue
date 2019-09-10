@@ -179,6 +179,24 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group fg-float">
+                                                <div class="fg-line basic-input">
+
+                                                     <div v-show="!editEnabled" class="checkbox m-t-10">
+                                                        <input type="checkbox" :checked="settings.round" disabled="true">
+                                                        <i class="input-helper"></i>
+                                                    </div>
+
+                                                    <div v-show="editEnabled" class="checkbox m-t-10">
+                                                        <input type="checkbox" v-model="localSettings.round" :checked="localSettings.round">
+                                                        <i class="input-helper"></i>
+                                                    </div>
+
+                                                    <label class="fg-label">Redondear decimales</label>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
 
@@ -347,7 +365,8 @@
                     additionalInformation: '',
                     address: '',
                     welcomeTitle: '',
-                    showBackgroundText: false
+                    showBackgroundText: false,
+                    round: false
                 },
                 coverFileRef: 'coverFile',
                 coverFile: null,
@@ -462,6 +481,7 @@
                 this.setEditEnabled(false);
             },
             setLocalSettings(val) {
+                console.log('val', val);
                 this.localSettings.title = val.title || '';
                 this.localSettings.description = val.description || '';
                 this.localSettings.contactLocation = val.contactLocation || '';
@@ -471,6 +491,7 @@
                 this.localSettings.additionalInformation = val.additionalInformation || '';
                 this.localSettings.welcomeTitle = val.welcomeTitle || '';
                 this.localSettings.showBackgroundText = val.showBackgroundText || false;
+                this.localSettings.round = val.round || false;
             },
             handleCoverFileUpload() {
 
