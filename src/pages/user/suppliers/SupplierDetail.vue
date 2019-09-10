@@ -101,7 +101,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
-                        <div class="panel-simple-color red">
+                        <div class="panel-simple-color green">
                             <!--<span>$23,980,030.81</span>-->
                             <span class="f-25">{{totals.public | currency}}</span>
                             <label>MONTO TOTAL DE CONTRATOS POR LICITACIÓN PÚBLICA</label>
@@ -115,7 +115,7 @@
                         </div>
                     </div>
                     <div class="col-12 col-md-6 col-lg-3 di-flex m-b-30">
-                        <div class="panel-simple-color green">
+                        <div class="panel-simple-color red">
                             <!--<span>$31,458,674.04</span>-->
                             <span class="f-25">{{totals.noBid | currency}}</span>
                             <label>MONTO TOTAL DE CONTRATOS POR ADJUDICACIÓN DIRECTA</label>
