@@ -21,14 +21,15 @@ RUN npm install
 
 COPY . .
 
-# RUN npm run build
+RUN npm run build
 
 ENV NODE_ENV production
 
-RUN apk add --update --no-cache curl
+# RUN apk add --update --no-cache curl
 
 EXPOSE 3000
 
 HEALTHCHECK CMD curl --fail http://localhost:3000/ || exit 1
 
-ENTRYPOINT [ "./entrypoint.sh" ]
+CMD ["npm", "run", "prod"]
+# ENTRYPOINT [ "./entrypoint.sh" ]
