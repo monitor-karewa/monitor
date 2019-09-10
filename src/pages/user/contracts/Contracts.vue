@@ -135,7 +135,7 @@
                                         <th class="text-align-l">Id. Contrato</th>
                                         <th class="text-align-l">Descripción de la obra</th>
                                         <th class="text-align-l">Monto total</th>
-                                        <th class="text-align-l">Fecha del contrato<i class="zmdi zmdi-caret-down m-l-5 f-16"></i></th>
+                                        <th class="text-align-l">Fecha del contrato</th>
                                         <th class="text-align-l">Tipo de procedimiento</th>
                                         <th class="text-align-l">Estdo del procedimiento</th>
                                         <th class="text-align-l">Unidad Administrativa Solicitante</th>
@@ -158,8 +158,8 @@
                                         <TableTdFormat :fieldName="'contractId'"    :value="contract.contractId"  class="text-align-l"> </TableTdFormat>
                                         <TableTdFormat :fieldName="'contractNumber'"    :value="contract.contractNumber"  class="text-align-l"> </TableTdFormat>
                                         <TableTdFormat :fieldName="'servicesDescription'"    :value="contract.servicesDescription"  class="text-align-l"> </TableTdFormat>
-                                        <TableTdFormat :format="'currency'" :fieldName="'totalOrMaxAmount'"    :value="contract.totalOrMaxAmount"  :currency="true" class="text-align-l"> </TableTdFormat>
-                                        <TableTdFormat :format="'date'"     :fieldName="'contractDate'"    :value="contract.contractDate" class="text-align-l c-accent"></TableTdFormat>
+                                        <TableTdFormat :format="'currency'" :fieldName="'totalOrMaxAmount'"    :value="contract.totalOrMaxAmount"  :currency="true" class="text-align-l c-accent"> </TableTdFormat>
+                                        <TableTdFormat :format="'date'"     :fieldName="'contractDate'"    :value="contract.contractDate" class="text-align-l"></TableTdFormat>
 
                                         <td class="text-align-l">
                                             <div class="badge" :class="{ 'badge-yellow' : contract.procedureType == 'INVITATION', 'badge-green' : contract.procedureType == 'PUBLIC', 'badge-red' : contract.procedureType == 'NO_BID'}">{{$t(contract.procedureType)}}</div>
