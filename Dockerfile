@@ -21,10 +21,12 @@ RUN npm install
 
 COPY . .
 
-RUN npm run build
+# RUN npm run build
 
 ENV NODE_ENV production
 
 EXPOSE 3000
 
-CMD ["npm", "run", "prod"]
+HEALTHCHECK CMD curl --fail http://localhost:3000/ || exit 1
+
+ENTRYPOINT [ "./entrypoint.sh" ]
