@@ -133,7 +133,7 @@ function _aggregateSupplierDetail(req, res, callback) {
                 _id: 1,
                 servicesDescription: 1,
                 totalOrMaxAmount: 1,
-                informationDate: 1,
+                contractDate: 1,
                 procedureType: 1,
                 procedureState: 1,
                 category: 1
