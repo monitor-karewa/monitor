@@ -6,15 +6,15 @@
         <div class="graph-info">
             <div class="info">
                                     <span class="green">
-                                        <label class="p-l-10">{{percentagePublic}}%</label>
+                                        <label class="p-l-10">{{percentagePublic | round}}%</label>
                                         <p>Lic. pública</p>
                                     </span>
                 <span class="yellow">
-                                        <label class="p-l-10">{{percentageInvitation}}%</label>
+                                        <label class="p-l-10">{{percentageInvitation | round}}%</label>
                                         <p>Por invitación</p>
                                     </span>
                 <span class="red">
-                                        <label class="p-l-10">{{percentageNoBid}}%</label>
+                                        <label class="p-l-10">{{percentageNoBid | round}}%</label>
                                         <p>Adj. directa</p>
                                     </span>
             </div>
@@ -67,8 +67,25 @@
                     tooltip: {
                         y: {
                             formatter: function (val) {
-                                return val ? '$' + val.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : "";
+                                const decimals = 0;
+                                if (val) {
+                                    const rounded = Number(Math.round(`${val}e${decimals}`)+`e-${decimals}`);
+                                    return `$ ${rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+                                } else {
+                                    return "";
+                                }
                             }
+                        }
+                    },
+                    dataLabels: {
+                        formatter: function (val) {
+                                const decimals = 0;
+                                if (val) {
+                                    const rounded = Number(Math.round(`${val}e${decimals}`)+`e-${decimals}`);
+                                    return `${rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}%`;
+                                } else {
+                                    return "";
+                                }
                         }
                     }
                 },

@@ -185,6 +185,7 @@
 
                                                      <div v-show="!editEnabled" class="checkbox m-t-10">
                                                         <input type="checkbox" :checked="settings.round" disabled="true">
+                                                        <input type="checkbox" :checked="settings.round" disabled="true">
                                                         <i class="input-helper"></i>
                                                     </div>
 
@@ -481,7 +482,6 @@
                 this.setEditEnabled(false);
             },
             setLocalSettings(val) {
-                console.log('val', val);
                 this.localSettings.title = val.title || '';
                 this.localSettings.description = val.description || '';
                 this.localSettings.contactLocation = val.contactLocation || '';

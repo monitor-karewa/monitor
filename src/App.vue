@@ -71,7 +71,9 @@
 //              let contactEmail = this.$session.get('currentOrganizationContactEmail');
               let welcomeTitle = this.$session.get('currentOrganizationWelcomeTitle');
               let showBackgroundText = this.$session.get('currentOrganizationShowBackgroundText');
-              this.$store.commit('CURRENT_ORGANIZATION', {_id, name, shortName, color, theme, cover, title, description/*, contactLocation, contactEmail*/,welcomeTitle, showBackgroundText}, {root: true});
+              let round = this.$session.get('currentOrganizationRound');
+              console.log('app.vue');
+              this.$store.commit('CURRENT_ORGANIZATION', {_id, name, shortName, color, theme, cover, title, description/*, contactLocation, contactEmail*/,welcomeTitle, showBackgroundText, round}, {root: true});
 
               let body = document.getElementById('body');
               body.className = `theme-body ${theme}`;

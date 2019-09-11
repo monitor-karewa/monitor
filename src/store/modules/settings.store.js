@@ -12,7 +12,7 @@ const state = {
         additionalInformation: '',
         welcomeTitle: '',
         showBackgroundText: false,
-        round: false
+        round: true
     },
     lastUpdate : undefined
 };
@@ -60,6 +60,9 @@ const actions = {
                 // session.set('currentOrganizationCover', );
                 session.set('currentOrganizationTitle', result.data.data.title);
                 session.set('currentOrganizationDescription', result.data.data.description);
+
+                console.log('result.data.data', result.data.data);
+                session.set('currentOrganizationRound', result.data.data.round);
 
                 commit('SETTINGS_UPDATED', result.data.data);
             } else {

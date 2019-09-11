@@ -25,6 +25,22 @@ window.$ = window.jQuery = require('jquery');
 
 Vue.config.productionTip = false;
 
+Vue.filter('currency', function (value) {
+    const decimals = 0;
+    const rounded = Number(Math.round(`${value}e${decimals}`)+`e-${decimals}`);
+    console.log('value', value);
+    console.log('rounded', rounded);
+    return `$ ${rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+});
+
+Vue.filter('round', function (value) {
+    const decimals = 0;
+    const rounded = Number(Math.round(`${value}e${decimals}`)+`e-${decimals}`);
+    console.log('value', value);
+    console.log('rounded', rounded);
+    return rounded;
+});
+
 export const bus = new Vue();
 
 Vue.use(new VueSocketIO({
