@@ -184,8 +184,7 @@
                                                 <div class="fg-line basic-input">
 
                                                      <div v-show="!editEnabled" class="checkbox m-t-10">
-                                                        <input type="checkbox" :checked="settings.round" disabled="true">
-                                                        <input type="checkbox" :checked="settings.round" disabled="true">
+                                                        <input type="checkbox" :checked="!(settings.round === false)" disabled="true">
                                                         <i class="input-helper"></i>
                                                     </div>
 
@@ -367,7 +366,7 @@
                     address: '',
                     welcomeTitle: '',
                     showBackgroundText: false,
-                    round: false
+                    round: true
                 },
                 coverFileRef: 'coverFile',
                 coverFile: null,
@@ -482,6 +481,7 @@
                 this.setEditEnabled(false);
             },
             setLocalSettings(val) {
+                console.log('val', val);
                 this.localSettings.title = val.title || '';
                 this.localSettings.description = val.description || '';
                 this.localSettings.contactLocation = val.contactLocation || '';
@@ -491,7 +491,7 @@
                 this.localSettings.additionalInformation = val.additionalInformation || '';
                 this.localSettings.welcomeTitle = val.welcomeTitle || '';
                 this.localSettings.showBackgroundText = val.showBackgroundText || false;
-                this.localSettings.round = val.round || false;
+                this.localSettings.round = val.round === false ? false : true;
             },
             handleCoverFileUpload() {
 

@@ -21,7 +21,7 @@
             <div class="divider-dash"></div>
             <div class="total">
                 <!--label>{{totalAmount | currency}} MXN</label-->
-                <label class="c-primary f-bold">{{totalAmount | currency}} MXN</label>
+                <label class="c-primary f-bold">{{totalAmount | roundCurrency}} MXN</label>
                 <small>MONTO TOTAL</small>
             </div>
         </div>
@@ -47,7 +47,7 @@
         data () {
             const toRound = this.$session.get('currentOrganizationRound');
             let decimals;
-            if (!toRound) {
+            if (toRound === false || toRound === "false") {
                 decimals = 2;
             } else {
                 decimals = 0;

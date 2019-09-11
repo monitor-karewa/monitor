@@ -61,7 +61,7 @@ export default {
             additionalInformation: '',
             welcomeTitle: '',
             showBackgroundText: false,
-            round: false
+            round: true
         };
     }
 }

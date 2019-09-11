@@ -25,10 +25,10 @@ window.$ = window.jQuery = require('jquery');
 
 Vue.config.productionTip = false;
 
-Vue.filter('currency', (value) => {
+Vue.filter('roundCurrency', (value) => {
     const toRound = !vue ? true : vue.$session.get('currentOrganizationRound');
     let decimals;
-    if (!toRound) {
+    if (toRound === false || toRound === "false") {
         decimals = 2;
     } else {
         decimals = 0;
@@ -40,7 +40,7 @@ Vue.filter('currency', (value) => {
 Vue.filter('round', (value) => {
     const toRound = !vue ? true : vue.$session.get('currentOrganizationRound');
     let decimals;
-    if (!toRound) {
+    if (toRound === false || toRound === "false") {
         decimals = 2;
     } else {
         decimals = 0;
