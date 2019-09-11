@@ -239,7 +239,8 @@
         data() {
             return {
                 storeModule: storeModule,
-                changePageAction: 'LOAD_SUPPLIERS',
+                // changePageAction: 'LOAD_SUPPLIERS',
+                changePageAction: 'loadFilteredList',
                 baseApi: baseApi,
                 format:"",
                 fuenteInformacion: aboutInfo.infoFuenteInformacion.fuenteInformacion || "https://www.plataformadetransparencia.org.mx"
