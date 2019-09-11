@@ -20,24 +20,32 @@ import '@/plugins/vueApexChart';
 import VueCurrencyFilter from '@/plugins/currencyFilter';
 import VueSession from '@/plugins/vueSession';
 
-
+let vue;
 window.$ = window.jQuery = require('jquery');
 
 Vue.config.productionTip = false;
 
-Vue.filter('currency', function (value) {
-    const decimals = 0;
+Vue.filter('currency', (value) => {
+    const toRound = !vue ? true : vue.$session.get('currentOrganizationRound');
+    let decimals;
+    if (!toRound) {
+        decimals = 2;
+    } else {
+        decimals = 0;
+    }
     const rounded = Number(Math.round(`${value}e${decimals}`)+`e-${decimals}`);
-    console.log('value', value);
-    console.log('rounded', rounded);
     return `$ ${rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
 });
 
-Vue.filter('round', function (value) {
-    const decimals = 0;
+Vue.filter('round', (value) => {
+    const toRound = !vue ? true : vue.$session.get('currentOrganizationRound');
+    let decimals;
+    if (!toRound) {
+        decimals = 2;
+    } else {
+        decimals = 0;
+    }
     const rounded = Number(Math.round(`${value}e${decimals}`)+`e-${decimals}`);
-    console.log('value', value);
-    console.log('rounded', rounded);
     return rounded;
 });
 
@@ -55,7 +63,7 @@ Vue.use(new VueSocketIO({
 );
 
 
-let vue = new Vue({
+vue = new Vue({
     router,
     store,
     i18n,

@@ -45,6 +45,13 @@
         components: {},
         mixins: [baseChart],
         data () {
+            const toRound = this.$session.get('currentOrganizationRound');
+            let decimals;
+            if (!toRound) {
+                decimals = 2;
+            } else {
+                decimals = 0;
+            };
             return {
                 storeModule: storeModule,
                 chartOptions: {
@@ -67,7 +74,6 @@
                     tooltip: {
                         y: {
                             formatter: function (val) {
-                                const decimals = 0;
                                 if (val) {
                                     const rounded = Number(Math.round(`${val}e${decimals}`)+`e-${decimals}`);
                                     return `$ ${rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
@@ -79,7 +85,6 @@
                     },
                     dataLabels: {
                         formatter: function (val) {
-                                const decimals = 0;
                                 if (val) {
                                     const rounded = Number(Math.round(`${val}e${decimals}`)+`e-${decimals}`);
                                     return `${rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}%`;

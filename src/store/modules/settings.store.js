@@ -12,7 +12,7 @@ const state = {
         additionalInformation: '',
         welcomeTitle: '',
         showBackgroundText: false,
-        round: true
+        round: false
     },
     lastUpdate : undefined
 };

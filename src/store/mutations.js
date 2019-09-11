@@ -43,7 +43,6 @@ export default {
             state.currentOrganization.showBackgroundText = showBackgroundText;
         }
 
-        console.log('round', round);
         state.currentOrganization.round = !!round;
     },
 
@@ -62,7 +61,7 @@ export default {
             additionalInformation: '',
             welcomeTitle: '',
             showBackgroundText: false,
-            round: true
+            round: false
         };
     }
 }
