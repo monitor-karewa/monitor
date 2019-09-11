@@ -1859,7 +1859,20 @@ button {
 
 /* DEFAULT SCROLLBAR */
 .default-scrollbar {
-  overflow-y:auto;
+    overflow-y: auto;
+    max-height: 500px;
+  
+   table {
+    border-collapse: collapse;
+    width: 100%;
+  }
+  
+   th {
+    position: sticky;
+    top: 0;
+    background: white;
+    z-index: 1;
+  }
 
   &::-webkit-scrollbar-track {
     border-radius: 0px !important;
