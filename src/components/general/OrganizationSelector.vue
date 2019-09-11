@@ -110,7 +110,6 @@
 //                this.$session.set('currentOrganizationContactEmail', organization.contactEmail);
                 this.$session.set('currentOrganizationWelcomeTitle', organization.welcomeTitle);
                 this.$session.set('currentOrganizationShowBackgroundText', organization.showBackgroundText);
-                console.log('setting organization', organization);
                 this.$session.set('currentOrganizationRound', organization.round);
                 
                 axios.defaults.headers.common['X-CURRENT-ORGANIZATION-ID'] = organization._id;

@@ -481,7 +481,6 @@
                 this.setEditEnabled(false);
             },
             setLocalSettings(val) {
-                console.log('val', val);
                 this.localSettings.title = val.title || '';
                 this.localSettings.description = val.description || '';
                 this.localSettings.contactLocation = val.contactLocation || '';
