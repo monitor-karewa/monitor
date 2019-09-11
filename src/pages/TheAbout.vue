@@ -18,15 +18,10 @@
                             <h1>Acerca de</h1>
                         </div>
                         <div class="about vertical-center">
-                            <p class="f-16 c-plain_text principal-font-regular"><strong
-                                    class="f-24 c-accent principal-font-medium">Karewa</strong> es una agrupación
-                                ciudadana sin fines de lucro, que desde agosto de 2016 trabaja con el objetivo de
-                                <strong>prevenir la corrupción</strong> en los procesos de compra y contratación de los
-                                gobiernos de la ciudad de Chihuahua. Todo esto a través de un programa estratégico de
-                                transparencia y rendición de cuentas a fin de contar con un eficiente y mejor gobierno.
+                            <p class="f-16 c-plain_text principal-font-regular" v-html="aboutText">
                             </p>
                             <img class="img-fluid m-l-30 max-h-200 d-flex"
-                                 src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80" alt=""/>
+                                 :src="aboutImage" alt=""/>
                         </div>
                     </div>
                 </div>
@@ -39,8 +34,7 @@
                             <div class="floating-title-panel small">
                                 <h1> Misión </h1>
                             </div>
-                            <p class="f-14 c-plain_text principal-font-regular"> Eliminar la corrupción en el manejo de
-                                los recusros públicos. </p>
+                            <p class="f-14 c-plain_text principal-font-regular"> {{mision}} </p>
                         </div>
                     </div>
                     <div class="col-12 col-md-4 di-flex">
@@ -48,8 +42,7 @@
                             <div class="floating-title-panel small">
                                 <h1> Visión </h1>
                             </div>
-                            <p class="f-14 c-plain_text principal-font-regular"> Somos la organización más influyente en
-                                México en el combate a la corrupción del manejo de los recursos públicos. </p>
+                            <p class="f-14 c-plain_text principal-font-regular"> {{vision}} </p>
                         </div>
                     </div>
                     <div class="col-12 col-md-4 di-flex">
@@ -57,8 +50,7 @@
                             <div class="floating-title-panel small">
                                 <h1> Valores </h1>
                             </div>
-                            <p class="f-14 c-plain_text principal-font-regular"> Nos regimos por la honestidad. el
-                                respeto. el compromiso. el trabajo en equipo y sobre todo con justicia. </p>
+                            <p class="f-14 c-plain_text principal-font-regular"> {{valores}} </p>
                         </div>
                     </div>
                 </div>
@@ -73,21 +65,15 @@
                             <div class="w-60 m-r-30 o-x-auto m-b-20">
                                 <h2 class="title-dot">Consejo:</h2>
                                 <ul class="list-dots">
-                                    <li>Javier Mesta Delgado <span>Consejero Presidente</span></li>
-                                    <li>Gabriela Alvídrez Ruiz <span>Consejera Directiva</span></li>
-                                    <li>Elías Fernando Ayub González <span>Consejero Directivo</span></li>
-                                    <li>Paola Contestábile Frayre <span>Consejera Directiva</span></li>
-                                    <li>César René Espinosa Lozano <span>Consejero Directivo</span></li>
-                                    <li>Luis Alberto González Herrera <span>Consejero Directivo</span></li>
-                                    <li>Leopoldo Rafael Lozano Cuarón <span>Consejero Directivo</span></li>
-                                    <li>Guillermo Antonio Orozco Salomón <span>Consejero Directivo</span></li>
-                                    <li>Luis Alonso Ramos Fernández <span>Consejero Directivo</span></li>
-                                    <li>Angélica Santana Fierro <span>Consejera Directiva</span></li>
+                                    <li v-for="person in consejo" :key="person">
+                                        {{person.nombre}} <span>{{person.puesto}}</span>
+                                    </li>
                                 </ul>
                                 <h2 class="title-dot">Consejo:</h2>
                                 <ul class="list-dots">
-                                    <li>José David Ponce de León Trejo <span>Coordinación</span></li>
-                                    <li>Edgar Renteria Rivas <span>Coordinación</span></li>
+                                    <li v-for="person in consejoCoordinacion" :key="person">
+                                        {{person.nombre}} <span>{{person.puesto}}</span>
+                                    </li>
                                 </ul>
                             </div>
                             <img class="img-fluid m-0-auto max-h-200 d-flex" src="https://images.unsplash.com/photo-1522165078649-823cf4dbaf46?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80" alt="" />
@@ -110,10 +96,20 @@
 
 <script>
     import MoreInfo from '@/components/general/MoreInfo';
+    import aboutInfo from '@/karewaPlatform.info';
 
     export default {
         data() {
             return {
+                aboutText: aboutInfo.infoAcercaDe.textoAcercaDe || "Por definir...",
+                aboutImage: aboutInfo.infoAcercaDe.imagenAcercaDe || "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80",
+                mision: aboutInfo.infoAcercaDe.mision || "Por definir...",
+                vision: aboutInfo.infoAcercaDe.vision || "Por definir...",
+                valores: aboutInfo.infoAcercaDe.valores || "Por definir...",
+                consejo: aboutInfo.infoAcercaDe.consejo || [],
+                consejoCoordinacion: aboutInfo.infoAcercaDe.consejoCoordinacion || [],
+                imagenConsejo: aboutInfo.infoAcercaDe.imagenConsejo || "https://images.unsplash.com/photo-1522165078649-823cf4dbaf46?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80"
+
             }
         },
         components: {

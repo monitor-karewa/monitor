@@ -89,7 +89,7 @@
 
             <!-- ADITIONAL INFO ONLY -->
             <p class="f-12 c-plain_text principal-font-regular">
-                Todos los datos que se presentan en este informe son única y exclusivamente obtenidos de: http://www.municipiochihuahua.gob.mx/Transparencia
+                Todos los datos que se presentan en este informe son única y exclusivamente obtenidos de: {{fuenteInformacion}}
                 <br>
                 Última actualización: <strong>{{contract.updateDate | moment}}</strong>
             </p>
@@ -108,11 +108,14 @@
     const storeModule = "publicContracts";
     import moment from 'moment';
     import {mapState,vm} from 'vuex';
+    import aboutInfo from '@/karewaPlatform.info';
 
 
     export default {
         data() {
-            return {};
+            return {
+                fuenteInformacion: aboutInfo.infoFuenteInformacion.fuenteInformacion || "https://www.plataformadetransparencia.org.mx"
+            };
         },
         name: "SupplierContract",
         components: {
