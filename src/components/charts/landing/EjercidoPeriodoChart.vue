@@ -6,22 +6,22 @@
         <div class="graph-info">
             <div class="info">
                                     <span class="green">
-                                        <label class="p-l-10">{{percentagePublic}}%</label>
+                                        <label class="p-l-10">{{percentagePublic | round}}%</label>
                                         <p>Lic. pública</p>
                                     </span>
                 <span class="yellow">
-                                        <label class="p-l-10">{{percentageInvitation}}%</label>
+                                        <label class="p-l-10">{{percentageInvitation | round}}%</label>
                                         <p>Por invitación</p>
                                     </span>
                 <span class="red">
-                                        <label class="p-l-10">{{percentageNoBid}}%</label>
+                                        <label class="p-l-10">{{percentageNoBid | round}}%</label>
                                         <p>Adj. directa</p>
                                     </span>
             </div>
             <div class="divider-dash"></div>
             <div class="total">
                 <!--label>{{totalAmount | currency}} MXN</label-->
-                <label class="c-primary f-bold">{{totalAmount | currency}} MXN</label>
+                <label class="c-primary f-bold">{{totalAmount | roundCurrency}} MXN</label>
                 <small>MONTO TOTAL</small>
             </div>
         </div>
@@ -45,6 +45,13 @@
         components: {},
         mixins: [baseChart],
         data () {
+            const toRound = this.$session.get('currentOrganizationRound');
+            let decimals;
+            if (toRound === false || toRound === "false") {
+                decimals = 2;
+            } else {
+                decimals = 0;
+            };
             return {
                 storeModule: storeModule,
                 chartOptions: {
@@ -67,8 +74,23 @@
                     tooltip: {
                         y: {
                             formatter: function (val) {
-                                return val ? '$' + val.toFixed(2).replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1,') : "";
+                                if (val) {
+                                    const rounded = Number(Math.round(`${val}e${decimals}`)+`e-${decimals}`);
+                                    return `$ ${rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}`;
+                                } else {
+                                    return "";
+                                }
                             }
+                        }
+                    },
+                    dataLabels: {
+                        formatter: function (val) {
+                                if (val) {
+                                    const rounded = Number(Math.round(`${val}e${decimals}`)+`e-${decimals}`);
+                                    return `${rounded.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",")}%`;
+                                } else {
+                                    return "";
+                                }
                         }
                     }
                 },

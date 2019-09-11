@@ -218,8 +218,32 @@ const mutations = {
     SET_TOTALS(state,results){
         if(results && results.length){
             state.totals.totalAmount = results[0].totalAmount;
+
+            // Totals to update
+            let totalsToUpdate = Object.keys(state.totals);
+
+            // Delete unnecessary element totalAmount
+            try {
+                totalsToUpdate.splice( totalsToUpdate.indexOf("totalAmount"), 1 );
+            } catch (e) {
+                console.error("Unable to delete element from totals to update");
+            }
+
             for (let i = 0; i < results.length; i++) {
                 state.totals[results[i]._id] = results[i].total;
+
+                // Update totalsToUpdate
+                try {
+                    totalsToUpdate.splice( totalsToUpdate.indexOf(results[i]._id), 1 );
+                } catch (e) {
+                    console.error("Unable to delete element from totals to update");
+                }
+
+            }
+
+            // Iterate missing contract type and assign 0 in result
+            for (let i = 0; i < totalsToUpdate.length; i++) {
+                state.totals[totalsToUpdate[i]] = 0;
             }
         } else {
             state.totals = {
