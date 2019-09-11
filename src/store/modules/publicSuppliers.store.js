@@ -19,7 +19,8 @@ const state = {
     administrationPeriods : [],
     procedureTypes : [],
     lastQuery : {},
-    lastUpdate : undefined
+    lastUpdate : undefined,
+    filters: {}
 };
 
 const storeName = 'publicSuppliers';
@@ -144,19 +145,23 @@ const actions = {
             })
     },
     filter({commit, dispatch},filters){
+        this.state.filters = JSON.parse(JSON.stringify(filters));
         commit('UPDATE_PAGE',1);
-        dispatch(`${storeName}/loadFilteredList`,filters,{root:true});
+        dispatch(`${storeName}/loadFilteredList`, 1,{root:true});
     },
-    loadFilteredList({commit, getters},filters){
-        let query = getters.getUrlQuery;
-        commit('SET_LAST_QUERY',filters);
+    loadFilteredList({commit, getters}, page){
+        let filters = this.state.filters;
+        let query = getters.getUrlQuery ? `${getters.getUrlQuery}&page=${page}` : `?page=${page}`;
+        if (filters) {
+            commit('SET_LAST_QUERY',filters);
+        }
 
         Vue.$log.info('filters' , filters);
 
         apiPublicSuppliers.filteredList(
             {
-                query: query,
-                filters : filters
+                query,
+                filters
             },
             (result) => {
                 commit('SET_SUPPLIERS', result.data.data);
