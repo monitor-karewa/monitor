@@ -11,7 +11,8 @@ const state = {
         schedule: '',
         additionalInformation: '',
         welcomeTitle: '',
-        showBackgroundText: false
+        showBackgroundText: false,
+        round: true
     },
     lastUpdate : undefined
 };
@@ -51,14 +52,15 @@ const actions = {
         });
     },
     
-    CHANGE_SETTINGS ({commit}, {session, title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle, showBackgroundText}) {
-        settingsApi.changeSettings({title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle, showBackgroundText}, (result) => {
+    CHANGE_SETTINGS ({commit}, {session, title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle, showBackgroundText, round}) {
+        settingsApi.changeSettings({title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle, showBackgroundText, round}, (result) => {
             if (result.data && !result.data.error && result.data.data) {
                 tShow(i18n.t('settings.change-settings.update.success'), 'success');
 
                 // session.set('currentOrganizationCover', );
                 session.set('currentOrganizationTitle', result.data.data.title);
                 session.set('currentOrganizationDescription', result.data.data.description);
+                session.set('currentOrganizationRound', result.data.data.round);
 
                 commit('SETTINGS_UPDATED', result.data.data);
             } else {
@@ -92,7 +94,7 @@ const actions = {
 };
 
 const mutations = {
-    SETTINGS_UPDATED (state, {title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle, showBackgroundText, updatedAt}) {
+    SETTINGS_UPDATED (state, {title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle, showBackgroundText, round, updatedAt}) {
         state.settings.title = title;
         state.settings.description = description;
         state.settings.contactLocation = contactLocation;
@@ -103,6 +105,7 @@ const mutations = {
         state.settings.welcomeTitle = welcomeTitle;
         state.settings.showBackgroundText = showBackgroundText;
         state.lastUpdate = updatedAt;
+        state.settings.round = round;
     }
 };
 
