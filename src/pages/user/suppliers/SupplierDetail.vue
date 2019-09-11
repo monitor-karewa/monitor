@@ -295,7 +295,7 @@
                 <!-- ADITIONAL INFO ONLY -->
                 <p class="f-12 c-plain_text principal-font-regular">
                     Todos los datos que se presentan en este informe son única y exclusivamente obtenidos de:
-                    http://www.municipiochihuahua.gob.mx/Transparencia
+                    {{fuenteInformacion}}
                     <br>
                     Última actualización: <strong>{{supplier.updatedAt | moment}}</strong>
                 </p>
@@ -321,6 +321,8 @@
     import PublicFilter from '@/components/filters/PublicFilter.vue';
     import ModalAutoDismiss from '@/components/catalogs/ModalAutoDismiss.vue';
     import ModalAlert from '@/components/catalogs/ModalAlert.vue';
+
+    import aboutInfo from '@/karewaPlatform.info';
 
     export default {
         data() {
@@ -364,7 +366,8 @@
                 ],
                 storeModule : storeModule,
                 supplierId : undefined,
-                format: ""
+                format: "",
+                fuenteInformacion: aboutInfo.infoFuenteInformacion.fuenteInformacion || "https://www.plataformadetransparencia.org.mx"
             }
         },
         components: {

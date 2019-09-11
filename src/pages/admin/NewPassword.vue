@@ -13,18 +13,15 @@
 
                 <div class="info">
                     <div class="title">
-                        <h1>KAREWA</h1>
-                        <h1>Es Amar Chihuahua</h1>
+                        <h1>{{nombreOrganizacion}}</h1>
+                        <h1>{{lemaOrganizacion}}</h1>
                     </div>
-                    <p>Karewa es una agrupación ciudadana sin fines de lucro, que desde agosto de 2016 trabaja con el
-                        objetivo de prevenir la corrupción en los procesos de compra y contratación de los gobiernos de
-                        la ciudad de Chihuahua.</p>
-                    <p>Somos la organización más influyente en México en el combate a la corrupción del manejo de los
-                        recursos públicos.</p>
+                    <p v-for="parrafo in descripcionEnParrafos" :key="parrafo">
+                        {{parrafo}}
+                    </p>
                     <div class="link">
-                        <a href="#">karewa.org</a>
+                        <a :href="enlaceWebsite" target="_blank">{{nombreWebsite}}</a>
                     </div>
-
                 </div>
                 <div class="login-footer">
                     <span>Desarrollado por </span><a href="http://www.blacklabs.mx/"> <img src="@/assets/images/Logos/logo-blacklabs-claro.png" alt=""> </a>
@@ -113,6 +110,7 @@
 <script>
     import base from '@/api/base.api';
     import axios from 'axios';
+    import aboutInfo from '@/karewaPlatform.info';
 
     export default {
         name: "NewPassword",
@@ -161,7 +159,12 @@
             return {
                 password: "",
                 confirmPassword: "",
-                messageError : ""
+                messageError : "",
+                nombreOrganizacion: aboutInfo.infoLogin.nombreOrganizacion || "Por definir...",
+                lemaOrganizacion: aboutInfo.infoLogin.lemaOrganizacion || "Por definir...",
+                descripcionEnParrafos: aboutInfo.infoLogin.descripcionEnParrafos || "Por definir...",
+                enlaceWebsite: aboutInfo.infoLogin.enlaceWebsite || "#",
+                nombreWebsite: aboutInfo.infoLogin.nombreWebsite || ""
             }
         },
         beforeMount() {
