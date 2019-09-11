@@ -1,4 +1,5 @@
 export default  {
+    // Información dinámica que aparecerá en las vista "Acerca de" de la plataforma
     infoAcercaDe: {
         textoAcercaDe: "<strong class=\"f-24 c-accent principal-font-medium\">Karewa</strong> es una agrupación ciudadana sin fines de lucro, que desde agosto de 2016 trabaja con el objetivo de <strong>prevenir la corrupción</strong> en los procesos de compra y contratación de los gobiernos de la ciudad de Chihuahua. Todo esto a través de un programa estratégico de transparencia y rendición de cuentas a fin de contar con un eficiente y mejor gobierno.",
         imagenAcercaDe: "https://images.unsplash.com/photo-1519389950473-47ba0277781c?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80",
@@ -24,6 +25,7 @@ export default  {
         imagenConsejo: "https://images.unsplash.com/photo-1522165078649-823cf4dbaf46?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=2250&q=80"
 
     },
+    // Información dinámica que aparecerá en las vista "Login" de la plataforma
     infoLogin: {
         nombreOrganizacion: "KAREWA",
         lemaOrganizacion: "Es Amar Chihuahua",
@@ -34,5 +36,9 @@ export default  {
         enlaceWebsite: "https://karewa.org",
         nombreWebsite: "karewa.org"
 
+    },
+    // Información dinámica que define la fuente de información de los datos presentados en las vistas de: Contratos y Proveedores
+    infoFuenteInformacion: {
+        fuenteInformacion: "http://www.municipiochihuahua.gob.mx/Transparencia"
     }
 }
