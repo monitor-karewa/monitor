@@ -760,7 +760,7 @@ let downloadXls = (req,res, contracts, filters) => {
             },
             {
                 header: 'MONTO TOTAL',
-                propName: 'totalAmount',
+                propName: 'totalOrMaxAmount',
                 format: 'currency'
             },
             {
@@ -841,7 +841,7 @@ let downloadPDF = (req, res, { totals, contracts, filters }) => {
                     header: 'Monto Total',
                     headerStyle:'headerA2Style',
                     rowStyle:'rowNumberA2Style',
-                    propName:'totalAmount',
+                    propName:'totalOrMaxAmount',
                     format:'currency'
                 },
                 {
@@ -897,7 +897,7 @@ let downloadPDF = (req, res, { totals, contracts, filters }) => {
                     header: 'Monto Total',
                     headerStyle:'headerStyle',
                     rowStyle:'rowCurrencyStyle',
-                    propName:'totalAmount',
+                    propName:'totalOrMaxAmount',
                     format:'currency'
                 },
                 {
