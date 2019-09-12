@@ -334,6 +334,8 @@ class ContractExcelReader {
                                 logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] forced to String.', fieldName);
                             }
 
+                            //Remove leading or trailing spaces
+                            fieldInfo.value = fieldInfo.value.trim();
 
                             //Check for reference check strategy override
                             //[!r#] at the start of a string overrides the ref check strategy, where # is a number from 0 to 2
