@@ -137,7 +137,7 @@
                                         <th class="text-align-l">Monto total</th>
                                         <th class="text-align-l">Fecha del contrato</th>
                                         <th class="text-align-l">Tipo de procedimiento</th>
-                                        <th class="text-align-l">Estdo del procedimiento</th>
+                                        <th class="text-align-l">Estado del procedimiento</th>
                                         <th class="text-align-l">Unidad Administrativa Solicitante</th>
                                         <th class="text-align-l">Materia</th>
                                         <th class="text-align-l">Tipo de contrato</th>
