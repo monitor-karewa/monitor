@@ -83,7 +83,7 @@ prod:
       API_PORT=$API_PORT_PROD \n \
       VUE_APP_API_HOST=$VUE_APP_API_HOST_PROD \n \
       VUE_APP_API_PORT=$VUE_APP_API_PORT_PROD" > .env.production
-            echo $KAREWA_CONF > src/karewaPlatform.info.js
+            echo -e $KAREWA_CONF > src/karewaPlatform.info.js
 
             docker build \
               --iidfile imageid.txt \
