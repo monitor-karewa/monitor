@@ -831,8 +831,8 @@ let  processCalculation = function(req, cache, calculation, options = {}, mainCa
             let matchQuery = buildAggregateQuerysFromFilters(filters);
             let qNotDeleted = deletedSchema.qNotDeleted();
 
-            const filterStateConcluded = item.abbreviation != '$NFXXVII' && item.abbreviation != '$NTF';
-            let query = {...Contract.qProcedureStateConcluded(filterStateConcluded), ...qNotDeleted};
+            const skipFilterByProcedureState = item.abbreviation === '$NFXXVII' || item.abbreviation === '$NTF';
+            let query = {...Contract.qProcedureStateConcluded(true, skipFilterByProcedureState), ...qNotDeleted};
             
             if (options.query) {
                 // query = {...query, ...options.query};
