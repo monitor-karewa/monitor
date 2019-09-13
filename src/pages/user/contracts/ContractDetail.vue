@@ -21,7 +21,7 @@
                             <a @click="copyUrlToClipBoard()" class="btn-stroke button-primary text-capi b-shadow-none" tabindex=""><i class="zmdi zmdi-share"></i> Compartir</a>
                         </div>
                     </div>
-                    <p class="f-14 c-plain_text principal-font-regular">El contrato <strong class="principal-font-semibold"><span class="text-upper"> {{contract.servicesDescription}}</span></strong>, a cargo del proveedor <strong class="principal-font-semibold">{{contract.supplier ? contract.supplier.name : ""}}</strong> obtuvo una cantidad de <strong class="c-accent">{{contract.totalOrMaxAmount | currency}}</strong>, celebrado el día <strong>{{contract.contractDate | moment}}</strong></p>
+                    <p class="f-14 c-plain_text principal-font-regular">El contrato <strong class="principal-font-semibold"><span class="text-upper"> {{contract.servicesDescription}}</span></strong>, a cargo del proveedor <strong class="principal-font-semibold">{{contract.supplier ? contract.supplier.name : ""}}</strong> obtuvo una cantidad de <strong class="c-accent">{{contract.totalOrMaxAmount | currency}}</strong>, celebrado el día <strong>{{contract.contractDate}}</strong></p>
                 </div>
                 <!-- CONTRATO FILES -->
                 <div class="card">
@@ -69,7 +69,7 @@
                         <span> <small>Identificador de proceso</small> <i>-</i> <strong>{{contract.contractId}}</strong></span>
                         <span> <small>Descripción de las obras, bienes o servicios</small> <i>-</i> <strong>{{contract.servicesDescription}}</strong></span>
                         <span> <small>Monto total</small>  <i>-</i> <strong class="c-accent"> {{contract.totalOrMaxAmount | currency}} </strong></span>
-                        <span> <small>Fecha del contrato</small> <i>-</i> <strong>{{contract.contractDate | moment}}</strong></span>
+                        <span> <small>Fecha del contrato</small> <i>-</i> <strong>{{contract.contractDate}}</strong></span>
                         <span> <small>Tipo de procedimiento</small> <i>-</i> <div class="badge" :class="{ 'badge-yellow' : contract.procedureType == 'INVITATION', 'badge-green' : contract.procedureType == 'PUBLIC', 'badge-red' : contract.procedureType == 'NO_BID'}">{{$t(contract.procedureType)}}</div></span>
 
                         <span> <small>Estado del procedimiento</small> <i>-</i>
@@ -82,7 +82,7 @@
                         <span> <small>Nombre del proveedor</small> <i>-</i> <strong>{{contract.supplier ? contract.supplier.name : ""}}</strong></span>
                         <!--<span> <small>RFC</small> <i>-</i> <strong>{{contract}}</strong></span>-->
                         <span> <small>Notas de Municipio de Chihuahua</small> <i>-</i> <strong>{{contract.notes}}</strong></span>
-                        <span> <small>Fecha de obtención de los datos</small> <i>-</i> <strong>{{contract.informationDate | moment}}</strong></span>
+                        <span> <small>Fecha de obtención de los datos</small> <i>-</i> <strong>{{contract.informationDate}}</strong></span>
                     </div>
                 </div>
             </div>
