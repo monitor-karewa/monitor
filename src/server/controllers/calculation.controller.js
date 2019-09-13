@@ -325,6 +325,7 @@ exports.validateFormula = (req, res, next) => {
         hasPercentScale : req.body.hasPercentScale,
         scale : req.body.scale || [],
         filters : req.body.filters || [],
+        type: req.body.type
     };
 
     //restarts value for validating tree

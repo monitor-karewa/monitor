@@ -788,7 +788,8 @@
                     scale:this.entry.scale,
                     filters:this.entry.filters,
                     locked: this.entry.locked,
-                    administrationPeriod: this.entry.administrationPeriod
+                    administrationPeriod: this.entry.administrationPeriod,
+                    type: this.entry.type
                 });
             },
             assignPercentScale(){
