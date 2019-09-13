@@ -60,7 +60,7 @@ const displayFormEnumDict = {
 const propertiesEnum = ['totalAmount','minAmount','maxAmount','totalOrMaxAmount','supplier','organizerAdministrativeUnit','applicantAdministrativeUnit']
 const operatorEnum = ['EQUAL','GREATER','GREATER_EQUAL','LESS','LESS_EQUAL','NOT_EQUAL'];
 const typesEnum = ['REF','STRING','NUMBER'];
-const variablesEnum =  ["$MTG", "$MGLP", "$MGAD", "$MGIR", "$NTC", "$NCSF", "$MADEM", "$MTAD", "$NTP", "$NPEPE", "$NPCGE","$NAC", "$NPEPCP", "$NCDPT", "$NIDPT", "$NCPJA", "$NFXXVII"];
+const variablesEnum =  ["$MTG", "$MGLP", "$MGAD", "$MGIR", "$NTC", "$NCSF", "$MADEM", "$MTAD", "$NTP", "$NPEPE", "$NPCGE","$NAC", "$NPEPCP", "$NCDPT", "$NIDPT", "$NCPJA", "$NFXXVII", "$NTF"];
 
 
 const displayFormEnum = Object.keys(displayFormEnumDict);
