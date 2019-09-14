@@ -131,6 +131,7 @@
                                     <thead>
                                     <tr>
                                         <th class="" style="min-width:0px;">Opciones</th>
+                                        <th class="text-align-l">Nombre Del Proveedor</th>
                                         <th class="text-align-l">Id. proceso</th>
                                         <th class="text-align-l">Id. Contrato</th>
                                         <th class="text-align-l">Descripción de la obra</th>
@@ -155,6 +156,7 @@
                                                 Ver más
                                             </router-link>
                                         </td>
+                                        <TableTdFormat :fieldName="'supplierName'"    :value="contract.supplier ? contract.supplier.name : ''"  class="text-align-l"> </TableTdFormat>
                                         <TableTdFormat :fieldName="'contractId'"    :value="contract.contractId"  class="text-align-l"> </TableTdFormat>
                                         <TableTdFormat :fieldName="'contractNumber'"    :value="contract.contractNumber"  class="text-align-l"> </TableTdFormat>
                                         <TableTdFormat :fieldName="'servicesDescription'"    :value="contract.servicesDescription"  class="text-align-l"> </TableTdFormat>
