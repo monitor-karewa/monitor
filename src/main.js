@@ -19,6 +19,7 @@ import vuelidate from '@/plugins/vuelidate';
 import '@/plugins/vueApexChart';
 import VueCurrencyFilter from '@/plugins/currencyFilter';
 import VueSession from '@/plugins/vueSession';
+import { ftruncate } from 'fs';
 
 let vue;
 window.$ = window.jQuery = require('jquery');
@@ -48,6 +49,32 @@ Vue.filter('round', (value) => {
     const rounded = Number(Math.round(`${value}e${decimals}`)+`e-${decimals}`);
     return rounded;
 });
+
+Vue.filter('date', (val) => {
+    if (val) {
+        return formatDate(val);
+    } else {
+        return val;
+    }
+});
+  
+  // super simple pt-BR date format
+function formatDate(dt) {
+    if(!dt) {
+        return '';
+    } else {
+        if (typeof dt != 'string') {
+            if (dt.toISOString) {
+                dt = dt.toISOString();
+            } else {
+                dt = dt.toString();
+            }
+        }
+        let date = dt.substring(0,10).split('-')
+        date = date[2] + '/' + date[1] + '/' + date[0]
+        return date;
+    }
+}
 
 export const bus = new Vue();
 

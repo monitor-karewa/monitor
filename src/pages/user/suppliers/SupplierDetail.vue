@@ -168,7 +168,7 @@
                                                     <div>
                                                     <span>
                                                         <label>{{contract.totalOrMaxAmount | currency}}</label>
-                                                        <small>{{contract.contractDate}}</small>
+                                                        <small>{{contract.contractDate | date}}</small>
                                                     </span>
 
                                                     </div>
@@ -270,7 +270,7 @@
                                                     <div>
                                                         <span>
                                                             <label>{{contract.totalOrMaxAmount | currency}}</label>
-                                                            <small>{{contract.contractDate}}</small>
+                                                            <small>{{contract.contractDate | date}}</small>
                                                         </span>
 
                                                     </div>
