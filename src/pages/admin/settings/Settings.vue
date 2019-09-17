@@ -183,6 +183,28 @@
                                             <div class="form-group fg-float">
                                                 <div class="fg-line basic-input">
 
+                                                     <div v-show="!editEnabled" class="fg-line basic-input">
+                                                        <p>{{settings.defaultAdministrationPeriod}}</p>
+                                                    </div>
+
+                                                    <div v-show="editEnabled" class="m-t-10">
+                                                        <select v-model="localSettings.defaultAdministrationPeriod" class="form-control select selectpicker" data-live-search="true"
+                                                                data-live-search-placeholder="Buscar administración"
+                                                                title="Administración">
+                                                            <option v-for="item in administrationPeriods" :value="item._id">
+                                                                {{item.administrationPeriod}}
+                                                            </option>
+                                                        </select>
+                                                    </div>
+
+                                                    <label class="fg-label">Administración por defecto</label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-12 col-md-6">
+                                            <div class="form-group fg-float">
+                                                <div class="fg-line basic-input">
+
                                                      <div v-show="!editEnabled" class="checkbox m-t-10">
                                                         <input type="checkbox" :checked="!(settings.round === false)" disabled="true">
                                                         <i class="input-helper"></i>
@@ -346,7 +368,6 @@
     import AdminMainSection from '@/components/admin/AdminMainSection';
     import BackButton from '@/components/general/BackButton';
     import baseApi from '@/api/base.api';
-
     import {mapState} from 'vuex';
     
     const storeModule = 'settings';
@@ -366,7 +387,8 @@
                     address: '',
                     welcomeTitle: '',
                     showBackgroundText: false,
-                    round: true
+                    round: true,
+                    defaultAdministrationPeriod: ''
                 },
                 coverFileRef: 'coverFile',
                 coverFile: null,
@@ -394,6 +416,7 @@
             ...mapState({
                 currentOrganization: state => state.currentOrganization,
                 settings: state => state[storeModule].settings,
+                administrationPeriods: state => state['publicContracts'].administrationPeriods,
             }),
             theme () {
                 return this.currentOrganization.theme || 'default';
@@ -471,6 +494,7 @@
             setEditEnabled (setTo) {
                 if (setTo) {
                     this.setLocalSettings(this.settings);
+                    $('.selectpicker').selectpicker('refresh');
                 }
                 this.editEnabled = setTo;
             },
@@ -491,6 +515,7 @@
                 this.localSettings.welcomeTitle = val.welcomeTitle || '';
                 this.localSettings.showBackgroundText = val.showBackgroundText || false;
                 this.localSettings.round = val.round === false ? false : true;
+                this.localSettings.defaultAdministrationPeriod = val.defaultAdministrationPeriod || '';
             },
             handleCoverFileUpload() {
 
@@ -524,6 +549,7 @@
         },
         beforeMount(){
             this.$store.dispatch(`${storeModule}/LOAD_SETTINGS`);
+            this.$store.dispatch('publicContracts/getAdministrationPeriods');
         },
         mounted() {
             if (this.settings) {

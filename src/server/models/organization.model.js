@@ -94,6 +94,10 @@ organizationSchema = mongoose.Schema({
         type: Boolean,
         default: true
     },
+    defaultAdministrationPeriod: {
+        type: String,
+        default: ""
+    },
     deleted: require("./schemas/deleted.schema").Deleted
 });
 

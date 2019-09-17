@@ -12,7 +12,8 @@ const state = {
         additionalInformation: '',
         welcomeTitle: '',
         showBackgroundText: false,
-        round: true
+        round: true,
+        defaultAdministrationPeriod: ''
     },
     lastUpdate : undefined
 };
@@ -52,8 +53,8 @@ const actions = {
         });
     },
     
-    CHANGE_SETTINGS ({commit}, {session, title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle, showBackgroundText, round}) {
-        settingsApi.changeSettings({title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle, showBackgroundText, round}, (result) => {
+    CHANGE_SETTINGS ({commit}, {session, title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle, showBackgroundText, round, defaultAdministrationPeriod}) {
+        settingsApi.changeSettings({title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle, showBackgroundText, round, defaultAdministrationPeriod}, (result) => {
             if (result.data && !result.data.error && result.data.data) {
                 tShow(i18n.t('settings.change-settings.update.success'), 'success');
 
@@ -94,7 +95,7 @@ const actions = {
 };
 
 const mutations = {
-    SETTINGS_UPDATED (state, {title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle, showBackgroundText, round, updatedAt}) {
+    SETTINGS_UPDATED (state, {title, description, contactLocation, contactEmail, address, schedule, additionalInformation, welcomeTitle, showBackgroundText, round, defaultAdministrationPeriod, updatedAt}) {
         state.settings.title = title;
         state.settings.description = description;
         state.settings.contactLocation = contactLocation;
@@ -106,6 +107,7 @@ const mutations = {
         state.settings.showBackgroundText = showBackgroundText;
         state.lastUpdate = updatedAt;
         state.settings.round = round;
+        state.settings.defaultAdministrationPeriod = defaultAdministrationPeriod;
     }
 };
 

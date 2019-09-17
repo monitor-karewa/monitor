@@ -4,7 +4,7 @@ export default {
         state.currentUser.userPicture = profilePicture;
     },
     
-    CURRENT_ORGANIZATION(state, {_id, name, shortName, color, theme, cover, title, description, contactLocation, contactEmail, additionalInformation, welcomeTitle, showBackgroundText, round}) {
+    CURRENT_ORGANIZATION(state, {_id, name, shortName, color, theme, cover, title, description, contactLocation, contactEmail, additionalInformation, welcomeTitle, showBackgroundText, round, defaultAdministrationPeriod}) {
         if (_id) {
             state.currentOrganization._id = _id;
         }
@@ -44,6 +44,8 @@ export default {
         }
 
         state.currentOrganization.round = !!round;
+
+        state.defaultAdministrationPeriod = defaultAdministrationPeriod;
     },
 
     SET_CURRENT_ORGANIZATION_DEFAULTS(state) {
