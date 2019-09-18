@@ -145,7 +145,9 @@
 </template>
 
 <script>
-
+    import {mapGetters} from 'vuex';
+    import EventBus from '@/bus';
+    
     const FIRST_ROW_TOTAL = 1;
     const SECOND_ROW_TOTAL = 6;
 
@@ -193,6 +195,7 @@
         components : {
         },
         computed : {
+            ...mapGetters('settings', ['GET_SETTINGS']),
            showFilters : function(){
 
            return (this.query.administrationPeriods && this.query.administrationPeriods.length >  0 ) ||
@@ -346,14 +349,23 @@
         },
         mounted() {
             this.$nextTick(function () {
-                $(document).ready(function () {
+                $(document).ready( () => {
                     setTimeout(function () {
                         $("#refresh-selects-button").click();
                     },2000);
                 })
-            })
+            })    
+
+            EventBus.$on('settings-loaded', (settings) => {
+                if (settings && settings.defaultAdministrationPeriod && settings.defaultAdministrationPeriod.length > 0) {
+                    let administrationPeriod = settings.defaultAdministrationPeriod;
+                    this.addFilter(this.query.administrationPeriods, { _id:administrationPeriod, administrationPeriod}, 'administrationPeriods', true);
+                    this.filter();
+                } 
+            });
         },
         beforeMount() {
+            this.$store.dispatch('settings/LOAD_SETTINGS');
 
             if(!(this.$props.projection == undefined  || (Object.entries(this.$props.projection).length === 0 && this.$props.projection.constructor === Object))) { //if it's not  empty
 
@@ -379,7 +391,6 @@
                         this.colSizes[projectionKeys[i]] = 2;
                     }
                 }
-
 
                 leftoverSpace = 12 % colCount;
                 let colSizesKeys = Object.keys(this.colSizes);
@@ -444,6 +455,9 @@
                 })
             },
             addFilter(array, element, keyName){
+                console.log('array', array);
+                console.log('element', element);
+                console.log('keyName', keyName);
                 if(element){
                     if(array.indexOf(element) < 0){
                         array.push(element);

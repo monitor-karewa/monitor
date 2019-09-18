@@ -1,5 +1,6 @@
 import settingsApi from '@/api/settings.api';
 import i18n from '@/plugins/i18n';
+import EventBus from '@/bus';
 
 const state = {
     settings: {
@@ -19,6 +20,7 @@ const state = {
 };
 
 const getters = {
+    GET_SETTINGS: state => state.settings
 };
 
 const actions = {
@@ -26,6 +28,7 @@ const actions = {
         settingsApi.loadSettings({}, (result) => {
             if (result.data && !result.data.error && result.data.data) {
                 commit('SETTINGS_UPDATED', result.data.data);
+                EventBus.$emit('settings-loaded', result.data.data);
             } else {
                 tShow(i18n.t('settings.load-settings.error'), 'danger');
             }
