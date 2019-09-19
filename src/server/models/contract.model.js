@@ -197,18 +197,18 @@ const procedureStateEnum = Object.keys(procedureStateEnumDict);
 
 
 const administrativeUnitTypeEnumDict = {
+    'DESCENTRALIZED': [
+        {
+            regexStr: utils.toAccentsRegex('(no |des)centralizad(a|o)', null, true),
+            flags: 'gi'
+        },
+    ],
     'CENTRALIZED': [
         {
             regexStr: utils.toAccentsRegex('centralizad(a|o)', null, true),
             flags: 'gi'
         },
     ],
-    'DESCENTRALIZED': [
-        {
-            regexStr: utils.toAccentsRegex('(no |des)centralizad(a|o)', null, true),
-            flags: 'gi'
-        },
-    ]
 };
 
 // const administrativeUnitTypeEnum = [
