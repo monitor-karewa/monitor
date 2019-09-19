@@ -1,7 +1,7 @@
 <template>
     <td>
-        <i class="zmdi zmdi-alert-circle-o c-error f-16" :class="`tippy-errors-${_uid}`" v-if="hasErrors || hasInfos || skipRow"></i>
-        <i class="zmdi zmdi-alert-circle-o f-16" v-if="!hasErrors && willCreateDoc"></i>
+        <i class="zmdi zmdi-alert-circle-o c-error f-16" :class="`tippy-errors-${_uid}`" v-if="!willCreateDoc && (hasErrors || hasInfos || skipRow)"></i>
+        <i class="zmdi zmdi-alert-circle-o f-16" :class="`tippy-errors-${_uid}`" v-if="!hasErrors && willCreateDoc"></i>
     </td>
 </template>
 

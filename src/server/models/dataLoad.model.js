@@ -127,7 +127,7 @@ DataLoadSchema.statics.getSummary = function (dataLoad, details) {
                 newContractsCount++;
             }
             
-            if (rowInfo.supplierName.shouldCreateDoc) {
+            if (rowInfo.supplierName && rowInfo.supplierName.shouldCreateDoc) {
                 if (!addedSuppliers[rowInfo.supplierName.value]) {
                     addedSuppliers[rowInfo.supplierName.value] = true;
                     newSuppliersCount++;
@@ -136,7 +136,7 @@ DataLoadSchema.statics.getSummary = function (dataLoad, details) {
                 skippedSuppliersCount++;
             }
     
-            if (rowInfo.organizerAdministrativeUnit.shouldCreateDoc) {
+            if (rowInfo.organizerAdministrativeUnit && rowInfo.organizerAdministrativeUnit.shouldCreateDoc) {
                 if (!addedAdministrativeUnits[rowInfo.organizerAdministrativeUnit.value]) {
                     addedAdministrativeUnits[rowInfo.organizerAdministrativeUnit.value] = true;
                     newAdministrativeUnitsCount++;
@@ -145,7 +145,7 @@ DataLoadSchema.statics.getSummary = function (dataLoad, details) {
                 skippedAdministrativeUnitsCount++;
             }
     
-            if (rowInfo.applicantAdministrativeUnit.shouldCreateDoc) {
+            if (rowInfo.applicantAdministrativeUnit && rowInfo.applicantAdministrativeUnit.shouldCreateDoc) {
                 if (!addedAdministrativeUnits[rowInfo.applicantAdministrativeUnit.value]) {
                     addedAdministrativeUnits[rowInfo.applicantAdministrativeUnit.value] = true;
                     newAdministrativeUnitsCount++;
@@ -390,7 +390,8 @@ DataLoadSchema.statics.confirm = function (dataLoad, details, confirmCallback) {
                         
                         //supplier
                         if (!detail.supplierName.valueToSaveOverride) {
-                            contract.supplier = suppliersMapIdByName[detail.supplierName.value];
+                            // contract.supplier = suppliersMapIdByName[detail.supplierName.value];
+                            contract.supplier = suppliersMapIdByName[detail.supplierRfc.value];
                         }
                         //organizerAdministrativeUnit
                         if (!detail.organizerAdministrativeUnit.valueToSaveOverride) {

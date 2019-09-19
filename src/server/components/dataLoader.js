@@ -426,7 +426,6 @@ class ContractExcelReader {
                             //Validate vs enum
                             if (fieldInfo.value && fieldInfo.value.length && options.enum) {
                                 let enumKeys = Object.keys(options.enum);
-                                
                                 let matchFound = false;
 
                                 for (let key of enumKeys) {
@@ -435,10 +434,8 @@ class ContractExcelReader {
                                         let regex = new RegExp(regexOption.regexStr, regexOption.flags);
                                         let isMatch = regex.test(fieldInfo.value);
                                         if (isMatch) {
-                                            
                                             //The value to save is the actual enum dict key (the allowed enum value)
                                             fieldInfo.valueToSaveOverride = key;
-
                                             matchFound = true;
                                             break;
                                         }
@@ -1021,7 +1018,7 @@ class ContractExcelReader {
             },
             options: {required: true}
         };
-        if (rowInfo.minAmount.value && rowInfo.maxAmount.value) {
+        if (rowInfo.minAmount && rowInfo.minAmount.value && rowInfo.maxAmount && rowInfo.maxAmount.value) {
             rowInfo.contractType.value = 'OPEN';
             rowInfo.contractType.valueToSaveOverride = 'OPEN';
         } else {
@@ -1252,39 +1249,39 @@ class ContractExcelReader {
                             let regexOptionMatch = null;
                             let matchingCategory = null;
 
-                            if (rowInfo.category.value && rowInfo.category.valueToSaveOverride && rowInfo.servicesDescription.value) {
+                            // if (rowInfo.category.value && rowInfo.category.valueToSaveOverride && rowInfo.servicesDescription.value) {
 
-                                for (let category of categoryEnum) {
+                            //     for (let category of categoryEnum) {
 
-                                    let regexOptions = categoryEnumDict[category];
+                            //         let regexOptions = categoryEnumDict[category];
 
-                                    if (regexOptions && regexOptions.length > 0) {
+                            //         if (regexOptions && regexOptions.length > 0) {
 
-                                        for (let regexOption of regexOptions) {
-                                            let regex = new RegExp(regexOption.regexStr, regexOption.flags);
-                                            if (regex.test(rowInfo.servicesDescription.value)) {
-                                                regexOptionMatch = regexOption;
-                                                matchingCategory = category;
-                                                break;
-                                            }
-                                        }
-                                        if (regexOptionMatch) {
-                                            break;
-                                        }
+                            //             for (let regexOption of regexOptions) {
+                            //                 let regex = new RegExp(regexOption.regexStr, regexOption.flags);
+                            //                 if (regex.test(rowInfo.servicesDescription.value)) {
+                            //                     regexOptionMatch = regexOption;
+                            //                     matchingCategory = category;
+                            //                     break;
+                            //                 }
+                            //             }
+                            //             if (regexOptionMatch) {
+                            //                 break;
+                            //             }
 
-                                    }
-                                }
+                            //         }
+                            //     }
 
-                                if (regexOptionMatch && matchingCategory && matchingCategory !== rowInfo.category.valueToSaveOverride) {
-                                    let errorMessage = "El valor de este campo no coincide con la categoría indicada en la descripción del contrato.";
+                            //     if (regexOptionMatch && matchingCategory && matchingCategory !== rowInfo.category.valueToSaveOverride) {
+                            //         let errorMessage = "El valor de este campo no coincide con la categoría indicada en la descripción del contrato.";
 
-                                    return callback(null, errorMessage);
-                                }
+                            //         return callback(null, errorMessage);
+                            //     }
 
+                            //     return callback();
+                            // } else {
                                 return callback();
-                            } else {
-                                return callback();
-                            }
+                            // }
 
                         },
                         uppercase: true
@@ -1413,39 +1410,39 @@ class ContractExcelReader {
                                 return callback(null, errorMessage);
                             }
 
-                            if (rowInfo.procedureState.value && rowInfo.procedureState.valueToSaveOverride && rowInfo.notes.value) {
+                            // if (rowInfo.procedureState.value && rowInfo.procedureState.valueToSaveOverride && rowInfo.notes.value) {
 
-                                for (let procedureState of procedureStateEnum) {
+                            //     for (let procedureState of procedureStateEnum) {
 
-                                    let regexOptions = procedureStateEnumDict[procedureState];
+                            //         let regexOptions = procedureStateEnumDict[procedureState];
     
-                                    if (regexOptions && regexOptions.length > 0) {
+                            //         if (regexOptions && regexOptions.length > 0) {
     
-                                        for (let regexOption of regexOptions) {
-                                            let regex = new RegExp(regexOption.regexStr, regexOption.flags);
-                                            if (regex.test(rowInfo.notes.value)) {
-                                                regexOptionMatch = regexOption;
-                                                matchingProcedureState = procedureState;
-                                                break;
-                                            }
-                                        }
-                                        if (regexOptionMatch) {
-                                            break;
-                                        }
+                            //             for (let regexOption of regexOptions) {
+                            //                 let regex = new RegExp(regexOption.regexStr, regexOption.flags);
+                            //                 if (regex.test(rowInfo.notes.value)) {
+                            //                     regexOptionMatch = regexOption;
+                            //                     matchingProcedureState = procedureState;
+                            //                     break;
+                            //                 }
+                            //             }
+                            //             if (regexOptionMatch) {
+                            //                 break;
+                            //             }
     
-                                    }
-                                }
+                            //         }
+                            //     }
     
-                                if (regexOptionMatch && matchingProcedureState && matchingProcedureState !== rowInfo.procedureState.valueToSaveOverride) {
-                                    let errorMessage = "El valor de este campo no coincide con el estado de procedimiento indicado en las notas del contrato.";
+                            //     if (regexOptionMatch && matchingProcedureState && matchingProcedureState !== rowInfo.procedureState.valueToSaveOverride) {
+                            //         let errorMessage = "El valor de este campo no coincide con el estado de procedimiento indicado en las notas del contrato.";
     
-                                    return callback(null, errorMessage);
-                                }
+                            //         return callback(null, errorMessage);
+                            //     }
     
+                            //     return callback();
+                            // } else {
                                 return callback();
-                            } else {
-                                return callback();
-                            }
+                            // }
 
                         },
                         uppercase: true
@@ -1505,10 +1502,9 @@ class ContractExcelReader {
                             regexStr: LETTERS_AND_SPACES_REGEX_STR,
                             flags: "gi"
                         },
-                        ref: {
-                            model: Supplier.modelName,
-                            field: 'name',
-                            strategy: REF_STRATEGIES.SUBSET
+                        refLink: {
+                            linkToField: 'supplierRfc',
+                            shouldMatchField: 'name'
                         }
                     }, callback);
                     break;
@@ -1530,9 +1526,10 @@ class ContractExcelReader {
 
                         //     return callback(null, false);
                         // },
-                        refLink: {
-                            linkToField: 'supplierName',
-                            shouldMatchField: 'rfc'
+                        ref: {
+                            model: Supplier.modelName,
+                            field: 'rfc',
+                            strategy: REF_STRATEGIES.SUBSET
                         },
                         uniqueByOrganization: function (rowInfo, callback) {
                             //Only validate when creating a new Supplier
