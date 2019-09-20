@@ -499,7 +499,7 @@ class ContractExcelReader {
                             }
                             break;
                         case Number:
-                            value = value || '';
+                            value = value || 0;
 
                             if (!utils.isNumber(value) && typeof(value) !== 'string') {
                                 // logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
@@ -548,7 +548,7 @@ class ContractExcelReader {
             },
             //Check ref in a collection
             (fieldInfo, callback) => {
-                fieldInfo.value = fieldInfo.value || '';
+                fieldInfo.value = (fieldInfo.value === null || fieldInfo.value === undefined) ? '' : fieldInfo.value;
 
                 if (typeof(fieldInfo.value) !== 'string') {
                     // logger.warn(null, null, 'dataLoader#_readField', 'Field [%s] is not a valid string; unable to parse as String.', fieldName);
@@ -1594,6 +1594,12 @@ class ContractExcelReader {
                             // if(rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride){
                             //     return callback(null, false);
                             // }
+                            if (
+                                    rowInfo.procedureState && 
+                                    rowInfo.procedureState.valueToSaveOverride && 
+                                    rowInfo.procedureState.valueToSaveOverride === 'DESERTED') {
+                                return callback(null, false);
+                            }
                             return callback(null, true, "Este campo es requerido");
                         },
                         // unique: true
@@ -1606,6 +1612,12 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell, 'contractDate', Date, {
                         required: function (rowInfo, callback) {
                             if(rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride){
+                                return callback(null, false);
+                            }
+                            if (
+                                    rowInfo.procedureState && 
+                                    rowInfo.procedureState.valueToSaveOverride && 
+                                    rowInfo.procedureState.valueToSaveOverride === 'DESERTED') {
                                 return callback(null, false);
                             }
                             return callback(null, true, "Este campo es requerido");
@@ -1634,12 +1646,14 @@ class ContractExcelReader {
                 //     }, callback);
                 //     break;
                 case C_IDS.TOTAL_AMOUT:
-                    return _this._readField(rowInfo, cell, 'totalAmount', Number, {
+                    return _this._readField(rowInfo, cell, 'totalAmount', Number, { 
                         required: function (rowInfo, callback) {
                             if (rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride) {
                                 return callback(null, false);
                             }
-                            let isRequired = rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'NORMAL';
+                            let isRequired = 
+                                    (rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'NORMAL') &&
+                                    !(rowInfo.procedureState && rowInfo.procedureState.valueToSaveOverride && rowInfo.procedureState.valueToSaveOverride === 'DESERTED');
                             let errorMessage = 'El campo Monto total es requerido al ser un contrato normal';
 
                             return callback(null, isRequired, errorMessage);
@@ -1652,7 +1666,9 @@ class ContractExcelReader {
                             if (rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride) {
                                 return callback(null, false);
                             }
-                            let isRequired = rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'OPEN';
+                            let isRequired = 
+                                    (rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'OPEN') &&
+                                    !(rowInfo.procedureState && rowInfo.procedureState.valueToSaveOverride && rowInfo.procedureState.valueToSaveOverride === 'DESERTED');
                             let errorMessage = 'El campo Monto mínimo es requerido al ser un contrato normal';
 
                             return callback(null, isRequired, errorMessage);
@@ -1665,7 +1681,9 @@ class ContractExcelReader {
                             if (rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride) {
                                 return callback(null, false);
                             }
-                            let isRequired = rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'OPEN';
+                            let isRequired = 
+                                    (rowInfo.contractType.valueToSaveOverride && rowInfo.contractType.valueToSaveOverride === 'OPEN') && 
+                                    !(rowInfo.procedureState && rowInfo.procedureState.valueToSaveOverride && rowInfo.procedureState.valueToSaveOverride === 'DESERTED');
                             let errorMessage = 'El campo Monto máximo es requerido al ser un contrato normal';
 
                             return callback(null, isRequired, errorMessage);
@@ -1676,6 +1694,12 @@ class ContractExcelReader {
                     return _this._readField(rowInfo, cell, 'totalOrMaxAmount', Number, {
                         required: function (rowInfo, callback) {
                             if(rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride){
+                                return callback(null, false);
+                            }
+                            if (
+                                    rowInfo.procedureState && 
+                                    rowInfo.procedureState.valueToSaveOverride && 
+                                    rowInfo.procedureState.valueToSaveOverride === 'DESERTED') {
                                 return callback(null, false);
                             }
                             return callback(null, true, "Este campo es requerido");
