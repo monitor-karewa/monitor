@@ -1610,18 +1610,7 @@ class ContractExcelReader {
                     break;
                 case C_IDS.CONTRACT_DATE:
                     return _this._readField(rowInfo, cell, 'contractDate', Date, {
-                        required: function (rowInfo, callback) {
-                            if(rowInfo.isEmpty && rowInfo.isEmpty.valueToSaveOverride){
-                                return callback(null, false);
-                            }
-                            if (
-                                    rowInfo.procedureState && 
-                                    rowInfo.procedureState.valueToSaveOverride && 
-                                    rowInfo.procedureState.valueToSaveOverride === 'DESERTED') {
-                                return callback(null, false);
-                            }
-                            return callback(null, true, "Este campo es requerido");
-                        },
+                        required: false,
                         //TODO: Centralize this validation
                         // validator: function(rowInfo, callback){
                         //     let yearContractDate = new Date(rowInfo.contractDate.value).getFullYear();
