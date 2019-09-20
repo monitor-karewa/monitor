@@ -336,6 +336,8 @@ class ContractExcelReader {
 
                             //Remove leading or trailing spaces
                             fieldInfo.value = fieldInfo.value.trim();
+                            // Remove duplicated spaces
+                            fieldInfo.value = fieldInfo.value.replace(/ {1,}/g, " ");
 
                             //Check for reference check strategy override
                             //[!r#] at the start of a string overrides the ref check strategy, where # is a number from 0 to 2
@@ -889,8 +891,6 @@ class ContractExcelReader {
 
                 //Do refLink check if needed
                 if (refLinkInfo && model && _id && sourceFieldInfo && targetFieldInfo) {
-
-
                     model
                         .findOne({
                             _id: _id
@@ -907,8 +907,16 @@ class ContractExcelReader {
                                 return callback(null, fieldInfo);
                             }
 
+                            //Check for validationStrategy
+                            let validationStrategyOnSourceField;
+                            if (sourceFieldInfo.overrides && utils.isDefined(sourceFieldInfo.overrides.validationStrategy)) {
+                                validationStrategyOnSourceField = sourceFieldInfo.overrides.validationStrategy;
+                            }
+
+                            let ignore = (validationStrategyOnSourceField === VALIDATION_STRATEGIES.SKIP);
+
                             //Check match
-                            if (linkedDoc[refLinkInfo.shouldMatchField] !== sourceFieldInfo.value) {
+                            if (!ignore && linkedDoc[refLinkInfo.shouldMatchField] !== sourceFieldInfo.value) {
                                 //Current value does not match the linked ref's doc field
                                 sourceFieldInfo.errors.push({
                                     message: `El valor ingresado no coincide con el actualmente registrado [${linkedDoc[refLinkInfo.shouldMatchField]}].`
@@ -1035,7 +1043,7 @@ class ContractExcelReader {
         if (fieldInfo.overrides && utils.isDefined(fieldInfo.overrides.validationStrategy)) {
             validationStrategy = fieldInfo.overrides.validationStrategy;
         }
-        
+
         //If the validation strategy is skip, skip the validation
         if (validationStrategy === VALIDATION_STRATEGIES.SKIP) {
             return callback();
