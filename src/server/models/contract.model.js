@@ -571,14 +571,12 @@ let ContractSchema = new Schema({
     contractNumber: {
         type: String,
         // unique: true,
-        required: true
+        required: false
     },
     /* Fecha del contrato */
     contractDate: {
         type: Date,
-        required: [function(value) {
-            return !this.isEmpty
-        }, "El campo Fecha del contrato es requerido"]
+        required: false
     },
     /* Tipo de Contrato */
     contractType: {
