@@ -50,7 +50,7 @@
                                 <select v-model="temp.procedureType" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar trimestre"
                                         title="Por tipo de procedimiento" @change="addFilter(query.procedureTypes, temp.procedureType, 'procedureTypes')">
-                                        <option v-for="procedureType in procedureTypes" :value="procedureType">
+                                        <option v-for="procedureType in procedureTypesSorted" :value="procedureType">
                                             {{$t(procedureType)}}
                                         </option>
                                 </select>
@@ -268,6 +268,19 @@
                     return 0;
                 });
                 return newTrimonths;
+            },
+            procedureTypesSorted: function () {
+                let newProcedureTypes = JSON.parse(JSON.stringify(this.$props.procedureTypes));
+                newProcedureTypes.sort(function (a, b) {
+                    if (a > b) {
+                        return 1;
+                    } else if (b > a) {
+                        return -1
+                    } else {
+                        return 0;
+                    }
+                });
+                return newProcedureTypes;
             }
         },
         props: {
