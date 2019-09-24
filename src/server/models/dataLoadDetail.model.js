@@ -86,7 +86,7 @@ DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
             
             
             //ref
-            supplier: detail.supplierName.valueToSaveOverride,
+            supplier: detail.supplierRfc.valueToSaveOverride,
             //ref
             organizerAdministrativeUnit: detail.organizerAdministrativeUnit.valueToSaveOverride,
             //ref
@@ -142,7 +142,7 @@ DataLoadDetailSchema.statics.toSuppliersArray = function (dataLoad, detailObj) {
     
     
     //Match already found, no need to create
-    if (!detail.supplierName.shouldCreateDoc) {
+    if (!detail.supplierRfc.shouldCreateDoc) {
         return null;
     }
     

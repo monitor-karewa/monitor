@@ -127,9 +127,9 @@ DataLoadSchema.statics.getSummary = function (dataLoad, details) {
                 newContractsCount++;
             }
             
-            if (rowInfo.supplierName && rowInfo.supplierName.shouldCreateDoc) {
-                if (!addedSuppliers[rowInfo.supplierName.value]) {
-                    addedSuppliers[rowInfo.supplierName.value] = true;
+            if (rowInfo.supplierRfc && rowInfo.supplierRfc.shouldCreateDoc) {
+                if (!addedSuppliers[rowInfo.supplierRfc.value]) {
+                    addedSuppliers[rowInfo.supplierRfc.value] = true;
                     newSuppliersCount++;
                 }
             } else {
@@ -302,22 +302,22 @@ DataLoadSchema.statics.confirm = function (dataLoad, details, confirmCallback) {
                             return waterfallCallback(err);
                         }
 
-                        let suppliersMapIdByName = {};
+                        let suppliersMapIdByRfc = {};
                         
                         if (!savedSuppliers || !savedSuppliers.length) {
                             logger.warn(err, null, 'dataLoad.model#confirm', 'No Suppliers saved on waterfall step #1');
-                            return waterfallCallback(null, suppliersMapIdByName);
+                            return waterfallCallback(null, suppliersMapIdByRfc);
                         }
                         
                         savedSuppliers.forEach((supplier) => {
-                            suppliersMapIdByName[supplier.name] = supplier._id;
+                            suppliersMapIdByRfc[supplier.rfc] = supplier._id;
                         });
                         
-                        return waterfallCallback(null, suppliersMapIdByName);
+                        return waterfallCallback(null, suppliersMapIdByRfc);
                     });
             },
             //Save all new AdministrativeUnits
-            function (suppliersMapIdByName, waterfallCallback) {
+            function (suppliersMapIdByRfc, waterfallCallback) {
                 let seenAdministrativeUnitNames = {};
                 let administrativeUnitsArrayOfArrays = _.flatten(mappedDetails
                 //Filter only valid administrative unit arrays (defined and not empty)
@@ -350,17 +350,17 @@ DataLoadSchema.statics.confirm = function (dataLoad, details, confirmCallback) {
 
                         if (!savedAdministrativeUnits || !savedAdministrativeUnits.length) {
                             logger.warn(err, null, 'dataLoad.model#confirm', 'No AdministrativeUnits saved on waterfall step #2');
-                            return waterfallCallback(null, suppliersMapIdByName, administrativeUnitsMapIdByName);
+                            return waterfallCallback(null, suppliersMapIdByRfc, administrativeUnitsMapIdByName);
                         }
 
                         savedAdministrativeUnits.forEach((administrativeUnit) => {
                             administrativeUnitsMapIdByName[administrativeUnit.name] = administrativeUnit._id;
                         });
 
-                        return waterfallCallback(null, suppliersMapIdByName, administrativeUnitsMapIdByName);
+                        return waterfallCallback(null, suppliersMapIdByRfc, administrativeUnitsMapIdByName);
                     });
             },
-            function (suppliersMapIdByName, administrativeUnitsMapIdByName, waterfallCallback) {
+            function (suppliersMapIdByRfc, administrativeUnitsMapIdByName, waterfallCallback) {
 
 
                 let seenContractContractIds = {};
@@ -389,9 +389,9 @@ DataLoadSchema.statics.confirm = function (dataLoad, details, confirmCallback) {
                         let contract = detailObj.contractInfo.contract;
                         
                         //supplier
-                        if (!detail.supplierName.valueToSaveOverride) {
+                        if (!detail.supplierRfc.valueToSaveOverride) {
                             // contract.supplier = suppliersMapIdByName[detail.supplierName.value];
-                            contract.supplier = suppliersMapIdByName[detail.supplierRfc.value];
+                            contract.supplier = suppliersMapIdByRfc[detail.supplierRfc.value];
                         }
                         //organizerAdministrativeUnit
                         if (!detail.organizerAdministrativeUnit.valueToSaveOverride) {
@@ -425,7 +425,7 @@ DataLoadSchema.statics.confirm = function (dataLoad, details, confirmCallback) {
                         }
                         
                         let results = {
-                            suppliersMapIdByName: suppliersMapIdByName,
+                            suppliersMapIdByRfc: suppliersMapIdByRfc,
                             administrativeUnitsMapIdByName: administrativeUnitsMapIdByName,
                             savedContracts: savedContracts
                         };
@@ -448,7 +448,7 @@ DataLoadSchema.statics.confirm = function (dataLoad, details, confirmCallback) {
                 contractsSavedCount: 0,
             };
             if (waterfallResults) {
-                confirmResults.suppliersSavedCount = Object.keys(waterfallResults.suppliersMapIdByName).length;
+                confirmResults.suppliersSavedCount = Object.keys(waterfallResults.suppliersMapIdByRfc).length;
                 confirmResults.administrativeUnitsSavedCount = Object.keys(waterfallResults.administrativeUnitsMapIdByName).length;
                 confirmResults.contractsSavedCount = waterfallResults.savedContracts.length;
             }
