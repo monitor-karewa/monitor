@@ -6,6 +6,7 @@ import Vue from "vue";
 
 const state = {
     suppliers: [],
+    allSuppliers: [],
     totals: {},
     pagination: {
         total: 0,
@@ -172,6 +173,14 @@ const actions = {
             }
         )
     },
+    getSuppliersForFilter({commit}) {
+        contractsApi.retrieveSuppliersForFilter({},
+            (result) => {
+                if (result && result.data) {
+                    commit('SET_SUPPLIERS_FOR_FILTER', result.data);
+                }
+            })
+    }
 };
 
 const mutations = {
@@ -226,6 +235,9 @@ const mutations = {
         state.lastQuery.procedureTypes = lastQuery.procedureTypes;
         state.lastQuery.administrativeUnits = lastQuery.administrativeUnits;
         state.lastQuery.search = lastQuery.search;
+    },
+    SET_SUPPLIERS_FOR_FILTER(state, suppliers) {
+        state.allSuppliers = suppliers;
     },
 };
 

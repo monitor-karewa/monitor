@@ -68,7 +68,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div :class="`form-group fg-float border-select m-0 p-0 col-lg-${colSizes['supplier']} col-12`" v-if="checkIfShown('supplier')" :key="keys.suppliers">
+                        <div :class="`form-group fg-float border-select m-0 p-0 thing-${numberOfFiltersExcludingSearch()} col-lg-${numberOfFiltersExcludingSearch() === 5 ? 4 : colSizes['supplier']} col-12`" v-if="checkIfShown('supplier')" :key="keys.suppliers">
                             <div class="fg-line m-0">
                                 <select v-model="temp.supplier" class="form-control select selectpicker" data-live-search="true"
                                         data-live-search-placeholder="Buscar proveedor"
@@ -415,7 +415,6 @@
                     this.colSizes[colSizesKeys[i]] = colSize;
                 }
 
-
                 if (filtersCount > 6) {
                     for (let i = 1; i <= leftoverSpace; i++) {
                         this.colSizes[colSizesKeys[i]]++;
@@ -468,9 +467,6 @@
                 })
             },
             addFilter(array, element, keyName){
-                console.log('array', array);
-                console.log('element', element);
-                console.log('keyName', keyName);
                 if(element){
                     if(array.indexOf(element) < 0){
                         array.push(element);
@@ -500,6 +496,15 @@
                     return true;
                 }
                 return false;
+            }
+            , numberOfFiltersExcludingSearch() {
+                if(this.$props.projection == undefined  || (Object.entries(this.$props.projection).length === 0 && this.$props.projection.constructor === Object)) { //if it's empty
+                    return 6;
+                } else {
+                    const dummy = JSON.parse(JSON.stringify(this.$props.projection));
+                    delete dummy.search;
+                    return Object.keys(dummy).length;
+                }
             }
         }
     }

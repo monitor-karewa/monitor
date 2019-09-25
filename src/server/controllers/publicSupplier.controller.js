@@ -345,10 +345,26 @@ function _aggregateSuppliersFromContracts(req, res, options = {}, callback) {
             andBuilder.push({$or: orBuilder});
             orBuilder = [];
         }
+        
+        let specificSuppliersFilter;
+        const supplierIds = [];
+        if (req.body.filters.suppliers && req.body.filters.suppliers.length) {
+            req.body.filters.suppliers.forEach(s => supplierIds.push(new mongoose.Types.ObjectId(s._id)));
+            
+            specificSuppliersFilter = {$in:supplierIds};
+            orBuilder.push({'supplier._id': {$in:supplierIds}});
+            andBuilder.push({$or: orBuilder});
+            orBuilder = [];
+
+        }
 
         if (andBuilder.length) {
             query = {$and: andBuilder};
         }
+
+        // if (supplierIds && supplierIds.length) {
+            // query._id = specificSuppliersFilter;
+        // }
     }
 
 

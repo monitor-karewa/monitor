@@ -110,8 +110,9 @@
                                 :trimonths="trimonths"
                                 :administrationPeriods="administrationPeriods"
                                 :procedureTypes="procedureTypes"
+                                :suppliers="allSuppliers"
                                 :placeHolder="'Escribe el nombre del proveedor...'"
-                                :projection = "{search : 1, administrationPeriod : 1, fiscalYear : 1, trimonth : 1, administrativeUnit : 1}"
+                                :projection = "{search : 1, administrationPeriod : 1, fiscalYear : 1, trimonth : 1, administrativeUnit : 1, supplier: 1}"
                         >
 
                         </PublicFilter>
@@ -257,6 +258,7 @@
         computed: {
             ...mapState({
                 suppliers: state => state[storeModule].suppliers,
+                allSuppliers: state => state[storeModule].allSuppliers,
                 totals: state => state[storeModule].totals,
                 adminstrativeUnitsForFilter: state => state[storeModule].adminstrativeUnitsForFilter,
                 fiscalYears: state => state[storeModule].fiscalYears,
@@ -297,6 +299,7 @@
             this.$store.dispatch(`${storeModule}/getTrimonths`);
             this.$store.dispatch(`${storeModule}/getAdministrationPeriods`);
             this.$store.dispatch(`${storeModule}/getProcedureTypes`);
+            this.$store.dispatch(`${storeModule}/getSuppliersForFilter`);
         },
         created() {
             window.$(document).ready(function () {
