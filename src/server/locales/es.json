@@ -50,5 +50,7 @@
 	"Jose Chuy": "Jose Chuy",
 	"data-load-notification.success": "¡Se ha completado la carga de datos!",
 	"data-load-notification.cancel": "Se detuvo la carga de datos por parte de ",
-	"data-load-notification.start": "Se ha iniciado una carga de datos en la organización actual."
+	"data-load-notification.start": "Se ha iniciado una carga de datos en la organización actual.",
+	"suppliers.filters.suppliers": "suppliers.filters.suppliers",
+	"OFICIALIA MAYOR": "OFICIALIA MAYOR"
 }

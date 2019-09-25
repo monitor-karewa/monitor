@@ -163,6 +163,7 @@ class ExcelExporter extends Exporter {
                         let format = formatByPropName[propName] || 'string';
                         let options = optionsByPropName[propName];
                         let value = options.childPropName ? doc[propName][options.childPropName] : doc[propName];
+
                         value = options.i18n && value ? req.__(value) : value;
 
 
@@ -252,7 +253,8 @@ class ExcelExporter extends Exporter {
             formatByPropName[propInfo.propName] = propInfo.format;
             optionsByPropName[propInfo.propName] = {
                 childPropName : propInfo.childPropName,
-                i18n : propInfo.childPropName
+                // i18n : propInfo.childPropName
+                i18n : propInfo.i18n
             }
         });
 
@@ -271,6 +273,7 @@ class ExcelExporter extends Exporter {
                         let format = formatByPropName[propName] || 'string';
                         let options = optionsByPropName[propName];
                         let value = "";
+
                         if(doc[propName]){
                             value = options.childPropName ? doc[propName][options.childPropName] : doc[propName];
                             value = options.i18n && value ? req.__(value) : value;
