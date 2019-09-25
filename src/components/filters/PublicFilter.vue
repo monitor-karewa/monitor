@@ -147,6 +147,7 @@
 <script>
     import {mapGetters} from 'vuex';
     import EventBus from '@/bus';
+    import i18n from '@/plugins/i18n';
     
     const FIRST_ROW_TOTAL = 1;
     const SECOND_ROW_TOTAL = 6;
@@ -272,9 +273,11 @@
             procedureTypesSorted: function () {
                 let newProcedureTypes = JSON.parse(JSON.stringify(this.$props.procedureTypes));
                 newProcedureTypes.sort(function (a, b) {
-                    if (a > b) {
+                    let translatedA = i18n.t(a);
+                    let translatedB = i18n.t(b);
+                    if (translatedA > translatedB) {
                         return 1;
-                    } else if (b > a) {
+                    } else if (translatedB > translatedA) {
                         return -1
                     } else {
                         return 0;
