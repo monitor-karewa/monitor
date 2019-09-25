@@ -378,7 +378,7 @@ DataLoadSchema.statics.confirm = function (dataLoad, details, confirmCallback) {
                             return false;
                         } else {
                             //Mark as "seen"
-                            // seenContractContractIds[contract.contractNumber] = true;
+                            seenContractContractIds[contract.contractNumber] = true;
                             return true;
                         }
                     })
