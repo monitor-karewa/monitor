@@ -106,7 +106,7 @@ DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
             minAmount : detail.minAmount.value,
             maxAmount : detail.maxAmount.value,
             totalOrMaxAmount : detail.totalOrMaxAmount.value,
-            contractUrl : detail.contractUrl.value,
+            contractUrl : detail.contractUrl.value ? detail.contractUrl.value : undefined,
             
             //ref
             areaInCharge : detail.areaInCharge.valueToSaveOverride,

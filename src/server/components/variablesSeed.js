@@ -400,7 +400,7 @@ let getVariables = function () {
             abbreviation: "$NCDPT",
             query: [
                 {
-                    $match: {presentationProposalsDocUrl: {$exists: true}}
+                    $match: {contractUrl: {$exists: true}}
                 },
                 {
                     $count: "noContracts"

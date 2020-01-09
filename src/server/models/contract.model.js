@@ -722,6 +722,10 @@ ContractSchema.pre('save', function (next) {
         this.announcementUrl = undefined;
     }
 
+    if (!this.contractUrl) {
+        this.contractUrl = undefined;
+    }
+
     if (!this.informationDate) {
         this.informationDate = undefined;
     }
