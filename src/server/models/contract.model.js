@@ -237,7 +237,7 @@ const limitExceededEnumDict = {
     ],
     'NOT_APPLICABLE': [
         {
-            regexStr: utils.toAccentsRegex('N(/)?A|no aplicable', null, true),
+            regexStr: utils.toAccentsRegex('N(/)?A|no aplicable|no aplica', null, true),
             flags: 'gi'
         },
     ]
@@ -707,6 +707,34 @@ ContractSchema.virtual('contractTypeEnumObject').get(function () {
 });
 ContractSchema.virtual('categoryEnumObject').get(function () {
     return getCategoryEnumObject(this.category);
+});
+
+ContractSchema.pre('save', function (next) {
+    if (!this.contractId) {
+        this.contractId = undefined;
+    }
+
+    if (!this.presentationProposalsDocUrl) {
+        this.presentationProposalsDocUrl = undefined
+    }
+
+    if (!this.announcementUrl) {
+        this.announcementUrl = undefined;
+    }
+
+    if (!this.contractUrl) {
+        this.contractUrl = undefined;
+    }
+
+    if (!this.informationDate) {
+        this.informationDate = undefined;
+    }
+
+    if (!this.clarificationMeetingJudgmentUrl) {
+        this.clarificationMeetingJudgmentUrl = undefined;
+    }
+
+    next();
 });
 
 ContractSchema.set('toObject', {virtuals: true});

@@ -71,18 +71,18 @@ DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
             
             fiscalYear : detail.fiscalYear.value,
             period : detail.period.value,
-            contractId : detail.contractId.value,
+            contractId : detail.contractId.value ? detail.contractId.value : undefined,
             partida : detail.partida.value,
             
             //enum
             procedureState : detail.procedureState.valueToSaveOverride || "NULL" ,
             
-            announcementUrl : detail.announcementUrl.value,
+            announcementUrl : detail.announcementUrl.value ? detail.announcementUrl.value : undefined,
             announcementDate : detail.announcementDate.value,
             servicesDescription : detail.servicesDescription.value,
             clarificationMeetingDate : detail.clarificationMeetingDate.value,
-            clarificationMeetingJudgmentUrl : detail.clarificationMeetingJudgmentUrl.value,
-            presentationProposalsDocUrl : detail.presentationProposalsDocUrl.value,
+            clarificationMeetingJudgmentUrl : detail.clarificationMeetingJudgmentUrl.value ? detail.clarificationMeetingJudgmentUrl.value : undefined,
+            presentationProposalsDocUrl : detail.presentationProposalsDocUrl.value ? detail.presentationProposalsDocUrl.value : undefined,
             
             
             //ref
@@ -106,7 +106,7 @@ DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
             minAmount : detail.minAmount.value,
             maxAmount : detail.maxAmount.value,
             totalOrMaxAmount : detail.totalOrMaxAmount.value,
-            contractUrl : detail.contractUrl.value,
+            contractUrl : detail.contractUrl.value ? detail.contractUrl.value : undefined,
             
             //ref
             areaInCharge : detail.areaInCharge.valueToSaveOverride,
@@ -115,11 +115,11 @@ DataLoadDetailSchema.statics.toContractObj = function (dataLoad, detailObj) {
             updateDate : detail.actualizationDate.value,
             notes : detail.notes.value,
             karewaNotes : detail.karewaNotes.value,
-            informationDate : detail.informationDate.value,
+            informationDate : detail.informationDate.value ? detail.informationDate.value : undefined,
 
             //enum -> boolean
             // limitExceeded : !!/no/gi.test(detail.limitExceeded.valueToSaveOverride),
-            limitExceeded : detail.limitExceeded.valueToSaveOverride === "NOT_APPLICABLE" ? false : !!/no/gi.test(detail.limitExceeded.valueToSaveOverride),
+            limitExceeded : detail.limitExceeded.valueToSaveOverride === "LIMIT_EXCEEDED",
             
             amountExceeded : detail.amountExceeded.value || 0,
 
