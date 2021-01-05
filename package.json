@@ -18,7 +18,7 @@
     "apexcharts": "^3.6.11",
     "app-root-path": "^2.2.1",
     "async": "^2.6.2",
-    "axios": "^0.18.0",
+    "axios": "^0.21.1",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "~1.18.2",
     "compression": "^1.7.3",
