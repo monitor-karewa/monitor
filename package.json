@@ -39,7 +39,7 @@
     "jaccard-index": "^0.2.0",
     "jsonwebtoken": "^8.5.1",
     "lodash.orderby": "^4.6.0",
-    "mathjs": "^5.9.0",
+    "mathjs": "^7.5.1",
     "md5": "^2.2.1",
     "mongoose": "^5.3.13",
     "mongoose-aggregate-paginate": "^1.1.3",
