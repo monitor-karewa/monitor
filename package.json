@@ -37,7 +37,7 @@
     "i18n": "^0.8.3",
     "import-lazy": "^4.0.0",
     "jaccard-index": "^0.2.0",
-    "jsonwebtoken": "^8.5.1",
+    "jsonwebtoken": "^9.0.0",
     "lodash.orderby": "^4.6.0",
     "mathjs": "^5.9.0",
     "md5": "^2.2.1",
